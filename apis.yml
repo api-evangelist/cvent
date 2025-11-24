@@ -15,13 +15,15 @@ specificationVersion: '0.19'
 apis:
   - aid: cvent:cvent
     name: Cvent
-    description: 'Connect with Cvent APIs to optimize your event '
-    humanURL: ' https://developers.cvent.com/'
     tags:
       - API
+    humanURL: ' https://developers.cvent.com/'
     properties:
-      - type: Documentation
-        url: ' https://developers.cvent.com/'
+      - url: ' https://developers.cvent.com/'
+        type: Documentation
+      - type: OpenAPI
+        url: properties/cvent-openapi.yml
+    description: 'Connect with Cvent APIs to optimize your event '
 maintainers:
   - FN: Kin Lane
     email: info@apievangelist.com
