@@ -1,5 +1,5 @@
 # Cvent (cvent)
-Connect with Cvent APIs to optimize your event 
+Cvent is a leading meetings, events, and hospitality technology provider with over 4,800 employees and 21,000+ customers worldwide. The platform offers event management software, venue sourcing, attendee engagement tools, and event marketing solutions.
 
 **URL:** [Visit APIs.json URL](https://raw.githubusercontent.com/api-evangelist/cvent/refs/heads/main/apis.yml)
 
@@ -11,12 +11,12 @@ Connect with Cvent APIs to optimize your event
 
 ## Tags:
 
- - Conferences, Meetings, Events
+ - Attendee Management, Conferences, Event Management, Events, Hospitality, Meetings, Registration, Venue Management
 
 ## Timestamps
 
 - **Created:** 2025-11-19 
-- **Modified:** 2025-11-24 
+- **Modified:** 2025-12-31 
 
 ## APIs
 
@@ -28,7 +28,7 @@ Cvent is an event management and hospitality platform that helps organizations p
 
 #### Tags:
 
- - Events, Conferences, Meetings
+ - Events, Conferences, Meetings, Sessions, Exhibitors
 
 #### Properties
 
@@ -76,10 +76,17 @@ Cvent is an event management and hospitality platform that helps organizations p
 - [Training](https://www.cvent.com/en/academy)
 - [Login](https://app.cvent.com/subscribers/Login.aspx?ReturnUrl=%2fsubscribers%2fdefault.aspx)
 - [RequestDemo](https://www.cvent.com/en/request-demo)
+- [Terms of Service](https://www.cvent.com/en/terms-of-use)
+- [Privacy Policy](https://www.cvent.com/en/privacy-policy)
+- [Sign Up](https://developers.cvent.com/register)
+- [Status](https://status.cvent.com)
+- [Contact](https://www.cvent.com/en/contact)
 
 ## Maintainers
 
 **FN:** Kin Lane
 
 **Email:** info@apievangelist.com
+**FN:** Cvent Developer Relations
 
+**Email:** developersupport@cvent.com
