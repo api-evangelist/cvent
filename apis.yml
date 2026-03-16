@@ -9,9 +9,9 @@ apis:
   - Meetings
   - Sessions
   - Exhibitors
-  humanURL: ' https://developers.cvent.com/'
+  humanURL: https://developers.cvent.com/
   properties:
-  - url: ' https://developers.cvent.com/'
+  - url: https://developers.cvent.com/
     type: Documentation
   - url: properties/cvent-openapi.yml
     type: OpenAPI
@@ -576,7 +576,7 @@ common:
   type: Integrations
   description: 'null'
 created: '2025-11-19'
-modified: '2026-03-04'
+modified: '2026-03-16'
 position: Consumer
 description: Cvent is a leading meetings, events, and hospitality technology provider with over 4,800 employees and 21,000+ customers worldwide. The platform offers event management software, venue sourcing, attendee engagement tools, and event marketing solutions.
 maintainers:
