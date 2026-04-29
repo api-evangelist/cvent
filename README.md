@@ -1,92 +1,118 @@
 # Cvent (cvent)
-Cvent is a leading meetings, events, and hospitality technology provider with over 4,800 employees and 21,000+ customers worldwide. The platform offers event management software, venue sourcing, attendee engagement tools, and event marketing solutions.
+
+Cvent is a leading meetings, events, and hospitality technology provider with over 4,800 employees and 22,000+ customers worldwide. The Cvent platform spans Event Cloud (event management, registration, mobile event apps, virtual and hybrid events, Attendee Hub, surveys, Diagramming, analytics) and Hospitality Cloud (Cvent Supplier Network, Passkey, Venue Sourcing, Sales & Catering). Programmatic access is delivered through the unified Cvent Platform REST API (`api-platform.cvent.com`) using OAuth 2.0 client credentials, alongside webhooks, SSO, custom widgets, white-label, Salesforce app, and several legacy APIs (SOAP, CSN, Passkey RegLink, BadgeKit, Jifflenow).
 
 **URL:** [Visit APIs.json URL](https://raw.githubusercontent.com/api-evangelist/cvent/refs/heads/main/apis.yml)
 
 ## Scope
 
-- **Type:** Index 
-- **Position:** Consumer 
-- **Access:** 3rd-Party 
+- **Type:** Index
+- **Position:** Consuming
+- **Access:** 3rd-Party
+- **x-type:** company
 
-## Tags:
+## Tags
 
- - Attendee Management, Conferences, Event Management, Events, Hospitality, Meetings, Registration, Venue Management
+- Attendee Hub, Attendee Management, Conferences, Diagramming, Event Management, Event Marketing, Events, Exhibitors, Hospitality, Hospitality Cloud, Hybrid Events, Meetings, OAuth 2.0, Passkey, Registration, REST API, SOAP API, SSO, Supplier Network, Surveys, Venue Management, Venue Sourcing, Virtual Events, Webhooks, White Label
 
 ## Timestamps
 
-- **Created:** 2025-11-19 
-- **Modified:** 2025-12-31 
+- **Created:** 2025-11-19
+- **Modified:** 2026-04-28
 
 ## APIs
 
-### Cvent
-Cvent is an event management and hospitality platform that helps organizations plan, promote, execute, and analyze in-person, virtual, and hybrid events. It provides tools for tasks such as attendee registration, website creation, email marketing, venue sourcing, budgeting, and on-site check-in, streamlining the entire event lifecycle. Cvent also offers engagement features like mobile event apps and surveys, along with analytics that help planners understand attendee behavior and measure event success.
+### Cvent REST API
 
-**Human URL:** [ https://developers.cvent.com/]( https://developers.cvent.com/)
+Unified Cvent Platform REST API providing programmatic access to events, contacts, registrations, attendees, sessions, speakers, exhibitors, surveys, webhooks, and Attendee Hub resources. OAuth 2.0 client credentials.
 
+- **Human URL:** https://developers.cvent.com/docs/rest-api/overview
+- **Base URL:** `https://api-platform.cvent.com`
 
-#### Tags:
+### Cvent Webhooks API
 
- - Events, Conferences, Meetings, Sessions, Exhibitors
+Real-time push notifications for event, attendee, speaker, and meeting request changes.
 
-#### Properties
+- **Human URL:** https://developers.cvent.com/docs/webhooks/overview
 
-- [Documentation]( https://developers.cvent.com/)
-- [OpenAPI](properties/cvent-openapi.yml)
+### Cvent Supplier Network (CSN) API
 
-## Common Properties
+Integration with 280,000+ hotels, suppliers, and destinations for venue search and RFP workflows.
 
-- [Documentation](https://developers.cvent.com/documentation)
-- [Tutorials](https://developers.cvent.com/docs/rest-api/tutorials/inviting-your-developers)
-- [Guide](https://developers.cvent.com/docs/rest-api/guides/rest-guides)
-- [Standards](https://developers.cvent.com/docs/rest-api/reference/api-standards)
-- [ChangeLog](https://developers.cvent.com/docs/rest-api/changelog)
-- [Widgets](https://developers.cvent.com/docs/custom-widgets/overview)
-- [WhiteLabel](https://developers.cvent.com/docs/white-label/overview)
-- [SSO](https://developers.cvent.com/docs/sso/overview)
-- [Webhooks](https://developers.cvent.com/docs/webhooks/overview)
-- [Support](https://support.cvent.com/s/communityarticle/What-can-Cvent-s-API-do)
-- [Website](https://www.cvent.com/)
-- [Integrations](https://www.cvent.com/en/event-management-software/cvent-integrations)
-- [Blog](https://www.cvent.com/en/blog)
-- [Website](https://www.cvent.com/)
-- [Pricing](https://www.cvent.com/en/event-management-software/cvent-pricing)
-- [Careers](https://careers.cvent.com/)
-- [Partners](https://www.cvent.com/en/become-partner)
-- [Blog](https://www.cvent.com/en/blog)
-- [CaseStudies](https://www.cvent.com/en/case-studies)
-- [Events](https://web.cvent.com/eventsplus/0a191bdc-46ea-47bb-921a-69d252ad21e3/eventcalendars/2402d010-8588-4fba-a3fc-e684ce562ab7)
-- [Webinars](https://web.cvent.com/eventsplus/0a191bdc-46ea-47bb-921a-69d252ad21e3/eventcalendars/2402d010-8588-4fba-a3fc-e684ce562ab7?field_event_type_target_id%5B46%5D=46&cvt_cal_filters=%5B%7B%22type%22%3A%22checkbox%22%2C%22field%22%3A%22f92543ff-cabd-454e-b582-65df803329ac%22%2C%22values%22%3A%5B%22Webinar%22%5D%2C%22cventFieldType%22%3A%2241%22%7D%5D)
-- [Community](https://community.cvent.com/home)
-- [Portal](https://developers.cvent.com/)
-- [Documentation](https://developers.cvent.com/documentation)
-- [GettingStarted](https://developers.cvent.com/documentation#section/Getting-Started)
-- [Authentication](https://developers.cvent.com/documentation#section/Getting-Started/Authentication)
-- [RateLimits](https://developers.cvent.com/documentation#section/Getting-Started/Rate-Limits)
-- [Pagination](https://developers.cvent.com/documentation#section/Getting-Started/Pagination)
-- [Filtering](https://developers.cvent.com/documentation#section/Getting-Started/Filtering)
-- [ChangeLog](https://developers.cvent.com/documentation#section/Getting-Started/Versioning)
-- [Standards](https://developers.cvent.com/documentation#section/Getting-Started/Standards)
-- [Webhooks](https://developers.cvent.com/docs/webhooks/overview)
-- [Guide](https://developers.cvent.com/docs/webhooks/overview#guides)
-- [SSO](https://developers.cvent.com/docs/sso/overview)
-- [WhiteLabel](https://developers.cvent.com/docs/white-label/overview)
-- [Security](https://www.cvent.com/en/security)
-- [Training](https://www.cvent.com/en/academy)
-- [Login](https://app.cvent.com/subscribers/Login.aspx?ReturnUrl=%2fsubscribers%2fdefault.aspx)
-- [RequestDemo](https://www.cvent.com/en/request-demo)
-- [Terms of Service](https://www.cvent.com/en/terms-of-use)
-- [Privacy Policy](https://www.cvent.com/en/privacy-policy)
-- [Sign Up](https://developers.cvent.com/register)
+- **Human URL:** https://developers.cvent.com/docs/legacy-api/csn/overview
+
+### Cvent Passkey RegLink API
+
+Connect registration systems to Passkey hotel reservation engines.
+
+- **Human URL:** https://developers.cvent.com/docs/passkey/REST/overview
+
+### Cvent SOAP API (Legacy)
+
+Original legacy API for contact, event, and registration management. Being sunset in favor of REST.
+
+- **Human URL:** https://developers.cvent.com/docs/legacy-api/soap-api/overview
+
+### Cvent Custom Widgets API
+
+SDK for embedding custom interactive widgets in Cvent Event Registration pages.
+
+- **Human URL:** https://developers.cvent.com/docs/custom-widgets/overview
+
+### Cvent SSO Integration
+
+SAML and OIDC SSO across planner login, registrant flows, Attendee Hub, Events+, and portals.
+
+- **Human URL:** https://developers.cvent.com/docs/sso/overview
+
+### Cvent White Label API
+
+Embed Cvent RFP functionality into supplier websites with custom branding.
+
+- **Human URL:** https://developers.cvent.com/docs/white-label/overview
+
+### Cvent Salesforce App
+
+Bidirectional integration of Cvent event data with Salesforce CRM.
+
+- **Human URL:** https://developers.cvent.com/docs/cvent-salesforce-app/overview
+
+## Capabilities
+
+- Event creation and lifecycle management
+- Registration, attendee, session, and speaker management
+- Survey distribution and feedback collection
+- Webhook subscriptions for real-time push integration
+- Hotel room block and reservation integration via Passkey
+- Venue sourcing and RFP workflows via CSN
+- Custom widgets and white-label embedding
+- SSO and identity federation via SAML / OpenID Connect
+
+## Use Cases
+
+- Sync event registrations to CRM (Salesforce, Dynamics, HubSpot)
+- Pipe attendee engagement data into BI / marketing automation
+- Drive hotel reservations from third-party registration systems
+- Hospitality suppliers responding to RFPs programmatically
+- Real-time event data streaming via webhooks
+- Embed RFP and registration UI in third-party portals
+
+## Common Resources
+
+- [Cvent Website](https://www.cvent.com/)
+- [Developer Portal](https://developers.cvent.com/)
+- [API Reference](https://developers.cvent.com/docs/rest-api/reference/reference)
 - [Status](https://status.cvent.com)
-- [Contact](https://www.cvent.com/en/contact)
+- [Support](https://support.cvent.com/)
+- [Community](https://community.cvent.com/home)
+- [GitHub](https://github.com/cvent)
 
 ## Maintainers
 
 **FN:** Kin Lane
 
-**Email:** info@apievangelist.com
+**Email:** kin@apievangelist.com
+
 **FN:** Cvent Developer Relations
 
 **Email:** developersupport@cvent.com
