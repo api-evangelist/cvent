@@ -1,0 +1,238 @@
+specification: FinOps Framework
+specificationVersion: '1.0'
+alignedWith:
+  framework: FinOps Foundation Framework
+  frameworkUrl: https://www.finops.org/framework/
+  dataSpec: FOCUS
+  dataSpecVersion: '1.3'
+  dataSpecUrl: https://focus.finops.org/focus-specification/v1-3/
+provider: Cvent
+providerId: cvent
+publisherName: Cvent
+serviceCategory: API
+created: '2026-05-04'
+modified: '2026-05-04'
+tags:
+  - Attendee Hub
+  - Attendee Management
+  - Conferences
+  - Diagramming
+  - Event Management
+  - Event Marketing
+  - Events
+  - Exhibitors
+  - Hospitality
+  - Hospitality Cloud
+  - Hybrid Events
+  - Meetings
+  - OAuth 2.0
+  - Passkey
+  - Registration
+  - REST API
+  - SOAP API
+  - SSO
+  - Supplier Network
+  - Surveys
+  - Venue Management
+  - Venue Sourcing
+  - Virtual Events
+  - Webhooks
+  - White Label
+  - FinOps
+  - Cost Management
+  - FOCUS
+description: FinOps framework definition for the Cvent API surface. Provides a FOCUS-aligned mapping for
+  cost allocation, usage measurement, and unit-economics reporting across the provider's APIs.
+principles:
+  - name: Visibility
+    description: Make API consumption costs visible to engineering, product, and finance teams in near
+      real-time.
+  - name: Allocation
+    description: Tag every chargeable API call with the consuming team, environment, application, and
+      feature so cost can be allocated.
+  - name: Optimization
+    description: Continuously evaluate request patterns, caching, batching, and tier selection to reduce
+      cost per useful unit of work.
+  - name: Accountability
+    description: Establish budget owners and chargeback or showback flows for each consuming team.
+domains:
+  - name: Understand Usage and Cost
+    capabilities:
+      - Data Ingestion
+      - Allocation
+      - Reporting and Analytics
+      - Anomaly Management
+  - name: Quantify Business Value
+    capabilities:
+      - Planning and Estimating
+      - Forecasting
+      - Budgeting
+      - Benchmarking
+      - Unit Economics
+  - name: Optimize Usage and Cost
+    capabilities:
+      - Architecting for Cloud
+      - Rate Optimization
+      - Workload Optimization
+      - Cloud Sustainability
+      - Licensing and SaaS
+  - name: Manage the FinOps Practice
+    capabilities:
+      - FinOps Practice Operations
+      - FinOps Education and Enablement
+      - Invoicing and Chargeback
+      - Onboarding Workloads
+      - Intersecting Disciplines
+billingModel:
+  pricingCategory: Usage-Based
+  billingFrequency: Monthly
+  billingCurrency: USD
+  chargeCategories:
+    - Usage
+    - Purchase
+    - Tax
+    - Credit
+    - Adjustment
+  chargeFrequency: Recurring
+focusColumns:
+  ServiceName: Cvent
+  ServiceCategory: Developer Tools / API
+  ProviderName: Cvent
+  PublisherName: Cvent
+  InvoiceIssuerName: Cvent
+  PricingCategory: Usage-Based
+  PricingUnit: request
+  BillingCurrency: USD
+  ChargeCategory: Usage
+meters:
+  - name: api_requests
+    description: Count of billable API requests
+    unit: request
+    aggregation: sum
+    dimensions:
+      - api
+      - endpoint
+      - tier
+      - region
+      - consumer
+  - name: data_egress
+    description: Bytes returned over the network in API responses
+    unit: GB
+    aggregation: sum
+    dimensions:
+      - api
+      - region
+      - consumer
+  - name: compute_seconds
+    description: Server-side compute consumed by the request, where applicable
+    unit: second
+    aggregation: sum
+    dimensions:
+      - api
+      - endpoint
+      - tier
+apis:
+  - name: Cvent REST API
+    baseURL: https://api-platform.cvent.com
+    tags:
+      - Attendees
+      - Contacts
+      - Events
+      - OAuth 2.0
+      - Registration
+      - REST
+      - Sessions
+      - Surveys
+      - Webhooks
+    serviceName: Cvent REST API
+    serviceCategory: API
+  - name: Cvent Webhooks API
+    baseURL: ''
+    tags:
+      - Attendees
+      - Events
+      - Notifications
+      - Sessions
+      - Webhooks
+    serviceName: Cvent Webhooks API
+    serviceCategory: API
+  - name: Cvent Supplier Network (CSN) API
+    baseURL: ''
+    tags:
+      - Hospitality
+      - Proposals
+      - RFP
+      - Suppliers
+      - Venues
+    serviceName: Cvent Supplier Network (CSN) API
+    serviceCategory: API
+  - name: Cvent Passkey RegLink API
+    baseURL: ''
+    tags:
+      - Accommodations
+      - Hotels
+      - Registration
+      - Reservations
+    serviceName: Cvent Passkey RegLink API
+    serviceCategory: API
+  - name: Cvent SOAP API (Legacy)
+    baseURL: ''
+    tags:
+      - Contacts
+      - Deprecated
+      - Events
+      - Legacy
+      - Registration
+      - SOAP
+    serviceName: Cvent SOAP API (Legacy)
+    serviceCategory: API
+  - name: Cvent Custom Widgets API
+    baseURL: ''
+    tags:
+      - Customization
+      - Embedding
+      - Registration
+      - Widgets
+    serviceName: Cvent Custom Widgets API
+    serviceCategory: API
+  - name: Cvent Single Sign-On (SSO) Integration
+    baseURL: ''
+    tags:
+      - Authentication
+      - Identity
+      - OpenID Connect
+      - SAML
+      - SSO
+    serviceName: Cvent Single Sign-On (SSO) Integration
+    serviceCategory: API
+  - name: Cvent White Label API
+    baseURL: ''
+    tags:
+      - Branding
+      - RFP
+      - White Label
+      - Widgets
+    serviceName: Cvent White Label API
+    serviceCategory: API
+  - name: Cvent Salesforce App
+    baseURL: ''
+    tags:
+      - CRM
+      - Events
+      - Integration
+      - Salesforce
+    serviceName: Cvent Salesforce App
+    serviceCategory: API
+unitEconomics:
+  - name: Cost per 1K Requests
+    metric: billed_cost / (api_requests / 1000)
+    target: TBD
+  - name: Cost per Active Consumer
+    metric: billed_cost / active_consumers
+    target: TBD
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com
+  - FN: Cvent Developer Relations
+    email: developersupport@cvent.com
+    url: https://developers.cvent.com
