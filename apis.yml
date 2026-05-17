@@ -1,6 +1,6 @@
 aid: cvent
 name: Cvent
-x-type: company
+kind: company
 description: >-
   Cvent is a leading meetings, events, and hospitality technology
   provider with over 4,800 employees and 22,000+ customers worldwide.
@@ -268,7 +268,7 @@ common:
     url: https://developers.cvent.com/docs/rest-api/reference/api-standards
   - type: ChangeLog
     url: https://developers.cvent.com/docs/rest-api/changelog
-  - type: Status
+  - type: StatusPage
     url: https://status.cvent.com
   - type: Support
     url: https://support.cvent.com/
