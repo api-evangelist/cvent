@@ -1,0 +1,222 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Cvent REST APIs — Leads
+  description: 'Cvent REST APIs — Leads. 4 operations. Lead operation: List E-literature Requests. Self-contained Naftiko capability covering one business surface.'
+  tags:
+  - Cvent
+  - Leads
+  created: '2026-05-20'
+  modified: '2026-05-20'
+binds:
+- namespace: env
+  keys:
+    CVENT_API_KEY: CVENT_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: rest-leads
+    baseUri: https://api-platform.cvent.com/ea
+    description: Cvent REST APIs — Leads business capability. Self-contained, no shared references.
+    resources:
+    - name: eliterature-requests
+      path: /eliterature-requests
+      operations:
+      - name: geteliteraturerequests
+        method: GET
+        description: List E-literature Requests
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: filter
+          in: query
+          type: string
+          description: 'A filter query string narrows search results and supports the combination of logical and comparison operators.
+
+            The filter adheres to the pattern filter=''field'' comparisonType ''value''.
+
+
+            These are the c'
+    - name: events-id-exhibitors-exhibitorid-leads-leadid-answers
+      path: /events/{id}/exhibitors/{exhibitorId}/leads/{leadId}/answers
+      operations:
+      - name: getleadqualificationanswers
+        method: GET
+        description: List Qualification Answers
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: exhibitorId
+          in: path
+          type: string
+          description: Path parameter exhibitorId.
+          required: true
+        - name: leadId
+          in: path
+          type: string
+          description: Path parameter leadId.
+          required: true
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+    - name: leads
+      path: /leads
+      operations:
+      - name: getleads
+        method: GET
+        description: List Leads
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: filter
+          in: query
+          type: string
+          description: 'A filter query string narrows search results and supports the combination of logical and comparison operators.
+
+            The filter adheres to the pattern filter=''field'' comparisonType ''value''.
+
+
+            These are the c'
+    - name: leads-filter
+      path: /leads/filter
+      operations:
+      - name: getleadspostfiltersdata
+        method: POST
+        description: List Leads
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+  exposes:
+  - type: rest
+    namespace: rest-leads-rest
+    port: 8080
+    description: REST adapter for Cvent REST APIs — Leads. One resource per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/eliterature-requests
+      name: eliterature-requests
+      description: REST surface for eliterature-requests.
+      operations:
+      - method: GET
+        name: geteliteraturerequests
+        description: List E-literature Requests
+        call: rest-leads.geteliteraturerequests
+        with:
+          filter: rest.filter
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/events/{id}/exhibitors/{exhibitorId}/leads/{leadId}/answers
+      name: events-id-exhibitors-exhibitorid-leads-leadid-answers
+      description: REST surface for events-id-exhibitors-exhibitorid-leads-leadid-answers.
+      operations:
+      - method: GET
+        name: getleadqualificationanswers
+        description: List Qualification Answers
+        call: rest-leads.getleadqualificationanswers
+        with:
+          exhibitorId: rest.exhibitorId
+          leadId: rest.leadId
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/leads
+      name: leads
+      description: REST surface for leads.
+      operations:
+      - method: GET
+        name: getleads
+        description: List Leads
+        call: rest-leads.getleads
+        with:
+          filter: rest.filter
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/leads/filter
+      name: leads-filter
+      description: REST surface for leads-filter.
+      operations:
+      - method: POST
+        name: getleadspostfiltersdata
+        description: List Leads
+        call: rest-leads.getleadspostfiltersdata
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: rest-leads-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Cvent REST APIs — Leads. One tool per consumed operation, routed inline through this capability's consumes block.
+    tools:
+    - name: cvent-geteliteraturerequests
+      description: List E-literature Requests
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-leads.geteliteraturerequests
+      with:
+        filter: tools.filter
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-getleadqualificationanswers
+      description: List Qualification Answers
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-leads.getleadqualificationanswers
+      with:
+        exhibitorId: tools.exhibitorId
+        leadId: tools.leadId
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-getleads
+      description: List Leads
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-leads.getleads
+      with:
+        filter: tools.filter
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-getleadspostfiltersdata
+      description: List Leads
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: rest-leads.getleadspostfiltersdata
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

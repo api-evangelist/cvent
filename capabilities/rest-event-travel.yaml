@@ -1,0 +1,242 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Cvent REST APIs — Event Travel
+  description: 'Cvent REST APIs — Event Travel. 5 operations. Lead operation: Get Air Actual. Self-contained Naftiko capability covering one business surface.'
+  tags:
+  - Cvent
+  - Event Travel
+  created: '2026-05-20'
+  modified: '2026-05-20'
+binds:
+- namespace: env
+  keys:
+    CVENT_API_KEY: CVENT_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: rest-event-travel
+    baseUri: https://api-platform.cvent.com/ea
+    description: Cvent REST APIs — Event Travel business capability. Self-contained, no shared references.
+    resources:
+    - name: events-id-event-travel-air-actuals
+      path: /events/{id}/event-travel/air-actuals
+      operations:
+      - name: getairactualdetail
+        method: GET
+        description: Get Air Actual
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+    - name: events-id-event-travel-air-requests
+      path: /events/{id}/event-travel/air-requests
+      operations:
+      - name: getairrequests
+        method: GET
+        description: Get Air Requests
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+    - name: events-id-event-travel-alternate-answers
+      path: /events/{id}/event-travel/alternate-answers
+      operations:
+      - name: getalternatetravelanswers
+        method: GET
+        description: Get Alternate Travel Answers
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+    - name: events-id-event-travel-hotel-requests
+      path: /events/{id}/event-travel/hotel-requests
+      operations:
+      - name: gethotelrequests
+        method: GET
+        description: Get Hotel Requests
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+    - name: events-id-event-travel-housing-reservation-requests
+      path: /events/{id}/event-travel/housing-reservation-requests
+      operations:
+      - name: gethousingreservationrequests
+        method: GET
+        description: Get Housing Requests
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+  exposes:
+  - type: rest
+    namespace: rest-event-travel-rest
+    port: 8080
+    description: REST adapter for Cvent REST APIs — Event Travel. One resource per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/events/{id}/event-travel/air-actuals
+      name: events-id-event-travel-air-actuals
+      description: REST surface for events-id-event-travel-air-actuals.
+      operations:
+      - method: GET
+        name: getairactualdetail
+        description: Get Air Actual
+        call: rest-event-travel.getairactualdetail
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/events/{id}/event-travel/air-requests
+      name: events-id-event-travel-air-requests
+      description: REST surface for events-id-event-travel-air-requests.
+      operations:
+      - method: GET
+        name: getairrequests
+        description: Get Air Requests
+        call: rest-event-travel.getairrequests
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/events/{id}/event-travel/alternate-answers
+      name: events-id-event-travel-alternate-answers
+      description: REST surface for events-id-event-travel-alternate-answers.
+      operations:
+      - method: GET
+        name: getalternatetravelanswers
+        description: Get Alternate Travel Answers
+        call: rest-event-travel.getalternatetravelanswers
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/events/{id}/event-travel/hotel-requests
+      name: events-id-event-travel-hotel-requests
+      description: REST surface for events-id-event-travel-hotel-requests.
+      operations:
+      - method: GET
+        name: gethotelrequests
+        description: Get Hotel Requests
+        call: rest-event-travel.gethotelrequests
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/events/{id}/event-travel/housing-reservation-requests
+      name: events-id-event-travel-housing-reservation-requests
+      description: REST surface for events-id-event-travel-housing-reservation-requests.
+      operations:
+      - method: GET
+        name: gethousingreservationrequests
+        description: Get Housing Requests
+        call: rest-event-travel.gethousingreservationrequests
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: rest-event-travel-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Cvent REST APIs — Event Travel. One tool per consumed operation, routed inline through this capability's consumes block.
+    tools:
+    - name: cvent-getairactualdetail
+      description: Get Air Actual
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-event-travel.getairactualdetail
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-getairrequests
+      description: Get Air Requests
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-event-travel.getairrequests
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-getalternatetravelanswers
+      description: Get Alternate Travel Answers
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-event-travel.getalternatetravelanswers
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-gethotelrequests
+      description: Get Hotel Requests
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-event-travel.gethotelrequests
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-gethousingreservationrequests
+      description: Get Housing Requests
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-event-travel.gethousingreservationrequests
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.

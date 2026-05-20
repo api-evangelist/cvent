@@ -1,0 +1,107 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Reconcile Cvent registration fees with Stripe payments
+  description: For each paid Cvent registration, look up the matching Stripe charge and write the Stripe charge id and net amount back onto the Cvent attendee record for finance reconciliation.
+  tags:
+  - Cvent
+  - Integration
+  - Payments
+  - stripe
+  created: '2026-05-20'
+  modified: '2026-05-20'
+binds:
+- namespace: env
+  keys:
+    CVENT_API_KEY: CVENT_API_KEY
+    STRIPE_API_KEY: STRIPE_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: cvent
+    baseUri: https://api-platform.cvent.com
+    description: Cvent API operations consumed by this integration.
+    resources:
+    - name: ea-attendees
+      path: /ea/attendees
+      operations:
+      - name: listattendees
+        method: GET
+        description: List paid Cvent attendees.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters: []
+    - name: ea-attendees-id
+      path: /ea/attendees/{id}
+      operations:
+      - name: updateattendee
+        method: PUT
+        description: Write Stripe charge id back to the attendee.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+  - type: http
+    namespace: stripe
+    baseUri: https://api.stripe.com
+    description: Stripe API operations consumed by this integration.
+    resources:
+    - name: v1-charges
+      path: /v1/charges
+      operations:
+      - name: listcharges
+        method: GET
+        description: 'Stripe API: listCharges'
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters: []
+  exposes:
+  - type: mcp
+    namespace: cvent-stripe-mcp
+    description: MCP adapter for the cvent-stripe integration.
+    tools:
+    - name: cvent_stripe
+      description: Execute the cvent stripe integration end-to-end.
+      inputSchema:
+        type: object
+        properties:
+          trigger_event:
+            type: object
+            description: Triggering event payload.
+        required:
+        - trigger_event
+  - type: rest
+    namespace: cvent-stripe-rest
+    port: 8080
+    description: REST adapter for the cvent-stripe integration.
+    resources:
+    - path: /cvent-stripe
+      name: cvent-stripe
+      description: REST surface for the cvent-stripe integration.
+      operations:
+      - method: POST
+        name: trigger
+        description: Trigger the cvent-stripe integration.
+        call: cvent_stripe
+        with:
+          trigger_event: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.

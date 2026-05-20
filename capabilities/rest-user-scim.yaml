@@ -1,0 +1,453 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Cvent REST APIs — User SCIM
+  description: 'Cvent REST APIs — User SCIM. 11 operations. Lead operation: Get SCIM Groups. Self-contained Naftiko capability covering one business surface.'
+  tags:
+  - Cvent
+  - User SCIM
+  created: '2026-05-20'
+  modified: '2026-05-20'
+binds:
+- namespace: env
+  keys:
+    CVENT_API_KEY: CVENT_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: rest-user-scim
+    baseUri: https://api-platform.cvent.com/ea
+    description: Cvent REST APIs — User SCIM business capability. Self-contained, no shared references.
+    resources:
+    - name: scim-v2-groups
+      path: /scim/v2/Groups
+      operations:
+      - name: getusergroups
+        method: GET
+        description: Get SCIM Groups
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters: []
+    - name: scim-v2-resourcetypes
+      path: /scim/v2/ResourceTypes
+      operations:
+      - name: getresourcetypes
+        method: GET
+        description: List Resource Types
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters: []
+    - name: scim-v2-resourcetypes-id
+      path: /scim/v2/ResourceTypes/{id}
+      operations:
+      - name: getresourcetype
+        method: GET
+        description: Get Resource Type
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+    - name: scim-v2-schemas
+      path: /scim/v2/Schemas
+      operations:
+      - name: getschemas
+        method: GET
+        description: List Schemas
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters: []
+    - name: scim-v2-schemas-id
+      path: /scim/v2/Schemas/{id}
+      operations:
+      - name: getschema
+        method: GET
+        description: Get Schema
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+    - name: scim-v2-serviceproviderconfig
+      path: /scim/v2/ServiceProviderConfig
+      operations:
+      - name: getserviceproviderconfig
+        method: GET
+        description: Get Service Provider Config
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters: []
+    - name: scim-v2-users
+      path: /scim/v2/Users
+      operations:
+      - name: createuser
+        method: POST
+        description: Create User
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+      - name: listusers
+        method: GET
+        description: List Users
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: filter
+          in: query
+          type: string
+          description: 'A filter string passed in the body of the request, narrows search results and supports the combination of logical and comparison operators.
+
+            The filter adheres to the pattern filter=''field'' comparisonT'
+    - name: scim-v2-users-id
+      path: /scim/v2/Users/{id}
+      operations:
+      - name: getuser
+        method: GET
+        description: Get User
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+      - name: updateuser
+        method: PUT
+        description: Update User
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+      - name: deleteuser
+        method: DELETE
+        description: Delete User
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+  exposes:
+  - type: rest
+    namespace: rest-user-scim-rest
+    port: 8080
+    description: REST adapter for Cvent REST APIs — User SCIM. One resource per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/scim/v2/Groups
+      name: scim-v2-groups
+      description: REST surface for scim-v2-groups.
+      operations:
+      - method: GET
+        name: getusergroups
+        description: Get SCIM Groups
+        call: rest-user-scim.getusergroups
+        with: {}
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/scim/v2/ResourceTypes
+      name: scim-v2-resourcetypes
+      description: REST surface for scim-v2-resourcetypes.
+      operations:
+      - method: GET
+        name: getresourcetypes
+        description: List Resource Types
+        call: rest-user-scim.getresourcetypes
+        with: {}
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/scim/v2/ResourceTypes/{id}
+      name: scim-v2-resourcetypes-id
+      description: REST surface for scim-v2-resourcetypes-id.
+      operations:
+      - method: GET
+        name: getresourcetype
+        description: Get Resource Type
+        call: rest-user-scim.getresourcetype
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/scim/v2/Schemas
+      name: scim-v2-schemas
+      description: REST surface for scim-v2-schemas.
+      operations:
+      - method: GET
+        name: getschemas
+        description: List Schemas
+        call: rest-user-scim.getschemas
+        with: {}
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/scim/v2/Schemas/{id}
+      name: scim-v2-schemas-id
+      description: REST surface for scim-v2-schemas-id.
+      operations:
+      - method: GET
+        name: getschema
+        description: Get Schema
+        call: rest-user-scim.getschema
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/scim/v2/ServiceProviderConfig
+      name: scim-v2-serviceproviderconfig
+      description: REST surface for scim-v2-serviceproviderconfig.
+      operations:
+      - method: GET
+        name: getserviceproviderconfig
+        description: Get Service Provider Config
+        call: rest-user-scim.getserviceproviderconfig
+        with: {}
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/scim/v2/Users
+      name: scim-v2-users
+      description: REST surface for scim-v2-users.
+      operations:
+      - method: POST
+        name: createuser
+        description: Create User
+        call: rest-user-scim.createuser
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: GET
+        name: listusers
+        description: List Users
+        call: rest-user-scim.listusers
+        with:
+          filter: rest.filter
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/scim/v2/Users/{id}
+      name: scim-v2-users-id
+      description: REST surface for scim-v2-users-id.
+      operations:
+      - method: GET
+        name: getuser
+        description: Get User
+        call: rest-user-scim.getuser
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: updateuser
+        description: Update User
+        call: rest-user-scim.updateuser
+        with:
+          id: rest.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deleteuser
+        description: Delete User
+        call: rest-user-scim.deleteuser
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: rest-user-scim-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Cvent REST APIs — User SCIM. One tool per consumed operation, routed inline through this capability's consumes block.
+    tools:
+    - name: cvent-getusergroups
+      description: Get SCIM Groups
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-user-scim.getusergroups
+      with: {}
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-getresourcetypes
+      description: List Resource Types
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-user-scim.getresourcetypes
+      with: {}
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-getresourcetype
+      description: Get Resource Type
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-user-scim.getresourcetype
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-getschemas
+      description: List Schemas
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-user-scim.getschemas
+      with: {}
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-getschema
+      description: Get Schema
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-user-scim.getschema
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-getserviceproviderconfig
+      description: Get Service Provider Config
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-user-scim.getserviceproviderconfig
+      with: {}
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-createuser
+      description: Create User
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: rest-user-scim.createuser
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-listusers
+      description: List Users
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-user-scim.listusers
+      with:
+        filter: tools.filter
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-getuser
+      description: Get User
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-user-scim.getuser
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-updateuser
+      description: Update User
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: rest-user-scim.updateuser
+      with:
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-deleteuser
+      description: Delete User
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: rest-user-scim.deleteuser
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.

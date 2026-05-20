@@ -1,0 +1,389 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Cvent REST APIs — Travel RFPs
+  description: 'Cvent REST APIs — Travel RFPs. 9 operations. Lead operation: List Travel Programs. Self-contained Naftiko capability covering one business surface.'
+  tags:
+  - Cvent
+  - Travel RFPs
+  created: '2026-05-20'
+  modified: '2026-05-20'
+binds:
+- namespace: env
+  keys:
+    CVENT_API_KEY: CVENT_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: rest-travel-rfps
+    baseUri: https://api-platform.cvent.com/ea
+    description: Cvent REST APIs — Travel RFPs business capability. Self-contained, no shared references.
+    resources:
+    - name: travel-programs
+      path: /travel-programs
+      operations:
+      - name: listtravelprograms
+        method: GET
+        description: List Travel Programs
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters: []
+    - name: travel-programs-questions
+      path: /travel-programs/questions
+      operations:
+      - name: listtravelprogramsquestions
+        method: GET
+        description: List Travel Programs Questions
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters: []
+    - name: travel-programs-programid
+      path: /travel-programs/{programId}
+      operations:
+      - name: gettravelprogram
+        method: GET
+        description: Get Travel Program
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: programId
+          in: path
+          type: string
+          description: Path parameter programId.
+          required: true
+    - name: travel-programs-programid-questions
+      path: /travel-programs/{programId}/questions
+      operations:
+      - name: listtravelprogramquestions
+        method: GET
+        description: List Travel Program Questions
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: programId
+          in: path
+          type: string
+          description: Path parameter programId.
+          required: true
+    - name: travel-programs-programid-questions-questionid
+      path: /travel-programs/{programId}/questions/{questionId}
+      operations:
+      - name: gettravelprogramquestion
+        method: GET
+        description: Get Travel Program Question
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: questionId
+          in: path
+          type: string
+          description: Path parameter questionId.
+          required: true
+        - name: programId
+          in: path
+          type: string
+          description: Path parameter programId.
+          required: true
+    - name: travel-proposals
+      path: /travel-proposals
+      operations:
+      - name: listtravelproposals
+        method: GET
+        description: List Travel Proposals
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters: []
+    - name: travel-proposals-bids
+      path: /travel-proposals/bids
+      operations:
+      - name: listtravelproposalbids
+        method: GET
+        description: List Travel Proposal Bids
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters: []
+    - name: travel-proposals-bids-travelproposalbidid
+      path: /travel-proposals/bids/{travelProposalBidId}
+      operations:
+      - name: gettravelproposalbid
+        method: GET
+        description: Get Travel Proposal Bid
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: travelProposalBidId
+          in: path
+          type: string
+          description: Path parameter travelProposalBidId.
+          required: true
+    - name: travel-proposals-travelproposalid
+      path: /travel-proposals/{travelProposalId}
+      operations:
+      - name: gettravelproposal
+        method: GET
+        description: Get Travel Proposal
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: travelProposalId
+          in: path
+          type: string
+          description: Path parameter travelProposalId.
+          required: true
+  exposes:
+  - type: rest
+    namespace: rest-travel-rfps-rest
+    port: 8080
+    description: REST adapter for Cvent REST APIs — Travel RFPs. One resource per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/travel-programs
+      name: travel-programs
+      description: REST surface for travel-programs.
+      operations:
+      - method: GET
+        name: listtravelprograms
+        description: List Travel Programs
+        call: rest-travel-rfps.listtravelprograms
+        with: {}
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/travel-programs/questions
+      name: travel-programs-questions
+      description: REST surface for travel-programs-questions.
+      operations:
+      - method: GET
+        name: listtravelprogramsquestions
+        description: List Travel Programs Questions
+        call: rest-travel-rfps.listtravelprogramsquestions
+        with: {}
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/travel-programs/{programId}
+      name: travel-programs-programid
+      description: REST surface for travel-programs-programid.
+      operations:
+      - method: GET
+        name: gettravelprogram
+        description: Get Travel Program
+        call: rest-travel-rfps.gettravelprogram
+        with:
+          programId: rest.programId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/travel-programs/{programId}/questions
+      name: travel-programs-programid-questions
+      description: REST surface for travel-programs-programid-questions.
+      operations:
+      - method: GET
+        name: listtravelprogramquestions
+        description: List Travel Program Questions
+        call: rest-travel-rfps.listtravelprogramquestions
+        with:
+          programId: rest.programId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/travel-programs/{programId}/questions/{questionId}
+      name: travel-programs-programid-questions-questionid
+      description: REST surface for travel-programs-programid-questions-questionid.
+      operations:
+      - method: GET
+        name: gettravelprogramquestion
+        description: Get Travel Program Question
+        call: rest-travel-rfps.gettravelprogramquestion
+        with:
+          questionId: rest.questionId
+          programId: rest.programId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/travel-proposals
+      name: travel-proposals
+      description: REST surface for travel-proposals.
+      operations:
+      - method: GET
+        name: listtravelproposals
+        description: List Travel Proposals
+        call: rest-travel-rfps.listtravelproposals
+        with: {}
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/travel-proposals/bids
+      name: travel-proposals-bids
+      description: REST surface for travel-proposals-bids.
+      operations:
+      - method: GET
+        name: listtravelproposalbids
+        description: List Travel Proposal Bids
+        call: rest-travel-rfps.listtravelproposalbids
+        with: {}
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/travel-proposals/bids/{travelProposalBidId}
+      name: travel-proposals-bids-travelproposalbidid
+      description: REST surface for travel-proposals-bids-travelproposalbidid.
+      operations:
+      - method: GET
+        name: gettravelproposalbid
+        description: Get Travel Proposal Bid
+        call: rest-travel-rfps.gettravelproposalbid
+        with:
+          travelProposalBidId: rest.travelProposalBidId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/travel-proposals/{travelProposalId}
+      name: travel-proposals-travelproposalid
+      description: REST surface for travel-proposals-travelproposalid.
+      operations:
+      - method: GET
+        name: gettravelproposal
+        description: Get Travel Proposal
+        call: rest-travel-rfps.gettravelproposal
+        with:
+          travelProposalId: rest.travelProposalId
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: rest-travel-rfps-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Cvent REST APIs — Travel RFPs. One tool per consumed operation, routed inline through this capability's consumes block.
+    tools:
+    - name: cvent-listtravelprograms
+      description: List Travel Programs
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-travel-rfps.listtravelprograms
+      with: {}
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-listtravelprogramsquestions
+      description: List Travel Programs Questions
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-travel-rfps.listtravelprogramsquestions
+      with: {}
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-gettravelprogram
+      description: Get Travel Program
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-travel-rfps.gettravelprogram
+      with:
+        programId: tools.programId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-listtravelprogramquestions
+      description: List Travel Program Questions
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-travel-rfps.listtravelprogramquestions
+      with:
+        programId: tools.programId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-gettravelprogramquestion
+      description: Get Travel Program Question
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-travel-rfps.gettravelprogramquestion
+      with:
+        questionId: tools.questionId
+        programId: tools.programId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-listtravelproposals
+      description: List Travel Proposals
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-travel-rfps.listtravelproposals
+      with: {}
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-listtravelproposalbids
+      description: List Travel Proposal Bids
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-travel-rfps.listtravelproposalbids
+      with: {}
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-gettravelproposalbid
+      description: Get Travel Proposal Bid
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-travel-rfps.gettravelproposalbid
+      with:
+        travelProposalBidId: tools.travelProposalBidId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-gettravelproposal
+      description: Get Travel Proposal
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-travel-rfps.gettravelproposal
+      with:
+        travelProposalId: tools.travelProposalId
+      outputParameters:
+      - type: object
+        mapping: $.

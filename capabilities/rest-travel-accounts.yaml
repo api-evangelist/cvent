@@ -1,0 +1,186 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Cvent REST APIs — Travel Accounts
+  description: 'Cvent REST APIs — Travel Accounts. 4 operations. Lead operation: List Travel Accounts. Self-contained Naftiko capability covering one business surface.'
+  tags:
+  - Cvent
+  - Travel Accounts
+  created: '2026-05-20'
+  modified: '2026-05-20'
+binds:
+- namespace: env
+  keys:
+    CVENT_API_KEY: CVENT_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: rest-travel-accounts
+    baseUri: https://api-platform.cvent.com/ea
+    description: Cvent REST APIs — Travel Accounts business capability. Self-contained, no shared references.
+    resources:
+    - name: travel-accounts
+      path: /travel-accounts
+      operations:
+      - name: listtravelaccounts
+        method: GET
+        description: List Travel Accounts
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters: []
+    - name: travel-accounts-supplier-accounts
+      path: /travel-accounts/supplier-accounts
+      operations:
+      - name: listsupplieraccounts
+        method: GET
+        description: List Supplier Accounts
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters: []
+    - name: travel-accounts-travelaccountid
+      path: /travel-accounts/{travelAccountId}
+      operations:
+      - name: gettravelaccount
+        method: GET
+        description: Get Travel Account
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: travelAccountId
+          in: path
+          type: string
+          description: Path parameter travelAccountId.
+          required: true
+    - name: travel-accounts-travelaccountid-supplier-accounts
+      path: /travel-accounts/{travelAccountId}/supplier-accounts
+      operations:
+      - name: getsupplieraccount
+        method: GET
+        description: Get Supplier Account
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: travelAccountId
+          in: path
+          type: string
+          description: Path parameter travelAccountId.
+          required: true
+  exposes:
+  - type: rest
+    namespace: rest-travel-accounts-rest
+    port: 8080
+    description: REST adapter for Cvent REST APIs — Travel Accounts. One resource per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/travel-accounts
+      name: travel-accounts
+      description: REST surface for travel-accounts.
+      operations:
+      - method: GET
+        name: listtravelaccounts
+        description: List Travel Accounts
+        call: rest-travel-accounts.listtravelaccounts
+        with: {}
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/travel-accounts/supplier-accounts
+      name: travel-accounts-supplier-accounts
+      description: REST surface for travel-accounts-supplier-accounts.
+      operations:
+      - method: GET
+        name: listsupplieraccounts
+        description: List Supplier Accounts
+        call: rest-travel-accounts.listsupplieraccounts
+        with: {}
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/travel-accounts/{travelAccountId}
+      name: travel-accounts-travelaccountid
+      description: REST surface for travel-accounts-travelaccountid.
+      operations:
+      - method: GET
+        name: gettravelaccount
+        description: Get Travel Account
+        call: rest-travel-accounts.gettravelaccount
+        with:
+          travelAccountId: rest.travelAccountId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/travel-accounts/{travelAccountId}/supplier-accounts
+      name: travel-accounts-travelaccountid-supplier-accounts
+      description: REST surface for travel-accounts-travelaccountid-supplier-accounts.
+      operations:
+      - method: GET
+        name: getsupplieraccount
+        description: Get Supplier Account
+        call: rest-travel-accounts.getsupplieraccount
+        with:
+          travelAccountId: rest.travelAccountId
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: rest-travel-accounts-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Cvent REST APIs — Travel Accounts. One tool per consumed operation, routed inline through this capability's consumes block.
+    tools:
+    - name: cvent-listtravelaccounts
+      description: List Travel Accounts
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-travel-accounts.listtravelaccounts
+      with: {}
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-listsupplieraccounts
+      description: List Supplier Accounts
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-travel-accounts.listsupplieraccounts
+      with: {}
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-gettravelaccount
+      description: Get Travel Account
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-travel-accounts.gettravelaccount
+      with:
+        travelAccountId: tools.travelAccountId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-getsupplieraccount
+      description: Get Supplier Account
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-travel-accounts.getsupplieraccount
+      with:
+        travelAccountId: tools.travelAccountId
+      outputParameters:
+      - type: object
+        mapping: $.

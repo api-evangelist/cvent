@@ -1,0 +1,124 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Push Cvent registrations to HubSpot contacts and deals
+  description: When a Cvent registration is captured, upsert the corresponding HubSpot Contact and attach an event-attended Deal so sales pipeline reflects in-person and virtual touchpoints.
+  tags:
+  - Cvent
+  - Integration
+  - CRM
+  - hubspot
+  created: '2026-05-20'
+  modified: '2026-05-20'
+binds:
+- namespace: env
+  keys:
+    CVENT_API_KEY: CVENT_API_KEY
+    HUBSPOT_API_KEY: HUBSPOT_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: cvent
+    baseUri: https://api-platform.cvent.com
+    description: Cvent API operations consumed by this integration.
+    resources:
+    - name: ea-attendees
+      path: /ea/attendees
+      operations:
+      - name: listattendees
+        method: GET
+        description: List Cvent attendees.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters: []
+    - name: ea-events-id
+      path: /ea/events/{id}
+      operations:
+      - name: getevent
+        method: GET
+        description: Get a Cvent event for deal context.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+  - type: http
+    namespace: hubspot
+    baseUri: https://api.hubapi.com
+    description: HubSpot CRM API operations consumed by this integration.
+    resources:
+    - name: crm-v3-objects-contacts
+      path: /crm/v3/objects/contacts
+      operations:
+      - name: createorupdatecontact
+        method: POST
+        description: 'HubSpot CRM API: createOrUpdateContact'
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: crm-v3-objects-deals
+      path: /crm/v3/objects/deals
+      operations:
+      - name: createdeal
+        method: POST
+        description: 'HubSpot CRM API: createDeal'
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+  exposes:
+  - type: mcp
+    namespace: cvent-hubspot-mcp
+    description: MCP adapter for the cvent-hubspot integration.
+    tools:
+    - name: cvent_hubspot
+      description: Execute the cvent hubspot integration end-to-end.
+      inputSchema:
+        type: object
+        properties:
+          trigger_event:
+            type: object
+            description: Triggering event payload.
+        required:
+        - trigger_event
+  - type: rest
+    namespace: cvent-hubspot-rest
+    port: 8080
+    description: REST adapter for the cvent-hubspot integration.
+    resources:
+    - path: /cvent-hubspot
+      name: cvent-hubspot
+      description: REST surface for the cvent-hubspot integration.
+      operations:
+      - method: POST
+        name: trigger
+        description: Trigger the cvent-hubspot integration.
+        call: cvent_hubspot
+        with:
+          trigger_event: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.

@@ -1,0 +1,89 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Cvent REST APIs — Attendee Messages
+  description: 'Cvent REST APIs — Attendee Messages. 1 operations. Lead operation: Get Messaging Members. Self-contained Naftiko capability covering one business surface.'
+  tags:
+  - Cvent
+  - Attendee Messages
+  created: '2026-05-20'
+  modified: '2026-05-20'
+binds:
+- namespace: env
+  keys:
+    CVENT_API_KEY: CVENT_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: rest-attendee-messages
+    baseUri: https://api-platform.cvent.com/ea
+    description: Cvent REST APIs — Attendee Messages business capability. Self-contained, no shared references.
+    resources:
+    - name: events-eventid-attendee-messages-members
+      path: /events/{eventId}/attendee-messages/members
+      operations:
+      - name: getattendeemessagesmembers
+        method: GET
+        description: Get Messaging Members
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: filter
+          in: query
+          type: string
+          description: 'Filters are used to narrow the results returned and support a combination of logical and comparison
+
+            operators.
+
+
+            The filter adheres to the pattern `filter=''field'' comparisonType ''value''`.
+
+
+            These are th'
+          required: true
+        - name: eventId
+          in: path
+          type: string
+          description: Path parameter eventId.
+          required: true
+  exposes:
+  - type: rest
+    namespace: rest-attendee-messages-rest
+    port: 8080
+    description: REST adapter for Cvent REST APIs — Attendee Messages. One resource per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/events/{eventId}/attendee-messages/members
+      name: events-eventid-attendee-messages-members
+      description: REST surface for events-eventid-attendee-messages-members.
+      operations:
+      - method: GET
+        name: getattendeemessagesmembers
+        description: Get Messaging Members
+        call: rest-attendee-messages.getattendeemessagesmembers
+        with:
+          filter: rest.filter
+          eventId: rest.eventId
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: rest-attendee-messages-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Cvent REST APIs — Attendee Messages. One tool per consumed operation, routed inline through this capability's consumes block.
+    tools:
+    - name: cvent-getattendeemessagesmembers
+      description: Get Messaging Members
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-attendee-messages.getattendeemessagesmembers
+      with:
+        filter: tools.filter
+        eventId: tools.eventId
+      outputParameters:
+      - type: object
+        mapping: $.

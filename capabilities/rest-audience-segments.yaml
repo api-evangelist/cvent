@@ -1,0 +1,445 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Cvent REST APIs — Audience Segments
+  description: 'Cvent REST APIs — Audience Segments. 10 operations. Lead operation: List Audience Segments. Self-contained Naftiko capability covering one business surface.'
+  tags:
+  - Cvent
+  - Audience Segments
+  created: '2026-05-20'
+  modified: '2026-05-20'
+binds:
+- namespace: env
+  keys:
+    CVENT_API_KEY: CVENT_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: rest-audience-segments
+    baseUri: https://api-platform.cvent.com/ea
+    description: Cvent REST APIs — Audience Segments business capability. Self-contained, no shared references.
+    resources:
+    - name: attendees-attendeeid-audience-segments
+      path: /attendees/{attendeeId}/audience-segments
+      operations:
+      - name: disassociateattendeefromaudiencesegments
+        method: DELETE
+        description: Delete Attendee Associations
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: attendeeId
+          in: path
+          type: string
+          description: Path parameter attendeeId.
+          required: true
+    - name: audience-segments
+      path: /audience-segments
+      operations:
+      - name: createaudiencesegment
+        method: POST
+        description: Create Audience Segment
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: listaudiencesegments
+        method: GET
+        description: List Audience Segments
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters: []
+    - name: audience-segments-filter
+      path: /audience-segments/filter
+      operations:
+      - name: listaudiencesegmentspostfilter
+        method: POST
+        description: List Audience Segments
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: audience-segments-audiencesegmentid
+      path: /audience-segments/{audienceSegmentId}
+      operations:
+      - name: getaudiencesegmentbyid
+        method: GET
+        description: Get Audience Segment
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: audienceSegmentId
+          in: path
+          type: string
+          description: Path parameter audienceSegmentId.
+          required: true
+      - name: updateaudiencesegment
+        method: PUT
+        description: Update Audience Segment
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: audienceSegmentId
+          in: path
+          type: string
+          description: Path parameter audienceSegmentId.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: deleteaudiencesegment
+        method: DELETE
+        description: Delete Audience Segment
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: audienceSegmentId
+          in: path
+          type: string
+          description: Path parameter audienceSegmentId.
+          required: true
+    - name: audience-segments-audiencesegmentid-attendees
+      path: /audience-segments/{audienceSegmentId}/attendees
+      operations:
+      - name: listsegmentassociatedattendees
+        method: GET
+        description: List Associated Attendees
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: audienceSegmentId
+          in: path
+          type: string
+          description: Path parameter audienceSegmentId.
+          required: true
+    - name: audience-segments-audiencesegmentid-attendees-attendeeid
+      path: /audience-segments/{audienceSegmentId}/attendees/{attendeeId}
+      operations:
+      - name: associateattendeetosegment
+        method: PUT
+        description: Associate Attendee to Segment
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: attendeeId
+          in: path
+          type: string
+          description: Path parameter attendeeId.
+          required: true
+        - name: audienceSegmentId
+          in: path
+          type: string
+          description: Path parameter audienceSegmentId.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+      - name: disassociateattendeefromaudiencesegment
+        method: DELETE
+        description: Disassociate Attendee
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: attendeeId
+          in: path
+          type: string
+          description: Path parameter attendeeId.
+          required: true
+        - name: audienceSegmentId
+          in: path
+          type: string
+          description: Path parameter audienceSegmentId.
+          required: true
+  exposes:
+  - type: rest
+    namespace: rest-audience-segments-rest
+    port: 8080
+    description: REST adapter for Cvent REST APIs — Audience Segments. One resource per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/attendees/{attendeeId}/audience-segments
+      name: attendees-attendeeid-audience-segments
+      description: REST surface for attendees-attendeeid-audience-segments.
+      operations:
+      - method: DELETE
+        name: disassociateattendeefromaudiencesegments
+        description: Delete Attendee Associations
+        call: rest-audience-segments.disassociateattendeefromaudiencesegments
+        with:
+          attendeeId: rest.attendeeId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/audience-segments
+      name: audience-segments
+      description: REST surface for audience-segments.
+      operations:
+      - method: POST
+        name: createaudiencesegment
+        description: Create Audience Segment
+        call: rest-audience-segments.createaudiencesegment
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: GET
+        name: listaudiencesegments
+        description: List Audience Segments
+        call: rest-audience-segments.listaudiencesegments
+        with: {}
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/audience-segments/filter
+      name: audience-segments-filter
+      description: REST surface for audience-segments-filter.
+      operations:
+      - method: POST
+        name: listaudiencesegmentspostfilter
+        description: List Audience Segments
+        call: rest-audience-segments.listaudiencesegmentspostfilter
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/audience-segments/{audienceSegmentId}
+      name: audience-segments-audiencesegmentid
+      description: REST surface for audience-segments-audiencesegmentid.
+      operations:
+      - method: GET
+        name: getaudiencesegmentbyid
+        description: Get Audience Segment
+        call: rest-audience-segments.getaudiencesegmentbyid
+        with:
+          audienceSegmentId: rest.audienceSegmentId
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: updateaudiencesegment
+        description: Update Audience Segment
+        call: rest-audience-segments.updateaudiencesegment
+        with:
+          audienceSegmentId: rest.audienceSegmentId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deleteaudiencesegment
+        description: Delete Audience Segment
+        call: rest-audience-segments.deleteaudiencesegment
+        with:
+          audienceSegmentId: rest.audienceSegmentId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/audience-segments/{audienceSegmentId}/attendees
+      name: audience-segments-audiencesegmentid-attendees
+      description: REST surface for audience-segments-audiencesegmentid-attendees.
+      operations:
+      - method: GET
+        name: listsegmentassociatedattendees
+        description: List Associated Attendees
+        call: rest-audience-segments.listsegmentassociatedattendees
+        with:
+          audienceSegmentId: rest.audienceSegmentId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/audience-segments/{audienceSegmentId}/attendees/{attendeeId}
+      name: audience-segments-audiencesegmentid-attendees-attendeeid
+      description: REST surface for audience-segments-audiencesegmentid-attendees-attendeeid.
+      operations:
+      - method: PUT
+        name: associateattendeetosegment
+        description: Associate Attendee to Segment
+        call: rest-audience-segments.associateattendeetosegment
+        with:
+          attendeeId: rest.attendeeId
+          audienceSegmentId: rest.audienceSegmentId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: disassociateattendeefromaudiencesegment
+        description: Disassociate Attendee
+        call: rest-audience-segments.disassociateattendeefromaudiencesegment
+        with:
+          attendeeId: rest.attendeeId
+          audienceSegmentId: rest.audienceSegmentId
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: rest-audience-segments-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Cvent REST APIs — Audience Segments. One tool per consumed operation, routed inline through this capability's consumes block.
+    tools:
+    - name: cvent-disassociateattendeefromaudiencesegments
+      description: Delete Attendee Associations
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: rest-audience-segments.disassociateattendeefromaudiencesegments
+      with:
+        attendeeId: tools.attendeeId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-createaudiencesegment
+      description: Create Audience Segment
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: rest-audience-segments.createaudiencesegment
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-listaudiencesegments
+      description: List Audience Segments
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-audience-segments.listaudiencesegments
+      with: {}
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-listaudiencesegmentspostfilter
+      description: List Audience Segments
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: rest-audience-segments.listaudiencesegmentspostfilter
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-getaudiencesegmentbyid
+      description: Get Audience Segment
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-audience-segments.getaudiencesegmentbyid
+      with:
+        audienceSegmentId: tools.audienceSegmentId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-updateaudiencesegment
+      description: Update Audience Segment
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: rest-audience-segments.updateaudiencesegment
+      with:
+        audienceSegmentId: tools.audienceSegmentId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-deleteaudiencesegment
+      description: Delete Audience Segment
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: rest-audience-segments.deleteaudiencesegment
+      with:
+        audienceSegmentId: tools.audienceSegmentId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-listsegmentassociatedattendees
+      description: List Associated Attendees
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-audience-segments.listsegmentassociatedattendees
+      with:
+        audienceSegmentId: tools.audienceSegmentId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-associateattendeetosegment
+      description: Associate Attendee to Segment
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: rest-audience-segments.associateattendeetosegment
+      with:
+        attendeeId: tools.attendeeId
+        audienceSegmentId: tools.audienceSegmentId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-disassociateattendeefromaudiencesegment
+      description: Disassociate Attendee
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: rest-audience-segments.disassociateattendeefromaudiencesegment
+      with:
+        attendeeId: tools.attendeeId
+        audienceSegmentId: tools.audienceSegmentId
+      outputParameters:
+      - type: object
+        mapping: $.

@@ -1,0 +1,100 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Add Cvent registrants to a Mailchimp audience
+  description: When a Cvent attendee registers, add or update them in a Mailchimp audience with tags for the event so post-event follow-up campaigns can target real registrants.
+  tags:
+  - Cvent
+  - Integration
+  - Email marketing
+  - mailchimp
+  created: '2026-05-20'
+  modified: '2026-05-20'
+binds:
+- namespace: env
+  keys:
+    CVENT_API_KEY: CVENT_API_KEY
+    MAILCHIMP_API_KEY: MAILCHIMP_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: cvent
+    baseUri: https://api-platform.cvent.com
+    description: Cvent API operations consumed by this integration.
+    resources:
+    - name: ea-attendees
+      path: /ea/attendees
+      operations:
+      - name: listattendees
+        method: GET
+        description: List event attendees.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters: []
+  - type: http
+    namespace: mailchimp
+    baseUri: https://us1.api.mailchimp.com
+    description: Mailchimp Marketing API operations consumed by this integration.
+    resources:
+    - name: 3-0-lists-list-id-members-subscriber-hash
+      path: /3.0/lists/{list_id}/members/{subscriber_hash}
+      operations:
+      - name: upsertlistmember
+        method: PUT
+        description: 'Mailchimp Marketing API: upsertListMember'
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: list_id
+          in: path
+          type: string
+          description: Path parameter list_id.
+          required: true
+        - name: subscriber_hash
+          in: path
+          type: string
+          description: Path parameter subscriber_hash.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+  exposes:
+  - type: mcp
+    namespace: cvent-mailchimp-mcp
+    description: MCP adapter for the cvent-mailchimp integration.
+    tools:
+    - name: cvent_mailchimp
+      description: Execute the cvent mailchimp integration end-to-end.
+      inputSchema:
+        type: object
+        properties:
+          trigger_event:
+            type: object
+            description: Triggering event payload.
+        required:
+        - trigger_event
+  - type: rest
+    namespace: cvent-mailchimp-rest
+    port: 8080
+    description: REST adapter for the cvent-mailchimp integration.
+    resources:
+    - path: /cvent-mailchimp
+      name: cvent-mailchimp
+      description: REST surface for the cvent-mailchimp integration.
+      operations:
+      - method: POST
+        name: trigger
+        description: Trigger the cvent-mailchimp integration.
+        call: cvent_mailchimp
+        with:
+          trigger_event: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.

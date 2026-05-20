@@ -1,0 +1,90 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Feed Cvent registration funnel events into GA4
+  description: Forward Cvent registration funnel stage transitions (started, paid, registered, attended) into GA4 as custom events so marketing teams can attribute event-driven conversions.
+  tags:
+  - Cvent
+  - Integration
+  - Analytics
+  - google-analytics
+  created: '2026-05-20'
+  modified: '2026-05-20'
+binds:
+- namespace: env
+  keys:
+    CVENT_API_KEY: CVENT_API_KEY
+    GOOGLE_ANALYTICS_API_KEY: GOOGLE_ANALYTICS_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: cvent
+    baseUri: https://api-platform.cvent.com
+    description: Cvent API operations consumed by this integration.
+    resources:
+    - name: ea-attendees
+      path: /ea/attendees
+      operations:
+      - name: listattendees
+        method: GET
+        description: List attendees and their funnel stage.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters: []
+  - type: http
+    namespace: google-analytics
+    baseUri: https://www.google-analytics.com
+    description: GA4 Measurement Protocol operations consumed by this integration.
+    resources:
+    - name: mp-collect
+      path: /mp/collect
+      operations:
+      - name: collectevent
+        method: POST
+        description: 'GA4 Measurement Protocol: collectEvent'
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+  exposes:
+  - type: mcp
+    namespace: cvent-google-analytics-mcp
+    description: MCP adapter for the cvent-google-analytics integration.
+    tools:
+    - name: cvent_google_analytics
+      description: Execute the cvent google analytics integration end-to-end.
+      inputSchema:
+        type: object
+        properties:
+          trigger_event:
+            type: object
+            description: Triggering event payload.
+        required:
+        - trigger_event
+  - type: rest
+    namespace: cvent-google-analytics-rest
+    port: 8080
+    description: REST adapter for the cvent-google-analytics integration.
+    resources:
+    - path: /cvent-google-analytics
+      name: cvent-google-analytics
+      description: REST surface for the cvent-google-analytics integration.
+      operations:
+      - method: POST
+        name: trigger
+        description: Trigger the cvent-google-analytics integration.
+        call: cvent_google_analytics
+        with:
+          trigger_event: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.

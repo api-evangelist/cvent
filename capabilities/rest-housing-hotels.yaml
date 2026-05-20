@@ -1,0 +1,88 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Cvent REST APIs — Housing Hotels
+  description: 'Cvent REST APIs — Housing Hotels. 1 operations. Lead operation: Update Hotel Room Rates. Self-contained Naftiko capability covering one business surface.'
+  tags:
+  - Cvent
+  - Housing Hotels
+  created: '2026-05-20'
+  modified: '2026-05-20'
+binds:
+- namespace: env
+  keys:
+    CVENT_API_KEY: CVENT_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: rest-housing-hotels
+    baseUri: https://api-platform.cvent.com/ea
+    description: Cvent REST APIs — Housing Hotels business capability. Self-contained, no shared references.
+    resources:
+    - name: housing-hotels-hotelcode-rooms-roomcode-rates
+      path: /housing-hotels/{hotelCode}/rooms/{roomCode}/rates
+      operations:
+      - name: updatehotelroomrates
+        method: PUT
+        description: Update Hotel Room Rates
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: hotelCode
+          in: path
+          type: string
+          description: Path parameter hotelCode.
+          required: true
+        - name: roomCode
+          in: path
+          type: string
+          description: Path parameter roomCode.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+  exposes:
+  - type: rest
+    namespace: rest-housing-hotels-rest
+    port: 8080
+    description: REST adapter for Cvent REST APIs — Housing Hotels. One resource per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/housing-hotels/{hotelCode}/rooms/{roomCode}/rates
+      name: housing-hotels-hotelcode-rooms-roomcode-rates
+      description: REST surface for housing-hotels-hotelcode-rooms-roomcode-rates.
+      operations:
+      - method: PUT
+        name: updatehotelroomrates
+        description: Update Hotel Room Rates
+        call: rest-housing-hotels.updatehotelroomrates
+        with:
+          hotelCode: rest.hotelCode
+          roomCode: rest.roomCode
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: rest-housing-hotels-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Cvent REST APIs — Housing Hotels. One tool per consumed operation, routed inline through this capability's consumes block.
+    tools:
+    - name: cvent-updatehotelroomrates
+      description: Update Hotel Room Rates
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: rest-housing-hotels.updatehotelroomrates
+      with:
+        hotelCode: tools.hotelCode
+        roomCode: tools.roomCode
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

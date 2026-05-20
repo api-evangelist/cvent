@@ -1,0 +1,1274 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Cvent REST APIs — Surveys
+  description: 'Cvent REST APIs — Surveys. 23 operations. Lead operation: List All Event Responses. Self-contained Naftiko capability covering one business surface.'
+  tags:
+  - Cvent
+  - Surveys
+  created: '2026-05-20'
+  modified: '2026-05-20'
+binds:
+- namespace: env
+  keys:
+    CVENT_API_KEY: CVENT_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: rest-surveys
+    baseUri: https://api-platform.cvent.com/ea
+    description: Cvent REST APIs — Surveys business capability. Self-contained, no shared references.
+    resources:
+    - name: events-surveys-responses
+      path: /events/surveys/responses
+      operations:
+      - name: getalleventsurveyresponses
+        method: GET
+        description: List All Event Responses
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: filter
+          in: query
+          type: string
+          description: 'Use filter query parameters to limit results
+
+            to data that matches your criteria. See
+
+            [Filters](/docs/rest-api/reference/filters) for details.
+
+
+            Supported fields and operators are listed below:
+
+
+            | Field'
+    - name: events-id-surveys
+      path: /events/{id}/surveys
+      operations:
+      - name: geteventsurveys
+        method: GET
+        description: List Event Surveys
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: filter
+          in: query
+          type: string
+          description: 'Use filter query parameters to limit results
+
+            to data that matches your criteria. See
+
+            [Filters](/docs/rest-api/reference/filters) for details.
+
+
+            Supported fields and operators are listed below:
+
+
+            | Field'
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+    - name: events-id-surveys-surveyid-questions
+      path: /events/{id}/surveys/{surveyId}/questions
+      operations:
+      - name: geteventsurveyquestions
+        method: GET
+        description: List Event Survey Questions
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: surveyId
+          in: path
+          type: string
+          description: Path parameter surveyId.
+          required: true
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+    - name: events-id-surveys-surveyid-respondents
+      path: /events/{id}/surveys/{surveyId}/respondents
+      operations:
+      - name: geteventsurveyrespondents
+        method: GET
+        description: List Event Survey Respondents
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: filter
+          in: query
+          type: string
+          description: 'Use filter query parameters to limit results
+
+            to data that matches your criteria. See
+
+            [Filters](/docs/rest-api/reference/filters) for details.
+
+
+            Supported fields and operators are listed below:
+
+
+            | Field'
+        - name: surveyId
+          in: path
+          type: string
+          description: Path parameter surveyId.
+          required: true
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+      - name: createeventsurveyrespondent
+        method: POST
+        description: Create Event Survey Respondent
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: surveyId
+          in: path
+          type: string
+          description: Path parameter surveyId.
+          required: true
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: events-id-surveys-surveyid-respondents-respondentid
+      path: /events/{id}/surveys/{surveyId}/respondents/{respondentId}
+      operations:
+      - name: updateeventsurveyrespondent
+        method: PUT
+        description: Update Event Survey Respondent
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: surveyId
+          in: path
+          type: string
+          description: Path parameter surveyId.
+          required: true
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+        - name: respondentId
+          in: path
+          type: string
+          description: Path parameter respondentId.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: events-id-surveys-surveyid-respondents-respondentid-response
+      path: /events/{id}/surveys/{surveyId}/respondents/{respondentId}/responses
+      operations:
+      - name: createeventsurveyresponses
+        method: POST
+        description: Create Event Survey Responses
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: surveyId
+          in: path
+          type: string
+          description: Path parameter surveyId.
+          required: true
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+        - name: respondentId
+          in: path
+          type: string
+          description: Path parameter respondentId.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: events-id-surveys-surveyid-responses
+      path: /events/{id}/surveys/{surveyId}/responses
+      operations:
+      - name: geteventsurveyresponses
+        method: GET
+        description: List Event Survey Responses
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: filter
+          in: query
+          type: string
+          description: 'Use filter query parameters to limit results
+
+            to data that matches your criteria. See
+
+            [Filters](/docs/rest-api/reference/filters) for details.
+
+
+            Supported fields and operators are listed below:
+
+
+            | Field'
+        - name: surveyId
+          in: path
+          type: string
+          description: Path parameter surveyId.
+          required: true
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+    - name: large-choices
+      path: /large-choices
+      operations:
+      - name: getlargechoices
+        method: GET
+        description: List Large Choices
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: filter
+          in: query
+          type: string
+          description: 'Use filter query parameters to limit results
+
+            to data that matches your criteria. See
+
+            [Filters](/docs/rest-api/reference/filters) for details.
+
+
+            Supported fields and operators are listed below:
+
+
+            | Field'
+    - name: questions
+      path: /questions
+      operations:
+      - name: getquestions
+        method: GET
+        description: List Questions
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: filter
+          in: query
+          type: string
+          description: 'Use filter query parameters to limit results
+
+            to data that matches your criteria. See
+
+            [Filters](/docs/rest-api/reference/filters) for details.
+
+
+            Supported fields and operators are listed below:
+
+
+            | Field'
+    - name: respondents
+      path: /respondents
+      operations:
+      - name: getrespondents
+        method: GET
+        description: List Respondents
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: filter
+          in: query
+          type: string
+          description: 'Use filter query parameters to limit results
+
+            to data that matches your criteria. See
+
+            [Filters](/docs/rest-api/reference/filters) for details.
+
+
+            Supported fields and operators are listed below:
+
+
+            | Field'
+    - name: responses
+      path: /responses
+      operations:
+      - name: getresponses
+        method: GET
+        description: List Responses
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: filter
+          in: query
+          type: string
+          description: 'Use filter query parameters to limit results
+
+            to data that matches your criteria. See
+
+            [Filters](/docs/rest-api/reference/filters) for details.
+
+
+            Supported fields and operators are listed below:
+
+
+            | Field'
+    - name: standard-surveys
+      path: /standard-surveys
+      operations:
+      - name: getstandardsurveys
+        method: GET
+        description: List Standalone Surveys
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: filter
+          in: query
+          type: string
+          description: 'Use filter query parameters to limit results
+
+            to data that matches your criteria. See
+
+            [Filters](/docs/rest-api/reference/filters) for details.
+
+
+            Supported fields and operators are listed below:
+
+
+            | Field'
+    - name: standard-surveys-responses
+      path: /standard-surveys/responses
+      operations:
+      - name: getstandardsurveyresponses
+        method: GET
+        description: List Stdl. Survey Responses
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: filter
+          in: query
+          type: string
+          description: 'Use filter query parameters to limit results
+
+            to data that matches your criteria. See
+
+            [Filters](/docs/rest-api/reference/filters) for details.
+
+
+            Supported fields and operators are listed below:
+
+
+            | Field'
+    - name: standard-surveys-surveyid-email-templates
+      path: /standard-surveys/{surveyId}/email-templates
+      operations:
+      - name: getstandardsurveyemailtemplates
+        method: GET
+        description: List Stdl. Survey Email Templ.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: surveyId
+          in: path
+          type: string
+          description: Path parameter surveyId.
+          required: true
+    - name: standard-surveys-surveyid-questions
+      path: /standard-surveys/{surveyId}/questions
+      operations:
+      - name: getstandardsurveyquestions
+        method: GET
+        description: List Stdl. Survey Questions
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: surveyId
+          in: path
+          type: string
+          description: Path parameter surveyId.
+          required: true
+    - name: standard-surveys-surveyid-respondents
+      path: /standard-surveys/{surveyId}/respondents
+      operations:
+      - name: getstandardsurveyrespondents
+        method: GET
+        description: List Stdl. Survey Respondents
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: filter
+          in: query
+          type: string
+          description: 'Use filter query parameters to limit results
+
+            to data that matches your criteria. See
+
+            [Filters](/docs/rest-api/reference/filters) for details.
+
+
+            Supported fields and operators are listed below:
+
+
+            | Field'
+        - name: surveyId
+          in: path
+          type: string
+          description: Path parameter surveyId.
+          required: true
+      - name: createstandardsurveyrespondent
+        method: POST
+        description: Create Stdl. Survey Respondent
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: surveyId
+          in: path
+          type: string
+          description: Path parameter surveyId.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: standard-surveys-surveyid-respondents-respondentid
+      path: /standard-surveys/{surveyId}/respondents/{respondentId}
+      operations:
+      - name: updatestandardsurveyrespondent
+        method: PUT
+        description: Update Stdl. Survey Respondent
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: surveyId
+          in: path
+          type: string
+          description: Path parameter surveyId.
+          required: true
+        - name: respondentId
+          in: path
+          type: string
+          description: Path parameter respondentId.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: standard-surveys-surveyid-respondents-respondentid-email-tem
+      path: /standard-surveys/{surveyId}/respondents/{respondentId}/email-templates/{emailTemplateId}/email
+      operations:
+      - name: sendstandardsurveyemail
+        method: POST
+        description: Send Standalone Survey Email
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: surveyId
+          in: path
+          type: string
+          description: Path parameter surveyId.
+          required: true
+        - name: emailTemplateId
+          in: path
+          type: string
+          description: Path parameter emailTemplateId.
+          required: true
+        - name: respondentId
+          in: path
+          type: string
+          description: Path parameter respondentId.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: standard-surveys-surveyid-respondents-respondentid-responses
+      path: /standard-surveys/{surveyId}/respondents/{respondentId}/responses
+      operations:
+      - name: createstandardsurveyresponses
+        method: POST
+        description: Create Stdl. Survey Responses
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: surveyId
+          in: path
+          type: string
+          description: Path parameter surveyId.
+          required: true
+        - name: respondentId
+          in: path
+          type: string
+          description: Path parameter respondentId.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: standard-surveys-surveyid-respondents-respondentid-responses
+      path: /standard-surveys/{surveyId}/respondents/{respondentId}/responses/{responseId}
+      operations:
+      - name: updatestandardsurveyresponses
+        method: PUT
+        description: Update Stdl. Survey Responses
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: responseId
+          in: path
+          type: string
+          description: Path parameter responseId.
+          required: true
+        - name: surveyId
+          in: path
+          type: string
+          description: Path parameter surveyId.
+          required: true
+        - name: respondentId
+          in: path
+          type: string
+          description: Path parameter respondentId.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: surveys
+      path: /surveys
+      operations:
+      - name: getsurvey
+        method: GET
+        description: List Surveys
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: filter
+          in: query
+          type: string
+          description: 'Use filter query parameters to limit results
+
+            to data that matches your criteria. See
+
+            [Filters](/docs/rest-api/reference/filters) for details.
+
+
+            Supported fields and operators are listed below:
+
+
+            | Field'
+  exposes:
+  - type: rest
+    namespace: rest-surveys-rest
+    port: 8080
+    description: REST adapter for Cvent REST APIs — Surveys. One resource per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/events/surveys/responses
+      name: events-surveys-responses
+      description: REST surface for events-surveys-responses.
+      operations:
+      - method: GET
+        name: getalleventsurveyresponses
+        description: List All Event Responses
+        call: rest-surveys.getalleventsurveyresponses
+        with:
+          filter: rest.filter
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/events/{id}/surveys
+      name: events-id-surveys
+      description: REST surface for events-id-surveys.
+      operations:
+      - method: GET
+        name: geteventsurveys
+        description: List Event Surveys
+        call: rest-surveys.geteventsurveys
+        with:
+          filter: rest.filter
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/events/{id}/surveys/{surveyId}/questions
+      name: events-id-surveys-surveyid-questions
+      description: REST surface for events-id-surveys-surveyid-questions.
+      operations:
+      - method: GET
+        name: geteventsurveyquestions
+        description: List Event Survey Questions
+        call: rest-surveys.geteventsurveyquestions
+        with:
+          surveyId: rest.surveyId
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/events/{id}/surveys/{surveyId}/respondents
+      name: events-id-surveys-surveyid-respondents
+      description: REST surface for events-id-surveys-surveyid-respondents.
+      operations:
+      - method: GET
+        name: geteventsurveyrespondents
+        description: List Event Survey Respondents
+        call: rest-surveys.geteventsurveyrespondents
+        with:
+          filter: rest.filter
+          surveyId: rest.surveyId
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: createeventsurveyrespondent
+        description: Create Event Survey Respondent
+        call: rest-surveys.createeventsurveyrespondent
+        with:
+          surveyId: rest.surveyId
+          id: rest.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/events/{id}/surveys/{surveyId}/respondents/{respondentId}
+      name: events-id-surveys-surveyid-respondents-respondentid
+      description: REST surface for events-id-surveys-surveyid-respondents-respondentid.
+      operations:
+      - method: PUT
+        name: updateeventsurveyrespondent
+        description: Update Event Survey Respondent
+        call: rest-surveys.updateeventsurveyrespondent
+        with:
+          surveyId: rest.surveyId
+          id: rest.id
+          respondentId: rest.respondentId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/events/{id}/surveys/{surveyId}/respondents/{respondentId}/responses
+      name: events-id-surveys-surveyid-respondents-respondentid-response
+      description: REST surface for events-id-surveys-surveyid-respondents-respondentid-response.
+      operations:
+      - method: POST
+        name: createeventsurveyresponses
+        description: Create Event Survey Responses
+        call: rest-surveys.createeventsurveyresponses
+        with:
+          surveyId: rest.surveyId
+          id: rest.id
+          respondentId: rest.respondentId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/events/{id}/surveys/{surveyId}/responses
+      name: events-id-surveys-surveyid-responses
+      description: REST surface for events-id-surveys-surveyid-responses.
+      operations:
+      - method: GET
+        name: geteventsurveyresponses
+        description: List Event Survey Responses
+        call: rest-surveys.geteventsurveyresponses
+        with:
+          filter: rest.filter
+          surveyId: rest.surveyId
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/large-choices
+      name: large-choices
+      description: REST surface for large-choices.
+      operations:
+      - method: GET
+        name: getlargechoices
+        description: List Large Choices
+        call: rest-surveys.getlargechoices
+        with:
+          filter: rest.filter
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/questions
+      name: questions
+      description: REST surface for questions.
+      operations:
+      - method: GET
+        name: getquestions
+        description: List Questions
+        call: rest-surveys.getquestions
+        with:
+          filter: rest.filter
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/respondents
+      name: respondents
+      description: REST surface for respondents.
+      operations:
+      - method: GET
+        name: getrespondents
+        description: List Respondents
+        call: rest-surveys.getrespondents
+        with:
+          filter: rest.filter
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/responses
+      name: responses
+      description: REST surface for responses.
+      operations:
+      - method: GET
+        name: getresponses
+        description: List Responses
+        call: rest-surveys.getresponses
+        with:
+          filter: rest.filter
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/standard-surveys
+      name: standard-surveys
+      description: REST surface for standard-surveys.
+      operations:
+      - method: GET
+        name: getstandardsurveys
+        description: List Standalone Surveys
+        call: rest-surveys.getstandardsurveys
+        with:
+          filter: rest.filter
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/standard-surveys/responses
+      name: standard-surveys-responses
+      description: REST surface for standard-surveys-responses.
+      operations:
+      - method: GET
+        name: getstandardsurveyresponses
+        description: List Stdl. Survey Responses
+        call: rest-surveys.getstandardsurveyresponses
+        with:
+          filter: rest.filter
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/standard-surveys/{surveyId}/email-templates
+      name: standard-surveys-surveyid-email-templates
+      description: REST surface for standard-surveys-surveyid-email-templates.
+      operations:
+      - method: GET
+        name: getstandardsurveyemailtemplates
+        description: List Stdl. Survey Email Templ.
+        call: rest-surveys.getstandardsurveyemailtemplates
+        with:
+          surveyId: rest.surveyId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/standard-surveys/{surveyId}/questions
+      name: standard-surveys-surveyid-questions
+      description: REST surface for standard-surveys-surveyid-questions.
+      operations:
+      - method: GET
+        name: getstandardsurveyquestions
+        description: List Stdl. Survey Questions
+        call: rest-surveys.getstandardsurveyquestions
+        with:
+          surveyId: rest.surveyId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/standard-surveys/{surveyId}/respondents
+      name: standard-surveys-surveyid-respondents
+      description: REST surface for standard-surveys-surveyid-respondents.
+      operations:
+      - method: GET
+        name: getstandardsurveyrespondents
+        description: List Stdl. Survey Respondents
+        call: rest-surveys.getstandardsurveyrespondents
+        with:
+          filter: rest.filter
+          surveyId: rest.surveyId
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: createstandardsurveyrespondent
+        description: Create Stdl. Survey Respondent
+        call: rest-surveys.createstandardsurveyrespondent
+        with:
+          surveyId: rest.surveyId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/standard-surveys/{surveyId}/respondents/{respondentId}
+      name: standard-surveys-surveyid-respondents-respondentid
+      description: REST surface for standard-surveys-surveyid-respondents-respondentid.
+      operations:
+      - method: PUT
+        name: updatestandardsurveyrespondent
+        description: Update Stdl. Survey Respondent
+        call: rest-surveys.updatestandardsurveyrespondent
+        with:
+          surveyId: rest.surveyId
+          respondentId: rest.respondentId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/standard-surveys/{surveyId}/respondents/{respondentId}/email-templates/{emailTemplateId}/email
+      name: standard-surveys-surveyid-respondents-respondentid-email-tem
+      description: REST surface for standard-surveys-surveyid-respondents-respondentid-email-tem.
+      operations:
+      - method: POST
+        name: sendstandardsurveyemail
+        description: Send Standalone Survey Email
+        call: rest-surveys.sendstandardsurveyemail
+        with:
+          surveyId: rest.surveyId
+          emailTemplateId: rest.emailTemplateId
+          respondentId: rest.respondentId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/standard-surveys/{surveyId}/respondents/{respondentId}/responses
+      name: standard-surveys-surveyid-respondents-respondentid-responses
+      description: REST surface for standard-surveys-surveyid-respondents-respondentid-responses.
+      operations:
+      - method: POST
+        name: createstandardsurveyresponses
+        description: Create Stdl. Survey Responses
+        call: rest-surveys.createstandardsurveyresponses
+        with:
+          surveyId: rest.surveyId
+          respondentId: rest.respondentId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/standard-surveys/{surveyId}/respondents/{respondentId}/responses/{responseId}
+      name: standard-surveys-surveyid-respondents-respondentid-responses
+      description: REST surface for standard-surveys-surveyid-respondents-respondentid-responses.
+      operations:
+      - method: PUT
+        name: updatestandardsurveyresponses
+        description: Update Stdl. Survey Responses
+        call: rest-surveys.updatestandardsurveyresponses
+        with:
+          responseId: rest.responseId
+          surveyId: rest.surveyId
+          respondentId: rest.respondentId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/surveys
+      name: surveys
+      description: REST surface for surveys.
+      operations:
+      - method: GET
+        name: getsurvey
+        description: List Surveys
+        call: rest-surveys.getsurvey
+        with:
+          filter: rest.filter
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: rest-surveys-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Cvent REST APIs — Surveys. One tool per consumed operation, routed inline through this capability's consumes block.
+    tools:
+    - name: cvent-getalleventsurveyresponses
+      description: List All Event Responses
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-surveys.getalleventsurveyresponses
+      with:
+        filter: tools.filter
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-geteventsurveys
+      description: List Event Surveys
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-surveys.geteventsurveys
+      with:
+        filter: tools.filter
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-geteventsurveyquestions
+      description: List Event Survey Questions
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-surveys.geteventsurveyquestions
+      with:
+        surveyId: tools.surveyId
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-geteventsurveyrespondents
+      description: List Event Survey Respondents
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-surveys.geteventsurveyrespondents
+      with:
+        filter: tools.filter
+        surveyId: tools.surveyId
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-createeventsurveyrespondent
+      description: Create Event Survey Respondent
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: rest-surveys.createeventsurveyrespondent
+      with:
+        surveyId: tools.surveyId
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-updateeventsurveyrespondent
+      description: Update Event Survey Respondent
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: rest-surveys.updateeventsurveyrespondent
+      with:
+        surveyId: tools.surveyId
+        id: tools.id
+        respondentId: tools.respondentId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-createeventsurveyresponses
+      description: Create Event Survey Responses
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: rest-surveys.createeventsurveyresponses
+      with:
+        surveyId: tools.surveyId
+        id: tools.id
+        respondentId: tools.respondentId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-geteventsurveyresponses
+      description: List Event Survey Responses
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-surveys.geteventsurveyresponses
+      with:
+        filter: tools.filter
+        surveyId: tools.surveyId
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-getlargechoices
+      description: List Large Choices
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-surveys.getlargechoices
+      with:
+        filter: tools.filter
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-getquestions
+      description: List Questions
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-surveys.getquestions
+      with:
+        filter: tools.filter
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-getrespondents
+      description: List Respondents
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-surveys.getrespondents
+      with:
+        filter: tools.filter
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-getresponses
+      description: List Responses
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-surveys.getresponses
+      with:
+        filter: tools.filter
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-getstandardsurveys
+      description: List Standalone Surveys
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-surveys.getstandardsurveys
+      with:
+        filter: tools.filter
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-getstandardsurveyresponses
+      description: List Stdl. Survey Responses
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-surveys.getstandardsurveyresponses
+      with:
+        filter: tools.filter
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-getstandardsurveyemailtemplates
+      description: List Stdl. Survey Email Templ.
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-surveys.getstandardsurveyemailtemplates
+      with:
+        surveyId: tools.surveyId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-getstandardsurveyquestions
+      description: List Stdl. Survey Questions
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-surveys.getstandardsurveyquestions
+      with:
+        surveyId: tools.surveyId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-getstandardsurveyrespondents
+      description: List Stdl. Survey Respondents
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-surveys.getstandardsurveyrespondents
+      with:
+        filter: tools.filter
+        surveyId: tools.surveyId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-createstandardsurveyrespondent
+      description: Create Stdl. Survey Respondent
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: rest-surveys.createstandardsurveyrespondent
+      with:
+        surveyId: tools.surveyId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-updatestandardsurveyrespondent
+      description: Update Stdl. Survey Respondent
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: rest-surveys.updatestandardsurveyrespondent
+      with:
+        surveyId: tools.surveyId
+        respondentId: tools.respondentId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-sendstandardsurveyemail
+      description: Send Standalone Survey Email
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: rest-surveys.sendstandardsurveyemail
+      with:
+        surveyId: tools.surveyId
+        emailTemplateId: tools.emailTemplateId
+        respondentId: tools.respondentId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-createstandardsurveyresponses
+      description: Create Stdl. Survey Responses
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: rest-surveys.createstandardsurveyresponses
+      with:
+        surveyId: tools.surveyId
+        respondentId: tools.respondentId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-updatestandardsurveyresponses
+      description: Update Stdl. Survey Responses
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: rest-surveys.updatestandardsurveyresponses
+      with:
+        responseId: tools.responseId
+        surveyId: tools.surveyId
+        respondentId: tools.respondentId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-getsurvey
+      description: List Surveys
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-surveys.getsurvey
+      with:
+        filter: tools.filter
+      outputParameters:
+      - type: object
+        mapping: $.

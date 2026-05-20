@@ -1,0 +1,90 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Trigger Qualtrics post-event surveys from Cvent attendance
+  description: When a Cvent attendee is marked as attended, enroll them in a Qualtrics XM distribution so post-event NPS / CSAT surveys go out automatically.
+  tags:
+  - Cvent
+  - Integration
+  - Surveys
+  - qualtrics
+  created: '2026-05-20'
+  modified: '2026-05-20'
+binds:
+- namespace: env
+  keys:
+    CVENT_API_KEY: CVENT_API_KEY
+    QUALTRICS_API_KEY: QUALTRICS_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: cvent
+    baseUri: https://api-platform.cvent.com
+    description: Cvent API operations consumed by this integration.
+    resources:
+    - name: ea-attendees
+      path: /ea/attendees
+      operations:
+      - name: listattendees
+        method: GET
+        description: List Cvent attendees who attended.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters: []
+  - type: http
+    namespace: qualtrics
+    baseUri: https://yourorg.qualtrics.com
+    description: Qualtrics Survey API operations consumed by this integration.
+    resources:
+    - name: api-v3-distributions
+      path: /API/v3/distributions
+      operations:
+      - name: createdistribution
+        method: POST
+        description: 'Qualtrics Survey API: createDistribution'
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+  exposes:
+  - type: mcp
+    namespace: cvent-qualtrics-mcp
+    description: MCP adapter for the cvent-qualtrics integration.
+    tools:
+    - name: cvent_qualtrics
+      description: Execute the cvent qualtrics integration end-to-end.
+      inputSchema:
+        type: object
+        properties:
+          trigger_event:
+            type: object
+            description: Triggering event payload.
+        required:
+        - trigger_event
+  - type: rest
+    namespace: cvent-qualtrics-rest
+    port: 8080
+    description: REST adapter for the cvent-qualtrics integration.
+    resources:
+    - path: /cvent-qualtrics
+      name: cvent-qualtrics
+      description: REST surface for the cvent-qualtrics integration.
+      operations:
+      - method: POST
+        name: trigger
+        description: Trigger the cvent-qualtrics integration.
+        call: cvent_qualtrics
+        with:
+          trigger_event: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.

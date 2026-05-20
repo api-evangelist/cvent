@@ -1,0 +1,136 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Cvent REST APIs — Badge Printer Pools
+  description: 'Cvent REST APIs — Badge Printer Pools. 2 operations. Lead operation: List Badge Printer Pools. Self-contained Naftiko capability covering one business surface.'
+  tags:
+  - Cvent
+  - Badge Printer Pools
+  created: '2026-05-20'
+  modified: '2026-05-20'
+binds:
+- namespace: env
+  keys:
+    CVENT_API_KEY: CVENT_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: rest-badge-printer-pools
+    baseUri: https://api-platform.cvent.com/ea
+    description: Cvent REST APIs — Badge Printer Pools business capability. Self-contained, no shared references.
+    resources:
+    - name: events-eventid-badge-printer-pools
+      path: /events/{eventId}/badge-printer-pools
+      operations:
+      - name: getbadgeprinterpools
+        method: GET
+        description: List Badge Printer Pools
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: filter
+          in: query
+          type: string
+          description: 'A filter query string narrows search results.
+
+            The filter adheres to the pattern filter=''field'' comparisonType ''value''.
+
+
+            These are the comparison types that can be used in filter expressions:
+
+            * equal: '
+        - name: eventId
+          in: path
+          type: string
+          description: Path parameter eventId.
+          required: true
+    - name: events-eventid-badge-printer-pools-poolid
+      path: /events/{eventId}/badge-printer-pools/{poolId}
+      operations:
+      - name: getbadgeprinterpool
+        method: GET
+        description: Get Badge Printer Pool
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: poolId
+          in: path
+          type: string
+          description: Path parameter poolId.
+          required: true
+        - name: eventId
+          in: path
+          type: string
+          description: Path parameter eventId.
+          required: true
+  exposes:
+  - type: rest
+    namespace: rest-badge-printer-pools-rest
+    port: 8080
+    description: REST adapter for Cvent REST APIs — Badge Printer Pools. One resource per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/events/{eventId}/badge-printer-pools
+      name: events-eventid-badge-printer-pools
+      description: REST surface for events-eventid-badge-printer-pools.
+      operations:
+      - method: GET
+        name: getbadgeprinterpools
+        description: List Badge Printer Pools
+        call: rest-badge-printer-pools.getbadgeprinterpools
+        with:
+          filter: rest.filter
+          eventId: rest.eventId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/events/{eventId}/badge-printer-pools/{poolId}
+      name: events-eventid-badge-printer-pools-poolid
+      description: REST surface for events-eventid-badge-printer-pools-poolid.
+      operations:
+      - method: GET
+        name: getbadgeprinterpool
+        description: Get Badge Printer Pool
+        call: rest-badge-printer-pools.getbadgeprinterpool
+        with:
+          poolId: rest.poolId
+          eventId: rest.eventId
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: rest-badge-printer-pools-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Cvent REST APIs — Badge Printer Pools. One tool per consumed operation, routed inline through this capability's consumes block.
+    tools:
+    - name: cvent-getbadgeprinterpools
+      description: List Badge Printer Pools
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-badge-printer-pools.getbadgeprinterpools
+      with:
+        filter: tools.filter
+        eventId: tools.eventId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-getbadgeprinterpool
+      description: Get Badge Printer Pool
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-badge-printer-pools.getbadgeprinterpool
+      with:
+        poolId: tools.poolId
+        eventId: tools.eventId
+      outputParameters:
+      - type: object
+        mapping: $.

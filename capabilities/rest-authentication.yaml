@@ -1,0 +1,217 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Cvent REST APIs — Authentication
+  description: 'Cvent REST APIs — Authentication. 3 operations. Lead operation: Authorize. Self-contained Naftiko capability covering one business surface.'
+  tags:
+  - Cvent
+  - Authentication
+  created: '2026-05-20'
+  modified: '2026-05-20'
+binds:
+- namespace: env
+  keys:
+    CVENT_API_KEY: CVENT_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: rest-authentication
+    baseUri: https://api-platform.cvent.com/ea
+    description: Cvent REST APIs — Authentication business capability. Self-contained, no shared references.
+    resources:
+    - name: oauth2-authorize
+      path: /oauth2/authorize
+      operations:
+      - name: oauth2authorize
+        method: GET
+        description: Authorize
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: response_type
+          in: query
+          type: string
+          description: 'The response type must be code. Indicates the client wants an authorization code (authorization code grant flow).
+
+
+            **Note:** *implicit flow* or the *token* value is not supported at this time.
+
+            '
+          required: true
+        - name: client_id
+          in: query
+          type: string
+          description: 'The OAuth2 Client application ID.
+
+
+            Must be a pre-registered client created in the developer portal.
+
+            '
+          required: true
+        - name: redirect_uri
+          in: query
+          type: string
+          description: 'The URL to which the authentication server redirects the browser after authorization has been granted by the user.
+
+
+            A redirect URI must:
+
+
+            * Be an absolute URI.
+
+            * Be pre-registered with a client.
+
+            * **N'
+          required: true
+        - name: state
+          in: query
+          type: string
+          description: 'An opaque value the client application adds to the initial request. The authorization server
+
+            includes this value when redirecting back to the client.
+
+
+            This value must be used by the client to prevent '
+        - name: scope
+          in: query
+          type: string
+          description: 'Can be a combination of any scopes associated with a client. Scopes must be separated by spaces.
+
+            Any scope used must be pre-associated with the client or it will be ignored at runtime.
+
+
+            **Note:** If t'
+    - name: oauth2-token
+      path: /oauth2/token
+      operations:
+      - name: oauth2token
+        method: POST
+        description: Token
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: Authorization
+          in: header
+          type: string
+          description: 'The client must pass its client_id and client_secret in the authorization header through Basic HTTP authorization.
+
+
+            An example is `Basic Base64Encode(client_id:client_secret)` where `Base64Encode` mea'
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+    - name: token-validation
+      path: /token-validation
+      operations:
+      - name: validatetoken
+        method: GET
+        description: Validate Token
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters: []
+  exposes:
+  - type: rest
+    namespace: rest-authentication-rest
+    port: 8080
+    description: REST adapter for Cvent REST APIs — Authentication. One resource per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/oauth2/authorize
+      name: oauth2-authorize
+      description: REST surface for oauth2-authorize.
+      operations:
+      - method: GET
+        name: oauth2authorize
+        description: Authorize
+        call: rest-authentication.oauth2authorize
+        with:
+          response_type: rest.response_type
+          client_id: rest.client_id
+          redirect_uri: rest.redirect_uri
+          state: rest.state
+          scope: rest.scope
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/oauth2/token
+      name: oauth2-token
+      description: REST surface for oauth2-token.
+      operations:
+      - method: POST
+        name: oauth2token
+        description: Token
+        call: rest-authentication.oauth2token
+        with:
+          Authorization: rest.Authorization
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/token-validation
+      name: token-validation
+      description: REST surface for token-validation.
+      operations:
+      - method: GET
+        name: validatetoken
+        description: Validate Token
+        call: rest-authentication.validatetoken
+        with: {}
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: rest-authentication-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Cvent REST APIs — Authentication. One tool per consumed operation, routed inline through this capability's consumes block.
+    tools:
+    - name: cvent-oauth2authorize
+      description: Authorize
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-authentication.oauth2authorize
+      with:
+        response_type: tools.response_type
+        client_id: tools.client_id
+        redirect_uri: tools.redirect_uri
+        state: tools.state
+        scope: tools.scope
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-oauth2token
+      description: Token
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: rest-authentication.oauth2token
+      with:
+        Authorization: tools.Authorization
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-validatetoken
+      description: Validate Token
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-authentication.validatetoken
+      with: {}
+      outputParameters:
+      - type: object
+        mapping: $.

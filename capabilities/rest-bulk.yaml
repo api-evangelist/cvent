@@ -1,0 +1,316 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Cvent REST APIs — Bulk
+  description: 'Cvent REST APIs — Bulk. 6 operations. Lead operation: Get Bulk Job. Self-contained Naftiko capability covering one business surface.'
+  tags:
+  - Cvent
+  - Bulk
+  created: '2026-05-20'
+  modified: '2026-05-20'
+binds:
+- namespace: env
+  keys:
+    CVENT_API_KEY: CVENT_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: rest-bulk
+    baseUri: https://api-platform.cvent.com/ea
+    description: Cvent REST APIs — Bulk business capability. Self-contained, no shared references.
+    resources:
+    - name: bulk-jobs
+      path: /bulk-jobs
+      operations:
+      - name: createbulkjob
+        method: POST
+        description: Create Bulk Job
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: bulk-jobs-id
+      path: /bulk-jobs/{id}
+      operations:
+      - name: getbulkjobbyid
+        method: GET
+        description: Get Bulk Job
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+    - name: bulk-jobs-id-cancel
+      path: /bulk-jobs/{id}/cancel
+      operations:
+      - name: cancelbulkjob
+        method: POST
+        description: Cancel Bulk Job
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: bulk-jobs-id-data
+      path: /bulk-jobs/{id}/data
+      operations:
+      - name: uploadbulkjobdata
+        method: POST
+        description: Upload Bulk Job Data
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: bulk-jobs-id-results
+      path: /bulk-jobs/{id}/results
+      operations:
+      - name: listbulkjobresult
+        method: GET
+        description: List Bulk Job Result
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: filter
+          in: query
+          type: string
+          description: 'A filter query string narrows search results and supports the combination of logical and comparison operators.
+
+            The filter adheres to the pattern filter=''field'' comparisonType ''value''.
+
+
+            These are the c'
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+    - name: bulk-jobs-id-run
+      path: /bulk-jobs/{id}/run
+      operations:
+      - name: runbulkjob
+        method: POST
+        description: Run Bulk Job
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+  exposes:
+  - type: rest
+    namespace: rest-bulk-rest
+    port: 8080
+    description: REST adapter for Cvent REST APIs — Bulk. One resource per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/bulk-jobs
+      name: bulk-jobs
+      description: REST surface for bulk-jobs.
+      operations:
+      - method: POST
+        name: createbulkjob
+        description: Create Bulk Job
+        call: rest-bulk.createbulkjob
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/bulk-jobs/{id}
+      name: bulk-jobs-id
+      description: REST surface for bulk-jobs-id.
+      operations:
+      - method: GET
+        name: getbulkjobbyid
+        description: Get Bulk Job
+        call: rest-bulk.getbulkjobbyid
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/bulk-jobs/{id}/cancel
+      name: bulk-jobs-id-cancel
+      description: REST surface for bulk-jobs-id-cancel.
+      operations:
+      - method: POST
+        name: cancelbulkjob
+        description: Cancel Bulk Job
+        call: rest-bulk.cancelbulkjob
+        with:
+          id: rest.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/bulk-jobs/{id}/data
+      name: bulk-jobs-id-data
+      description: REST surface for bulk-jobs-id-data.
+      operations:
+      - method: POST
+        name: uploadbulkjobdata
+        description: Upload Bulk Job Data
+        call: rest-bulk.uploadbulkjobdata
+        with:
+          id: rest.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/bulk-jobs/{id}/results
+      name: bulk-jobs-id-results
+      description: REST surface for bulk-jobs-id-results.
+      operations:
+      - method: GET
+        name: listbulkjobresult
+        description: List Bulk Job Result
+        call: rest-bulk.listbulkjobresult
+        with:
+          filter: rest.filter
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/bulk-jobs/{id}/run
+      name: bulk-jobs-id-run
+      description: REST surface for bulk-jobs-id-run.
+      operations:
+      - method: POST
+        name: runbulkjob
+        description: Run Bulk Job
+        call: rest-bulk.runbulkjob
+        with:
+          id: rest.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: rest-bulk-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Cvent REST APIs — Bulk. One tool per consumed operation, routed inline through this capability's consumes block.
+    tools:
+    - name: cvent-createbulkjob
+      description: Create Bulk Job
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: rest-bulk.createbulkjob
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-getbulkjobbyid
+      description: Get Bulk Job
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-bulk.getbulkjobbyid
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-cancelbulkjob
+      description: Cancel Bulk Job
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: rest-bulk.cancelbulkjob
+      with:
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-uploadbulkjobdata
+      description: Upload Bulk Job Data
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: rest-bulk.uploadbulkjobdata
+      with:
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-listbulkjobresult
+      description: List Bulk Job Result
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-bulk.listbulkjobresult
+      with:
+        filter: tools.filter
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-runbulkjob
+      description: Run Bulk Job
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: rest-bulk.runbulkjob
+      with:
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

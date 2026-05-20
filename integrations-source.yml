@@ -1,0 +1,273 @@
+# Curated top Cvent integrations grouped by category.
+# Each entry becomes one Naftiko capability YAML in integrations/.
+# Categories reflect the systems-of-record that event teams routinely pair with Cvent.
+# Cvent's REST API base path includes /ea (e.g. https://api-platform.cvent.com/ea/attendees).
+
+# CRM (2)
+- partner: salesforce
+  name: Sync Cvent attendees to Salesforce contacts
+  category: CRM
+  use_case: When a Cvent attendee is added or updated for an event, upsert the matching Salesforce Contact (by email) with the latest registration, session, and engagement signal so reps see event activity in the timeline.
+  partner_baseUri: https://yourinstance.my.salesforce.com
+  partner_api: Salesforce REST API
+  provider_ops:
+    - method: GET
+      path: /ea/attendees
+      name: listAttendees
+      description: List attendees across an event.
+    - method: GET
+      path: /ea/attendees/{id}
+      name: getAttendee
+      description: Get a single attendee record.
+  partner_ops:
+    - method: POST
+      path: /services/data/v60.0/sobjects/Contact
+      name: createContact
+    - method: PATCH
+      path: /services/data/v60.0/sobjects/Contact/{id}
+      name: updateContact
+
+- partner: hubspot
+  name: Push Cvent registrations to HubSpot contacts and deals
+  category: CRM
+  use_case: When a Cvent registration is captured, upsert the corresponding HubSpot Contact and attach an event-attended Deal so sales pipeline reflects in-person and virtual touchpoints.
+  partner_baseUri: https://api.hubapi.com
+  partner_api: HubSpot CRM API
+  provider_ops:
+    - method: GET
+      path: /ea/attendees
+      name: listAttendees
+      description: List Cvent attendees.
+    - method: GET
+      path: /ea/events/{id}
+      name: getEvent
+      description: Get a Cvent event for deal context.
+  partner_ops:
+    - method: POST
+      path: /crm/v3/objects/contacts
+      name: createOrUpdateContact
+    - method: POST
+      path: /crm/v3/objects/deals
+      name: createDeal
+
+# Marketing automation (3)
+- partner: marketo
+  name: Forward Cvent attendee activities into Marketo programs
+  category: Marketing automation
+  use_case: Stream Cvent attendee status changes (registered, attended, no-show) into Marketo as Program Member Status updates so nurture flows fire on real event behavior.
+  partner_baseUri: https://yourinstance.mktorest.com
+  partner_api: Marketo REST API
+  provider_ops:
+    - method: GET
+      path: /ea/attendees
+      name: listAttendees
+      description: List Cvent attendees and current status.
+    - method: GET
+      path: /ea/attendees/{id}
+      name: getAttendee
+      description: Get individual attendee status.
+  partner_ops:
+    - method: POST
+      path: /rest/v1/leads.json
+      name: upsertLead
+    - method: POST
+      path: /rest/v1/leads/programs/{programId}/status.json
+      name: changeProgramMemberStatus
+
+- partner: eloqua
+  name: Sync Cvent contacts and registrations to Eloqua
+  category: Marketing automation
+  use_case: Mirror Cvent contacts and event registration state into Oracle Eloqua contacts and shared lists so demand-gen campaigns can target event attendees directly.
+  partner_baseUri: https://login.eloqua.com
+  partner_api: Eloqua REST API
+  provider_ops:
+    - method: GET
+      path: /ea/contacts
+      name: listContacts
+      description: List Cvent contacts.
+    - method: GET
+      path: /ea/attendees
+      name: listAttendees
+      description: List event attendees.
+  partner_ops:
+    - method: POST
+      path: /API/REST/2.0/data/contact
+      name: createContact
+    - method: PUT
+      path: /API/REST/2.0/data/contact/{id}
+      name: updateContact
+
+- partner: mailchimp
+  name: Add Cvent registrants to a Mailchimp audience
+  category: Email marketing
+  use_case: When a Cvent attendee registers, add or update them in a Mailchimp audience with tags for the event so post-event follow-up campaigns can target real registrants.
+  partner_baseUri: https://us1.api.mailchimp.com
+  partner_api: Mailchimp Marketing API
+  provider_ops:
+    - method: GET
+      path: /ea/attendees
+      name: listAttendees
+      description: List event attendees.
+  partner_ops:
+    - method: PUT
+      path: /3.0/lists/{list_id}/members/{subscriber_hash}
+      name: upsertListMember
+
+# Video / virtual (2)
+- partner: zoom
+  name: Provision Zoom meetings for Cvent sessions
+  category: Video
+  use_case: For each new Cvent session marked virtual, auto-create the corresponding Zoom meeting and write the join URL back so attendees see the right link in their itinerary.
+  partner_baseUri: https://api.zoom.us
+  partner_api: Zoom Meetings API
+  provider_ops:
+    - method: GET
+      path: /ea/program-items
+      name: listProgramItems
+      description: List Cvent sessions / program items.
+    - method: PUT
+      path: /ea/program-items/{programItemId}
+      name: updateProgramItem
+      description: Write the virtual meeting URL back to the session.
+  partner_ops:
+    - method: POST
+      path: /v2/users/{userId}/meetings
+      name: createMeeting
+
+- partner: microsoft-teams
+  name: Create Microsoft Teams events for Cvent webcasts
+  category: Video
+  use_case: When a Cvent webcast is created, provision the matching Microsoft Teams live event and link the Teams join URL on the webcast record.
+  partner_baseUri: https://graph.microsoft.com
+  partner_api: Microsoft Graph API
+  provider_ops:
+    - method: POST
+      path: /ea/webcasts
+      name: createWebcast
+      description: Create a Cvent webcast.
+    - method: PUT
+      path: /ea/webcasts/{id}
+      name: updateWebcast
+      description: Update the webcast with the Teams meeting URL.
+  partner_ops:
+    - method: POST
+      path: /v1.0/me/onlineMeetings
+      name: createOnlineMeeting
+
+# Collaboration (1)
+- partner: slack
+  name: Post Cvent attendee milestones to Slack
+  category: Collaboration
+  use_case: When notable Cvent events happen (first 100 registrants, VIP registered, no-show flag) post a formatted message to the right Slack channel so the events team reacts in real time.
+  partner_baseUri: https://slack.com
+  partner_api: Slack Web API
+  provider_ops:
+    - method: GET
+      path: /ea/attendees
+      name: listAttendees
+      description: List attendees to compute milestones.
+    - method: GET
+      path: /ea/events/{id}
+      name: getEvent
+      description: Get event context for the message body.
+  partner_ops:
+    - method: POST
+      path: /api/chat.postMessage
+      name: postMessage
+
+# HRIS (1)
+- partner: workday
+  name: Push Cvent training event attendance to Workday Learning
+  category: HRIS
+  use_case: For internal Cvent training events, send attendance records to Workday Learning as completion events so employee learning history stays accurate.
+  partner_baseUri: https://wd2-impl-services1.workday.com
+  partner_api: Workday Learning Web Service
+  provider_ops:
+    - method: GET
+      path: /ea/attendees
+      name: listAttendees
+      description: List Cvent attendees for an internal training event.
+  partner_ops:
+    - method: POST
+      path: /ccx/service/{tenant}/Learning/v40.0
+      name: putLearningRecord
+
+# Payments (1)
+- partner: stripe
+  name: Reconcile Cvent registration fees with Stripe payments
+  category: Payments
+  use_case: For each paid Cvent registration, look up the matching Stripe charge and write the Stripe charge id and net amount back onto the Cvent attendee record for finance reconciliation.
+  partner_baseUri: https://api.stripe.com
+  partner_api: Stripe API
+  provider_ops:
+    - method: GET
+      path: /ea/attendees
+      name: listAttendees
+      description: List paid Cvent attendees.
+    - method: PUT
+      path: /ea/attendees/{id}
+      name: updateAttendee
+      description: Write Stripe charge id back to the attendee.
+  partner_ops:
+    - method: GET
+      path: /v1/charges
+      name: listCharges
+
+# Sponsor / lead capture (1)
+- partner: snowflake
+  name: Land Cvent attendee and session activity in Snowflake
+  category: Data warehouse
+  use_case: Stream Cvent attendees, sessions, and attendance-duration records into Snowflake so events analytics joins cleanly with the rest of the company's reporting models.
+  partner_baseUri: https://yourorg.snowflakecomputing.com
+  partner_api: Snowflake SQL API
+  provider_ops:
+    - method: GET
+      path: /ea/attendees
+      name: listAttendees
+      description: List attendees.
+    - method: GET
+      path: /ea/attendance-durations
+      name: listAttendanceDurations
+      description: List attendance durations.
+    - method: GET
+      path: /ea/program-items
+      name: listProgramItems
+      description: List sessions.
+  partner_ops:
+    - method: POST
+      path: /api/v2/statements
+      name: submitStatement
+
+# Surveys / NPS (1)
+- partner: qualtrics
+  name: Trigger Qualtrics post-event surveys from Cvent attendance
+  category: Surveys
+  use_case: When a Cvent attendee is marked as attended, enroll them in a Qualtrics XM distribution so post-event NPS / CSAT surveys go out automatically.
+  partner_baseUri: https://yourorg.qualtrics.com
+  partner_api: Qualtrics Survey API
+  provider_ops:
+    - method: GET
+      path: /ea/attendees
+      name: listAttendees
+      description: List Cvent attendees who attended.
+  partner_ops:
+    - method: POST
+      path: /API/v3/distributions
+      name: createDistribution
+
+# Analytics (1)
+- partner: google-analytics
+  name: Feed Cvent registration funnel events into GA4
+  category: Analytics
+  use_case: Forward Cvent registration funnel stage transitions (started, paid, registered, attended) into GA4 as custom events so marketing teams can attribute event-driven conversions.
+  partner_baseUri: https://www.google-analytics.com
+  partner_api: GA4 Measurement Protocol
+  provider_ops:
+    - method: GET
+      path: /ea/attendees
+      name: listAttendees
+      description: List attendees and their funnel stage.
+  partner_ops:
+    - method: POST
+      path: /mp/collect
+      name: collectEvent

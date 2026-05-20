@@ -1,0 +1,462 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Cvent REST APIs — Seating
+  description: 'Cvent REST APIs — Seating. 8 operations. Lead operation: List Seating. Self-contained Naftiko capability covering one business surface.'
+  tags:
+  - Cvent
+  - Seating
+  created: '2026-05-20'
+  modified: '2026-05-20'
+binds:
+- namespace: env
+  keys:
+    CVENT_API_KEY: CVENT_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: rest-seating
+    baseUri: https://api-platform.cvent.com/ea
+    description: Cvent REST APIs — Seating business capability. Self-contained, no shared references.
+    resources:
+    - name: events-id-seatings
+      path: /events/{id}/seatings
+      operations:
+      - name: listseating
+        method: GET
+        description: List Seating
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: filter
+          in: query
+          type: string
+          description: 'A filter string passed in the body of the request, narrows search results and supports the combination of logical and comparison operators.
+
+            The filter adheres to the pattern filter=''field'' comparisonT'
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+    - name: events-id-seatings-assignments
+      path: /events/{id}/seatings/assignments
+      operations:
+      - name: geteventtableassignments
+        method: GET
+        description: List All Seating Assignments
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+    - name: events-id-seatings-seatingid
+      path: /events/{id}/seatings/{seatingId}
+      operations:
+      - name: getseating
+        method: GET
+        description: Get Seating
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: seatingId
+          in: path
+          type: string
+          description: Path parameter seatingId.
+          required: true
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+    - name: events-id-seatings-seatingid-assignments
+      path: /events/{id}/seatings/{seatingId}/assignments
+      operations:
+      - name: gettableassignment
+        method: GET
+        description: List Seating Assignments
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: seatingId
+          in: path
+          type: string
+          description: Path parameter seatingId.
+          required: true
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+    - name: events-id-seatings-seatingid-tables
+      path: /events/{id}/seatings/{seatingId}/tables
+      operations:
+      - name: listtables
+        method: GET
+        description: List Tables
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: filter
+          in: query
+          type: string
+          description: 'A filter string passed in the body of the request, narrows search results and supports the combination of logical and comparison operators.
+
+            The filter adheres to the pattern filter=''field'' comparisonT'
+        - name: seatingId
+          in: path
+          type: string
+          description: Path parameter seatingId.
+          required: true
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+    - name: events-id-seatings-seatingid-tables-tableid
+      path: /events/{id}/seatings/{seatingId}/tables/{tableId}
+      operations:
+      - name: gettable
+        method: GET
+        description: Get Table
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: seatingId
+          in: path
+          type: string
+          description: Path parameter seatingId.
+          required: true
+        - name: tableId
+          in: path
+          type: string
+          description: Path parameter tableId.
+          required: true
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+    - name: events-id-seatings-seatingid-tables-tableid-seats
+      path: /events/{id}/seatings/{seatingId}/tables/{tableId}/seats
+      operations:
+      - name: listseats
+        method: GET
+        description: List Seats
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: filter
+          in: query
+          type: string
+          description: 'A filter string passed in the body of the request, narrows search results and supports the combination of logical and comparison operators.
+
+            The filter adheres to the pattern filter=''field'' comparisonT'
+        - name: seatingId
+          in: path
+          type: string
+          description: Path parameter seatingId.
+          required: true
+        - name: tableId
+          in: path
+          type: string
+          description: Path parameter tableId.
+          required: true
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+    - name: events-id-seatings-seatingid-tables-tableid-seats-seatid
+      path: /events/{id}/seatings/{seatingId}/tables/{tableId}/seats/{seatId}
+      operations:
+      - name: getseat
+        method: GET
+        description: Get Seat
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: seatingId
+          in: path
+          type: string
+          description: Path parameter seatingId.
+          required: true
+        - name: tableId
+          in: path
+          type: string
+          description: Path parameter tableId.
+          required: true
+        - name: seatId
+          in: path
+          type: string
+          description: Path parameter seatId.
+          required: true
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+  exposes:
+  - type: rest
+    namespace: rest-seating-rest
+    port: 8080
+    description: REST adapter for Cvent REST APIs — Seating. One resource per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/events/{id}/seatings
+      name: events-id-seatings
+      description: REST surface for events-id-seatings.
+      operations:
+      - method: GET
+        name: listseating
+        description: List Seating
+        call: rest-seating.listseating
+        with:
+          filter: rest.filter
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/events/{id}/seatings/assignments
+      name: events-id-seatings-assignments
+      description: REST surface for events-id-seatings-assignments.
+      operations:
+      - method: GET
+        name: geteventtableassignments
+        description: List All Seating Assignments
+        call: rest-seating.geteventtableassignments
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/events/{id}/seatings/{seatingId}
+      name: events-id-seatings-seatingid
+      description: REST surface for events-id-seatings-seatingid.
+      operations:
+      - method: GET
+        name: getseating
+        description: Get Seating
+        call: rest-seating.getseating
+        with:
+          seatingId: rest.seatingId
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/events/{id}/seatings/{seatingId}/assignments
+      name: events-id-seatings-seatingid-assignments
+      description: REST surface for events-id-seatings-seatingid-assignments.
+      operations:
+      - method: GET
+        name: gettableassignment
+        description: List Seating Assignments
+        call: rest-seating.gettableassignment
+        with:
+          seatingId: rest.seatingId
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/events/{id}/seatings/{seatingId}/tables
+      name: events-id-seatings-seatingid-tables
+      description: REST surface for events-id-seatings-seatingid-tables.
+      operations:
+      - method: GET
+        name: listtables
+        description: List Tables
+        call: rest-seating.listtables
+        with:
+          filter: rest.filter
+          seatingId: rest.seatingId
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/events/{id}/seatings/{seatingId}/tables/{tableId}
+      name: events-id-seatings-seatingid-tables-tableid
+      description: REST surface for events-id-seatings-seatingid-tables-tableid.
+      operations:
+      - method: GET
+        name: gettable
+        description: Get Table
+        call: rest-seating.gettable
+        with:
+          seatingId: rest.seatingId
+          tableId: rest.tableId
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/events/{id}/seatings/{seatingId}/tables/{tableId}/seats
+      name: events-id-seatings-seatingid-tables-tableid-seats
+      description: REST surface for events-id-seatings-seatingid-tables-tableid-seats.
+      operations:
+      - method: GET
+        name: listseats
+        description: List Seats
+        call: rest-seating.listseats
+        with:
+          filter: rest.filter
+          seatingId: rest.seatingId
+          tableId: rest.tableId
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/events/{id}/seatings/{seatingId}/tables/{tableId}/seats/{seatId}
+      name: events-id-seatings-seatingid-tables-tableid-seats-seatid
+      description: REST surface for events-id-seatings-seatingid-tables-tableid-seats-seatid.
+      operations:
+      - method: GET
+        name: getseat
+        description: Get Seat
+        call: rest-seating.getseat
+        with:
+          seatingId: rest.seatingId
+          tableId: rest.tableId
+          seatId: rest.seatId
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: rest-seating-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Cvent REST APIs — Seating. One tool per consumed operation, routed inline through this capability's consumes block.
+    tools:
+    - name: cvent-listseating
+      description: List Seating
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-seating.listseating
+      with:
+        filter: tools.filter
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-geteventtableassignments
+      description: List All Seating Assignments
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-seating.geteventtableassignments
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-getseating
+      description: Get Seating
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-seating.getseating
+      with:
+        seatingId: tools.seatingId
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-gettableassignment
+      description: List Seating Assignments
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-seating.gettableassignment
+      with:
+        seatingId: tools.seatingId
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-listtables
+      description: List Tables
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-seating.listtables
+      with:
+        filter: tools.filter
+        seatingId: tools.seatingId
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-gettable
+      description: Get Table
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-seating.gettable
+      with:
+        seatingId: tools.seatingId
+        tableId: tools.tableId
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-listseats
+      description: List Seats
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-seating.listseats
+      with:
+        filter: tools.filter
+        seatingId: tools.seatingId
+        tableId: tools.tableId
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-getseat
+      description: Get Seat
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-seating.getseat
+      with:
+        seatingId: tools.seatingId
+        tableId: tools.tableId
+        seatId: tools.seatId
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.

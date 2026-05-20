@@ -1,0 +1,114 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Land Cvent attendee and session activity in Snowflake
+  description: Stream Cvent attendees, sessions, and attendance-duration records into Snowflake so events analytics joins cleanly with the rest of the company's reporting models.
+  tags:
+  - Cvent
+  - Integration
+  - Data warehouse
+  - snowflake
+  created: '2026-05-20'
+  modified: '2026-05-20'
+binds:
+- namespace: env
+  keys:
+    CVENT_API_KEY: CVENT_API_KEY
+    SNOWFLAKE_API_KEY: SNOWFLAKE_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: cvent
+    baseUri: https://api-platform.cvent.com
+    description: Cvent API operations consumed by this integration.
+    resources:
+    - name: ea-attendees
+      path: /ea/attendees
+      operations:
+      - name: listattendees
+        method: GET
+        description: List attendees.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters: []
+    - name: ea-attendance-durations
+      path: /ea/attendance-durations
+      operations:
+      - name: listattendancedurations
+        method: GET
+        description: List attendance durations.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters: []
+    - name: ea-program-items
+      path: /ea/program-items
+      operations:
+      - name: listprogramitems
+        method: GET
+        description: List sessions.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters: []
+  - type: http
+    namespace: snowflake
+    baseUri: https://yourorg.snowflakecomputing.com
+    description: Snowflake SQL API operations consumed by this integration.
+    resources:
+    - name: api-v2-statements
+      path: /api/v2/statements
+      operations:
+      - name: submitstatement
+        method: POST
+        description: 'Snowflake SQL API: submitStatement'
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+  exposes:
+  - type: mcp
+    namespace: cvent-snowflake-mcp
+    description: MCP adapter for the cvent-snowflake integration.
+    tools:
+    - name: cvent_snowflake
+      description: Execute the cvent snowflake integration end-to-end.
+      inputSchema:
+        type: object
+        properties:
+          trigger_event:
+            type: object
+            description: Triggering event payload.
+        required:
+        - trigger_event
+  - type: rest
+    namespace: cvent-snowflake-rest
+    port: 8080
+    description: REST adapter for the cvent-snowflake integration.
+    resources:
+    - path: /cvent-snowflake
+      name: cvent-snowflake
+      description: REST surface for the cvent-snowflake integration.
+      operations:
+      - method: POST
+        name: trigger
+        description: Trigger the cvent-snowflake integration.
+        call: cvent_snowflake
+        with:
+          trigger_event: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.

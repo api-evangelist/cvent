@@ -1,0 +1,74 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Cvent REST APIs — Card Tokens
+  description: 'Cvent REST APIs — Card Tokens. 1 operations. Lead operation: Create a Credit Card Token. Self-contained Naftiko capability covering one business surface.'
+  tags:
+  - Cvent
+  - Card Tokens
+  created: '2026-05-20'
+  modified: '2026-05-20'
+binds:
+- namespace: env
+  keys:
+    CVENT_API_KEY: CVENT_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: rest-card-tokens
+    baseUri: https://api-platform.cvent.com/ea
+    description: Cvent REST APIs — Card Tokens business capability. Self-contained, no shared references.
+    resources:
+    - name: card-tokens
+      path: /card-tokens
+      operations:
+      - name: createcardtokens
+        method: POST
+        description: Create a Credit Card Token
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+  exposes:
+  - type: rest
+    namespace: rest-card-tokens-rest
+    port: 8080
+    description: REST adapter for Cvent REST APIs — Card Tokens. One resource per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/card-tokens
+      name: card-tokens
+      description: REST surface for card-tokens.
+      operations:
+      - method: POST
+        name: createcardtokens
+        description: Create a Credit Card Token
+        call: rest-card-tokens.createcardtokens
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: rest-card-tokens-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Cvent REST APIs — Card Tokens. One tool per consumed operation, routed inline through this capability's consumes block.
+    tools:
+    - name: cvent-createcardtokens
+      description: Create a Credit Card Token
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: rest-card-tokens.createcardtokens
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

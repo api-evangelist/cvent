@@ -1,0 +1,83 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Cvent REST APIs — Event Credits
+  description: 'Cvent REST APIs — Event Credits. 1 operations. Lead operation: List Attendee Event Credits. Self-contained Naftiko capability covering one business surface.'
+  tags:
+  - Cvent
+  - Event Credits
+  created: '2026-05-20'
+  modified: '2026-05-20'
+binds:
+- namespace: env
+  keys:
+    CVENT_API_KEY: CVENT_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: rest-event-credits
+    baseUri: https://api-platform.cvent.com/ea
+    description: Cvent REST APIs — Event Credits business capability. Self-contained, no shared references.
+    resources:
+    - name: attendee-credits
+      path: /attendee-credits
+      operations:
+      - name: getattendeecredits
+        method: GET
+        description: List Attendee Event Credits
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: filter
+          in: query
+          type: string
+          description: 'A filter query string narrows search
+
+            results and supports the combination of logical and comparison
+
+            operators.
+
+
+            The filter adheres to the pattern filter=''field'' comparisonType ''value''.
+
+
+            These are the '
+  exposes:
+  - type: rest
+    namespace: rest-event-credits-rest
+    port: 8080
+    description: REST adapter for Cvent REST APIs — Event Credits. One resource per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/attendee-credits
+      name: attendee-credits
+      description: REST surface for attendee-credits.
+      operations:
+      - method: GET
+        name: getattendeecredits
+        description: List Attendee Event Credits
+        call: rest-event-credits.getattendeecredits
+        with:
+          filter: rest.filter
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: rest-event-credits-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Cvent REST APIs — Event Credits. One tool per consumed operation, routed inline through this capability's consumes block.
+    tools:
+    - name: cvent-getattendeecredits
+      description: List Attendee Event Credits
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-event-credits.getattendeecredits
+      with:
+        filter: tools.filter
+      outputParameters:
+      - type: object
+        mapping: $.

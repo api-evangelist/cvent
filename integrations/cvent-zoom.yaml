@@ -1,0 +1,117 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Provision Zoom meetings for Cvent sessions
+  description: For each new Cvent session marked virtual, auto-create the corresponding Zoom meeting and write the join URL back so attendees see the right link in their itinerary.
+  tags:
+  - Cvent
+  - Integration
+  - Video
+  - zoom
+  created: '2026-05-20'
+  modified: '2026-05-20'
+binds:
+- namespace: env
+  keys:
+    CVENT_API_KEY: CVENT_API_KEY
+    ZOOM_API_KEY: ZOOM_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: cvent
+    baseUri: https://api-platform.cvent.com
+    description: Cvent API operations consumed by this integration.
+    resources:
+    - name: ea-program-items
+      path: /ea/program-items
+      operations:
+      - name: listprogramitems
+        method: GET
+        description: List Cvent sessions / program items.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters: []
+    - name: ea-program-items-programitemid
+      path: /ea/program-items/{programItemId}
+      operations:
+      - name: updateprogramitem
+        method: PUT
+        description: Write the virtual meeting URL back to the session.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: programItemId
+          in: path
+          type: string
+          description: Path parameter programItemId.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+  - type: http
+    namespace: zoom
+    baseUri: https://api.zoom.us
+    description: Zoom Meetings API operations consumed by this integration.
+    resources:
+    - name: v2-users-userid-meetings
+      path: /v2/users/{userId}/meetings
+      operations:
+      - name: createmeeting
+        method: POST
+        description: 'Zoom Meetings API: createMeeting'
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: userId
+          in: path
+          type: string
+          description: Path parameter userId.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+  exposes:
+  - type: mcp
+    namespace: cvent-zoom-mcp
+    description: MCP adapter for the cvent-zoom integration.
+    tools:
+    - name: cvent_zoom
+      description: Execute the cvent zoom integration end-to-end.
+      inputSchema:
+        type: object
+        properties:
+          trigger_event:
+            type: object
+            description: Triggering event payload.
+        required:
+        - trigger_event
+  - type: rest
+    namespace: cvent-zoom-rest
+    port: 8080
+    description: REST adapter for the cvent-zoom integration.
+    resources:
+    - path: /cvent-zoom
+      name: cvent-zoom
+      description: REST surface for the cvent-zoom integration.
+      operations:
+      - method: POST
+        name: trigger
+        description: Trigger the cvent-zoom integration.
+        call: cvent_zoom
+        with:
+          trigger_event: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.

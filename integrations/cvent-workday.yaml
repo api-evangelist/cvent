@@ -1,0 +1,95 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Push Cvent training event attendance to Workday Learning
+  description: For internal Cvent training events, send attendance records to Workday Learning as completion events so employee learning history stays accurate.
+  tags:
+  - Cvent
+  - Integration
+  - HRIS
+  - workday
+  created: '2026-05-20'
+  modified: '2026-05-20'
+binds:
+- namespace: env
+  keys:
+    CVENT_API_KEY: CVENT_API_KEY
+    WORKDAY_API_KEY: WORKDAY_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: cvent
+    baseUri: https://api-platform.cvent.com
+    description: Cvent API operations consumed by this integration.
+    resources:
+    - name: ea-attendees
+      path: /ea/attendees
+      operations:
+      - name: listattendees
+        method: GET
+        description: List Cvent attendees for an internal training event.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters: []
+  - type: http
+    namespace: workday
+    baseUri: https://wd2-impl-services1.workday.com
+    description: Workday Learning Web Service operations consumed by this integration.
+    resources:
+    - name: ccx-service-tenant-learning-v40-0
+      path: /ccx/service/{tenant}/Learning/v40.0
+      operations:
+      - name: putlearningrecord
+        method: POST
+        description: 'Workday Learning Web Service: putLearningRecord'
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: tenant
+          in: path
+          type: string
+          description: Path parameter tenant.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+  exposes:
+  - type: mcp
+    namespace: cvent-workday-mcp
+    description: MCP adapter for the cvent-workday integration.
+    tools:
+    - name: cvent_workday
+      description: Execute the cvent workday integration end-to-end.
+      inputSchema:
+        type: object
+        properties:
+          trigger_event:
+            type: object
+            description: Triggering event payload.
+        required:
+        - trigger_event
+  - type: rest
+    namespace: cvent-workday-rest
+    port: 8080
+    description: REST adapter for the cvent-workday integration.
+    resources:
+    - path: /cvent-workday
+      name: cvent-workday
+      description: REST surface for the cvent-workday integration.
+      operations:
+      - method: POST
+        name: trigger
+        description: Trigger the cvent-workday integration.
+        call: cvent_workday
+        with:
+          trigger_event: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.

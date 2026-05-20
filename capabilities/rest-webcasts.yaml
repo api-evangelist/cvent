@@ -1,0 +1,530 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Cvent REST APIs — Webcasts
+  description: 'Cvent REST APIs — Webcasts. 11 operations. Lead operation: List Webcasts. Self-contained Naftiko capability covering one business surface.'
+  tags:
+  - Cvent
+  - Webcasts
+  created: '2026-05-20'
+  modified: '2026-05-20'
+binds:
+- namespace: env
+  keys:
+    CVENT_API_KEY: CVENT_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: rest-webcasts
+    baseUri: https://api-platform.cvent.com/ea
+    description: Cvent REST APIs — Webcasts business capability. Self-contained, no shared references.
+    resources:
+    - name: webcasts
+      path: /webcasts
+      operations:
+      - name: createwebcast
+        method: POST
+        description: Create Webcast
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: listwebcasts
+        method: GET
+        description: List Webcasts
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: filter
+          in: query
+          type: string
+          description: 'Use filter query parameters to limit results
+
+            to data that matches your criteria. See
+
+            [Filters](/docs/rest-api/reference/filters) for details.
+
+
+            Supported fields and operators are listed below:
+
+
+            | Field'
+    - name: webcasts-attendee-links
+      path: /webcasts/attendee-links
+      operations:
+      - name: listattendeelinks
+        method: GET
+        description: List Attendee Links
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: filter
+          in: query
+          type: string
+          description: 'Use filter query parameters to limit results
+
+            to data that matches your criteria. See
+
+            [Filters](/docs/rest-api/reference/filters) for details.
+
+
+            Supported fields and operators are listed below:
+
+
+            | Field'
+    - name: webcasts-players
+      path: /webcasts/players
+      operations:
+      - name: listplayers
+        method: GET
+        description: List Players
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: filter
+          in: query
+          type: string
+          description: 'Use filter query parameters to limit results
+
+            to data that matches your criteria. See
+
+            [Filters](/docs/rest-api/reference/filters) for details.
+
+
+            Supported fields and operators are listed below:
+
+
+            | Field'
+    - name: webcasts-id
+      path: /webcasts/{id}
+      operations:
+      - name: getwebcastbyid
+        method: GET
+        description: Get Webcast
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+      - name: deletewebcast
+        method: DELETE
+        description: Delete Webcast
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+      - name: updatewebcast
+        method: PUT
+        description: Update Webcast
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: webcasts-id-attendee-links
+      path: /webcasts/{id}/attendee-links
+      operations:
+      - name: createattendeelinks
+        method: POST
+        description: Create Attendee Link
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: updateattendeelinks
+        method: PUT
+        description: Update Attendee Link
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: listwebcastattendeelinks
+        method: GET
+        description: List Attendee Links
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: filter
+          in: query
+          type: string
+          description: 'Use filter query parameters to limit results
+
+            to data that matches your criteria. See
+
+            [Filters](/docs/rest-api/reference/filters) for details.
+
+
+            Supported fields and operators are listed below:
+
+
+            | Field'
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+    - name: webcasts-id-attendee-links-attendeelinkid
+      path: /webcasts/{id}/attendee-links/{attendeeLinkId}
+      operations:
+      - name: deleteattendeelink
+        method: DELETE
+        description: Delete Attendee Link
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: attendeeLinkId
+          in: path
+          type: string
+          description: Path parameter attendeeLinkId.
+          required: true
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+  exposes:
+  - type: rest
+    namespace: rest-webcasts-rest
+    port: 8080
+    description: REST adapter for Cvent REST APIs — Webcasts. One resource per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/webcasts
+      name: webcasts
+      description: REST surface for webcasts.
+      operations:
+      - method: POST
+        name: createwebcast
+        description: Create Webcast
+        call: rest-webcasts.createwebcast
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: GET
+        name: listwebcasts
+        description: List Webcasts
+        call: rest-webcasts.listwebcasts
+        with:
+          filter: rest.filter
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/webcasts/attendee-links
+      name: webcasts-attendee-links
+      description: REST surface for webcasts-attendee-links.
+      operations:
+      - method: GET
+        name: listattendeelinks
+        description: List Attendee Links
+        call: rest-webcasts.listattendeelinks
+        with:
+          filter: rest.filter
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/webcasts/players
+      name: webcasts-players
+      description: REST surface for webcasts-players.
+      operations:
+      - method: GET
+        name: listplayers
+        description: List Players
+        call: rest-webcasts.listplayers
+        with:
+          filter: rest.filter
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/webcasts/{id}
+      name: webcasts-id
+      description: REST surface for webcasts-id.
+      operations:
+      - method: GET
+        name: getwebcastbyid
+        description: Get Webcast
+        call: rest-webcasts.getwebcastbyid
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deletewebcast
+        description: Delete Webcast
+        call: rest-webcasts.deletewebcast
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: updatewebcast
+        description: Update Webcast
+        call: rest-webcasts.updatewebcast
+        with:
+          id: rest.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/webcasts/{id}/attendee-links
+      name: webcasts-id-attendee-links
+      description: REST surface for webcasts-id-attendee-links.
+      operations:
+      - method: POST
+        name: createattendeelinks
+        description: Create Attendee Link
+        call: rest-webcasts.createattendeelinks
+        with:
+          id: rest.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: updateattendeelinks
+        description: Update Attendee Link
+        call: rest-webcasts.updateattendeelinks
+        with:
+          id: rest.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: GET
+        name: listwebcastattendeelinks
+        description: List Attendee Links
+        call: rest-webcasts.listwebcastattendeelinks
+        with:
+          filter: rest.filter
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/webcasts/{id}/attendee-links/{attendeeLinkId}
+      name: webcasts-id-attendee-links-attendeelinkid
+      description: REST surface for webcasts-id-attendee-links-attendeelinkid.
+      operations:
+      - method: DELETE
+        name: deleteattendeelink
+        description: Delete Attendee Link
+        call: rest-webcasts.deleteattendeelink
+        with:
+          attendeeLinkId: rest.attendeeLinkId
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: rest-webcasts-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Cvent REST APIs — Webcasts. One tool per consumed operation, routed inline through this capability's consumes block.
+    tools:
+    - name: cvent-createwebcast
+      description: Create Webcast
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: rest-webcasts.createwebcast
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-listwebcasts
+      description: List Webcasts
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-webcasts.listwebcasts
+      with:
+        filter: tools.filter
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-listattendeelinks
+      description: List Attendee Links
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-webcasts.listattendeelinks
+      with:
+        filter: tools.filter
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-listplayers
+      description: List Players
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-webcasts.listplayers
+      with:
+        filter: tools.filter
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-getwebcastbyid
+      description: Get Webcast
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-webcasts.getwebcastbyid
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-deletewebcast
+      description: Delete Webcast
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: rest-webcasts.deletewebcast
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-updatewebcast
+      description: Update Webcast
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: rest-webcasts.updatewebcast
+      with:
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-createattendeelinks
+      description: Create Attendee Link
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: rest-webcasts.createattendeelinks
+      with:
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-updateattendeelinks
+      description: Update Attendee Link
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: rest-webcasts.updateattendeelinks
+      with:
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-listwebcastattendeelinks
+      description: List Attendee Links
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-webcasts.listwebcastattendeelinks
+      with:
+        filter: tools.filter
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-deleteattendeelink
+      description: Delete Attendee Link
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: rest-webcasts.deleteattendeelink
+      with:
+        attendeeLinkId: tools.attendeeLinkId
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.

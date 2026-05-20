@@ -1,0 +1,75 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Cvent REST APIs — Signatures
+  description: 'Cvent REST APIs — Signatures. 1 operations. Lead operation: List Signatures. Self-contained Naftiko capability covering one business surface.'
+  tags:
+  - Cvent
+  - Signatures
+  created: '2026-05-20'
+  modified: '2026-05-20'
+binds:
+- namespace: env
+  keys:
+    CVENT_API_KEY: CVENT_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: rest-signatures
+    baseUri: https://api-platform.cvent.com/ea
+    description: Cvent REST APIs — Signatures business capability. Self-contained, no shared references.
+    resources:
+    - name: signatures
+      path: /signatures
+      operations:
+      - name: getsignatures
+        method: GET
+        description: List Signatures
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: filter
+          in: query
+          type: string
+          description: 'A filter string passed in the body of the request, narrows search results and supports the combination of logical and comparison operators.
+
+            The filter adheres to the pattern filter=''field'' comparisonT'
+  exposes:
+  - type: rest
+    namespace: rest-signatures-rest
+    port: 8080
+    description: REST adapter for Cvent REST APIs — Signatures. One resource per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/signatures
+      name: signatures
+      description: REST surface for signatures.
+      operations:
+      - method: GET
+        name: getsignatures
+        description: List Signatures
+        call: rest-signatures.getsignatures
+        with:
+          filter: rest.filter
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: rest-signatures-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Cvent REST APIs — Signatures. One tool per consumed operation, routed inline through this capability's consumes block.
+    tools:
+    - name: cvent-getsignatures
+      description: List Signatures
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-signatures.getsignatures
+      with:
+        filter: tools.filter
+      outputParameters:
+      - type: object
+        mapping: $.

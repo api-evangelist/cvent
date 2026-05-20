@@ -1,0 +1,1331 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Cvent REST APIs — Sessions
+  description: 'Cvent REST APIs — Sessions. 29 operations. Lead operation: List Session Locations. Self-contained Naftiko capability covering one business surface.'
+  tags:
+  - Cvent
+  - Sessions
+  created: '2026-05-20'
+  modified: '2026-05-20'
+binds:
+- namespace: env
+  keys:
+    CVENT_API_KEY: CVENT_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: rest-sessions
+    baseUri: https://api-platform.cvent.com/ea
+    description: Cvent REST APIs — Sessions business capability. Self-contained, no shared references.
+    resources:
+    - name: events-id-session-locations
+      path: /events/{id}/session-locations
+      operations:
+      - name: getsessionlocation
+        method: GET
+        description: List Session Locations
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+      - name: addsessionlocation
+        method: POST
+        description: Add Session Location
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: program-items
+      path: /program-items
+      operations:
+      - name: createprogramitem
+        method: POST
+        description: Create Program Item
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: listprogramitems
+        method: GET
+        description: List Program Items
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: filter
+          in: query
+          type: string
+          description: 'Use filter query parameters to limit results
+
+            to data that matches your criteria. See
+
+            [Filters](/docs/rest-api/reference/filters) for details.
+
+
+            Supported fields and operators are listed below:
+
+
+            | Field'
+    - name: program-items-docs-filter
+      path: /program-items/docs/filter
+      operations:
+      - name: filterprogramitemdocuments
+        method: POST
+        description: Filter Program Item Documents
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+    - name: program-items-filter
+      path: /program-items/filter
+      operations:
+      - name: listprogramitemspostfilters
+        method: POST
+        description: List Program Items
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+    - name: program-items-programitemid
+      path: /program-items/{programItemId}
+      operations:
+      - name: updateprogramitem
+        method: PUT
+        description: Update Program Item
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: programItemId
+          in: path
+          type: string
+          description: Path parameter programItemId.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: deleteprogramitem
+        method: DELETE
+        description: Delete Session Program Item
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: programItemId
+          in: path
+          type: string
+          description: Path parameter programItemId.
+          required: true
+    - name: program-items-programitemid-docs
+      path: /program-items/{programItemId}/docs
+      operations:
+      - name: getprogramitemdocuments
+        method: GET
+        description: Get Program Item Documents
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: programItemId
+          in: path
+          type: string
+          description: Path parameter programItemId.
+          required: true
+    - name: program-items-programitemid-docs-fileid
+      path: /program-items/{programItemId}/docs/{fileId}
+      operations:
+      - name: relateprogramitemtosessiondocument
+        method: PUT
+        description: Add Program Item Document
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: fileId
+          in: path
+          type: string
+          description: Path parameter fileId.
+          required: true
+        - name: programItemId
+          in: path
+          type: string
+          description: Path parameter programItemId.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+      - name: getprogramitemsessiondocument
+        method: GET
+        description: Get Program Item Document
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: fileId
+          in: path
+          type: string
+          description: Path parameter fileId.
+          required: true
+        - name: programItemId
+          in: path
+          type: string
+          description: Path parameter programItemId.
+          required: true
+      - name: deleteprogramitemsessiondocument
+        method: DELETE
+        description: Delete Program Item Document
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: fileId
+          in: path
+          type: string
+          description: Path parameter fileId.
+          required: true
+        - name: programItemId
+          in: path
+          type: string
+          description: Path parameter programItemId.
+          required: true
+    - name: session-categories
+      path: /session-categories
+      operations:
+      - name: listsessionscategories
+        method: GET
+        description: List Session Categories
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: sort
+          in: query
+          type: string
+          description: "The sort order passed as a parameter, used to control the order of the\nsearch results as a priority ordered list of sorts\n\nThere are two orders:\n  * ascending: ASC\n  * descending: DESC\n\nThe following "
+        - name: filter
+          in: query
+          type: string
+          description: 'Use filter query parameters to limit results
+
+            to data that matches your criteria. See
+
+            [Filters](/docs/rest-api/reference/filters) for details.
+
+
+            Supported fields and operators are listed below:
+
+
+            | Field'
+      - name: createsessioncategory
+        method: POST
+        description: Create Session Categories
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: session-segments
+      path: /session-segments
+      operations:
+      - name: getsessionsegments
+        method: GET
+        description: Get Session Segments
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: filter
+          in: query
+          type: string
+          description: 'A filter query string narrows search results and supports the combination of logical and comparison operators.
+
+            The filter adheres to the pattern filter=''field'' comparisonType ''value''.
+
+
+            There are two c'
+    - name: sessions
+      path: /sessions
+      operations:
+      - name: listsessions
+        method: GET
+        description: List Sessions
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: filter
+          in: query
+          type: string
+          description: 'Use filter query parameters to limit results
+
+            to data that matches your criteria. See
+
+            [Filters](/docs/rest-api/reference/filters) for details.
+
+
+            Supported fields and operators are listed below:
+
+
+            | Field'
+      - name: createsession
+        method: POST
+        description: Create Session
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: sessions-filter
+      path: /sessions/filter
+      operations:
+      - name: listsessionspostfilters
+        method: POST
+        description: List Sessions
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+    - name: sessions-id
+      path: /sessions/{id}
+      operations:
+      - name: getsessionbyid
+        method: GET
+        description: Get Session
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+      - name: updatesession
+        method: PUT
+        description: Update Session
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: deletesession
+        method: DELETE
+        description: Delete Session
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+    - name: sessions-id-custom-fields-customfieldid-answers
+      path: /sessions/{id}/custom-fields/{customFieldId}/answers
+      operations:
+      - name: updatesessioncustomfieldanswers
+        method: PUT
+        description: Update Custom Field Answers
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: customFieldId
+          in: path
+          type: string
+          description: Path parameter customFieldId.
+          required: true
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: sessions-id-docs
+      path: /sessions/{id}/docs
+      operations:
+      - name: listsessiondocs
+        method: GET
+        description: List Session Documents
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: filter
+          in: query
+          type: string
+          description: 'Use filter query parameters to limit results
+
+            to data that matches your criteria. See
+
+            [Filters](/docs/rest-api/reference/filters) for details.
+
+
+            Supported fields and operators are listed below:
+
+
+            | Field'
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+    - name: sessions-id-docs-fileid
+      path: /sessions/{id}/docs/{fileId}
+      operations:
+      - name: getsessiondoc
+        method: GET
+        description: Get Session Document
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: fileId
+          in: path
+          type: string
+          description: Path parameter fileId.
+          required: true
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+      - name: addsessiondoc
+        method: PUT
+        description: Add Document To Session
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: fileId
+          in: path
+          type: string
+          description: Path parameter fileId.
+          required: true
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+      - name: deletesessiondocument
+        method: DELETE
+        description: Delete Document from Session
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: fileId
+          in: path
+          type: string
+          description: Path parameter fileId.
+          required: true
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+    - name: sessions-id-speakers
+      path: /sessions/{id}/speakers
+      operations:
+      - name: listsessionspeakers
+        method: GET
+        description: List Session's Speakers
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+    - name: sessions-id-speakers-speakerid
+      path: /sessions/{id}/speakers/{speakerId}
+      operations:
+      - name: addspeakertosession
+        method: PUT
+        description: Assign Speaker to Session
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+        - name: speakerId
+          in: path
+          type: string
+          description: Path parameter speakerId.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+      - name: removespeakerfromsession
+        method: DELETE
+        description: Delete Speaker From Session
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+        - name: speakerId
+          in: path
+          type: string
+          description: Path parameter speakerId.
+          required: true
+  exposes:
+  - type: rest
+    namespace: rest-sessions-rest
+    port: 8080
+    description: REST adapter for Cvent REST APIs — Sessions. One resource per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/events/{id}/session-locations
+      name: events-id-session-locations
+      description: REST surface for events-id-session-locations.
+      operations:
+      - method: GET
+        name: getsessionlocation
+        description: List Session Locations
+        call: rest-sessions.getsessionlocation
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: addsessionlocation
+        description: Add Session Location
+        call: rest-sessions.addsessionlocation
+        with:
+          id: rest.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/program-items
+      name: program-items
+      description: REST surface for program-items.
+      operations:
+      - method: POST
+        name: createprogramitem
+        description: Create Program Item
+        call: rest-sessions.createprogramitem
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: GET
+        name: listprogramitems
+        description: List Program Items
+        call: rest-sessions.listprogramitems
+        with:
+          filter: rest.filter
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/program-items/docs/filter
+      name: program-items-docs-filter
+      description: REST surface for program-items-docs-filter.
+      operations:
+      - method: POST
+        name: filterprogramitemdocuments
+        description: Filter Program Item Documents
+        call: rest-sessions.filterprogramitemdocuments
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/program-items/filter
+      name: program-items-filter
+      description: REST surface for program-items-filter.
+      operations:
+      - method: POST
+        name: listprogramitemspostfilters
+        description: List Program Items
+        call: rest-sessions.listprogramitemspostfilters
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/program-items/{programItemId}
+      name: program-items-programitemid
+      description: REST surface for program-items-programitemid.
+      operations:
+      - method: PUT
+        name: updateprogramitem
+        description: Update Program Item
+        call: rest-sessions.updateprogramitem
+        with:
+          programItemId: rest.programItemId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deleteprogramitem
+        description: Delete Session Program Item
+        call: rest-sessions.deleteprogramitem
+        with:
+          programItemId: rest.programItemId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/program-items/{programItemId}/docs
+      name: program-items-programitemid-docs
+      description: REST surface for program-items-programitemid-docs.
+      operations:
+      - method: GET
+        name: getprogramitemdocuments
+        description: Get Program Item Documents
+        call: rest-sessions.getprogramitemdocuments
+        with:
+          programItemId: rest.programItemId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/program-items/{programItemId}/docs/{fileId}
+      name: program-items-programitemid-docs-fileid
+      description: REST surface for program-items-programitemid-docs-fileid.
+      operations:
+      - method: PUT
+        name: relateprogramitemtosessiondocument
+        description: Add Program Item Document
+        call: rest-sessions.relateprogramitemtosessiondocument
+        with:
+          fileId: rest.fileId
+          programItemId: rest.programItemId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: GET
+        name: getprogramitemsessiondocument
+        description: Get Program Item Document
+        call: rest-sessions.getprogramitemsessiondocument
+        with:
+          fileId: rest.fileId
+          programItemId: rest.programItemId
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deleteprogramitemsessiondocument
+        description: Delete Program Item Document
+        call: rest-sessions.deleteprogramitemsessiondocument
+        with:
+          fileId: rest.fileId
+          programItemId: rest.programItemId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/session-categories
+      name: session-categories
+      description: REST surface for session-categories.
+      operations:
+      - method: GET
+        name: listsessionscategories
+        description: List Session Categories
+        call: rest-sessions.listsessionscategories
+        with:
+          sort: rest.sort
+          filter: rest.filter
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: createsessioncategory
+        description: Create Session Categories
+        call: rest-sessions.createsessioncategory
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/session-segments
+      name: session-segments
+      description: REST surface for session-segments.
+      operations:
+      - method: GET
+        name: getsessionsegments
+        description: Get Session Segments
+        call: rest-sessions.getsessionsegments
+        with:
+          filter: rest.filter
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/sessions
+      name: sessions
+      description: REST surface for sessions.
+      operations:
+      - method: GET
+        name: listsessions
+        description: List Sessions
+        call: rest-sessions.listsessions
+        with:
+          filter: rest.filter
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: createsession
+        description: Create Session
+        call: rest-sessions.createsession
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/sessions/filter
+      name: sessions-filter
+      description: REST surface for sessions-filter.
+      operations:
+      - method: POST
+        name: listsessionspostfilters
+        description: List Sessions
+        call: rest-sessions.listsessionspostfilters
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/sessions/{id}
+      name: sessions-id
+      description: REST surface for sessions-id.
+      operations:
+      - method: GET
+        name: getsessionbyid
+        description: Get Session
+        call: rest-sessions.getsessionbyid
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: updatesession
+        description: Update Session
+        call: rest-sessions.updatesession
+        with:
+          id: rest.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deletesession
+        description: Delete Session
+        call: rest-sessions.deletesession
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/sessions/{id}/custom-fields/{customFieldId}/answers
+      name: sessions-id-custom-fields-customfieldid-answers
+      description: REST surface for sessions-id-custom-fields-customfieldid-answers.
+      operations:
+      - method: PUT
+        name: updatesessioncustomfieldanswers
+        description: Update Custom Field Answers
+        call: rest-sessions.updatesessioncustomfieldanswers
+        with:
+          customFieldId: rest.customFieldId
+          id: rest.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/sessions/{id}/docs
+      name: sessions-id-docs
+      description: REST surface for sessions-id-docs.
+      operations:
+      - method: GET
+        name: listsessiondocs
+        description: List Session Documents
+        call: rest-sessions.listsessiondocs
+        with:
+          filter: rest.filter
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/sessions/{id}/docs/{fileId}
+      name: sessions-id-docs-fileid
+      description: REST surface for sessions-id-docs-fileid.
+      operations:
+      - method: GET
+        name: getsessiondoc
+        description: Get Session Document
+        call: rest-sessions.getsessiondoc
+        with:
+          fileId: rest.fileId
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: addsessiondoc
+        description: Add Document To Session
+        call: rest-sessions.addsessiondoc
+        with:
+          fileId: rest.fileId
+          id: rest.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deletesessiondocument
+        description: Delete Document from Session
+        call: rest-sessions.deletesessiondocument
+        with:
+          fileId: rest.fileId
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/sessions/{id}/speakers
+      name: sessions-id-speakers
+      description: REST surface for sessions-id-speakers.
+      operations:
+      - method: GET
+        name: listsessionspeakers
+        description: List Session's Speakers
+        call: rest-sessions.listsessionspeakers
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/sessions/{id}/speakers/{speakerId}
+      name: sessions-id-speakers-speakerid
+      description: REST surface for sessions-id-speakers-speakerid.
+      operations:
+      - method: PUT
+        name: addspeakertosession
+        description: Assign Speaker to Session
+        call: rest-sessions.addspeakertosession
+        with:
+          id: rest.id
+          speakerId: rest.speakerId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: removespeakerfromsession
+        description: Delete Speaker From Session
+        call: rest-sessions.removespeakerfromsession
+        with:
+          id: rest.id
+          speakerId: rest.speakerId
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: rest-sessions-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Cvent REST APIs — Sessions. One tool per consumed operation, routed inline through this capability's consumes block.
+    tools:
+    - name: cvent-getsessionlocation
+      description: List Session Locations
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-sessions.getsessionlocation
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-addsessionlocation
+      description: Add Session Location
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: rest-sessions.addsessionlocation
+      with:
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-createprogramitem
+      description: Create Program Item
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: rest-sessions.createprogramitem
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-listprogramitems
+      description: List Program Items
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-sessions.listprogramitems
+      with:
+        filter: tools.filter
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-filterprogramitemdocuments
+      description: Filter Program Item Documents
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: rest-sessions.filterprogramitemdocuments
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-listprogramitemspostfilters
+      description: List Program Items
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: rest-sessions.listprogramitemspostfilters
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-updateprogramitem
+      description: Update Program Item
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: rest-sessions.updateprogramitem
+      with:
+        programItemId: tools.programItemId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-deleteprogramitem
+      description: Delete Session Program Item
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: rest-sessions.deleteprogramitem
+      with:
+        programItemId: tools.programItemId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-getprogramitemdocuments
+      description: Get Program Item Documents
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-sessions.getprogramitemdocuments
+      with:
+        programItemId: tools.programItemId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-relateprogramitemtosessiondocument
+      description: Add Program Item Document
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: rest-sessions.relateprogramitemtosessiondocument
+      with:
+        fileId: tools.fileId
+        programItemId: tools.programItemId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-getprogramitemsessiondocument
+      description: Get Program Item Document
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-sessions.getprogramitemsessiondocument
+      with:
+        fileId: tools.fileId
+        programItemId: tools.programItemId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-deleteprogramitemsessiondocument
+      description: Delete Program Item Document
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: rest-sessions.deleteprogramitemsessiondocument
+      with:
+        fileId: tools.fileId
+        programItemId: tools.programItemId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-listsessionscategories
+      description: List Session Categories
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-sessions.listsessionscategories
+      with:
+        sort: tools.sort
+        filter: tools.filter
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-createsessioncategory
+      description: Create Session Categories
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: rest-sessions.createsessioncategory
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-getsessionsegments
+      description: Get Session Segments
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-sessions.getsessionsegments
+      with:
+        filter: tools.filter
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-listsessions
+      description: List Sessions
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-sessions.listsessions
+      with:
+        filter: tools.filter
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-createsession
+      description: Create Session
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: rest-sessions.createsession
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-listsessionspostfilters
+      description: List Sessions
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: rest-sessions.listsessionspostfilters
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-getsessionbyid
+      description: Get Session
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-sessions.getsessionbyid
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-updatesession
+      description: Update Session
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: rest-sessions.updatesession
+      with:
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-deletesession
+      description: Delete Session
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: rest-sessions.deletesession
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-updatesessioncustomfieldanswers
+      description: Update Custom Field Answers
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: rest-sessions.updatesessioncustomfieldanswers
+      with:
+        customFieldId: tools.customFieldId
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-listsessiondocs
+      description: List Session Documents
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-sessions.listsessiondocs
+      with:
+        filter: tools.filter
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-getsessiondoc
+      description: Get Session Document
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-sessions.getsessiondoc
+      with:
+        fileId: tools.fileId
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-addsessiondoc
+      description: Add Document To Session
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: rest-sessions.addsessiondoc
+      with:
+        fileId: tools.fileId
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-deletesessiondocument
+      description: Delete Document from Session
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: rest-sessions.deletesessiondocument
+      with:
+        fileId: tools.fileId
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-listsessionspeakers
+      description: List Session's Speakers
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-sessions.listsessionspeakers
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-addspeakertosession
+      description: Assign Speaker to Session
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: rest-sessions.addspeakertosession
+      with:
+        id: tools.id
+        speakerId: tools.speakerId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-removespeakerfromsession
+      description: Delete Speaker From Session
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: rest-sessions.removespeakerfromsession
+      with:
+        id: tools.id
+        speakerId: tools.speakerId
+      outputParameters:
+      - type: object
+        mapping: $.

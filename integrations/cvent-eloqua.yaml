@@ -1,0 +1,124 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Sync Cvent contacts and registrations to Eloqua
+  description: Mirror Cvent contacts and event registration state into Oracle Eloqua contacts and shared lists so demand-gen campaigns can target event attendees directly.
+  tags:
+  - Cvent
+  - Integration
+  - Marketing automation
+  - eloqua
+  created: '2026-05-20'
+  modified: '2026-05-20'
+binds:
+- namespace: env
+  keys:
+    CVENT_API_KEY: CVENT_API_KEY
+    ELOQUA_API_KEY: ELOQUA_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: cvent
+    baseUri: https://api-platform.cvent.com
+    description: Cvent API operations consumed by this integration.
+    resources:
+    - name: ea-contacts
+      path: /ea/contacts
+      operations:
+      - name: listcontacts
+        method: GET
+        description: List Cvent contacts.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters: []
+    - name: ea-attendees
+      path: /ea/attendees
+      operations:
+      - name: listattendees
+        method: GET
+        description: List event attendees.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters: []
+  - type: http
+    namespace: eloqua
+    baseUri: https://login.eloqua.com
+    description: Eloqua REST API operations consumed by this integration.
+    resources:
+    - name: api-rest-2-0-data-contact
+      path: /API/REST/2.0/data/contact
+      operations:
+      - name: createcontact
+        method: POST
+        description: 'Eloqua REST API: createContact'
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: api-rest-2-0-data-contact-id
+      path: /API/REST/2.0/data/contact/{id}
+      operations:
+      - name: updatecontact
+        method: PUT
+        description: 'Eloqua REST API: updateContact'
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+  exposes:
+  - type: mcp
+    namespace: cvent-eloqua-mcp
+    description: MCP adapter for the cvent-eloqua integration.
+    tools:
+    - name: cvent_eloqua
+      description: Execute the cvent eloqua integration end-to-end.
+      inputSchema:
+        type: object
+        properties:
+          trigger_event:
+            type: object
+            description: Triggering event payload.
+        required:
+        - trigger_event
+  - type: rest
+    namespace: cvent-eloqua-rest
+    port: 8080
+    description: REST adapter for the cvent-eloqua integration.
+    resources:
+    - path: /cvent-eloqua
+      name: cvent-eloqua
+      description: REST surface for the cvent-eloqua integration.
+      operations:
+      - method: POST
+        name: trigger
+        description: Trigger the cvent-eloqua integration.
+        call: cvent_eloqua
+        with:
+          trigger_event: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.

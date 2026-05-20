@@ -1,0 +1,501 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Cvent REST APIs — Exhibitor Content
+  description: 'Cvent REST APIs — Exhibitor Content. 9 operations. Lead operation: List Exhibitor Files. Self-contained Naftiko capability covering one business surface.'
+  tags:
+  - Cvent
+  - Exhibitor Content
+  created: '2026-05-20'
+  modified: '2026-05-20'
+binds:
+- namespace: env
+  keys:
+    CVENT_API_KEY: CVENT_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: rest-exhibitor-content
+    baseUri: https://api-platform.cvent.com/ea
+    description: Cvent REST APIs — Exhibitor Content business capability. Self-contained, no shared references.
+    resources:
+    - name: events-id-exhibitors-exhibitorid-files
+      path: /events/{id}/exhibitors/{exhibitorId}/files
+      operations:
+      - name: listexhibitorfiles
+        method: GET
+        description: List Exhibitor Files
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: exhibitorId
+          in: path
+          type: string
+          description: Path parameter exhibitorId.
+          required: true
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+    - name: events-id-exhibitors-exhibitorid-files-fileid
+      path: /events/{id}/exhibitors/{exhibitorId}/files/{fileId}
+      operations:
+      - name: getexhibitorfile
+        method: GET
+        description: Get Exhibitor File
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: fileId
+          in: path
+          type: string
+          description: Path parameter fileId.
+          required: true
+        - name: exhibitorId
+          in: path
+          type: string
+          description: Path parameter exhibitorId.
+          required: true
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+      - name: updateexhibitorfile
+        method: PUT
+        description: Associate Exhibitor File
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: fileId
+          in: path
+          type: string
+          description: Path parameter fileId.
+          required: true
+        - name: exhibitorId
+          in: path
+          type: string
+          description: Path parameter exhibitorId.
+          required: true
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: disassociateexhibitorfile
+        method: DELETE
+        description: Disassociate Exhibitor File
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: fileId
+          in: path
+          type: string
+          description: Path parameter fileId.
+          required: true
+        - name: exhibitorId
+          in: path
+          type: string
+          description: Path parameter exhibitorId.
+          required: true
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+    - name: events-id-exhibitors-exhibitorid-weblinks
+      path: /events/{id}/exhibitors/{exhibitorId}/weblinks
+      operations:
+      - name: listexhibitorweblinks
+        method: GET
+        description: List Exhibitor Weblinks
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: exhibitorId
+          in: path
+          type: string
+          description: Path parameter exhibitorId.
+          required: true
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+      - name: createexhibitorweblink
+        method: POST
+        description: Create Exhibitor Weblink
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: exhibitorId
+          in: path
+          type: string
+          description: Path parameter exhibitorId.
+          required: true
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: events-id-exhibitors-exhibitorid-weblinks-weblinkid
+      path: /events/{id}/exhibitors/{exhibitorId}/weblinks/{weblinkId}
+      operations:
+      - name: getexhibitorweblink
+        method: GET
+        description: Get Exhibitor Weblink
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: exhibitorId
+          in: path
+          type: string
+          description: Path parameter exhibitorId.
+          required: true
+        - name: weblinkId
+          in: path
+          type: string
+          description: Path parameter weblinkId.
+          required: true
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+      - name: updateexhibitorweblink
+        method: PUT
+        description: Update Exhibitor Weblink
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: exhibitorId
+          in: path
+          type: string
+          description: Path parameter exhibitorId.
+          required: true
+        - name: weblinkId
+          in: path
+          type: string
+          description: Path parameter weblinkId.
+          required: true
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: deleteexhibitorweblink
+        method: DELETE
+        description: Delete Exhibitor Weblink
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: exhibitorId
+          in: path
+          type: string
+          description: Path parameter exhibitorId.
+          required: true
+        - name: weblinkId
+          in: path
+          type: string
+          description: Path parameter weblinkId.
+          required: true
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+  exposes:
+  - type: rest
+    namespace: rest-exhibitor-content-rest
+    port: 8080
+    description: REST adapter for Cvent REST APIs — Exhibitor Content. One resource per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/events/{id}/exhibitors/{exhibitorId}/files
+      name: events-id-exhibitors-exhibitorid-files
+      description: REST surface for events-id-exhibitors-exhibitorid-files.
+      operations:
+      - method: GET
+        name: listexhibitorfiles
+        description: List Exhibitor Files
+        call: rest-exhibitor-content.listexhibitorfiles
+        with:
+          exhibitorId: rest.exhibitorId
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/events/{id}/exhibitors/{exhibitorId}/files/{fileId}
+      name: events-id-exhibitors-exhibitorid-files-fileid
+      description: REST surface for events-id-exhibitors-exhibitorid-files-fileid.
+      operations:
+      - method: GET
+        name: getexhibitorfile
+        description: Get Exhibitor File
+        call: rest-exhibitor-content.getexhibitorfile
+        with:
+          fileId: rest.fileId
+          exhibitorId: rest.exhibitorId
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: updateexhibitorfile
+        description: Associate Exhibitor File
+        call: rest-exhibitor-content.updateexhibitorfile
+        with:
+          fileId: rest.fileId
+          exhibitorId: rest.exhibitorId
+          id: rest.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: disassociateexhibitorfile
+        description: Disassociate Exhibitor File
+        call: rest-exhibitor-content.disassociateexhibitorfile
+        with:
+          fileId: rest.fileId
+          exhibitorId: rest.exhibitorId
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/events/{id}/exhibitors/{exhibitorId}/weblinks
+      name: events-id-exhibitors-exhibitorid-weblinks
+      description: REST surface for events-id-exhibitors-exhibitorid-weblinks.
+      operations:
+      - method: GET
+        name: listexhibitorweblinks
+        description: List Exhibitor Weblinks
+        call: rest-exhibitor-content.listexhibitorweblinks
+        with:
+          exhibitorId: rest.exhibitorId
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: createexhibitorweblink
+        description: Create Exhibitor Weblink
+        call: rest-exhibitor-content.createexhibitorweblink
+        with:
+          exhibitorId: rest.exhibitorId
+          id: rest.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/events/{id}/exhibitors/{exhibitorId}/weblinks/{weblinkId}
+      name: events-id-exhibitors-exhibitorid-weblinks-weblinkid
+      description: REST surface for events-id-exhibitors-exhibitorid-weblinks-weblinkid.
+      operations:
+      - method: GET
+        name: getexhibitorweblink
+        description: Get Exhibitor Weblink
+        call: rest-exhibitor-content.getexhibitorweblink
+        with:
+          exhibitorId: rest.exhibitorId
+          weblinkId: rest.weblinkId
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: updateexhibitorweblink
+        description: Update Exhibitor Weblink
+        call: rest-exhibitor-content.updateexhibitorweblink
+        with:
+          exhibitorId: rest.exhibitorId
+          weblinkId: rest.weblinkId
+          id: rest.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deleteexhibitorweblink
+        description: Delete Exhibitor Weblink
+        call: rest-exhibitor-content.deleteexhibitorweblink
+        with:
+          exhibitorId: rest.exhibitorId
+          weblinkId: rest.weblinkId
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: rest-exhibitor-content-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Cvent REST APIs — Exhibitor Content. One tool per consumed operation, routed inline through this capability's consumes block.
+    tools:
+    - name: cvent-listexhibitorfiles
+      description: List Exhibitor Files
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-exhibitor-content.listexhibitorfiles
+      with:
+        exhibitorId: tools.exhibitorId
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-getexhibitorfile
+      description: Get Exhibitor File
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-exhibitor-content.getexhibitorfile
+      with:
+        fileId: tools.fileId
+        exhibitorId: tools.exhibitorId
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-updateexhibitorfile
+      description: Associate Exhibitor File
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: rest-exhibitor-content.updateexhibitorfile
+      with:
+        fileId: tools.fileId
+        exhibitorId: tools.exhibitorId
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-disassociateexhibitorfile
+      description: Disassociate Exhibitor File
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: rest-exhibitor-content.disassociateexhibitorfile
+      with:
+        fileId: tools.fileId
+        exhibitorId: tools.exhibitorId
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-listexhibitorweblinks
+      description: List Exhibitor Weblinks
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-exhibitor-content.listexhibitorweblinks
+      with:
+        exhibitorId: tools.exhibitorId
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-createexhibitorweblink
+      description: Create Exhibitor Weblink
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: rest-exhibitor-content.createexhibitorweblink
+      with:
+        exhibitorId: tools.exhibitorId
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-getexhibitorweblink
+      description: Get Exhibitor Weblink
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-exhibitor-content.getexhibitorweblink
+      with:
+        exhibitorId: tools.exhibitorId
+        weblinkId: tools.weblinkId
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-updateexhibitorweblink
+      description: Update Exhibitor Weblink
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: rest-exhibitor-content.updateexhibitorweblink
+      with:
+        exhibitorId: tools.exhibitorId
+        weblinkId: tools.weblinkId
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-deleteexhibitorweblink
+      description: Delete Exhibitor Weblink
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: rest-exhibitor-content.deleteexhibitorweblink
+      with:
+        exhibitorId: tools.exhibitorId
+        weblinkId: tools.weblinkId
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.

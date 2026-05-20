@@ -1,0 +1,117 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Create Microsoft Teams events for Cvent webcasts
+  description: When a Cvent webcast is created, provision the matching Microsoft Teams live event and link the Teams join URL on the webcast record.
+  tags:
+  - Cvent
+  - Integration
+  - Video
+  - microsoft-teams
+  created: '2026-05-20'
+  modified: '2026-05-20'
+binds:
+- namespace: env
+  keys:
+    CVENT_API_KEY: CVENT_API_KEY
+    MICROSOFT_TEAMS_API_KEY: MICROSOFT_TEAMS_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: cvent
+    baseUri: https://api-platform.cvent.com
+    description: Cvent API operations consumed by this integration.
+    resources:
+    - name: ea-webcasts
+      path: /ea/webcasts
+      operations:
+      - name: createwebcast
+        method: POST
+        description: Create a Cvent webcast.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: ea-webcasts-id
+      path: /ea/webcasts/{id}
+      operations:
+      - name: updatewebcast
+        method: PUT
+        description: Update the webcast with the Teams meeting URL.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+  - type: http
+    namespace: microsoft-teams
+    baseUri: https://graph.microsoft.com
+    description: Microsoft Graph API operations consumed by this integration.
+    resources:
+    - name: v1-0-me-onlinemeetings
+      path: /v1.0/me/onlineMeetings
+      operations:
+      - name: createonlinemeeting
+        method: POST
+        description: 'Microsoft Graph API: createOnlineMeeting'
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+  exposes:
+  - type: mcp
+    namespace: cvent-microsoft-teams-mcp
+    description: MCP adapter for the cvent-microsoft-teams integration.
+    tools:
+    - name: cvent_microsoft_teams
+      description: Execute the cvent microsoft teams integration end-to-end.
+      inputSchema:
+        type: object
+        properties:
+          trigger_event:
+            type: object
+            description: Triggering event payload.
+        required:
+        - trigger_event
+  - type: rest
+    namespace: cvent-microsoft-teams-rest
+    port: 8080
+    description: REST adapter for the cvent-microsoft-teams integration.
+    resources:
+    - path: /cvent-microsoft-teams
+      name: cvent-microsoft-teams
+      description: REST surface for the cvent-microsoft-teams integration.
+      operations:
+      - method: POST
+        name: trigger
+        description: Trigger the cvent-microsoft-teams integration.
+        call: cvent_microsoft_teams
+        with:
+          trigger_event: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.

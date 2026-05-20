@@ -1,0 +1,75 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Cvent REST APIs — Event Role
+  description: 'Cvent REST APIs — Event Role. 1 operations. Lead operation: List Event Role Assignments. Self-contained Naftiko capability covering one business surface.'
+  tags:
+  - Cvent
+  - Event Role
+  created: '2026-05-20'
+  modified: '2026-05-20'
+binds:
+- namespace: env
+  keys:
+    CVENT_API_KEY: CVENT_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: rest-event-role
+    baseUri: https://api-platform.cvent.com/ea
+    description: Cvent REST APIs — Event Role business capability. Self-contained, no shared references.
+    resources:
+    - name: event-roles-assignments
+      path: /event-roles/assignments
+      operations:
+      - name: listeventroleassignment
+        method: GET
+        description: List Event Role Assignments
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: filter
+          in: query
+          type: string
+          description: 'A filter query string narrows search results and supports the combination of logical and comparison operators. The filter adheres to the pattern filter=''field'' comparisonType ''value''.
+
+            This is the comp'
+  exposes:
+  - type: rest
+    namespace: rest-event-role-rest
+    port: 8080
+    description: REST adapter for Cvent REST APIs — Event Role. One resource per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/event-roles/assignments
+      name: event-roles-assignments
+      description: REST surface for event-roles-assignments.
+      operations:
+      - method: GET
+        name: listeventroleassignment
+        description: List Event Role Assignments
+        call: rest-event-role.listeventroleassignment
+        with:
+          filter: rest.filter
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: rest-event-role-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Cvent REST APIs — Event Role. One tool per consumed operation, routed inline through this capability's consumes block.
+    tools:
+    - name: cvent-listeventroleassignment
+      description: List Event Role Assignments
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-event-role.listeventroleassignment
+      with:
+        filter: tools.filter
+      outputParameters:
+      - type: object
+        mapping: $.

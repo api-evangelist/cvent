@@ -1,0 +1,288 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Cvent REST APIs — Attendee Activities
+  description: 'Cvent REST APIs — Attendee Activities. 6 operations. Lead operation: List Activities. Self-contained Naftiko capability covering one business surface.'
+  tags:
+  - Cvent
+  - Attendee Activities
+  created: '2026-05-20'
+  modified: '2026-05-20'
+binds:
+- namespace: env
+  keys:
+    CVENT_API_KEY: CVENT_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: rest-attendee-activities
+    baseUri: https://api-platform.cvent.com/ea
+    description: Cvent REST APIs — Attendee Activities business capability. Self-contained, no shared references.
+    resources:
+    - name: attendees-activities
+      path: /attendees/activities
+      operations:
+      - name: listattendeeactivities
+        method: GET
+        description: List Activities
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: filter
+          in: query
+          type: string
+          description: 'Use filter query parameters to limit results
+
+            to data that matches your criteria. See
+
+            [Filters](/docs/rest-api/reference/filters) for details.
+
+
+            Supported fields and operators are listed below:
+
+
+            | Field'
+      - name: createattendeeactivity
+        method: POST
+        description: Add External Activity
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: attendees-activities-external-metadata
+      path: /attendees/activities/external/metadata
+      operations:
+      - name: listexternalattendeeactivitiesmetadata
+        method: GET
+        description: List Ext. Activities Metadata
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: filter
+          in: query
+          type: string
+          description: 'Use filter query parameters to limit results
+
+            to data that matches your criteria. See
+
+            [Filters](/docs/rest-api/reference/filters) for details.
+
+
+            Supported fields and operators are listed below:
+
+
+            | Field'
+      - name: createexternalattendeeactivitymetadata
+        method: POST
+        description: Add Ext. Activities Metadata
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: attendees-activities-external-metadata-id
+      path: /attendees/activities/external/metadata/{id}
+      operations:
+      - name: deleteexternalattendeeactivitymetadata
+        method: DELETE
+        description: Delete Ext Activities Metadata
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+      - name: updateexternalattendeeactivitymetadata
+        method: PUT
+        description: Update Ext Activities Metadata
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+  exposes:
+  - type: rest
+    namespace: rest-attendee-activities-rest
+    port: 8080
+    description: REST adapter for Cvent REST APIs — Attendee Activities. One resource per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/attendees/activities
+      name: attendees-activities
+      description: REST surface for attendees-activities.
+      operations:
+      - method: GET
+        name: listattendeeactivities
+        description: List Activities
+        call: rest-attendee-activities.listattendeeactivities
+        with:
+          filter: rest.filter
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: createattendeeactivity
+        description: Add External Activity
+        call: rest-attendee-activities.createattendeeactivity
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/attendees/activities/external/metadata
+      name: attendees-activities-external-metadata
+      description: REST surface for attendees-activities-external-metadata.
+      operations:
+      - method: GET
+        name: listexternalattendeeactivitiesmetadata
+        description: List Ext. Activities Metadata
+        call: rest-attendee-activities.listexternalattendeeactivitiesmetadata
+        with:
+          filter: rest.filter
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: createexternalattendeeactivitymetadata
+        description: Add Ext. Activities Metadata
+        call: rest-attendee-activities.createexternalattendeeactivitymetadata
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/attendees/activities/external/metadata/{id}
+      name: attendees-activities-external-metadata-id
+      description: REST surface for attendees-activities-external-metadata-id.
+      operations:
+      - method: DELETE
+        name: deleteexternalattendeeactivitymetadata
+        description: Delete Ext Activities Metadata
+        call: rest-attendee-activities.deleteexternalattendeeactivitymetadata
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: updateexternalattendeeactivitymetadata
+        description: Update Ext Activities Metadata
+        call: rest-attendee-activities.updateexternalattendeeactivitymetadata
+        with:
+          id: rest.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: rest-attendee-activities-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Cvent REST APIs — Attendee Activities. One tool per consumed operation, routed inline through this capability's consumes block.
+    tools:
+    - name: cvent-listattendeeactivities
+      description: List Activities
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-attendee-activities.listattendeeactivities
+      with:
+        filter: tools.filter
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-createattendeeactivity
+      description: Add External Activity
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: rest-attendee-activities.createattendeeactivity
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-listexternalattendeeactivitiesmetadata
+      description: List Ext. Activities Metadata
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-attendee-activities.listexternalattendeeactivitiesmetadata
+      with:
+        filter: tools.filter
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-createexternalattendeeactivitymetadata
+      description: Add Ext. Activities Metadata
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: rest-attendee-activities.createexternalattendeeactivitymetadata
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-deleteexternalattendeeactivitymetadata
+      description: Delete Ext Activities Metadata
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: rest-attendee-activities.deleteexternalattendeeactivitymetadata
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-updateexternalattendeeactivitymetadata
+      description: Update Ext Activities Metadata
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: rest-attendee-activities.updateexternalattendeeactivitymetadata
+      with:
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

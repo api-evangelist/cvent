@@ -1,0 +1,1275 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Cvent REST APIs — Budget
+  description: 'Cvent REST APIs — Budget. 24 operations. Lead operation: List Budget Items. Self-contained Naftiko capability covering one business surface.'
+  tags:
+  - Cvent
+  - Budget
+  created: '2026-05-20'
+  modified: '2026-05-20'
+binds:
+- namespace: env
+  keys:
+    CVENT_API_KEY: CVENT_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: rest-budget
+    baseUri: https://api-platform.cvent.com/ea
+    description: Cvent REST APIs — Budget business capability. Self-contained, no shared references.
+    resources:
+    - name: budget-items
+      path: /budget-items
+      operations:
+      - name: getaccountbudgetitems
+        method: GET
+        description: List Budget Items
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: filter
+          in: query
+          type: string
+          description: 'Use filter query parameters to limit results
+
+            to data that matches your criteria. See
+
+            [Filters](/docs/rest-api/reference/filters) for details.
+
+
+            Supported fields and operators are listed below:
+
+
+            | Field'
+    - name: budget-vendors
+      path: /budget-vendors
+      operations:
+      - name: getaccountvendors
+        method: GET
+        description: List Account Vendors
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: filter
+          in: query
+          type: string
+          description: 'Use filter query parameters to limit results
+
+            to data that matches your criteria. See
+
+            [Filters](/docs/rest-api/reference/filters) for details.
+
+
+            Supported fields and operators are listed below:
+
+
+            | Field'
+    - name: cards
+      path: /cards
+      operations:
+      - name: getcards
+        method: GET
+        description: List Cards
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: filter
+          in: query
+          type: string
+          description: 'Use filter query parameters to limit results
+
+            to data that matches your criteria. See
+
+            [Filters](/docs/rest-api/reference/filters) for details.
+
+
+            Supported fields and operators are listed below:
+
+
+            | Field'
+    - name: cards-transactions
+      path: /cards/transactions
+      operations:
+      - name: getcardtransactions
+        method: GET
+        description: List Card Transactions
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: filter
+          in: query
+          type: string
+          description: 'Use filter query parameters to limit results
+
+            to data that matches your criteria. See
+
+            [Filters](/docs/rest-api/reference/filters) for details.
+
+
+            Supported fields and operators are listed below:
+
+
+            | Field'
+      - name: createcardtransaction
+        method: POST
+        description: Create Card Transaction
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: cards-transactions-transactionid
+      path: /cards/transactions/{transactionId}
+      operations:
+      - name: deletecardtransaction
+        method: DELETE
+        description: Delete Card Transaction
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: transactionId
+          in: path
+          type: string
+          description: Path parameter transactionId.
+          required: true
+      - name: updatecardtransaction
+        method: PUT
+        description: Update Card Transaction
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: transactionId
+          in: path
+          type: string
+          description: Path parameter transactionId.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: currencies-currency-conversion-rates
+      path: /currencies/{currency}/conversion-rates
+      operations:
+      - name: getcurrencyconversionrate
+        method: GET
+        description: List Currency Conversion Rates
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: filter
+          in: query
+          type: string
+          description: 'Use filter query parameters to limit results
+
+            to data that matches your criteria. See
+
+            [Filters](/docs/rest-api/reference/filters) for details.
+
+
+            Supported fields and operators are listed below:
+
+
+            | Field'
+        - name: currency
+          in: path
+          type: string
+          description: Path parameter currency.
+          required: true
+      - name: createcurrencyconversionrate
+        method: POST
+        description: Create Conversion Rate
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: currency
+          in: path
+          type: string
+          description: Path parameter currency.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: currencies-currency-conversion-rates-conversionrateid
+      path: /currencies/{currency}/conversion-rates/{conversionRateId}
+      operations:
+      - name: updatecurrencyconversionrate
+        method: PUT
+        description: Update Conversion Rate
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: conversionRateId
+          in: path
+          type: string
+          description: Path parameter conversionRateId.
+          required: true
+        - name: currency
+          in: path
+          type: string
+          description: Path parameter currency.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: deletecurrencyconversionrate
+        method: DELETE
+        description: Delete Conversion Rate
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: conversionRateId
+          in: path
+          type: string
+          description: Path parameter conversionRateId.
+          required: true
+        - name: currency
+          in: path
+          type: string
+          description: Path parameter currency.
+          required: true
+    - name: events-id-budget-items
+      path: /events/{id}/budget-items
+      operations:
+      - name: getbudgetitems
+        method: GET
+        description: List Event Budget Items
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: filter
+          in: query
+          type: string
+          description: 'Use filter query parameters to limit results
+
+            to data that matches your criteria. See
+
+            [Filters](/docs/rest-api/reference/filters) for details.
+
+
+            Supported fields and operators are listed below:
+
+
+            | Field'
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+      - name: createbudgetitem
+        method: POST
+        description: Create Budget Item
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: events-id-budget-items-allocations
+      path: /events/{id}/budget-items/allocations
+      operations:
+      - name: getbudgetallocations
+        method: GET
+        description: List Budget Allocations
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: filter
+          in: query
+          type: string
+          description: 'Use filter query parameters to limit results
+
+            to data that matches your criteria. See
+
+            [Filters](/docs/rest-api/reference/filters) for details.
+
+
+            Supported fields and operators are listed below:
+
+
+            | Field'
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+    - name: events-id-budget-items-budgetitemid
+      path: /events/{id}/budget-items/{budgetItemId}
+      operations:
+      - name: updatebudgetitem
+        method: PUT
+        description: Update Budget Item
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: budgetItemId
+          in: path
+          type: string
+          description: Path parameter budgetItemId.
+          required: true
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: events-id-budget-items-budgetitemid-allocations
+      path: /events/{id}/budget-items/{budgetItemId}/allocations
+      operations:
+      - name: updatebudgetallocations
+        method: PUT
+        description: Update Budget Allocations
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: budgetItemId
+          in: path
+          type: string
+          description: Path parameter budgetItemId.
+          required: true
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: deletebudgetallocations
+        method: DELETE
+        description: Delete  Budget Allocations
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: budgetItemId
+          in: path
+          type: string
+          description: Path parameter budgetItemId.
+          required: true
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+    - name: events-id-budget-items-budgetitemid-budget-payments
+      path: /events/{id}/budget-items/{budgetItemId}/budget-payments
+      operations:
+      - name: createpayment
+        method: POST
+        description: Create Budget Payment
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: budgetItemId
+          in: path
+          type: string
+          description: Path parameter budgetItemId.
+          required: true
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: events-id-budget-items-budgetitemid-budget-payments-paymenti
+      path: /events/{id}/budget-items/{budgetItemId}/budget-payments/{paymentId}
+      operations:
+      - name: updatepayment
+        method: PUT
+        description: Update Budget Payment
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: paymentId
+          in: path
+          type: string
+          description: Path parameter paymentId.
+          required: true
+        - name: budgetItemId
+          in: path
+          type: string
+          description: Path parameter budgetItemId.
+          required: true
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: deletepayment
+        method: DELETE
+        description: Delete Budget Payment
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: paymentId
+          in: path
+          type: string
+          description: Path parameter paymentId.
+          required: true
+        - name: budgetItemId
+          in: path
+          type: string
+          description: Path parameter budgetItemId.
+          required: true
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+    - name: events-id-budget-items-budgetitemid-custom-fields-customfiel
+      path: /events/{id}/budget-items/{budgetItemId}/custom-fields/{customFieldId}/answers
+      operations:
+      - name: answerbudgetcustomfield
+        method: PUT
+        description: Update Budget Cstm Fld Answers
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: customFieldId
+          in: path
+          type: string
+          description: Path parameter customFieldId.
+          required: true
+        - name: budgetItemId
+          in: path
+          type: string
+          description: Path parameter budgetItemId.
+          required: true
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: events-id-budget-payments
+      path: /events/{id}/budget-payments
+      operations:
+      - name: getpayments
+        method: GET
+        description: List Budget Payments
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: filter
+          in: query
+          type: string
+          description: 'Use filter query parameters to limit results
+
+            to data that matches your criteria. See
+
+            [Filters](/docs/rest-api/reference/filters) for details.
+
+
+            Supported fields and operators are listed below:
+
+
+            | Field'
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+    - name: events-id-budget-payments-paymentid-invoices-invoiceid
+      path: /events/{id}/budget-payments/{paymentId}/invoices/{invoiceId}
+      operations:
+      - name: attachinvoicetopayment
+        method: PUT
+        description: Assign Invoice To Payment
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: paymentId
+          in: path
+          type: string
+          description: Path parameter paymentId.
+          required: true
+        - name: invoiceId
+          in: path
+          type: string
+          description: Path parameter invoiceId.
+          required: true
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+    - name: events-id-budget-totals
+      path: /events/{id}/budget-totals
+      operations:
+      - name: geteventbudgettotals
+        method: GET
+        description: List Budget Totals
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: filter
+          in: query
+          type: string
+          description: 'Use filter query parameters to limit results
+
+            to data that matches your criteria. See
+
+            [Filters](/docs/rest-api/reference/filters) for details.
+
+
+            Supported fields and operators are listed below:
+
+
+            | Field'
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+  exposes:
+  - type: rest
+    namespace: rest-budget-rest
+    port: 8080
+    description: REST adapter for Cvent REST APIs — Budget. One resource per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/budget-items
+      name: budget-items
+      description: REST surface for budget-items.
+      operations:
+      - method: GET
+        name: getaccountbudgetitems
+        description: List Budget Items
+        call: rest-budget.getaccountbudgetitems
+        with:
+          filter: rest.filter
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/budget-vendors
+      name: budget-vendors
+      description: REST surface for budget-vendors.
+      operations:
+      - method: GET
+        name: getaccountvendors
+        description: List Account Vendors
+        call: rest-budget.getaccountvendors
+        with:
+          filter: rest.filter
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/cards
+      name: cards
+      description: REST surface for cards.
+      operations:
+      - method: GET
+        name: getcards
+        description: List Cards
+        call: rest-budget.getcards
+        with:
+          filter: rest.filter
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/cards/transactions
+      name: cards-transactions
+      description: REST surface for cards-transactions.
+      operations:
+      - method: GET
+        name: getcardtransactions
+        description: List Card Transactions
+        call: rest-budget.getcardtransactions
+        with:
+          filter: rest.filter
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: createcardtransaction
+        description: Create Card Transaction
+        call: rest-budget.createcardtransaction
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/cards/transactions/{transactionId}
+      name: cards-transactions-transactionid
+      description: REST surface for cards-transactions-transactionid.
+      operations:
+      - method: DELETE
+        name: deletecardtransaction
+        description: Delete Card Transaction
+        call: rest-budget.deletecardtransaction
+        with:
+          transactionId: rest.transactionId
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: updatecardtransaction
+        description: Update Card Transaction
+        call: rest-budget.updatecardtransaction
+        with:
+          transactionId: rest.transactionId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/currencies/{currency}/conversion-rates
+      name: currencies-currency-conversion-rates
+      description: REST surface for currencies-currency-conversion-rates.
+      operations:
+      - method: GET
+        name: getcurrencyconversionrate
+        description: List Currency Conversion Rates
+        call: rest-budget.getcurrencyconversionrate
+        with:
+          filter: rest.filter
+          currency: rest.currency
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: createcurrencyconversionrate
+        description: Create Conversion Rate
+        call: rest-budget.createcurrencyconversionrate
+        with:
+          currency: rest.currency
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/currencies/{currency}/conversion-rates/{conversionRateId}
+      name: currencies-currency-conversion-rates-conversionrateid
+      description: REST surface for currencies-currency-conversion-rates-conversionrateid.
+      operations:
+      - method: PUT
+        name: updatecurrencyconversionrate
+        description: Update Conversion Rate
+        call: rest-budget.updatecurrencyconversionrate
+        with:
+          conversionRateId: rest.conversionRateId
+          currency: rest.currency
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deletecurrencyconversionrate
+        description: Delete Conversion Rate
+        call: rest-budget.deletecurrencyconversionrate
+        with:
+          conversionRateId: rest.conversionRateId
+          currency: rest.currency
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/events/{id}/budget-items
+      name: events-id-budget-items
+      description: REST surface for events-id-budget-items.
+      operations:
+      - method: GET
+        name: getbudgetitems
+        description: List Event Budget Items
+        call: rest-budget.getbudgetitems
+        with:
+          filter: rest.filter
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: createbudgetitem
+        description: Create Budget Item
+        call: rest-budget.createbudgetitem
+        with:
+          id: rest.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/events/{id}/budget-items/allocations
+      name: events-id-budget-items-allocations
+      description: REST surface for events-id-budget-items-allocations.
+      operations:
+      - method: GET
+        name: getbudgetallocations
+        description: List Budget Allocations
+        call: rest-budget.getbudgetallocations
+        with:
+          filter: rest.filter
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/events/{id}/budget-items/{budgetItemId}
+      name: events-id-budget-items-budgetitemid
+      description: REST surface for events-id-budget-items-budgetitemid.
+      operations:
+      - method: PUT
+        name: updatebudgetitem
+        description: Update Budget Item
+        call: rest-budget.updatebudgetitem
+        with:
+          budgetItemId: rest.budgetItemId
+          id: rest.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/events/{id}/budget-items/{budgetItemId}/allocations
+      name: events-id-budget-items-budgetitemid-allocations
+      description: REST surface for events-id-budget-items-budgetitemid-allocations.
+      operations:
+      - method: PUT
+        name: updatebudgetallocations
+        description: Update Budget Allocations
+        call: rest-budget.updatebudgetallocations
+        with:
+          budgetItemId: rest.budgetItemId
+          id: rest.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deletebudgetallocations
+        description: Delete  Budget Allocations
+        call: rest-budget.deletebudgetallocations
+        with:
+          budgetItemId: rest.budgetItemId
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/events/{id}/budget-items/{budgetItemId}/budget-payments
+      name: events-id-budget-items-budgetitemid-budget-payments
+      description: REST surface for events-id-budget-items-budgetitemid-budget-payments.
+      operations:
+      - method: POST
+        name: createpayment
+        description: Create Budget Payment
+        call: rest-budget.createpayment
+        with:
+          budgetItemId: rest.budgetItemId
+          id: rest.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/events/{id}/budget-items/{budgetItemId}/budget-payments/{paymentId}
+      name: events-id-budget-items-budgetitemid-budget-payments-paymenti
+      description: REST surface for events-id-budget-items-budgetitemid-budget-payments-paymenti.
+      operations:
+      - method: PUT
+        name: updatepayment
+        description: Update Budget Payment
+        call: rest-budget.updatepayment
+        with:
+          paymentId: rest.paymentId
+          budgetItemId: rest.budgetItemId
+          id: rest.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deletepayment
+        description: Delete Budget Payment
+        call: rest-budget.deletepayment
+        with:
+          paymentId: rest.paymentId
+          budgetItemId: rest.budgetItemId
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/events/{id}/budget-items/{budgetItemId}/custom-fields/{customFieldId}/answers
+      name: events-id-budget-items-budgetitemid-custom-fields-customfiel
+      description: REST surface for events-id-budget-items-budgetitemid-custom-fields-customfiel.
+      operations:
+      - method: PUT
+        name: answerbudgetcustomfield
+        description: Update Budget Cstm Fld Answers
+        call: rest-budget.answerbudgetcustomfield
+        with:
+          customFieldId: rest.customFieldId
+          budgetItemId: rest.budgetItemId
+          id: rest.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/events/{id}/budget-payments
+      name: events-id-budget-payments
+      description: REST surface for events-id-budget-payments.
+      operations:
+      - method: GET
+        name: getpayments
+        description: List Budget Payments
+        call: rest-budget.getpayments
+        with:
+          filter: rest.filter
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/events/{id}/budget-payments/{paymentId}/invoices/{invoiceId}
+      name: events-id-budget-payments-paymentid-invoices-invoiceid
+      description: REST surface for events-id-budget-payments-paymentid-invoices-invoiceid.
+      operations:
+      - method: PUT
+        name: attachinvoicetopayment
+        description: Assign Invoice To Payment
+        call: rest-budget.attachinvoicetopayment
+        with:
+          paymentId: rest.paymentId
+          invoiceId: rest.invoiceId
+          id: rest.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/events/{id}/budget-totals
+      name: events-id-budget-totals
+      description: REST surface for events-id-budget-totals.
+      operations:
+      - method: GET
+        name: geteventbudgettotals
+        description: List Budget Totals
+        call: rest-budget.geteventbudgettotals
+        with:
+          filter: rest.filter
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: rest-budget-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Cvent REST APIs — Budget. One tool per consumed operation, routed inline through this capability's consumes block.
+    tools:
+    - name: cvent-getaccountbudgetitems
+      description: List Budget Items
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-budget.getaccountbudgetitems
+      with:
+        filter: tools.filter
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-getaccountvendors
+      description: List Account Vendors
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-budget.getaccountvendors
+      with:
+        filter: tools.filter
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-getcards
+      description: List Cards
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-budget.getcards
+      with:
+        filter: tools.filter
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-getcardtransactions
+      description: List Card Transactions
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-budget.getcardtransactions
+      with:
+        filter: tools.filter
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-createcardtransaction
+      description: Create Card Transaction
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: rest-budget.createcardtransaction
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-deletecardtransaction
+      description: Delete Card Transaction
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: rest-budget.deletecardtransaction
+      with:
+        transactionId: tools.transactionId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-updatecardtransaction
+      description: Update Card Transaction
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: rest-budget.updatecardtransaction
+      with:
+        transactionId: tools.transactionId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-getcurrencyconversionrate
+      description: List Currency Conversion Rates
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-budget.getcurrencyconversionrate
+      with:
+        filter: tools.filter
+        currency: tools.currency
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-createcurrencyconversionrate
+      description: Create Conversion Rate
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: rest-budget.createcurrencyconversionrate
+      with:
+        currency: tools.currency
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-updatecurrencyconversionrate
+      description: Update Conversion Rate
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: rest-budget.updatecurrencyconversionrate
+      with:
+        conversionRateId: tools.conversionRateId
+        currency: tools.currency
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-deletecurrencyconversionrate
+      description: Delete Conversion Rate
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: rest-budget.deletecurrencyconversionrate
+      with:
+        conversionRateId: tools.conversionRateId
+        currency: tools.currency
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-getbudgetitems
+      description: List Event Budget Items
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-budget.getbudgetitems
+      with:
+        filter: tools.filter
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-createbudgetitem
+      description: Create Budget Item
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: rest-budget.createbudgetitem
+      with:
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-getbudgetallocations
+      description: List Budget Allocations
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-budget.getbudgetallocations
+      with:
+        filter: tools.filter
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-updatebudgetitem
+      description: Update Budget Item
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: rest-budget.updatebudgetitem
+      with:
+        budgetItemId: tools.budgetItemId
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-updatebudgetallocations
+      description: Update Budget Allocations
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: rest-budget.updatebudgetallocations
+      with:
+        budgetItemId: tools.budgetItemId
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-deletebudgetallocations
+      description: Delete  Budget Allocations
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: rest-budget.deletebudgetallocations
+      with:
+        budgetItemId: tools.budgetItemId
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-createpayment
+      description: Create Budget Payment
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: rest-budget.createpayment
+      with:
+        budgetItemId: tools.budgetItemId
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-updatepayment
+      description: Update Budget Payment
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: rest-budget.updatepayment
+      with:
+        paymentId: tools.paymentId
+        budgetItemId: tools.budgetItemId
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-deletepayment
+      description: Delete Budget Payment
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: rest-budget.deletepayment
+      with:
+        paymentId: tools.paymentId
+        budgetItemId: tools.budgetItemId
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-answerbudgetcustomfield
+      description: Update Budget Cstm Fld Answers
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: rest-budget.answerbudgetcustomfield
+      with:
+        customFieldId: tools.customFieldId
+        budgetItemId: tools.budgetItemId
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-getpayments
+      description: List Budget Payments
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-budget.getpayments
+      with:
+        filter: tools.filter
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-attachinvoicetopayment
+      description: Assign Invoice To Payment
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: rest-budget.attachinvoicetopayment
+      with:
+        paymentId: tools.paymentId
+        invoiceId: tools.invoiceId
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-geteventbudgettotals
+      description: List Budget Totals
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-budget.geteventbudgettotals
+      with:
+        filter: tools.filter
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.

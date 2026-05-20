@@ -1,0 +1,445 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Cvent REST APIs — Exhibitor Team
+  description: 'Cvent REST APIs — Exhibitor Team. 8 operations. Lead operation: List Exhibitor Admins. Self-contained Naftiko capability covering one business surface.'
+  tags:
+  - Cvent
+  - Exhibitor Team
+  created: '2026-05-20'
+  modified: '2026-05-20'
+binds:
+- namespace: env
+  keys:
+    CVENT_API_KEY: CVENT_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: rest-exhibitor-team
+    baseUri: https://api-platform.cvent.com/ea
+    description: Cvent REST APIs — Exhibitor Team business capability. Self-contained, no shared references.
+    resources:
+    - name: events-id-exhibitors-exhibitorid-admins
+      path: /events/{id}/exhibitors/{exhibitorId}/admins
+      operations:
+      - name: listexhibitoradmins
+        method: GET
+        description: List Exhibitor Admins
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: exhibitorId
+          in: path
+          type: string
+          description: Path parameter exhibitorId.
+          required: true
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+      - name: postexhibitoradmin
+        method: POST
+        description: Create Exhibitor Admin
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: exhibitorId
+          in: path
+          type: string
+          description: Path parameter exhibitorId.
+          required: true
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: events-id-exhibitors-exhibitorid-admins-adminid
+      path: /events/{id}/exhibitors/{exhibitorId}/admins/{adminId}
+      operations:
+      - name: getexhibitoradmin
+        method: GET
+        description: Get Exhibitor Admin
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: adminId
+          in: path
+          type: string
+          description: Path parameter adminId.
+          required: true
+        - name: exhibitorId
+          in: path
+          type: string
+          description: Path parameter exhibitorId.
+          required: true
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+      - name: updateexhibitoradmin
+        method: PUT
+        description: Update Exhibitor Admin
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: adminId
+          in: path
+          type: string
+          description: Path parameter adminId.
+          required: true
+        - name: exhibitorId
+          in: path
+          type: string
+          description: Path parameter exhibitorId.
+          required: true
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: events-id-exhibitors-exhibitorid-booth-staff
+      path: /events/{id}/exhibitors/{exhibitorId}/booth-staff
+      operations:
+      - name: listboothstaff
+        method: GET
+        description: List Booth Staff
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: exhibitorId
+          in: path
+          type: string
+          description: Path parameter exhibitorId.
+          required: true
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+      - name: associateboothstaff
+        method: POST
+        description: Create Booth Staff
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: exhibitorId
+          in: path
+          type: string
+          description: Path parameter exhibitorId.
+          required: true
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: events-id-exhibitors-exhibitorid-booth-staff-boothstaffid
+      path: /events/{id}/exhibitors/{exhibitorId}/booth-staff/{boothstaffId}
+      operations:
+      - name: getboothstaff
+        method: GET
+        description: Get Booth Staff member
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: exhibitorId
+          in: path
+          type: string
+          description: Path parameter exhibitorId.
+          required: true
+        - name: boothstaffId
+          in: path
+          type: string
+          description: Path parameter boothstaffId.
+          required: true
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+      - name: deleteboothstaff
+        method: DELETE
+        description: Delete Booth Staff member
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: exhibitorId
+          in: path
+          type: string
+          description: Path parameter exhibitorId.
+          required: true
+        - name: boothstaffId
+          in: path
+          type: string
+          description: Path parameter boothstaffId.
+          required: true
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+  exposes:
+  - type: rest
+    namespace: rest-exhibitor-team-rest
+    port: 8080
+    description: REST adapter for Cvent REST APIs — Exhibitor Team. One resource per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/events/{id}/exhibitors/{exhibitorId}/admins
+      name: events-id-exhibitors-exhibitorid-admins
+      description: REST surface for events-id-exhibitors-exhibitorid-admins.
+      operations:
+      - method: GET
+        name: listexhibitoradmins
+        description: List Exhibitor Admins
+        call: rest-exhibitor-team.listexhibitoradmins
+        with:
+          exhibitorId: rest.exhibitorId
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: postexhibitoradmin
+        description: Create Exhibitor Admin
+        call: rest-exhibitor-team.postexhibitoradmin
+        with:
+          exhibitorId: rest.exhibitorId
+          id: rest.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/events/{id}/exhibitors/{exhibitorId}/admins/{adminId}
+      name: events-id-exhibitors-exhibitorid-admins-adminid
+      description: REST surface for events-id-exhibitors-exhibitorid-admins-adminid.
+      operations:
+      - method: GET
+        name: getexhibitoradmin
+        description: Get Exhibitor Admin
+        call: rest-exhibitor-team.getexhibitoradmin
+        with:
+          adminId: rest.adminId
+          exhibitorId: rest.exhibitorId
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: updateexhibitoradmin
+        description: Update Exhibitor Admin
+        call: rest-exhibitor-team.updateexhibitoradmin
+        with:
+          adminId: rest.adminId
+          exhibitorId: rest.exhibitorId
+          id: rest.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/events/{id}/exhibitors/{exhibitorId}/booth-staff
+      name: events-id-exhibitors-exhibitorid-booth-staff
+      description: REST surface for events-id-exhibitors-exhibitorid-booth-staff.
+      operations:
+      - method: GET
+        name: listboothstaff
+        description: List Booth Staff
+        call: rest-exhibitor-team.listboothstaff
+        with:
+          exhibitorId: rest.exhibitorId
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: associateboothstaff
+        description: Create Booth Staff
+        call: rest-exhibitor-team.associateboothstaff
+        with:
+          exhibitorId: rest.exhibitorId
+          id: rest.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/events/{id}/exhibitors/{exhibitorId}/booth-staff/{boothstaffId}
+      name: events-id-exhibitors-exhibitorid-booth-staff-boothstaffid
+      description: REST surface for events-id-exhibitors-exhibitorid-booth-staff-boothstaffid.
+      operations:
+      - method: GET
+        name: getboothstaff
+        description: Get Booth Staff member
+        call: rest-exhibitor-team.getboothstaff
+        with:
+          exhibitorId: rest.exhibitorId
+          boothstaffId: rest.boothstaffId
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deleteboothstaff
+        description: Delete Booth Staff member
+        call: rest-exhibitor-team.deleteboothstaff
+        with:
+          exhibitorId: rest.exhibitorId
+          boothstaffId: rest.boothstaffId
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: rest-exhibitor-team-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Cvent REST APIs — Exhibitor Team. One tool per consumed operation, routed inline through this capability's consumes block.
+    tools:
+    - name: cvent-listexhibitoradmins
+      description: List Exhibitor Admins
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-exhibitor-team.listexhibitoradmins
+      with:
+        exhibitorId: tools.exhibitorId
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-postexhibitoradmin
+      description: Create Exhibitor Admin
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: rest-exhibitor-team.postexhibitoradmin
+      with:
+        exhibitorId: tools.exhibitorId
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-getexhibitoradmin
+      description: Get Exhibitor Admin
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-exhibitor-team.getexhibitoradmin
+      with:
+        adminId: tools.adminId
+        exhibitorId: tools.exhibitorId
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-updateexhibitoradmin
+      description: Update Exhibitor Admin
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: rest-exhibitor-team.updateexhibitoradmin
+      with:
+        adminId: tools.adminId
+        exhibitorId: tools.exhibitorId
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-listboothstaff
+      description: List Booth Staff
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-exhibitor-team.listboothstaff
+      with:
+        exhibitorId: tools.exhibitorId
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-associateboothstaff
+      description: Create Booth Staff
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: rest-exhibitor-team.associateboothstaff
+      with:
+        exhibitorId: tools.exhibitorId
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-getboothstaff
+      description: Get Booth Staff member
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-exhibitor-team.getboothstaff
+      with:
+        exhibitorId: tools.exhibitorId
+        boothstaffId: tools.boothstaffId
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-deleteboothstaff
+      description: Delete Booth Staff member
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: rest-exhibitor-team.deleteboothstaff
+      with:
+        exhibitorId: tools.exhibitorId
+        boothstaffId: tools.boothstaffId
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.

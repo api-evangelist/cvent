@@ -1,0 +1,1258 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Cvent REST APIs — Contacts
+  description: 'Cvent REST APIs — Contacts. 28 operations. Lead operation: List Contact Groups. Self-contained Naftiko capability covering one business surface.'
+  tags:
+  - Cvent
+  - Contacts
+  created: '2026-05-20'
+  modified: '2026-05-20'
+binds:
+- namespace: env
+  keys:
+    CVENT_API_KEY: CVENT_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: rest-contacts
+    baseUri: https://api-platform.cvent.com/ea
+    description: Cvent REST APIs — Contacts business capability. Self-contained, no shared references.
+    resources:
+    - name: contact-groups
+      path: /contact-groups
+      operations:
+      - name: createcontactgroup
+        method: POST
+        description: Create Contact Group
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: listcontactgroups
+        method: GET
+        description: List Contact Groups
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: filter
+          in: query
+          type: string
+          description: 'Use filter query parameters to limit results
+
+            to data that matches your criteria. See
+
+            [Filters](/docs/rest-api/reference/filters) for details.
+
+
+            Supported fields and operators are listed below:
+
+
+            | Field'
+    - name: contact-groups-id
+      path: /contact-groups/{id}
+      operations:
+      - name: getcontactgroupbyid
+        method: GET
+        description: Get Contact Group
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+      - name: updatecontactgroup
+        method: PUT
+        description: Update Contact Group
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: deletecontactgroup
+        method: DELETE
+        description: Delete Contact Group
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+    - name: contact-groups-id-contacts
+      path: /contact-groups/{id}/contacts
+      operations:
+      - name: getcontactidsbycontactgroup
+        method: GET
+        description: Get Ids in Contact Group
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+    - name: contact-groups-id-contacts-contactid
+      path: /contact-groups/{id}/contacts/{contactId}
+      operations:
+      - name: addcontacttocontactgroup
+        method: PUT
+        description: Add Contact To Group
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: contactId
+          in: path
+          type: string
+          description: Path parameter contactId.
+          required: true
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+      - name: removecontactfromcontactgroup
+        method: DELETE
+        description: Remove Contact From Group
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: contactId
+          in: path
+          type: string
+          description: Path parameter contactId.
+          required: true
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+    - name: contact-types
+      path: /contact-types
+      operations:
+      - name: listcontacttypes
+        method: GET
+        description: List Contact Types
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: filter
+          in: query
+          type: string
+          description: 'Use filter query parameters to limit results
+
+            to data that matches your criteria. See
+
+            [Filters](/docs/rest-api/reference/filters) for details.
+
+
+            Supported fields and operators are listed below:
+
+
+            | Field'
+    - name: contacts
+      path: /contacts
+      operations:
+      - name: listcontacts
+        method: GET
+        description: List Contacts
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: filter
+          in: query
+          type: string
+          description: 'Use filter query parameters to limit results
+
+            to data that matches your criteria. See
+
+            [Filters](/docs/rest-api/reference/filters) for details.
+
+
+            Supported fields and operators are listed below:
+
+
+            | Field'
+      - name: updatecontacts
+        method: PUT
+        description: Update Contacts
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: patchcontacts
+        method: PATCH
+        description: Patch Contacts
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: createcontacts
+        method: POST
+        description: Create Contacts
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: upsert
+          in: query
+          type: boolean
+          description: 'This parameter determines whether the POST operation should be treated as an upsert. Upserts update existing contacts if they already exist, and otherwise create new contacts.
+
+
+            True indicates that thi'
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: contacts-filter
+      path: /contacts/filter
+      operations:
+      - name: listcontactspostfilters
+        method: POST
+        description: List Contacts
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+    - name: contacts-obfuscate-obfuscateid-status
+      path: /contacts/obfuscate/{obfuscateId}/status
+      operations:
+      - name: getcontactobfuscationstatusbyid
+        method: GET
+        description: Get Obfuscation Status
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: obfuscateId
+          in: path
+          type: string
+          description: Path parameter obfuscateId.
+          required: true
+    - name: contacts-contactid-history
+      path: /contacts/{contactId}/history
+      operations:
+      - name: getchangehistoryforaspecificcontact
+        method: GET
+        description: Get Contact Change History
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: contactId
+          in: path
+          type: string
+          description: Path parameter contactId.
+          required: true
+    - name: contacts-id
+      path: /contacts/{id}
+      operations:
+      - name: getcontactbyid
+        method: GET
+        description: Get Contact
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+      - name: updatecontactbyid
+        method: PUT
+        description: Update Contact
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: patchcontactbyid
+        method: PATCH
+        description: Patch Contact
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: deletecontactbyid
+        method: DELETE
+        description: Delete Contact
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+    - name: contacts-id-custom-fields-customfieldid-answers
+      path: /contacts/{id}/custom-fields/{customFieldId}/answers
+      operations:
+      - name: updatecontactcustomfieldanswers
+        method: PUT
+        description: Update Custom Field Answers
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: customFieldId
+          in: path
+          type: string
+          description: Path parameter customFieldId.
+          required: true
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: contacts-id-merge
+      path: /contacts/{id}/merge
+      operations:
+      - name: mergecontacts
+        method: POST
+        description: Merge Contacts
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: contacts-id-obfuscate
+      path: /contacts/{id}/obfuscate
+      operations:
+      - name: obfuscatecontactbyid
+        method: POST
+        description: Obfuscate a Contact
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: contacts-id-profile-images
+      path: /contacts/{id}/profile-images
+      operations:
+      - name: deletecontactprofileimage
+        method: DELETE
+        description: Delete Contact Profile Picture
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+      - name: assigncontactprofileimage
+        method: PUT
+        description: Assign Contact Profile Picture
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: contacts-id-related-contacts
+      path: /contacts/{id}/related-contacts
+      operations:
+      - name: getcontactrelationshipsbyid
+        method: GET
+        description: Get Related Contact Ids
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+    - name: contacts-id-related-contacts-relatedcontactid
+      path: /contacts/{id}/related-contacts/{relatedContactId}
+      operations:
+      - name: createcontactrelationship
+        method: PUT
+        description: Add Contact Relationship
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: relatedContactId
+          in: path
+          type: string
+          description: Path parameter relatedContactId.
+          required: true
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+      - name: deletecontactrelationship
+        method: DELETE
+        description: Delete Contact Relationship
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: relatedContactId
+          in: path
+          type: string
+          description: Path parameter relatedContactId.
+          required: true
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+  exposes:
+  - type: rest
+    namespace: rest-contacts-rest
+    port: 8080
+    description: REST adapter for Cvent REST APIs — Contacts. One resource per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/contact-groups
+      name: contact-groups
+      description: REST surface for contact-groups.
+      operations:
+      - method: POST
+        name: createcontactgroup
+        description: Create Contact Group
+        call: rest-contacts.createcontactgroup
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: GET
+        name: listcontactgroups
+        description: List Contact Groups
+        call: rest-contacts.listcontactgroups
+        with:
+          filter: rest.filter
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/contact-groups/{id}
+      name: contact-groups-id
+      description: REST surface for contact-groups-id.
+      operations:
+      - method: GET
+        name: getcontactgroupbyid
+        description: Get Contact Group
+        call: rest-contacts.getcontactgroupbyid
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: updatecontactgroup
+        description: Update Contact Group
+        call: rest-contacts.updatecontactgroup
+        with:
+          id: rest.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deletecontactgroup
+        description: Delete Contact Group
+        call: rest-contacts.deletecontactgroup
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/contact-groups/{id}/contacts
+      name: contact-groups-id-contacts
+      description: REST surface for contact-groups-id-contacts.
+      operations:
+      - method: GET
+        name: getcontactidsbycontactgroup
+        description: Get Ids in Contact Group
+        call: rest-contacts.getcontactidsbycontactgroup
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/contact-groups/{id}/contacts/{contactId}
+      name: contact-groups-id-contacts-contactid
+      description: REST surface for contact-groups-id-contacts-contactid.
+      operations:
+      - method: PUT
+        name: addcontacttocontactgroup
+        description: Add Contact To Group
+        call: rest-contacts.addcontacttocontactgroup
+        with:
+          contactId: rest.contactId
+          id: rest.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: removecontactfromcontactgroup
+        description: Remove Contact From Group
+        call: rest-contacts.removecontactfromcontactgroup
+        with:
+          contactId: rest.contactId
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/contact-types
+      name: contact-types
+      description: REST surface for contact-types.
+      operations:
+      - method: GET
+        name: listcontacttypes
+        description: List Contact Types
+        call: rest-contacts.listcontacttypes
+        with:
+          filter: rest.filter
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/contacts
+      name: contacts
+      description: REST surface for contacts.
+      operations:
+      - method: GET
+        name: listcontacts
+        description: List Contacts
+        call: rest-contacts.listcontacts
+        with:
+          filter: rest.filter
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: updatecontacts
+        description: Update Contacts
+        call: rest-contacts.updatecontacts
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PATCH
+        name: patchcontacts
+        description: Patch Contacts
+        call: rest-contacts.patchcontacts
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: createcontacts
+        description: Create Contacts
+        call: rest-contacts.createcontacts
+        with:
+          upsert: rest.upsert
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/contacts/filter
+      name: contacts-filter
+      description: REST surface for contacts-filter.
+      operations:
+      - method: POST
+        name: listcontactspostfilters
+        description: List Contacts
+        call: rest-contacts.listcontactspostfilters
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/contacts/obfuscate/{obfuscateId}/status
+      name: contacts-obfuscate-obfuscateid-status
+      description: REST surface for contacts-obfuscate-obfuscateid-status.
+      operations:
+      - method: GET
+        name: getcontactobfuscationstatusbyid
+        description: Get Obfuscation Status
+        call: rest-contacts.getcontactobfuscationstatusbyid
+        with:
+          obfuscateId: rest.obfuscateId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/contacts/{contactId}/history
+      name: contacts-contactid-history
+      description: REST surface for contacts-contactid-history.
+      operations:
+      - method: GET
+        name: getchangehistoryforaspecificcontact
+        description: Get Contact Change History
+        call: rest-contacts.getchangehistoryforaspecificcontact
+        with:
+          contactId: rest.contactId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/contacts/{id}
+      name: contacts-id
+      description: REST surface for contacts-id.
+      operations:
+      - method: GET
+        name: getcontactbyid
+        description: Get Contact
+        call: rest-contacts.getcontactbyid
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: updatecontactbyid
+        description: Update Contact
+        call: rest-contacts.updatecontactbyid
+        with:
+          id: rest.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PATCH
+        name: patchcontactbyid
+        description: Patch Contact
+        call: rest-contacts.patchcontactbyid
+        with:
+          id: rest.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deletecontactbyid
+        description: Delete Contact
+        call: rest-contacts.deletecontactbyid
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/contacts/{id}/custom-fields/{customFieldId}/answers
+      name: contacts-id-custom-fields-customfieldid-answers
+      description: REST surface for contacts-id-custom-fields-customfieldid-answers.
+      operations:
+      - method: PUT
+        name: updatecontactcustomfieldanswers
+        description: Update Custom Field Answers
+        call: rest-contacts.updatecontactcustomfieldanswers
+        with:
+          customFieldId: rest.customFieldId
+          id: rest.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/contacts/{id}/merge
+      name: contacts-id-merge
+      description: REST surface for contacts-id-merge.
+      operations:
+      - method: POST
+        name: mergecontacts
+        description: Merge Contacts
+        call: rest-contacts.mergecontacts
+        with:
+          id: rest.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/contacts/{id}/obfuscate
+      name: contacts-id-obfuscate
+      description: REST surface for contacts-id-obfuscate.
+      operations:
+      - method: POST
+        name: obfuscatecontactbyid
+        description: Obfuscate a Contact
+        call: rest-contacts.obfuscatecontactbyid
+        with:
+          id: rest.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/contacts/{id}/profile-images
+      name: contacts-id-profile-images
+      description: REST surface for contacts-id-profile-images.
+      operations:
+      - method: DELETE
+        name: deletecontactprofileimage
+        description: Delete Contact Profile Picture
+        call: rest-contacts.deletecontactprofileimage
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: assigncontactprofileimage
+        description: Assign Contact Profile Picture
+        call: rest-contacts.assigncontactprofileimage
+        with:
+          id: rest.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/contacts/{id}/related-contacts
+      name: contacts-id-related-contacts
+      description: REST surface for contacts-id-related-contacts.
+      operations:
+      - method: GET
+        name: getcontactrelationshipsbyid
+        description: Get Related Contact Ids
+        call: rest-contacts.getcontactrelationshipsbyid
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/contacts/{id}/related-contacts/{relatedContactId}
+      name: contacts-id-related-contacts-relatedcontactid
+      description: REST surface for contacts-id-related-contacts-relatedcontactid.
+      operations:
+      - method: PUT
+        name: createcontactrelationship
+        description: Add Contact Relationship
+        call: rest-contacts.createcontactrelationship
+        with:
+          relatedContactId: rest.relatedContactId
+          id: rest.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deletecontactrelationship
+        description: Delete Contact Relationship
+        call: rest-contacts.deletecontactrelationship
+        with:
+          relatedContactId: rest.relatedContactId
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: rest-contacts-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Cvent REST APIs — Contacts. One tool per consumed operation, routed inline through this capability's consumes block.
+    tools:
+    - name: cvent-createcontactgroup
+      description: Create Contact Group
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: rest-contacts.createcontactgroup
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-listcontactgroups
+      description: List Contact Groups
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-contacts.listcontactgroups
+      with:
+        filter: tools.filter
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-getcontactgroupbyid
+      description: Get Contact Group
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-contacts.getcontactgroupbyid
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-updatecontactgroup
+      description: Update Contact Group
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: rest-contacts.updatecontactgroup
+      with:
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-deletecontactgroup
+      description: Delete Contact Group
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: rest-contacts.deletecontactgroup
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-getcontactidsbycontactgroup
+      description: Get Ids in Contact Group
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-contacts.getcontactidsbycontactgroup
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-addcontacttocontactgroup
+      description: Add Contact To Group
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: rest-contacts.addcontacttocontactgroup
+      with:
+        contactId: tools.contactId
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-removecontactfromcontactgroup
+      description: Remove Contact From Group
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: rest-contacts.removecontactfromcontactgroup
+      with:
+        contactId: tools.contactId
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-listcontacttypes
+      description: List Contact Types
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-contacts.listcontacttypes
+      with:
+        filter: tools.filter
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-listcontacts
+      description: List Contacts
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-contacts.listcontacts
+      with:
+        filter: tools.filter
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-updatecontacts
+      description: Update Contacts
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: rest-contacts.updatecontacts
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-patchcontacts
+      description: Patch Contacts
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: rest-contacts.patchcontacts
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-createcontacts
+      description: Create Contacts
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: rest-contacts.createcontacts
+      with:
+        upsert: tools.upsert
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-listcontactspostfilters
+      description: List Contacts
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: rest-contacts.listcontactspostfilters
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-getcontactobfuscationstatusbyid
+      description: Get Obfuscation Status
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-contacts.getcontactobfuscationstatusbyid
+      with:
+        obfuscateId: tools.obfuscateId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-getchangehistoryforaspecificcontact
+      description: Get Contact Change History
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-contacts.getchangehistoryforaspecificcontact
+      with:
+        contactId: tools.contactId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-getcontactbyid
+      description: Get Contact
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-contacts.getcontactbyid
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-updatecontactbyid
+      description: Update Contact
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: rest-contacts.updatecontactbyid
+      with:
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-patchcontactbyid
+      description: Patch Contact
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: rest-contacts.patchcontactbyid
+      with:
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-deletecontactbyid
+      description: Delete Contact
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: rest-contacts.deletecontactbyid
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-updatecontactcustomfieldanswers
+      description: Update Custom Field Answers
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: rest-contacts.updatecontactcustomfieldanswers
+      with:
+        customFieldId: tools.customFieldId
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-mergecontacts
+      description: Merge Contacts
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: rest-contacts.mergecontacts
+      with:
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-obfuscatecontactbyid
+      description: Obfuscate a Contact
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: rest-contacts.obfuscatecontactbyid
+      with:
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-deletecontactprofileimage
+      description: Delete Contact Profile Picture
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: rest-contacts.deletecontactprofileimage
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-assigncontactprofileimage
+      description: Assign Contact Profile Picture
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: rest-contacts.assigncontactprofileimage
+      with:
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-getcontactrelationshipsbyid
+      description: Get Related Contact Ids
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-contacts.getcontactrelationshipsbyid
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-createcontactrelationship
+      description: Add Contact Relationship
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: rest-contacts.createcontactrelationship
+      with:
+        relatedContactId: tools.relatedContactId
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-deletecontactrelationship
+      description: Delete Contact Relationship
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: rest-contacts.deletecontactrelationship
+      with:
+        relatedContactId: tools.relatedContactId
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.

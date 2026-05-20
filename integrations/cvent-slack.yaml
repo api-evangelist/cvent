@@ -1,0 +1,107 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Post Cvent attendee milestones to Slack
+  description: When notable Cvent events happen (first 100 registrants, VIP registered, no-show flag) post a formatted message to the right Slack channel so the events team reacts in real time.
+  tags:
+  - Cvent
+  - Integration
+  - Collaboration
+  - slack
+  created: '2026-05-20'
+  modified: '2026-05-20'
+binds:
+- namespace: env
+  keys:
+    CVENT_API_KEY: CVENT_API_KEY
+    SLACK_API_KEY: SLACK_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: cvent
+    baseUri: https://api-platform.cvent.com
+    description: Cvent API operations consumed by this integration.
+    resources:
+    - name: ea-attendees
+      path: /ea/attendees
+      operations:
+      - name: listattendees
+        method: GET
+        description: List attendees to compute milestones.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters: []
+    - name: ea-events-id
+      path: /ea/events/{id}
+      operations:
+      - name: getevent
+        method: GET
+        description: Get event context for the message body.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: Path parameter id.
+          required: true
+  - type: http
+    namespace: slack
+    baseUri: https://slack.com
+    description: Slack Web API operations consumed by this integration.
+    resources:
+    - name: api-chat-postmessage
+      path: /api/chat.postMessage
+      operations:
+      - name: postmessage
+        method: POST
+        description: 'Slack Web API: postMessage'
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+  exposes:
+  - type: mcp
+    namespace: cvent-slack-mcp
+    description: MCP adapter for the cvent-slack integration.
+    tools:
+    - name: cvent_slack
+      description: Execute the cvent slack integration end-to-end.
+      inputSchema:
+        type: object
+        properties:
+          trigger_event:
+            type: object
+            description: Triggering event payload.
+        required:
+        - trigger_event
+  - type: rest
+    namespace: cvent-slack-rest
+    port: 8080
+    description: REST adapter for the cvent-slack integration.
+    resources:
+    - path: /cvent-slack
+      name: cvent-slack
+      description: REST surface for the cvent-slack integration.
+      operations:
+      - method: POST
+        name: trigger
+        description: Trigger the cvent-slack integration.
+        call: cvent_slack
+        with:
+          trigger_event: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.

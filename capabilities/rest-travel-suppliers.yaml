@@ -1,0 +1,340 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Cvent REST APIs — Travel Suppliers
+  description: 'Cvent REST APIs — Travel Suppliers. 8 operations. Lead operation: List Supplier Brands. Self-contained Naftiko capability covering one business surface.'
+  tags:
+  - Cvent
+  - Travel Suppliers
+  created: '2026-05-20'
+  modified: '2026-05-20'
+binds:
+- namespace: env
+  keys:
+    CVENT_API_KEY: CVENT_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: rest-travel-suppliers
+    baseUri: https://api-platform.cvent.com/ea
+    description: Cvent REST APIs — Travel Suppliers business capability. Self-contained, no shared references.
+    resources:
+    - name: travel-suppliers-brands
+      path: /travel-suppliers/brands
+      operations:
+      - name: propertyapilistbrands
+        method: GET
+        description: List Supplier Brands
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters: []
+    - name: travel-suppliers-brands-brandid
+      path: /travel-suppliers/brands/{brandId}
+      operations:
+      - name: propertyapigetbrand
+        method: GET
+        description: Get Supplier Brand
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: brandId
+          in: path
+          type: string
+          description: Path parameter brandId.
+          required: true
+    - name: travel-suppliers-chains
+      path: /travel-suppliers/chains
+      operations:
+      - name: propertyapilistchains
+        method: GET
+        description: List Supplier Chains
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters: []
+    - name: travel-suppliers-chains-chainid
+      path: /travel-suppliers/chains/{chainId}
+      operations:
+      - name: propertyapigetchain
+        method: GET
+        description: Get Supplier Chain
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: chainId
+          in: path
+          type: string
+          description: Path parameter chainId.
+          required: true
+    - name: travel-suppliers-properties
+      path: /travel-suppliers/properties
+      operations:
+      - name: propertyapilistproperties
+        method: GET
+        description: List Supplier Properties
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters: []
+    - name: travel-suppliers-properties-propertyid
+      path: /travel-suppliers/properties/{propertyId}
+      operations:
+      - name: propertyapigetproperty
+        method: GET
+        description: Get Supplier Property
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: propertyId
+          in: path
+          type: string
+          description: Path parameter propertyId.
+          required: true
+    - name: travel-suppliers-property-rooms
+      path: /travel-suppliers/property-rooms
+      operations:
+      - name: btapigetpropertyrooms
+        method: GET
+        description: List Supplier Property Rooms
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters: []
+    - name: travel-suppliers-property-rooms-roomid
+      path: /travel-suppliers/property-rooms/{roomId}
+      operations:
+      - name: propertyapigetpropertyroom
+        method: GET
+        description: Get Supplier Property Room
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: roomId
+          in: path
+          type: string
+          description: Path parameter roomId.
+          required: true
+  exposes:
+  - type: rest
+    namespace: rest-travel-suppliers-rest
+    port: 8080
+    description: REST adapter for Cvent REST APIs — Travel Suppliers. One resource per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/travel-suppliers/brands
+      name: travel-suppliers-brands
+      description: REST surface for travel-suppliers-brands.
+      operations:
+      - method: GET
+        name: propertyapilistbrands
+        description: List Supplier Brands
+        call: rest-travel-suppliers.propertyapilistbrands
+        with: {}
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/travel-suppliers/brands/{brandId}
+      name: travel-suppliers-brands-brandid
+      description: REST surface for travel-suppliers-brands-brandid.
+      operations:
+      - method: GET
+        name: propertyapigetbrand
+        description: Get Supplier Brand
+        call: rest-travel-suppliers.propertyapigetbrand
+        with:
+          brandId: rest.brandId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/travel-suppliers/chains
+      name: travel-suppliers-chains
+      description: REST surface for travel-suppliers-chains.
+      operations:
+      - method: GET
+        name: propertyapilistchains
+        description: List Supplier Chains
+        call: rest-travel-suppliers.propertyapilistchains
+        with: {}
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/travel-suppliers/chains/{chainId}
+      name: travel-suppliers-chains-chainid
+      description: REST surface for travel-suppliers-chains-chainid.
+      operations:
+      - method: GET
+        name: propertyapigetchain
+        description: Get Supplier Chain
+        call: rest-travel-suppliers.propertyapigetchain
+        with:
+          chainId: rest.chainId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/travel-suppliers/properties
+      name: travel-suppliers-properties
+      description: REST surface for travel-suppliers-properties.
+      operations:
+      - method: GET
+        name: propertyapilistproperties
+        description: List Supplier Properties
+        call: rest-travel-suppliers.propertyapilistproperties
+        with: {}
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/travel-suppliers/properties/{propertyId}
+      name: travel-suppliers-properties-propertyid
+      description: REST surface for travel-suppliers-properties-propertyid.
+      operations:
+      - method: GET
+        name: propertyapigetproperty
+        description: Get Supplier Property
+        call: rest-travel-suppliers.propertyapigetproperty
+        with:
+          propertyId: rest.propertyId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/travel-suppliers/property-rooms
+      name: travel-suppliers-property-rooms
+      description: REST surface for travel-suppliers-property-rooms.
+      operations:
+      - method: GET
+        name: btapigetpropertyrooms
+        description: List Supplier Property Rooms
+        call: rest-travel-suppliers.btapigetpropertyrooms
+        with: {}
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/travel-suppliers/property-rooms/{roomId}
+      name: travel-suppliers-property-rooms-roomid
+      description: REST surface for travel-suppliers-property-rooms-roomid.
+      operations:
+      - method: GET
+        name: propertyapigetpropertyroom
+        description: Get Supplier Property Room
+        call: rest-travel-suppliers.propertyapigetpropertyroom
+        with:
+          roomId: rest.roomId
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: rest-travel-suppliers-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Cvent REST APIs — Travel Suppliers. One tool per consumed operation, routed inline through this capability's consumes block.
+    tools:
+    - name: cvent-propertyapilistbrands
+      description: List Supplier Brands
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-travel-suppliers.propertyapilistbrands
+      with: {}
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-propertyapigetbrand
+      description: Get Supplier Brand
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-travel-suppliers.propertyapigetbrand
+      with:
+        brandId: tools.brandId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-propertyapilistchains
+      description: List Supplier Chains
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-travel-suppliers.propertyapilistchains
+      with: {}
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-propertyapigetchain
+      description: Get Supplier Chain
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-travel-suppliers.propertyapigetchain
+      with:
+        chainId: tools.chainId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-propertyapilistproperties
+      description: List Supplier Properties
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-travel-suppliers.propertyapilistproperties
+      with: {}
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-propertyapigetproperty
+      description: Get Supplier Property
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-travel-suppliers.propertyapigetproperty
+      with:
+        propertyId: tools.propertyId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-btapigetpropertyrooms
+      description: List Supplier Property Rooms
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-travel-suppliers.btapigetpropertyrooms
+      with: {}
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cvent-propertyapigetpropertyroom
+      description: Get Supplier Property Room
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: rest-travel-suppliers.propertyapigetpropertyroom
+      with:
+        roomId: tools.roomId
+      outputParameters:
+      - type: object
+        mapping: $.
