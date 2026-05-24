@@ -1,0 +1,495 @@
+openapi: 3.1.0
+info:
+  title: Cvent REST API
+  version: v2
+  description: |
+    Cvent Platform REST API — the unified Cvent developer surface spanning
+    Event Cloud and Hospitality Cloud product lines. Provides programmatic access to events, contacts,
+    registrations, attendees, sessions, exhibitors, surveys, webhooks, and
+    related Event Cloud resources, authenticated via OAuth 2.0 client
+    credentials. Endpoint host varies by region — US accounts use
+    api-platform.cvent.com and EMEA accounts use api-platform-eur.cvent.com.
+
+    Best-effort spec derived from Cvent developer portal documentation
+    (overview, quickstart, Registration Guide, Managing Events Guide).
+    Refer to https://developers.cvent.com/docs/rest-api/overview for the
+    authoritative reference and downloadable OpenAPI.
+  contact:
+    name: Cvent Developer Portal
+    url: https://developers.cvent.com
+  license:
+    name: Proprietary
+externalDocs:
+  description: Cvent Platform REST API documentation
+  url: https://developers.cvent.com/docs/rest-api/overview
+servers:
+  - url: https://api-platform.cvent.com
+    description: Cvent Platform REST API (US/global)
+  - url: https://api-platform-eur.cvent.com
+    description: Cvent Platform REST API (EMEA)
+security:
+  - OAuth2ClientCredentials: []
+tags:
+  - name: OAuth
+    description: OAuth 2.0 token issuance
+  - name: Events
+    description: Event lifecycle and configuration
+  - name: Contacts
+    description: Contact/address book
+  - name: Attendees
+    description: Event registrations and attendees
+  - name: Sessions
+    description: Agenda sessions
+  - name: Exhibitors
+    description: Exhibitor management
+  - name: Webhooks
+    description: Webhook subscriptions
+paths:
+  /ea/oauth2/token:
+    post:
+      tags: [OAuth]
+      summary: Issue OAuth 2.0 access token
+      description: |
+        Exchange Basic-authenticated client credentials for a Bearer access
+        token valid for 60 minutes. Use the returned token in the
+        `Authorization: Bearer <token>` header on subsequent API calls.
+      security:
+        - BasicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required: [grant_type]
+              properties:
+                grant_type:
+                  type: string
+                  enum: [client_credentials]
+                client_id:
+                  type: string
+      responses:
+        '200':
+          description: Access token issued
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessToken'
+        '401': { $ref: '#/components/responses/Unauthorized' }
+  /ea/events:
+    get:
+      tags: [Events]
+      summary: List events
+      parameters:
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Token'
+        - in: query
+          name: filter
+          schema: { type: string }
+          description: RSQL-style filter expression.
+      responses:
+        '200':
+          description: Paginated list of events
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/EventList' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+    post:
+      tags: [Events]
+      summary: Create event
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Event' }
+      responses:
+        '201':
+          description: Event created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Event' }
+  /ea/events/{eventId}:
+    parameters:
+      - $ref: '#/components/parameters/EventId'
+    get:
+      tags: [Events]
+      summary: Get event
+      responses:
+        '200':
+          description: Event detail
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Event' }
+        '404': { $ref: '#/components/responses/NotFound' }
+    put:
+      tags: [Events]
+      summary: Replace event
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Event' }
+      responses:
+        '200':
+          description: Updated event
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Event' }
+    delete:
+      tags: [Events]
+      summary: Delete event
+      responses:
+        '204':
+          description: Deleted
+  /ea/events/{eventId}/copy:
+    parameters:
+      - $ref: '#/components/parameters/EventId'
+    post:
+      tags: [Events]
+      summary: Copy event
+      responses:
+        '201':
+          description: Event copy created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Event' }
+  /ea/events/{eventId}/attendees:
+    parameters:
+      - $ref: '#/components/parameters/EventId'
+    get:
+      tags: [Attendees]
+      summary: List attendees for an event
+      parameters:
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Token'
+      responses:
+        '200':
+          description: Paginated attendee list
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AttendeeList' }
+    post:
+      tags: [Attendees]
+      summary: Add attendees (register contacts)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items: { $ref: '#/components/schemas/Attendee' }
+      responses:
+        '201':
+          description: Attendees registered
+  /ea/events/{eventId}/attendees/{attendeeId}:
+    parameters:
+      - $ref: '#/components/parameters/EventId'
+      - in: path
+        name: attendeeId
+        required: true
+        schema: { type: string }
+    get:
+      tags: [Attendees]
+      summary: Get attendee
+      responses:
+        '200':
+          description: Attendee detail
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Attendee' }
+    put:
+      tags: [Attendees]
+      summary: Update attendee (cancel, modify)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Attendee' }
+      responses:
+        '200':
+          description: Updated attendee
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Attendee' }
+  /ea/events/{eventId}/sessions:
+    parameters:
+      - $ref: '#/components/parameters/EventId'
+    get:
+      tags: [Sessions]
+      summary: List sessions
+      responses:
+        '200':
+          description: Sessions
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Session' }
+  /ea/events/{eventId}/exhibitors:
+    parameters:
+      - $ref: '#/components/parameters/EventId'
+    get:
+      tags: [Exhibitors]
+      summary: List exhibitors
+      responses:
+        '200':
+          description: Exhibitors
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Exhibitor' }
+  /ea/contacts:
+    get:
+      tags: [Contacts]
+      summary: List contacts
+      parameters:
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Token'
+      responses:
+        '200':
+          description: Paginated contact list
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ContactList' }
+    post:
+      tags: [Contacts]
+      summary: Create contact
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Contact' }
+      responses:
+        '201':
+          description: Contact created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Contact' }
+  /ea/contacts/{contactId}:
+    parameters:
+      - in: path
+        name: contactId
+        required: true
+        schema: { type: string }
+    get:
+      tags: [Contacts]
+      summary: Get contact
+      responses:
+        '200':
+          description: Contact detail
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Contact' }
+    put:
+      tags: [Contacts]
+      summary: Update contact
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Contact' }
+      responses:
+        '200':
+          description: Updated contact
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Contact' }
+    delete:
+      tags: [Contacts]
+      summary: Delete contact
+      responses:
+        '204':
+          description: Deleted
+  /ea/webhooks:
+    get:
+      tags: [Webhooks]
+      summary: List webhook subscriptions
+      responses:
+        '200':
+          description: Webhooks
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Webhook' }
+    post:
+      tags: [Webhooks]
+      summary: Create webhook subscription
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Webhook' }
+      responses:
+        '201':
+          description: Webhook subscription created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Webhook' }
+components:
+  securitySchemes:
+    OAuth2ClientCredentials:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://api-platform.cvent.com/ea/oauth2/token
+          scopes:
+            event/events:read: Read events
+            event/events:write: Write events
+            event/contacts:read: Read contacts
+            event/contacts:write: Write contacts
+            event/attendees:read: Read attendees
+            event/attendees:write: Write attendees
+            event/sessions:read: Read sessions
+            event/registration-types:read: Read registration types
+            event/custom-fields:read: Read custom fields
+    BasicAuth:
+      type: http
+      scheme: basic
+      description: Client ID / client secret Basic auth used only for the /ea/oauth2/token call.
+  parameters:
+    EventId:
+      in: path
+      name: eventId
+      required: true
+      schema: { type: string }
+    Limit:
+      in: query
+      name: limit
+      schema: { type: integer, minimum: 1, maximum: 200, default: 50 }
+    Token:
+      in: query
+      name: token
+      schema: { type: string }
+      description: Continuation token for paged results.
+  responses:
+    Unauthorized:
+      description: Missing or invalid OAuth credentials
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+  schemas:
+    AccessToken:
+      type: object
+      properties:
+        access_token: { type: string }
+        token_type: { type: string, example: Bearer }
+        expires_in: { type: integer, example: 3599 }
+        scope: { type: string }
+    Error:
+      type: object
+      properties:
+        type: { type: string }
+        title: { type: string }
+        status: { type: integer }
+        detail: { type: string }
+    Event:
+      type: object
+      properties:
+        id: { type: string }
+        code: { type: string }
+        title: { type: string }
+        description: { type: string }
+        start: { type: string, format: date-time }
+        end: { type: string, format: date-time }
+        timezone: { type: string }
+        status:
+          type: string
+          enum: [DRAFT, ACTIVE, ARCHIVED, CANCELLED]
+        type:
+          type: string
+          enum: [IN_PERSON, VIRTUAL, HYBRID, WEBINAR]
+        eventUrl: { type: string, format: uri }
+        currency: { type: string }
+        locale: { type: string }
+        created: { type: string, format: date-time }
+        lastModified: { type: string, format: date-time }
+    EventList:
+      type: object
+      properties:
+        data:
+          type: array
+          items: { $ref: '#/components/schemas/Event' }
+        paging: { $ref: '#/components/schemas/Paging' }
+    Contact:
+      type: object
+      properties:
+        id: { type: string }
+        firstName: { type: string }
+        lastName: { type: string }
+        email: { type: string, format: email }
+        company: { type: string }
+        title: { type: string }
+        phone: { type: string }
+        address:
+          type: object
+          properties:
+            line1: { type: string }
+            city: { type: string }
+            state: { type: string }
+            postalCode: { type: string }
+            countryCode: { type: string }
+    ContactList:
+      type: object
+      properties:
+        data:
+          type: array
+          items: { $ref: '#/components/schemas/Contact' }
+        paging: { $ref: '#/components/schemas/Paging' }
+    Attendee:
+      type: object
+      properties:
+        id: { type: string }
+        contactId: { type: string }
+        eventId: { type: string }
+        registrationStatus:
+          type: string
+          enum: [REGISTERED, ACCEPTED, DECLINED, CANCELLED, WAITLISTED]
+        registrationTypeId: { type: string }
+        admissionItemId: { type: string }
+        attendanceType:
+          type: string
+          enum: [IN_PERSON, VIRTUAL]
+        checkedIn: { type: boolean }
+        registered: { type: string, format: date-time }
+    AttendeeList:
+      type: object
+      properties:
+        data:
+          type: array
+          items: { $ref: '#/components/schemas/Attendee' }
+        paging: { $ref: '#/components/schemas/Paging' }
+    Session:
+      type: object
+      properties:
+        id: { type: string }
+        title: { type: string }
+        start: { type: string, format: date-time }
+        end: { type: string, format: date-time }
+        capacity: { type: integer }
+    Exhibitor:
+      type: object
+      properties:
+        id: { type: string }
+        name: { type: string }
+        boothNumber: { type: string }
+    Webhook:
+      type: object
+      properties:
+        id: { type: string }
+        url: { type: string, format: uri }
+        events:
+          type: array
+          items: { type: string }
+        active: { type: boolean }
+    Paging:
+      type: object
+      properties:
+        token: { type: string, nullable: true }
+        limit: { type: integer }
