@@ -2,12 +2,20 @@
   "repo": "cvent",
   "feeds": [
     {
-      "source": "https://www.cvent.com/en/blog",
+      "source": "https://www.cvent.com/en/blog/feed.xml",
       "feed_url": "https://www.cvent.com/en/blog/feed.xml",
-      "title": "More Reading",
-      "saved": 33
+      "title": "",
+      "saved": 0,
+      "method": "feed"
+    },
+    {
+      "source": "https://community.cvent.com/home",
+      "feed_url": "https://community.cvent.com/home",
+      "title": "",
+      "saved": 0,
+      "method": "none"
     }
   ],
-  "post_count": 49,
-  "fetched": "2026-05-17T20:20:35Z"
+  "post_count": 60,
+  "fetched": "2026-06-01T23:35:02Z"
 }
