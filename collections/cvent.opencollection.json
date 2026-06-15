@@ -1,0 +1,487 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Cvent REST API",
+    "version": "v2"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "client_credentials",
+      "accessTokenUrl": "https://api-platform.cvent.com/ea/oauth2/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "OAuth",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Issue OAuth 2.0 access token",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api-platform.cvent.com/ea/oauth2/token",
+            "body": {
+              "type": "form-urlencoded",
+              "data": [
+                {
+                  "name": "grant_type",
+                  "value": ""
+                },
+                {
+                  "name": "client_id",
+                  "value": ""
+                }
+              ]
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Exchange Basic-authenticated client credentials for a Bearer access\ntoken valid for 60 minutes. Use the returned token in the\n`Authorization: Bearer <token>` header on subsequent API calls.\n"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Events",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List events",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api-platform.cvent.com/ea/events",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "token",
+                "value": "",
+                "type": "query",
+                "description": "Continuation token for paged results."
+              },
+              {
+                "name": "filter",
+                "value": "",
+                "type": "query",
+                "description": "RSQL-style filter expression."
+              }
+            ]
+          },
+          "docs": "List events"
+        },
+        {
+          "info": {
+            "name": "Create event",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api-platform.cvent.com/ea/events",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create event"
+        },
+        {
+          "info": {
+            "name": "Get event",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api-platform.cvent.com/ea/events/:eventId",
+            "params": [
+              {
+                "name": "eventId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get event"
+        },
+        {
+          "info": {
+            "name": "Replace event",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api-platform.cvent.com/ea/events/:eventId",
+            "params": [
+              {
+                "name": "eventId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Replace event"
+        },
+        {
+          "info": {
+            "name": "Delete event",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api-platform.cvent.com/ea/events/:eventId",
+            "params": [
+              {
+                "name": "eventId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Delete event"
+        },
+        {
+          "info": {
+            "name": "Copy event",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api-platform.cvent.com/ea/events/:eventId/copy",
+            "params": [
+              {
+                "name": "eventId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Copy event"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Attendees",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List attendees for an event",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api-platform.cvent.com/ea/events/:eventId/attendees",
+            "params": [
+              {
+                "name": "eventId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "token",
+                "value": "",
+                "type": "query",
+                "description": "Continuation token for paged results."
+              }
+            ]
+          },
+          "docs": "List attendees for an event"
+        },
+        {
+          "info": {
+            "name": "Add attendees (register contacts)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api-platform.cvent.com/ea/events/:eventId/attendees",
+            "params": [
+              {
+                "name": "eventId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Add attendees (register contacts)"
+        },
+        {
+          "info": {
+            "name": "Get attendee",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api-platform.cvent.com/ea/events/:eventId/attendees/:attendeeId",
+            "params": [
+              {
+                "name": "eventId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "attendeeId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get attendee"
+        },
+        {
+          "info": {
+            "name": "Update attendee (cancel, modify)",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api-platform.cvent.com/ea/events/:eventId/attendees/:attendeeId",
+            "params": [
+              {
+                "name": "eventId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "attendeeId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update attendee (cancel, modify)"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Sessions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List sessions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api-platform.cvent.com/ea/events/:eventId/sessions",
+            "params": [
+              {
+                "name": "eventId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "List sessions"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Exhibitors",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List exhibitors",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api-platform.cvent.com/ea/events/:eventId/exhibitors",
+            "params": [
+              {
+                "name": "eventId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "List exhibitors"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Contacts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List contacts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api-platform.cvent.com/ea/contacts",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "token",
+                "value": "",
+                "type": "query",
+                "description": "Continuation token for paged results."
+              }
+            ]
+          },
+          "docs": "List contacts"
+        },
+        {
+          "info": {
+            "name": "Create contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api-platform.cvent.com/ea/contacts",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create contact"
+        },
+        {
+          "info": {
+            "name": "Get contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api-platform.cvent.com/ea/contacts/:contactId",
+            "params": [
+              {
+                "name": "contactId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get contact"
+        },
+        {
+          "info": {
+            "name": "Update contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api-platform.cvent.com/ea/contacts/:contactId",
+            "params": [
+              {
+                "name": "contactId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update contact"
+        },
+        {
+          "info": {
+            "name": "Delete contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api-platform.cvent.com/ea/contacts/:contactId",
+            "params": [
+              {
+                "name": "contactId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Delete contact"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Webhooks",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List webhook subscriptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api-platform.cvent.com/ea/webhooks"
+          },
+          "docs": "List webhook subscriptions"
+        },
+        {
+          "info": {
+            "name": "Create webhook subscription",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api-platform.cvent.com/ea/webhooks",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create webhook subscription"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
