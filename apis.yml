@@ -15,7 +15,7 @@ description: >-
   hosts API references, guides, OpenAPI downloads, webhooks, SSO,
   custom widgets, white-label, and integration documentation.
 url: https://raw.githubusercontent.com/api-evangelist/cvent/refs/heads/main/apis.yml
-image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
 type: Index
 access: 3rd-Party
 position: Consuming
@@ -57,7 +57,7 @@ apis:
       exhibitors, surveys, webhooks, and Attendee Hub resources. OAuth
       2.0 client credentials with the token endpoint at
       api-platform.cvent.com/ea/oauth2/token.
-    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://developers.cvent.com/docs/rest-api/overview
     baseURL: https://api-platform.cvent.com
     tags:
@@ -90,7 +90,7 @@ apis:
       Cvent and send relevant data to a specified URL, automatically
       pushing event, attendee, speaker, and meeting request data to
       subscriber endpoints for real-time integration.
-    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://developers.cvent.com/docs/webhooks/overview
     tags:
       - Attendees
@@ -114,7 +114,7 @@ apis:
       database of 280,000+ hotels, suppliers, and destinations
       worldwide. Planners search and compare venues and manage RFPs;
       suppliers create and update proposals via a push-pull workflow.
-    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://developers.cvent.com/docs/legacy-api/csn/overview
     tags:
       - Hospitality
@@ -137,7 +137,7 @@ apis:
       hotel reservations. Send registrant info, fetch event and hotel
       availability, retrieve reservations, and create / update / cancel
       hotel bookings.
-    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://developers.cvent.com/docs/passkey/REST/overview
     tags:
       - Accommodations
@@ -160,7 +160,7 @@ apis:
       pulling data between Cvent and internal systems. Supports contact
       and event management, custom fields, address book, and metadata.
       Being sunset in favor of the REST API.
-    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://developers.cvent.com/docs/legacy-api/soap-api/overview
     tags:
       - Contacts
@@ -184,7 +184,7 @@ apis:
       The Cvent Custom Widgets API allows developers to build custom
       interactive widgets for Cvent Event Registration pages. SDK for
       widget elements, configuration files, and navigation methods.
-    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://developers.cvent.com/docs/custom-widgets/overview
     tags:
       - Customization
@@ -202,7 +202,7 @@ apis:
       Cvent SSO enables identity provider integration via SAML and
       OpenID Connect for planner login, access portals, event
       registrant and Attendee Hub, Events+, and portal applications.
-    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://developers.cvent.com/docs/sso/overview
     tags:
       - Authentication
@@ -221,7 +221,7 @@ apis:
       The Cvent White Label API enables venues and suppliers to embed
       Cvent RFP functionality into their own websites with custom
       branding, theming, and analytics for embedded RFP forms.
-    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://developers.cvent.com/docs/white-label/overview
     tags:
       - Branding
@@ -237,7 +237,7 @@ apis:
       The Cvent Salesforce App integrates Cvent event data with
       Salesforce CRM, enabling users to view events from Salesforce,
       invite contacts and leads, and sync attendee data bidirectionally.
-    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://developers.cvent.com/docs/cvent-salesforce-app/overview
     tags:
       - CRM
