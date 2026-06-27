@@ -262,7 +262,7 @@ common:
     url: https://developers.cvent.com/docs/rest-api/explanation/authentication
   - type: OAuthTokenEndpoint
     url: https://api-platform.cvent.com/ea/oauth2/token
-  - type: SignUp
+  - type: Signup
     url: https://developers.cvent.com/register
   - type: Standards
     url: https://developers.cvent.com/docs/rest-api/reference/api-standards
