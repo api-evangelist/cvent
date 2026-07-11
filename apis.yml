@@ -252,6 +252,8 @@ apis:
       - type: Authentication
         url: https://developers.cvent.com/docs/cvent-salesforce-app/salesforce-oauth
 common:
+  - type: OAuthScopes
+    url: scopes/cvent-scopes.yml
   - type: Website
     url: https://www.cvent.com/
   - type: DeveloperPortal

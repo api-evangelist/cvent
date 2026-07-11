@@ -1,0 +1,64 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/cvent-openapi.yml
+schemes:
+- name: OAuth2ClientCredentials
+  source: openapi/cvent-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: https://api-platform.cvent.com/ea/oauth2/token
+scopes:
+- scope: event/attendees:read
+  description: Read attendees
+  flows:
+  - clientCredentials
+  sources:
+  - openapi/cvent-openapi.yml
+- scope: event/attendees:write
+  description: Write attendees
+  flows:
+  - clientCredentials
+  sources:
+  - openapi/cvent-openapi.yml
+- scope: event/contacts:read
+  description: Read contacts
+  flows:
+  - clientCredentials
+  sources:
+  - openapi/cvent-openapi.yml
+- scope: event/contacts:write
+  description: Write contacts
+  flows:
+  - clientCredentials
+  sources:
+  - openapi/cvent-openapi.yml
+- scope: event/custom-fields:read
+  description: Read custom fields
+  flows:
+  - clientCredentials
+  sources:
+  - openapi/cvent-openapi.yml
+- scope: event/events:read
+  description: Read events
+  flows:
+  - clientCredentials
+  sources:
+  - openapi/cvent-openapi.yml
+- scope: event/events:write
+  description: Write events
+  flows:
+  - clientCredentials
+  sources:
+  - openapi/cvent-openapi.yml
+- scope: event/registration-types:read
+  description: Read registration types
+  flows:
+  - clientCredentials
+  sources:
+  - openapi/cvent-openapi.yml
+- scope: event/sessions:read
+  description: Read sessions
+  flows:
+  - clientCredentials
+  sources:
+  - openapi/cvent-openapi.yml
