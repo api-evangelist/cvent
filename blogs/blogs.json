@@ -5,7 +5,7 @@
       "source": "https://www.cvent.com/en/blog/feed.xml",
       "feed_url": "https://www.cvent.com/en/blog/feed.xml",
       "title": "",
-      "saved": 3,
+      "saved": 0,
       "method": "feed"
     },
     {
@@ -16,6 +16,6 @@
       "method": "none"
     }
   ],
-  "post_count": 67,
-  "fetched": "2026-06-27T12:03:07Z"
+  "post_count": 80,
+  "fetched": "2026-07-11T11:50:51Z"
 }
