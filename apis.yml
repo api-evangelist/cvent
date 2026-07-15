@@ -252,6 +252,8 @@ apis:
       - type: Authentication
         url: https://developers.cvent.com/docs/cvent-salesforce-app/salesforce-oauth
 common:
+  - type: AgenticAccess
+    url: agentic-access/cvent-agentic-access.yml
   - type: TrustCenter
     url: security/cvent-trust-center.yml
   - type: DomainSecurity
