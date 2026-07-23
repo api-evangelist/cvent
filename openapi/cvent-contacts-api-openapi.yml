@@ -1,0 +1,204 @@
+openapi: 3.1.0
+info:
+  title: Cvent REST Attendees Contacts API
+  version: v2
+  description: 'Cvent Platform REST API — the unified Cvent developer surface spanning
+
+    Event Cloud and Hospitality Cloud product lines. Provides programmatic access to events, contacts,
+
+    registrations, attendees, sessions, exhibitors, surveys, webhooks, and
+
+    related Event Cloud resources, authenticated via OAuth 2.0 client
+
+    credentials. Endpoint host varies by region — US accounts use
+
+    api-platform.cvent.com and EMEA accounts use api-platform-eur.cvent.com.
+
+
+    Best-effort spec derived from Cvent developer portal documentation
+
+    (overview, quickstart, Registration Guide, Managing Events Guide).
+
+    Refer to https://developers.cvent.com/docs/rest-api/overview for the
+
+    authoritative reference and downloadable OpenAPI.
+
+    '
+  contact:
+    name: Cvent Developer Portal
+    url: https://developers.cvent.com
+  license:
+    name: Proprietary
+servers:
+- url: https://api-platform.cvent.com
+  description: Cvent Platform REST API (US/global)
+- url: https://api-platform-eur.cvent.com
+  description: Cvent Platform REST API (EMEA)
+security:
+- OAuth2ClientCredentials: []
+tags:
+- name: Contacts
+  description: Contact/address book
+paths:
+  /ea/contacts:
+    get:
+      tags:
+      - Contacts
+      summary: List contacts
+      parameters:
+      - $ref: '#/components/parameters/Limit'
+      - $ref: '#/components/parameters/Token'
+      responses:
+        '200':
+          description: Paginated contact list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContactList'
+    post:
+      tags:
+      - Contacts
+      summary: Create contact
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Contact'
+      responses:
+        '201':
+          description: Contact created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contact'
+  /ea/contacts/{contactId}:
+    parameters:
+    - in: path
+      name: contactId
+      required: true
+      schema:
+        type: string
+    get:
+      tags:
+      - Contacts
+      summary: Get contact
+      responses:
+        '200':
+          description: Contact detail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contact'
+    put:
+      tags:
+      - Contacts
+      summary: Update contact
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Contact'
+      responses:
+        '200':
+          description: Updated contact
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contact'
+    delete:
+      tags:
+      - Contacts
+      summary: Delete contact
+      responses:
+        '204':
+          description: Deleted
+components:
+  parameters:
+    Limit:
+      in: query
+      name: limit
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 200
+        default: 50
+    Token:
+      in: query
+      name: token
+      schema:
+        type: string
+      description: Continuation token for paged results.
+  schemas:
+    ContactList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Contact'
+        paging:
+          $ref: '#/components/schemas/Paging'
+    Contact:
+      type: object
+      properties:
+        id:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+          format: email
+        company:
+          type: string
+        title:
+          type: string
+        phone:
+          type: string
+        address:
+          type: object
+          properties:
+            line1:
+              type: string
+            city:
+              type: string
+            state:
+              type: string
+            postalCode:
+              type: string
+            countryCode:
+              type: string
+    Paging:
+      type: object
+      properties:
+        token:
+          type: string
+          nullable: true
+        limit:
+          type: integer
+  securitySchemes:
+    OAuth2ClientCredentials:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://api-platform.cvent.com/ea/oauth2/token
+          scopes:
+            event/events:read: Read events
+            event/events:write: Write events
+            event/contacts:read: Read contacts
+            event/contacts:write: Write contacts
+            event/attendees:read: Read attendees
+            event/attendees:write: Write attendees
+            event/sessions:read: Read sessions
+            event/registration-types:read: Read registration types
+            event/custom-fields:read: Read custom fields
+    BasicAuth:
+      type: http
+      scheme: basic
+      description: Client ID / client secret Basic auth used only for the /ea/oauth2/token call.
+externalDocs:
+  description: Cvent Platform REST API documentation
+  url: https://developers.cvent.com/docs/rest-api/overview

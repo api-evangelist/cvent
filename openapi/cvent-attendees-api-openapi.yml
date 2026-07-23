@@ -1,0 +1,204 @@
+openapi: 3.1.0
+info:
+  title: Cvent REST Attendees API
+  version: v2
+  description: 'Cvent Platform REST API — the unified Cvent developer surface spanning
+
+    Event Cloud and Hospitality Cloud product lines. Provides programmatic access to events, contacts,
+
+    registrations, attendees, sessions, exhibitors, surveys, webhooks, and
+
+    related Event Cloud resources, authenticated via OAuth 2.0 client
+
+    credentials. Endpoint host varies by region — US accounts use
+
+    api-platform.cvent.com and EMEA accounts use api-platform-eur.cvent.com.
+
+
+    Best-effort spec derived from Cvent developer portal documentation
+
+    (overview, quickstart, Registration Guide, Managing Events Guide).
+
+    Refer to https://developers.cvent.com/docs/rest-api/overview for the
+
+    authoritative reference and downloadable OpenAPI.
+
+    '
+  contact:
+    name: Cvent Developer Portal
+    url: https://developers.cvent.com
+  license:
+    name: Proprietary
+servers:
+- url: https://api-platform.cvent.com
+  description: Cvent Platform REST API (US/global)
+- url: https://api-platform-eur.cvent.com
+  description: Cvent Platform REST API (EMEA)
+security:
+- OAuth2ClientCredentials: []
+tags:
+- name: Attendees
+  description: Event registrations and attendees
+paths:
+  /ea/events/{eventId}/attendees:
+    parameters:
+    - $ref: '#/components/parameters/EventId'
+    get:
+      tags:
+      - Attendees
+      summary: List attendees for an event
+      parameters:
+      - $ref: '#/components/parameters/Limit'
+      - $ref: '#/components/parameters/Token'
+      responses:
+        '200':
+          description: Paginated attendee list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttendeeList'
+    post:
+      tags:
+      - Attendees
+      summary: Add attendees (register contacts)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Attendee'
+      responses:
+        '201':
+          description: Attendees registered
+  /ea/events/{eventId}/attendees/{attendeeId}:
+    parameters:
+    - $ref: '#/components/parameters/EventId'
+    - in: path
+      name: attendeeId
+      required: true
+      schema:
+        type: string
+    get:
+      tags:
+      - Attendees
+      summary: Get attendee
+      responses:
+        '200':
+          description: Attendee detail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Attendee'
+    put:
+      tags:
+      - Attendees
+      summary: Update attendee (cancel, modify)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Attendee'
+      responses:
+        '200':
+          description: Updated attendee
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Attendee'
+components:
+  parameters:
+    Limit:
+      in: query
+      name: limit
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 200
+        default: 50
+    Token:
+      in: query
+      name: token
+      schema:
+        type: string
+      description: Continuation token for paged results.
+    EventId:
+      in: path
+      name: eventId
+      required: true
+      schema:
+        type: string
+  schemas:
+    AttendeeList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Attendee'
+        paging:
+          $ref: '#/components/schemas/Paging'
+    Attendee:
+      type: object
+      properties:
+        id:
+          type: string
+        contactId:
+          type: string
+        eventId:
+          type: string
+        registrationStatus:
+          type: string
+          enum:
+          - REGISTERED
+          - ACCEPTED
+          - DECLINED
+          - CANCELLED
+          - WAITLISTED
+        registrationTypeId:
+          type: string
+        admissionItemId:
+          type: string
+        attendanceType:
+          type: string
+          enum:
+          - IN_PERSON
+          - VIRTUAL
+        checkedIn:
+          type: boolean
+        registered:
+          type: string
+          format: date-time
+    Paging:
+      type: object
+      properties:
+        token:
+          type: string
+          nullable: true
+        limit:
+          type: integer
+  securitySchemes:
+    OAuth2ClientCredentials:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://api-platform.cvent.com/ea/oauth2/token
+          scopes:
+            event/events:read: Read events
+            event/events:write: Write events
+            event/contacts:read: Read contacts
+            event/contacts:write: Write contacts
+            event/attendees:read: Read attendees
+            event/attendees:write: Write attendees
+            event/sessions:read: Read sessions
+            event/registration-types:read: Read registration types
+            event/custom-fields:read: Read custom fields
+    BasicAuth:
+      type: http
+      scheme: basic
+      description: Client ID / client secret Basic auth used only for the /ea/oauth2/token call.
+externalDocs:
+  description: Cvent Platform REST API documentation
+  url: https://developers.cvent.com/docs/rest-api/overview

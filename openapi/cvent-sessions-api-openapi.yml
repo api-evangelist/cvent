@@ -1,0 +1,105 @@
+openapi: 3.1.0
+info:
+  title: Cvent REST Attendees Sessions API
+  version: v2
+  description: 'Cvent Platform REST API — the unified Cvent developer surface spanning
+
+    Event Cloud and Hospitality Cloud product lines. Provides programmatic access to events, contacts,
+
+    registrations, attendees, sessions, exhibitors, surveys, webhooks, and
+
+    related Event Cloud resources, authenticated via OAuth 2.0 client
+
+    credentials. Endpoint host varies by region — US accounts use
+
+    api-platform.cvent.com and EMEA accounts use api-platform-eur.cvent.com.
+
+
+    Best-effort spec derived from Cvent developer portal documentation
+
+    (overview, quickstart, Registration Guide, Managing Events Guide).
+
+    Refer to https://developers.cvent.com/docs/rest-api/overview for the
+
+    authoritative reference and downloadable OpenAPI.
+
+    '
+  contact:
+    name: Cvent Developer Portal
+    url: https://developers.cvent.com
+  license:
+    name: Proprietary
+servers:
+- url: https://api-platform.cvent.com
+  description: Cvent Platform REST API (US/global)
+- url: https://api-platform-eur.cvent.com
+  description: Cvent Platform REST API (EMEA)
+security:
+- OAuth2ClientCredentials: []
+tags:
+- name: Sessions
+  description: Agenda sessions
+paths:
+  /ea/events/{eventId}/sessions:
+    parameters:
+    - $ref: '#/components/parameters/EventId'
+    get:
+      tags:
+      - Sessions
+      summary: List sessions
+      responses:
+        '200':
+          description: Sessions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Session'
+components:
+  schemas:
+    Session:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        start:
+          type: string
+          format: date-time
+        end:
+          type: string
+          format: date-time
+        capacity:
+          type: integer
+  parameters:
+    EventId:
+      in: path
+      name: eventId
+      required: true
+      schema:
+        type: string
+  securitySchemes:
+    OAuth2ClientCredentials:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://api-platform.cvent.com/ea/oauth2/token
+          scopes:
+            event/events:read: Read events
+            event/events:write: Write events
+            event/contacts:read: Read contacts
+            event/contacts:write: Write contacts
+            event/attendees:read: Read attendees
+            event/attendees:write: Write attendees
+            event/sessions:read: Read sessions
+            event/registration-types:read: Read registration types
+            event/custom-fields:read: Read custom fields
+    BasicAuth:
+      type: http
+      scheme: basic
+      description: Client ID / client secret Basic auth used only for the /ea/oauth2/token call.
+externalDocs:
+  description: Cvent Platform REST API documentation
+  url: https://developers.cvent.com/docs/rest-api/overview

@@ -1,0 +1,268 @@
+openapi: 3.1.0
+info:
+  title: Cvent REST Attendees Events API
+  version: v2
+  description: 'Cvent Platform REST API — the unified Cvent developer surface spanning
+
+    Event Cloud and Hospitality Cloud product lines. Provides programmatic access to events, contacts,
+
+    registrations, attendees, sessions, exhibitors, surveys, webhooks, and
+
+    related Event Cloud resources, authenticated via OAuth 2.0 client
+
+    credentials. Endpoint host varies by region — US accounts use
+
+    api-platform.cvent.com and EMEA accounts use api-platform-eur.cvent.com.
+
+
+    Best-effort spec derived from Cvent developer portal documentation
+
+    (overview, quickstart, Registration Guide, Managing Events Guide).
+
+    Refer to https://developers.cvent.com/docs/rest-api/overview for the
+
+    authoritative reference and downloadable OpenAPI.
+
+    '
+  contact:
+    name: Cvent Developer Portal
+    url: https://developers.cvent.com
+  license:
+    name: Proprietary
+servers:
+- url: https://api-platform.cvent.com
+  description: Cvent Platform REST API (US/global)
+- url: https://api-platform-eur.cvent.com
+  description: Cvent Platform REST API (EMEA)
+security:
+- OAuth2ClientCredentials: []
+tags:
+- name: Events
+  description: Event lifecycle and configuration
+paths:
+  /ea/events:
+    get:
+      tags:
+      - Events
+      summary: List events
+      parameters:
+      - $ref: '#/components/parameters/Limit'
+      - $ref: '#/components/parameters/Token'
+      - in: query
+        name: filter
+        schema:
+          type: string
+        description: RSQL-style filter expression.
+      responses:
+        '200':
+          description: Paginated list of events
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      tags:
+      - Events
+      summary: Create event
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Event'
+      responses:
+        '201':
+          description: Event created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+  /ea/events/{eventId}:
+    parameters:
+    - $ref: '#/components/parameters/EventId'
+    get:
+      tags:
+      - Events
+      summary: Get event
+      responses:
+        '200':
+          description: Event detail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      tags:
+      - Events
+      summary: Replace event
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Event'
+      responses:
+        '200':
+          description: Updated event
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+    delete:
+      tags:
+      - Events
+      summary: Delete event
+      responses:
+        '204':
+          description: Deleted
+  /ea/events/{eventId}/copy:
+    parameters:
+    - $ref: '#/components/parameters/EventId'
+    post:
+      tags:
+      - Events
+      summary: Copy event
+      responses:
+        '201':
+          description: Event copy created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+components:
+  parameters:
+    Limit:
+      in: query
+      name: limit
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 200
+        default: 50
+    Token:
+      in: query
+      name: token
+      schema:
+        type: string
+      description: Continuation token for paged results.
+    EventId:
+      in: path
+      name: eventId
+      required: true
+      schema:
+        type: string
+  responses:
+    Unauthorized:
+      description: Missing or invalid OAuth credentials
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    EventList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Event'
+        paging:
+          $ref: '#/components/schemas/Paging'
+    Error:
+      type: object
+      properties:
+        type:
+          type: string
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+    Paging:
+      type: object
+      properties:
+        token:
+          type: string
+          nullable: true
+        limit:
+          type: integer
+    Event:
+      type: object
+      properties:
+        id:
+          type: string
+        code:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        start:
+          type: string
+          format: date-time
+        end:
+          type: string
+          format: date-time
+        timezone:
+          type: string
+        status:
+          type: string
+          enum:
+          - DRAFT
+          - ACTIVE
+          - ARCHIVED
+          - CANCELLED
+        type:
+          type: string
+          enum:
+          - IN_PERSON
+          - VIRTUAL
+          - HYBRID
+          - WEBINAR
+        eventUrl:
+          type: string
+          format: uri
+        currency:
+          type: string
+        locale:
+          type: string
+        created:
+          type: string
+          format: date-time
+        lastModified:
+          type: string
+          format: date-time
+  securitySchemes:
+    OAuth2ClientCredentials:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://api-platform.cvent.com/ea/oauth2/token
+          scopes:
+            event/events:read: Read events
+            event/events:write: Write events
+            event/contacts:read: Read contacts
+            event/contacts:write: Write contacts
+            event/attendees:read: Read attendees
+            event/attendees:write: Write attendees
+            event/sessions:read: Read sessions
+            event/registration-types:read: Read registration types
+            event/custom-fields:read: Read custom fields
+    BasicAuth:
+      type: http
+      scheme: basic
+      description: Client ID / client secret Basic auth used only for the /ea/oauth2/token call.
+externalDocs:
+  description: Cvent Platform REST API documentation
+  url: https://developers.cvent.com/docs/rest-api/overview

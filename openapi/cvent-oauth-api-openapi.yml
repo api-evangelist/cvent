@@ -1,0 +1,136 @@
+openapi: 3.1.0
+info:
+  title: Cvent REST Attendees OAuth API
+  version: v2
+  description: 'Cvent Platform REST API — the unified Cvent developer surface spanning
+
+    Event Cloud and Hospitality Cloud product lines. Provides programmatic access to events, contacts,
+
+    registrations, attendees, sessions, exhibitors, surveys, webhooks, and
+
+    related Event Cloud resources, authenticated via OAuth 2.0 client
+
+    credentials. Endpoint host varies by region — US accounts use
+
+    api-platform.cvent.com and EMEA accounts use api-platform-eur.cvent.com.
+
+
+    Best-effort spec derived from Cvent developer portal documentation
+
+    (overview, quickstart, Registration Guide, Managing Events Guide).
+
+    Refer to https://developers.cvent.com/docs/rest-api/overview for the
+
+    authoritative reference and downloadable OpenAPI.
+
+    '
+  contact:
+    name: Cvent Developer Portal
+    url: https://developers.cvent.com
+  license:
+    name: Proprietary
+servers:
+- url: https://api-platform.cvent.com
+  description: Cvent Platform REST API (US/global)
+- url: https://api-platform-eur.cvent.com
+  description: Cvent Platform REST API (EMEA)
+security:
+- OAuth2ClientCredentials: []
+tags:
+- name: OAuth
+  description: OAuth 2.0 token issuance
+paths:
+  /ea/oauth2/token:
+    post:
+      tags:
+      - OAuth
+      summary: Issue OAuth 2.0 access token
+      description: 'Exchange Basic-authenticated client credentials for a Bearer access
+
+        token valid for 60 minutes. Use the returned token in the
+
+        `Authorization: Bearer <token>` header on subsequent API calls.
+
+        '
+      security:
+      - BasicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - grant_type
+              properties:
+                grant_type:
+                  type: string
+                  enum:
+                  - client_credentials
+                client_id:
+                  type: string
+      responses:
+        '200':
+          description: Access token issued
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessToken'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  schemas:
+    AccessToken:
+      type: object
+      properties:
+        access_token:
+          type: string
+        token_type:
+          type: string
+          example: Bearer
+        expires_in:
+          type: integer
+          example: 3599
+        scope:
+          type: string
+    Error:
+      type: object
+      properties:
+        type:
+          type: string
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+  responses:
+    Unauthorized:
+      description: Missing or invalid OAuth credentials
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    OAuth2ClientCredentials:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://api-platform.cvent.com/ea/oauth2/token
+          scopes:
+            event/events:read: Read events
+            event/events:write: Write events
+            event/contacts:read: Read contacts
+            event/contacts:write: Write contacts
+            event/attendees:read: Read attendees
+            event/attendees:write: Write attendees
+            event/sessions:read: Read sessions
+            event/registration-types:read: Read registration types
+            event/custom-fields:read: Read custom fields
+    BasicAuth:
+      type: http
+      scheme: basic
+      description: Client ID / client secret Basic auth used only for the /ea/oauth2/token call.
+externalDocs:
+  description: Cvent Platform REST API documentation
+  url: https://developers.cvent.com/docs/rest-api/overview
