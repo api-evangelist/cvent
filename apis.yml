@@ -34,7 +34,7 @@ access: 3rd-Party
 position: Consuming
 created: '2025-11-19'
 modified: '2026-04-28'
-specificationVersion: '0.20'
+specificationVersion: '0.23'
 tags:
   - Attendee Hub
   - Attendee Management
