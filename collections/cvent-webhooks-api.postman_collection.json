@@ -1,0 +1,224 @@
+{
+  "item": [
+    {
+      "id": "cae698d3-956d-49ec-b2bd-04408fe8198a",
+      "name": "Webhooks",
+      "description": {
+        "content": "Webhook subscriptions",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "8dc69957-ab22-469c-a4bd-196018dce36a",
+          "name": "List webhook subscriptions",
+          "request": {
+            "name": "List webhook subscriptions",
+            "description": {},
+            "url": {
+              "path": [
+                "ea",
+                "webhooks"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "205d2f76-b18e-436d-8224-e755f07c403e",
+              "name": "Webhooks",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "ea",
+                    "webhooks"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": \"string\",\n    \"url\": \"http://rrYrcZVFeTNRwWpnSnmvga.awsxhgqUCOHoTyxObDp66+l3ZWPi9LvAUfdnCS20I\",\n    \"events\": [\n      \"string\",\n      \"string\"\n    ],\n    \"active\": true\n  },\n  {\n    \"id\": \"string\",\n    \"url\": \"https://CuypGFTPNrIvJjNUUzyeoMESRmp.trb.ocE,aYM0OOON3WkusygV45r9PBWlugYNk1pZpKLPWdyQhCHNGjkXfVgLyCbwU3Q,Zsr\",\n    \"events\": [\n      \"string\",\n      \"string\"\n    ],\n    \"active\": false\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "409885fe-9c2f-4ac5-9e6b-dc5bfd9b3485",
+          "name": "Create webhook subscription",
+          "request": {
+            "name": "Create webhook subscription",
+            "description": {},
+            "url": {
+              "path": [
+                "ea",
+                "webhooks"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"<string>\",\n  \"url\": \"<uri>\",\n  \"events\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"active\": \"<boolean>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "8e86577a-fbad-44c5-8f04-b01643e5d840",
+              "name": "Webhook subscription created",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "ea",
+                    "webhooks"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"id\": \"<string>\",\n  \"url\": \"<uri>\",\n  \"events\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"active\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"url\": \"https://tdiUWOJxCafMSncNJupkljvfBCVmVOm.expaCbNYESes7syrW6KGYY9CaEJ+ZY50Njag,h7ZSJC6IXTDqioWembtcy8JfO\",\n  \"events\": [\n    \"string\",\n    \"string\"\n  ],\n  \"active\": false\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api-platform.cvent.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "scope",
+        "value": "event/events:read event/events:write event/contacts:read event/contacts:write event/attendees:read event/attendees:write event/sessions:read event/registration-types:read event/custom-fields:read"
+      },
+      {
+        "key": "accessTokenUrl",
+        "value": "https://api-platform.cvent.com/ea/oauth2/token"
+      },
+      {
+        "key": "grant_type",
+        "value": "client_credentials"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "6d4fc3b8-e6bc-4da8-8daf-bc79b8810318",
+    "name": "Cvent REST Attendees Webhooks API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Cvent Platform REST API — the unified Cvent developer surface spanning\nEvent Cloud and Hospitality Cloud product lines. Provides programmatic access to events, contacts,\nregistrations, attendees, sessions, exhibitors, surveys, webhooks, and\nrelated Event Cloud resources, authenticated via OAuth 2.0 client\ncredentials. Endpoint host varies by region — US accounts use\napi-platform.cvent.com and EMEA accounts use api-platform-eur.cvent.com.\n\nBest-effort spec derived from Cvent developer portal documentation\n(overview, quickstart, Registration Guide, Managing Events Guide).\nRefer to https://developers.cvent.com/docs/rest-api/overview for the\nauthoritative reference and downloadable OpenAPI.\n\n\nContact Support:\n Name: Cvent Developer Portal",
+      "type": "text/plain"
+    }
+  }
+}

@@ -1,0 +1,130 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Cvent REST Attendees API",
+    "version": "v2"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "client_credentials",
+      "accessTokenUrl": "https://api-platform.cvent.com/ea/oauth2/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Attendees",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List attendees for an event",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api-platform.cvent.com/ea/events/:eventId/attendees",
+            "params": [
+              {
+                "name": "eventId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "token",
+                "value": "",
+                "type": "query",
+                "description": "Continuation token for paged results."
+              }
+            ]
+          },
+          "docs": "List attendees for an event"
+        },
+        {
+          "info": {
+            "name": "Add attendees (register contacts)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api-platform.cvent.com/ea/events/:eventId/attendees",
+            "params": [
+              {
+                "name": "eventId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Add attendees (register contacts)"
+        },
+        {
+          "info": {
+            "name": "Get attendee",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api-platform.cvent.com/ea/events/:eventId/attendees/:attendeeId",
+            "params": [
+              {
+                "name": "eventId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "attendeeId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get attendee"
+        },
+        {
+          "info": {
+            "name": "Update attendee (cancel, modify)",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api-platform.cvent.com/ea/events/:eventId/attendees/:attendeeId",
+            "params": [
+              {
+                "name": "eventId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "attendeeId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update attendee (cancel, modify)"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
