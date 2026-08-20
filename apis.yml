@@ -42,6 +42,32 @@ tags:
   - Diagramming
   - Event Management
   - Event Marketing
+  - Event
+  - Exhibitors
+  - Hospitality
+  - Hospitality Cloud
+  - Hybrid Events
+  - Meetings
+  - Authentication
+  - Passkey
+  - Registration
+  - REST API
+  - SOAP API
+  - SSO
+  - Supplier Network
+  - Surveys
+  - Venue Management
+  - Venue Sourcing
+  - Virtual Events
+  - Webhook
+  - White Label
+tags_raw:
+  - Attendee Hub
+  - Attendee Management
+  - Conferences
+  - Diagramming
+  - Event Management
+  - Event Marketing
   - Events
   - Exhibitors
   - Hospitality
@@ -74,6 +100,16 @@ apis:
   tags:
   - Attendees
   - Contacts
+  - Event
+  - Authentication
+  - Registration
+  - REST
+  - Sessions
+  - Surveys
+  - Webhook
+  tags_raw:
+  - Attendees
+  - Contacts
   - Events
   - OAuth 2.0
   - Registration
@@ -103,6 +139,12 @@ apis:
   image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
   humanURL: https://developers.cvent.com/docs/webhooks/overview
   tags:
+  - Attendees
+  - Event
+  - Notification
+  - Sessions
+  - Webhook
+  tags_raw:
   - Attendees
   - Events
   - Notifications
@@ -169,6 +211,13 @@ apis:
   image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
   humanURL: https://developers.cvent.com/docs/legacy-api/soap-api/overview
   tags:
+  - Contacts
+  - Deprecated
+  - Event
+  - Legacy
+  - Registration
+  - SOAP
+  tags_raw:
   - Contacts
   - Deprecated
   - Events
@@ -243,6 +292,11 @@ apis:
   humanURL: https://developers.cvent.com/docs/cvent-salesforce-app/overview
   tags:
   - CRM
+  - Event
+  - Integration
+  - Salesforce
+  tags_raw:
+  - CRM
   - Events
   - Integration
   - Salesforce
@@ -279,6 +333,8 @@ apis:
   humanURL: https://developers.cvent.com/docs/rest-api/overview
   baseURL: https://api-platform.cvent.com
   tags:
+  - Event
+  tags_raw:
   - Events
   properties:
   - type: OpenAPI
@@ -299,6 +355,8 @@ apis:
   humanURL: https://developers.cvent.com/docs/rest-api/overview
   baseURL: https://api-platform.cvent.com
   tags:
+  - Authentication
+  tags_raw:
   - OAuth
   properties:
   - type: OpenAPI
@@ -319,6 +377,8 @@ apis:
   humanURL: https://developers.cvent.com/docs/rest-api/overview
   baseURL: https://api-platform.cvent.com
   tags:
+  - Webhook
+  tags_raw:
   - Webhooks
   properties:
   - type: OpenAPI
