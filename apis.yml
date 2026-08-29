@@ -397,6 +397,9 @@ apis:
   - type: OpenAPI
     url: openapi/cvent-webhooks-api-openapi.yml
 common:
+  - type: CapabilityMap
+    url: capabilities/cvent-capability-edges.yml
+    name: Cvent Business Capability Map
   - type: IssueTracker
     url: https://github.com/cvent/custom-widgets-labs/issues
   - type: AgenticAccess
