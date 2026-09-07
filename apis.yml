@@ -1108,6 +1108,8 @@ apis:
   - type: APIReference
     url: https://developers.cvent.com/documentation#tag/Webcasts
 common:
+- type: SupportArticles
+  url: https://support.cvent.com/
 - type: IssueTracker
   url: https://github.com/cvent/custom-widgets-labs/issues
 - type: AgenticAccess
