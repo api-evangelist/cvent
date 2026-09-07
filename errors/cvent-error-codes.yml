@@ -1,0 +1,868 @@
+generated: '2026-09-07'
+method: searched
+source: https://developers.cvent.com/docs/legacy-api/soap-api/error-codes
+api: Cvent SOAP API (legacy, V200611)
+summary:
+  codes: 277
+  classes: 23
+  scheme: CV##### — the first two digits after CV group the class (CV100xx generic/security, CV2xxxx invalid operations,
+    CV3xxxx metric/limit, CV4xxxx+ validation).
+  by_class:
+    Generic: 2
+    Security: 9
+    Invalid Operations: 14
+    Metric: 20
+    Validation: 72
+    Meeting Request: 2
+    Budget Item: 43
+    User Management: 29
+    User Group Management: 4
+    No-Registration Event Creation: 12
+    Invitee Internal Information: 10
+    Rate History: 1
+    Invitee or Guest Check-In: 2
+    Transaction Creation: 8
+    Supplier: 1
+    Survey Answer Import: 5
+    RFP Creation: 8
+    Distribution List: 6
+    Approver: 14
+    Invitee Validation: 9
+    Contact: 1
+    Advanced Logic: 1
+    No Permission: 4
+note: This registry belongs to the legacy SOAP API, which Cvent is sunsetting in favour of the REST API. The REST
+  API does not publish a numeric error registry; its errors are HTTP status codes carried in the ErrorResponse envelope
+  (see cvent-problem-types.yml).
+error_codes:
+- code: CV10000
+  class: Generic
+  message: Unknown exception
+- code: CV10001
+  class: Generic
+  message: Server exception – transaction cancelled
+- code: CV10100
+  class: Security
+  message: Account lockout
+- code: CV10101
+  class: Security
+  message: No access
+- code: CV10102
+  class: Security
+  message: Invalid login
+- code: CV10103
+  class: Security
+  message: Cannot be authenticated
+- code: CV10104
+  class: Security
+  message: Invalid Cvent header value
+- code: CV10105
+  class: Security
+  message: Session expired
+- code: CV10106
+  class: Security
+  message: Invalid IP
+- code: CV10107
+  class: Security
+  message: Unknown header value
+- code: CV10108
+  class: Security
+  message: API currently disabled
+- code: CV20001
+  class: Invalid Operations
+  message: Malformed ID
+- code: CV20010
+  class: Invalid Operations
+  message: Invalid search filter
+- code: CV20011
+  class: Invalid Operations
+  message: Unknown search exception
+- code: CV20012
+  class: Invalid Operations
+  message: Too many IDs returned
+- code: CV20013
+  class: Invalid Operations
+  message: Invalid date range
+- code: CV20014
+  class: Invalid Operations
+  message: Invalid date range
+- code: CV20015
+  class: Invalid Operations
+  message: Invalid search operator
+- code: CV20016
+  class: Invalid Operations
+  message: Invalid custom contact field ID or search filter format
+- code: CV20017
+  class: Invalid Operations
+  message: Invalid custom event field ID or search filter format
+- code: CV20018
+  class: Invalid Operations
+  message: No ID provided
+- code: CV20019
+  class: Invalid Operations
+  message: Invalid user ID
+- code: CV20020
+  class: Invalid Operations
+  message: Invalid respondent status
+- code: CV20021
+  class: Invalid Operations
+  message: Too many IDs provided
+- code: CV20027
+  class: Invalid Operations
+  message: The CopyEvent method is not supported Express or Flex event types
+- code: CV30100
+  class: Metric
+  message: Exceed API call limit
+- code: CV30101
+  class: Metric
+  message: Exceed create contact limit
+- code: CV30102
+  class: Metric
+  message: Exceed update contact limit
+- code: CV30103
+  class: Metric
+  message: Exceed delete contact limit
+- code: CV30104
+  class: Metric
+  message: Exceed check-in limit
+- code: CV30105
+  class: Metric
+  message: Exceed simple event registration limit
+- code: CV30106
+  class: Metric
+  message: Exceed transfer invitee limit
+- code: CV30107
+  class: Metric
+  message: Exceed manage contact group members limit
+- code: CV30108
+  class: Metric
+  message: Exceed create user limit
+- code: CV30109
+  class: Metric
+  message: Exceed update user limit
+- code: CV30110
+  class: Metric
+  message: Exceed delete user limit
+- code: CV30111
+  class: Metric
+  message: Exceed create no-registration event limit
+- code: CV30112
+  class: Metric
+  message: Exceed manage user group limit
+- code: CV30117
+  class: Metric
+  message: Exceed copy event limit
+- code: CV30118
+  class: Metric
+  message: Exceed survey answer import limit
+- code: CV30119
+  class: Metric
+  message: Exceed create RFP limit
+- code: CV30120
+  class: Metric
+  message: Exceed upsert contact limit
+- code: CV30121
+  class: Metric
+  message: Exceed validate invitee limit
+- code: CV30122
+  class: Metric
+  message: Exceed update approver limit
+- code: CV30123
+  class: Metric
+  message: Exceed invitee limit
+- code: CV40101
+  class: Validation
+  message: Last Name is required to create a contact
+- code: CV40102
+  class: Validation
+  message: Invalid format for email address
+- code: CV40103
+  class: Validation
+  message: Duplicated Contact object – Key field(s) are not unique
+- code: CV40104
+  class: Validation
+  message: Contact already exists
+- code: CV40105
+  class: Validation
+  message: Contact Type Code not valid
+- code: CV40106
+  class: Validation
+  message: Country Code for Home Address is not valid
+- code: CV40107
+  class: Validation
+  message: State Code for Home Address is not valid
+- code: CV40108
+  class: Validation
+  message: Country Code for Work Address is not valid
+- code: CV40109
+  class: Validation
+  message: State Code for Work Address is not valid
+- code: CV40110
+  class: Validation
+  message: ID is not valid
+- code: CV40111
+  class: Validation
+  message: Contact Custom Field ID(s) is not valid
+- code: CV40112
+  class: Validation
+  message: Contact Group ID(s) is not valid
+- code: CV40113
+  class: Validation
+  message: ID is required
+- code: CV40114
+  class: Validation
+  message: Last Name is required to update a contact
+- code: CV40115
+  class: Validation
+  message: ID is required
+- code: CV40116
+  class: Validation
+  message: Duplicated Custom Field Detail object - FieldId(s) are not unique
+- code: CV40117
+  class: Validation
+  message: Duplicated Contact Group Detail object - GroupId(s) are not unique
+- code: CV40118
+  class: Validation
+  message: Duplicate ID
+- code: CV40119
+  class: Validation
+  message: Invalid format for cc email-address
+- code: CV40120
+  class: Validation
+  message: Email is required to upsert a contact
+- code: CV40121
+  class: Validation
+  message: FirstName is required to upsert a contact
+- code: CV40122
+  class: Validation
+  message: LastName is required to upsert a contact
+- code: CV40123
+  class: Validation
+  message: Invalid DOB
+- code: CV40124
+  class: Validation
+  message: Email address does not exist in your account
+- code: CV50101
+  class: Validation
+  message: Invalid ID
+- code: CV50102
+  class: Validation
+  message: Duplicate ID
+- code: CV50103
+  class: Validation
+  message: ID does not exist in this account
+- code: CV50104
+  class: Validation
+  message: Invitee already exists
+- code: CV50105
+  class: Validation
+  message: Invalid activity ID
+- code: CV50106
+  class: Validation
+  message: Invalid activity type
+- code: CV50107
+  class: Validation
+  message: Transaction ID already exists
+- code: CV50108
+  class: Validation
+  message: Transaction ID not found for respondent
+- code: CV60101
+  class: Validation
+  message: Invalid ID
+- code: CV60102
+  class: Validation
+  message: Duplicate ID
+- code: CV70101
+  class: Validation
+  message: Invalid ID
+- code: CV70102
+  class: Validation
+  message: Duplicate ID
+- code: CV70103
+  class: Validation
+  message: ID attempted to be registered already has an Accepted status
+- code: CV70104
+  class: Validation
+  message: ID attempted to be declined cannot have an Accepted or Declined status
+- code: CV70105
+  class: Validation
+  message: ID attempted to be waitlisted cannot have an Accepted or Waitlisted status
+- code: CV70106
+  class: Validation
+  message: ID attempted to be canceled must already have an Accepted status
+- code: CV70107
+  class: Validation
+  message: Event capacity has been reached
+- code: CV70108
+  class: Validation
+  message: Invalid registration action
+- code: CV70109
+  class: Validation
+  message: Invalid event ID
+- code: CV70110
+  class: Validation
+  message: Event ID is not eligible for simple event registration
+- code: CV70111
+  class: Validation
+  message: Waitlist is not active for supplied event ID
+- code: CV70112
+  class: Validation
+  message: Event status is not valid for supplied registration action
+- code: CV70113
+  class: Validation
+  message: The event you are currently requesting is not open for registration
+- code: CV80101
+  class: Validation
+  message: Invalid ID
+- code: CV80102
+  class: Validation
+  message: ID is required
+- code: CV80103
+  class: Validation
+  message: Contact already exists in the passed contact group
+- code: CV80104
+  class: Validation
+  message: Contact does not exist in the passed contact group
+- code: CV80105
+  class: Validation
+  message: Invalid action
+- code: CV90101
+  class: Validation
+  message: Exceed create contact group limit
+- code: CV90102
+  class: Validation
+  message: Name is required to create a contact group
+- code: CV91101
+  class: Validation
+  message: Required arguments not supplied
+- code: CV91102
+  class: Validation
+  message: Invalid argument format
+- code: CV91103
+  class: Validation
+  message: Invalid template
+- code: CV91105
+  class: Validation
+  message: No event email access
+- code: CV91106
+  class: Validation
+  message: No survey email access
+- code: CV91107
+  class: Validation
+  message: Exceed send email limit
+- code: CV91108
+  class: Validation
+  message: No eMarketing email access
+- code: CV91200
+  class: Validation
+  message: Recipient’s ID is not valid
+- code: CV91201
+  class: Validation
+  message: Recipient does not exist
+- code: CV91202
+  class: Validation
+  message: Duplicate recipient found
+- code: CV91203
+  class: Validation
+  message: Recipient’s contact information not found
+- code: CV91204
+  class: Validation
+  message: Recipient has already received this email
+- code: CV91205
+  class: Validation
+  message: Recipient’s email address is invalid
+- code: CV91206
+  class: Validation
+  message: Recipient has opted out
+- code: CV91207
+  class: Validation
+  message: Sending mail process for the recipient resulted in a failure
+- code: CV91208
+  class: Validation
+  message: No email template
+- code: CV91209
+  class: Validation
+  message: Registration approval is not enabled
+- code: CV91210
+  class: Validation
+  message: Recipient has unsubscribed
+- code: CV99623
+  class: Meeting Request
+  message: Invalid Event Country Code
+- code: CV99641
+  class: Meeting Request
+  message: Invalid Request Status Name
+- code: CV91211
+  class: Budget Item
+  message: Invalid ID
+- code: CV91212
+  class: Budget Item
+  message: Duplicate ID
+- code: CV91213
+  class: Budget Item
+  message: ID does not exist in this account
+- code: CV91214
+  class: Budget Item
+  message: Invalid event ID
+- code: CV91215
+  class: Budget Item
+  message: Blank budget item name
+- code: CV91216
+  class: Budget Item
+  message: Invalid budget item type
+- code: CV91217
+  class: Budget Item
+  message: Invalid budget item status
+- code: CV91218
+  class: Budget Item
+  message: Invalid budget currency code
+- code: CV91219
+  class: Budget Item
+  message: Budget currency code inactive in this account
+- code: CV91220
+  class: Budget Item
+  message: Invalid conversion rate
+- code: CV91221
+  class: Budget Item
+  message: Invalid budget category name
+- code: CV91222
+  class: Budget Item
+  message: Invalid budget subcategory ID
+- code: CV91223
+  class: Budget Item
+  message: Invalid vendor ID
+- code: CV91224
+  class: Budget Item
+  message: Invalid product ID
+- code: CV91225
+  class: Budget Item
+  message: Invalid budget item date
+- code: CV91226
+  class: Budget Item
+  message: Invalid GL code
+- code: CV91227
+  class: Budget Item
+  message: Invalid cost avoidance
+- code: CV91229
+  class: Budget Item
+  message: Invalid units
+- code: CV91230
+  class: Budget Item
+  message: Invalid cost
+- code: CV91231
+  class: Budget Item
+  message: Invalid tax 1 rate
+- code: CV91232
+  class: Budget Item
+  message: Invalid tax 2 rate
+- code: CV91233
+  class: Budget Item
+  message: Invalid tax 3 rate
+- code: CV91234
+  class: Budget Item
+  message: Invalid tax 4 rate
+- code: CV91235
+  class: Budget Item
+  message: Invalid tax 5 rate
+- code: CV91236
+  class: Budget Item
+  message: Invalid gratuity rate
+- code: CV91237
+  class: Budget Item
+  message: Budgeted cost is required
+- code: CV91238
+  class: Budget Item
+  message: Invalid budget cost type
+- code: CV91240
+  class: Budget Item
+  message: Invalid allocation category ID
+- code: CV91241
+  class: Budget Item
+  message: Invalid allocation subcategory ID
+- code: CV91242
+  class: Budget Item
+  message: Invalid allocation percentage
+- code: CV91243
+  class: Budget Item
+  message: Sum of allocations does not equal 100%
+- code: CV91245
+  class: Budget Item
+  message: Invalid payment name
+- code: CV91246
+  class: Budget Item
+  message: Invalid payment method
+- code: CV91247
+  class: Budget Item
+  message: Invalid payment date
+- code: CV91248
+  class: Budget Item
+  message: Invalid payment amount
+- code: CV91249
+  class: Budget Item
+  message: Invalid currency code
+- code: CV91250
+  class: Budget Item
+  message: Currency code inactive in this account
+- code: CV91251
+  class: Budget Item
+  message: Invalid payment detail ID
+- code: CV91252
+  class: Budget Item
+  message: Invalid RFP ID
+- code: CV91253
+  class: Budget Item
+  message: Account budget tracking is off
+- code: CV91254
+  class: Budget Item
+  message: Account budget allocation is off
+- code: CV91255
+  class: Budget Item
+  message: GL code must be active
+- code: CV91256
+  class: Budget Item
+  message: Duplicate budget cost name”
+- code: CV92101
+  class: User Management
+  message: UserType is required
+- code: CV92102
+  class: User Management
+  message: Username is required to create a User
+- code: CV92103
+  class: User Management
+  message: FederatedId is required to create a User
+- code: CV92104
+  class: User Management
+  message: UserRoleId is required to create a User
+- code: CV92105
+  class: User Management
+  message: Email is required to create a User
+- code: CV92106
+  class: User Management
+  message: First Name is required to create a User
+- code: CV92107
+  class: User Management
+  message: Last Name is required to create a User
+- code: CV92108
+  class: User Management
+  message: Password is required to create a User
+- code: CV92109
+  class: User Management
+  message: ID is not Valid
+- code: CV92110
+  class: User Management
+  message: ID is required to update a User
+- code: CV92111
+  class: User Management
+  message: UserRoleId is not Valid
+- code: CV92112
+  class: User Management
+  message: User’s DefaultContactGroupId is not Valid
+- code: CV92113
+  class: User Management
+  message: UserGroupDetail’s UserGroupId is not Valid
+- code: CV92114
+  class: User Management
+  message: VisibilityDefaults’s UserGroupId is not Valid
+- code: CV92115
+  class: User Management
+  message: Invalid format for email address
+- code: CV92116
+  class: User Management
+  message: Country Code is not valid
+- code: CV92117
+  class: User Management
+  message: State Code is not valid
+- code: CV92118
+  class: User Management
+  message: UserType is not Valid
+- code: CV92119
+  class: User Management
+  message: Username already exists
+- code: CV92120
+  class: User Management
+  message: FederatedId already exists for this user
+- code: CV92121
+  class: User Management
+  message: Duplicated User object - Key field(s) are not unique
+- code: CV92122
+  class: User Management
+  message: Duplicated User Group Detail object - GroupId(s) are not unique
+- code: CV92123
+  class: User Management
+  message: Duplicated User Visibility Defaults object - GroupId(s) are not unique
+- code: CV92124
+  class: User Management
+  message: VisibilityDefaults’s VisibilityType is not Valid
+- code: CV92125
+  class: User Management
+  message: Active multi user limit has been reached
+- code: CV92126
+  class: User Management
+  message: ID is required to delete a User
+- code: CV92127
+  class: User Management
+  message: VisibilityDefaults’s UserGroupId already exists for this user
+- code: CV92128
+  class: User Management
+  message: UserGroupDetail’s UserGroupId already exists for this user
+- code: CV92129
+  class: User Management
+  message: You cannot delete a user who is associated to an active API account
+- code: CV93101
+  class: User Group Management
+  message: Invalid user group ID
+- code: CV93102
+  class: User Group Management
+  message: ID is required for adding/removing a User from a User Group
+- code: CV93103
+  class: User Group Management
+  message: User already exists in the passed User Group
+- code: CV93104
+  class: User Group Management
+  message: User does not exist in the passed User Group
+- code: CV94101
+  class: No-Registration Event Creation
+  message: Title is required to create an Event
+- code: CV94102
+  class: No-Registration Event Creation
+  message: TimeZoneCode is required to create an Event
+- code: CV94103
+  class: No-Registration Event Creation
+  message: StartDate is required to create an Event
+- code: CV94104
+  class: No-Registration Event Creation
+  message: PlannerFirstName is required to create an Event
+- code: CV94105
+  class: No-Registration Event Creation
+  message: PlannerLastName is required to create an Event
+- code: CV94106
+  class: No-Registration Event Creation
+  message: StartDate must be earlier than the EndDate
+- code: CV94107
+  class: No-Registration Event Creation
+  message: State Code is not valid
+- code: CV94108
+  class: No-Registration Event Creation
+  message: Country Code is not valid
+- code: CV94109
+  class: No-Registration Event Creation
+  message: TimeZone Code is not valid
+- code: CV94110
+  class: No-Registration Event Creation
+  message: Capacity is not valid
+- code: CV94111
+  class: No-Registration Event Creation
+  message: Registrant count or Participant count is not valid
+- code: CV94112
+  class: No-Registration Event Creation
+  message: RSVP By Date is not valid
+- code: CV95101
+  class: Invitee Internal Information
+  message: Combination of InviteeId and QuestionCode is not unique
+- code: CV95102
+  class: Invitee Internal Information
+  message: Invalid question type
+- code: CV95103
+  class: Invitee Internal Information
+  message: Question Code does not exist for this Event
+- code: CV95104
+  class: Invitee Internal Information
+  message: EventId is required to update Invitee Internal Information
+- code: CV95105
+  class: Invitee Internal Information
+  message: InviteeId is required to update Invitee Internal Information
+- code: CV95106
+  class: Invitee Internal Information
+  message: Question ID or Question Code is required
+- code: CV95107
+  class: Invitee Internal Information
+  message: Answer Text is required to update Invitee Internal Information
+- code: CV95108
+  class: Invitee Internal Information
+  message: EventId is not Valid
+- code: CV95109
+  class: Invitee Internal Information
+  message: Question ID does not exist for this Event
+- code: CV84001
+  class: Invitee Internal Information
+  message: Invitee ID does not exist
+- code: CV96101
+  class: Rate History
+  message: ID is required to delete a Rate History
+- code: CV97101
+  class: Invitee or Guest Check-In
+  message: ID does not match an existing session
+- code: CV97102
+  class: Invitee or Guest Check-In
+  message: Invitee/guest must be registered for the session to be checked in
+- code: CV98101
+  class: Transaction Creation
+  message: Invalid invitee status
+- code: CV98102
+  class: Transaction Creation
+  message: Duplicated Transaction object – Invitee ID(s) are not unique
+- code: CV98103
+  class: Transaction Creation
+  message: Duplicated Distribution Detail object – Product ID(s) are not unique
+- code: CV98104
+  class: Transaction Creation
+  message: The amount due must be greater than 0
+- code: CV98105
+  class: Transaction Creation
+  message: The amount due must be less than 0
+- code: CV98106
+  class: Transaction Creation
+  message: Amount applied to all products must equal the total amount paid
+- code: CV98107
+  class: Transaction Creation
+  message: Invalid product
+- code: CV98108
+  class: Transaction Creation
+  message: The total Amt Applied cannot be less or greater than the total payment
+- code: CV99101
+  class: Supplier
+  message: You do not have access to this object
+- code: CV99611
+  class: Survey Answer Import
+  message: Question Code does not exist for this Survey
+- code: CV99612
+  class: Survey Answer Import
+  message: Invalid respondent status
+- code: CV99613
+  class: Survey Answer Import
+  message: Invalid question type
+- code: CV99614
+  class: Survey Answer Import
+  message: QuestionID or QuestionCode is required
+- code: CV99615
+  class: Survey Answer Import
+  message: Question ID does not exist for this Survey
+- code: CV81101
+  class: RFP Creation
+  message: User ID is required to create an RFP
+- code: CV81102
+  class: RFP Creation
+  message: RFP Type is required
+- code: CV81103
+  class: RFP Creation
+  message: RFP Name is required
+- code: CV81104
+  class: RFP Creation
+  message: Invalid RFP Type
+- code: CV81105
+  class: RFP Creation
+  message: Invalid Currency Code
+- code: CV81106
+  class: RFP Creation
+  message: Invalid State Code
+- code: CV81107
+  class: RFP Creation
+  message: Invalid Country Code
+- code: CV81108
+  class: RFP Creation
+  message: Event Start Date must be earlier than the Event End Date
+- code: CV83101
+  class: Distribution List
+  message: Name is required to create a Distribution List
+- code: CV83102
+  class: Distribution List
+  message: Active flag is missing
+- code: CV83103
+  class: Distribution List
+  message: Security Type is required
+- code: CV89102
+  class: Distribution List
+  message: ID is required for adding/removing from a Distribution List
+- code: CV89103
+  class: Distribution List
+  message: Contact already included in Distribution List
+- code: CV89104
+  class: Distribution List
+  message: Contact is not included in Distribution List
+- code: CV85101
+  class: Approver
+  message: ApproverCategory is required
+- code: CV85102
+  class: Approver
+  message: ApproverCategory already exists
+- code: CV85103
+  class: Approver
+  message: Approver configuration for source already exists
+- code: CV85104
+  class: Approver
+  message: Invalid Email Address
+- code: CV85106
+  class: Approver
+  message: ApproverCategory ID is invalid or does not exist
+- code: CV85107
+  class: Approver
+  message: Approver category ID and requestor source value combination is invalid or does not exist
+- code: CV85108
+  class: Approver
+  message: ApproverCategory ID is or Source Value is not exist
+- code: CV85111
+  class: Approver
+  message: ApproverCategory ID is invalid or does not exist
+- code: CV85112
+  class: Approver
+  message: Invalid email ID of approver
+- code: CV85113
+  class: Approver
+  message: ApproverCategory and Source nor exists
+- code: CV85114
+  class: Approver
+  message: Approver configuration already exists for the given category and source
+- code: CV85115
+  class: Approver
+  message: RequestorSource is required
+- code: CV85116
+  class: Approver
+  message: Approver is required
+- code: CV85117
+  class: Approver
+  message: Duplicate Approver Objects - Key field(s) are not unique
+- code: CV90100
+  class: Invitee Validation
+  message: Invalid product type
+- code: CV90103
+  class: Invitee Validation
+  message: Invalid product ID
+- code: CV90104
+  class: Invitee Validation
+  message: Invitee or guest must be in Accepted status
+- code: CV90105
+  class: Invitee Validation
+  message: This invitee or guest is already registered for this session
+- code: CV90106
+  class: Invitee Validation
+  message: This invitee or guest is not registered for this session
+- code: CV90107
+  class: Invitee Validation
+  message: Event status is not valid
+- code: CV90108
+  class: Invitee Validation
+  message: Session does not belong to the registrant event
+- code: CV90109
+  class: Invitee Validation
+  message: This invitee or guest is already registered for a session within this session group
+- code: CV90110
+  class: Invitee Validation
+  message: Invitee or guest cannot be unregistered from this session
+- code: CV91100
+  class: Contact
+  message: Name is required to create a Distribution List
+- code: CV99747
+  class: Advanced Logic
+  message: Invalid child question choice
+- code: CV20022
+  class: No Permission
+  message: Access denied
+- code: CV99616
+  class: No Permission
+  message: Targeted List ID does not exist
+- code: CV99617
+  class: No Permission
+  message: Invalid Contact Group Type
+- code: CV99618
+  class: No Permission
+  message: Response ID is required for ticketing survey

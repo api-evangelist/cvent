@@ -1,0 +1,31 @@
+overlay: 1.0.0
+x-speakeasy-jsonpath: rfc9535
+info:
+  title: Retries overlay
+  version: 0.0.0
+actions:
+  - target: $
+    update:
+      x-speakeasy-retries:
+  - target: $["x-speakeasy-retries"]
+    update:
+      strategy: backoff
+      backoff:
+        initialInterval: 2000 # 2 seconds — per Cvent rate-limit guidance
+        maxInterval: 16000 # 16 seconds — per Cvent rate-limit guidance
+        # Covers worst-case 5 attempts (4 sleeps) with jitterFactor=0.5:
+        # max sleep sequence = 3000 + 6000 + 12000 + 16000 = 37000ms; 40000 provides headroom.
+        # Per Cvent guidance: use exponential backoff, up to 5 attempts, then log and stop.
+        maxElapsedTime: 40000 # ~5 attempts
+        exponent: 2.0 # double each retry — per Cvent rate-limit guidance
+      statusCodes:
+        # 429 (Too Many Requests) is intentionally excluded from the global default.
+        # The Cvent API uses the same 429 status for two distinct conditions:
+        #   - "Too Many Requests"  → per-second throttling; safe to retry with backoff
+        #   - "Limit Exceeded"     → daily quota exhausted; retrying wastes quota
+        # Because these cannot be distinguished at the HTTP status-code level alone,
+        # 429 handling must be implemented by each consumer with body-message inspection.
+        - 502
+        - 503
+        - 504
+      retryConnectionErrors: true

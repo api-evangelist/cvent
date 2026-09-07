@@ -1,0 +1,211 @@
+overlay: 1.0.0
+x-speakeasy-jsonpath: rfc9535
+info:
+  title: example overlay
+  version: 0.0.0
+actions:
+  - target: $
+    update:
+      security:
+  - target: $["security"]
+    update:
+      - OAuth2.clientCredentials: []
+      - OAuth2.authorizationCode: []
+  - target: $["components"]["securitySchemes"]
+    update:
+      basicHttpAuthentication:
+        description: Basic HTTP Authentication
+        type: http
+        scheme: Basic
+  - target: $["paths"]["/oauth2/token"]["post"]
+    update:
+      security:
+        - basicHttpAuthentication: []
+  - target: $["servers"]
+    remove: true
+  - target: $
+    update:
+      servers:
+  - target: $["servers"]
+    update:
+      - url: https://api-platform.cvent.com/ea
+      - url: https://api-platform-eur.cvent.com/ea
+  - target: $["paths"]["/program-items/{programItemId}/docs/{fileId}"]["put"]["responses"]["409"]["content"]["application/json"]["schema"]["$ref"]
+    update: "#/components/schemas/error-response"
+  - target: $["paths"]["/program-items/{programItemId}/speakers/{id}"]["put"]["responses"]["409"]["content"]["application/json"]["schema"]["$ref"]
+    update: "#/components/schemas/error-response"
+  - target: $["components"]["schemas"]["program-item-copy-responses"]["properties"]["data"]["anyOf"][1]["allOf"][0]["$ref"]
+    update: "#/components/schemas/error-response/allOf/0"
+  - target: $["components"]["schemas"]["program-item-copy-responses"]["properties"]["data"]["anyOf"][1]["properties"]["details"]["items"]["$ref"]
+    update: "#/components/schemas/error-response/allOf/0"
+  - target: $["components"]["schemas"]["baseErrorResponse"]
+    remove: true
+  - target: $["components"]["responses"]["BadRequest34"]["content"]["application/json"]["schema"]["$ref"]
+    update: "#/components/schemas/error-response"
+  - target: $["components"]["responses"]["DataLimitExceeded"]["content"]["application/json"]["schema"]["$ref"]
+    update: "#/components/schemas/error-response"
+  - target: $["components"]["responses"]["Forbidden34"]["content"]["application/json"]["schema"]["$ref"]
+    update: "#/components/schemas/error-response"
+  - target: $["components"]["responses"]["JobLimitExceeded"]["content"]["application/json"]["schema"]["$ref"]
+    update: "#/components/schemas/error-response"
+  - target: $["components"]["responses"]["NotFound34"]["content"]["application/json"]["schema"]["$ref"]
+    update: "#/components/schemas/error-response"
+  - target: $["components"]["responses"]["TooManyRequests34"]["content"]["application/json"]["schema"]["$ref"]
+    update: "#/components/schemas/error-response"
+  - target: $["components"]["responses"]["Unauthorized34"]["content"]["application/json"]["schema"]["$ref"]
+    update: "#/components/schemas/error-response"
+  - target: $["components"]["responses"]["BadRequest35"]["content"]["application/json"]["schema"]["$ref"]
+    update: "#/components/schemas/error-response"
+  - target: $["components"]["responses"]["Forbidden35"]["content"]["application/json"]["schema"]["$ref"]
+    update: "#/components/schemas/error-response"
+  - target: $["components"]["responses"]["NotFound35"]["content"]["application/json"]["schema"]["$ref"]
+    update: "#/components/schemas/error-response"
+  - target: $["components"]["responses"]["Unauthorized35"]["content"]["application/json"]["schema"]["$ref"]
+    update: "#/components/schemas/error-response"
+  - target: $["components"]["schemas"]["supplier-summary.json"]["properties"]["supplier"]["oneOf"][0]
+    update:
+      $ref: "#/components/schemas/venue-summary"
+  - target: $["components"]["schemas"]["supplier-summary.json"]["properties"]["supplier"]["oneOf"][0]["description"]
+    remove: true
+  - target: $["components"]["schemas"]["supplier-summary.json"]["properties"]["supplier"]["oneOf"][0]["type"]
+    remove: true
+  - target: $["components"]["schemas"]["supplier-summary.json"]["properties"]["supplier"]["oneOf"][0]["title"]
+    remove: true
+  - target: $["components"]["schemas"]["supplier-summary.json"]["properties"]["supplier"]["oneOf"][0]["allOf"]
+    remove: true
+  - target: $["components"]["schemas"]["supplier-summary.json"]["properties"]["supplier"]["oneOf"][0]["properties"]
+    remove: true
+  - target: $["components"]["schemas"]["supplier-summary.json"]["properties"]["supplier"]["discriminator"]["mapping"]["VENUE"]
+    update: "#/components/schemas/venue-summary"
+  - target: $["components"]["schemas"]
+    update:
+      venue-summary:
+        description: Represents a summary of venue information associated with current proposal.
+        type: object
+        title: VenueSummary
+        allOf:
+          - description: Represents a supplier object.
+            type: object
+            title: Supplier
+            properties:
+              type:
+                $ref: "#/components/schemas/supplier-type.json"
+        properties:
+          id:
+            type: string
+            description: The unique ID of the venue.
+            example: bedc1f8e-f68b-40cf-b901-487e407f637a
+          name:
+            type: string
+            description: The name of the venue.
+            example: Hotel Grand San Francisco.
+  - target: $["components"]["schemas"]["SleepingRoomRequirement"]["properties"]["double"]
+    remove: true
+  - target: $["components"]["schemas"]["SleepingRoomRequirement"]["properties"]
+    update:
+      doubleBeds:
+        type: integer
+        description: The number of 2 beds sleeping rooms.
+        example: 10
+  - target: $.components.securitySchemes["OAuth2.clientCredentials"].flows.clientCredentials
+    update:
+      x-speakeasy-token-endpoint-authentication: client_secret_basic
+      x-speakeasy-overridable-scopes: true
+  # Rename the new PascalCase CustomField schema to avoid collision with custom-field (both map to "CustomField" class name)
+  - target: $["components"]["schemas"]["CustomField"]["title"]
+    update: "CustomFieldSchema"
+  - target: $["components"]["schemas"]["CustomField"]
+    update:
+      x-speakeasy-name-override: "CustomFieldSchema"
+  # TypeScript barrel fix: renaming the "Attendee" schema key to "Attendee2" in June 17-18 release
+  # shifted Speakeasy's collision slot numbering, orphaning attendee1.ts from the barrel index.
+  # Pinning "attendee" to class "Attendee1" (its prior stable name) restores the barrel entry.
+  # Safe (class name): "Attendee1" was already the published class name up to SDK Release June 3-4 —
+  # the collision resolver had naturally assigned it that name. This pin preserves the existing
+  # name rather than introducing a breaking rename for SDK consumers.
+  # Safe (no property renames): x-speakeasy-name-override also renames any *property* in a
+  # parent schema that references this schema via a named $ref (e.g. properties.attendee.$ref).
+  # Since all refs to "attendee" are response body schemas or array item $refs (not named
+  # properties), there are no property renames as a side effect — only the class name is affected.
+  - target: $["components"]["schemas"]["attendee"]
+    update:
+      x-speakeasy-name-override: "Attendee1"
+  # TypeScript barrel fix: new ErrorResponse2 SCIM schema (title: ErrorResponse) in July 7-8 release
+  # entered the ErrorResponse collision pool, shifting collision-resolver suffixes and orphaning
+  # ErrorResponse1 from the errors barrel index. Pinning "ErrorResponse" to "ErrorResponse1"
+  # (its prior stable name) restores the barrel entry; pinning "ErrorResponse2" to "ErrorResponse2"
+  # stabilises the new schema's name independent of pool sizing.
+  - target: $["components"]["schemas"]["ErrorResponse"]
+    update:
+      x-speakeasy-name-override: "ErrorResponse1"
+  - target: $["components"]["schemas"]["ErrorResponse2"]["title"]
+    update: "ErrorResponse2"
+  - target: $["components"]["schemas"]["ErrorResponse2"]
+    update:
+      x-speakeasy-name-override: "ErrorResponse2"
+  # OAuth2 flow-split fix (API-6019): the July 22-23 published spec added the new
+  # business-travel/* scopes to seven travel operations as a SECOND OAuth2.clientCredentials
+  # entry instead of adding the scope to the existing entry. Two clientCredentials entries on
+  # one operation trips Speakeasy's "concurrent use of multiple OAuth2 built-in security flows
+  # is not currently supported" lint error and fails generation. These actions collapse each
+  # split back into a single clientCredentials entry carrying both scopes.
+  # Two-step per operation: remove the split security array first, then set the combined entry.
+  # A plain `update` on an array APPENDS rather than replaces (see the root-security override
+  # above), so the array must be removed before the single combined entry is set.
+  # Remove once the developer-portal published spec combines the scopes at the source.
+  - target: $["paths"]["/travel-accounts"]["get"]["security"]
+    remove: true
+  - target: $["paths"]["/travel-accounts"]["get"]
+    update:
+      security:
+        - OAuth2.clientCredentials:
+            - business-transient/travel-accounts:read
+            - business-travel/travel-accounts:read
+  - target: $["paths"]["/travel-accounts/{travelAccountId}"]["get"]["security"]
+    remove: true
+  - target: $["paths"]["/travel-accounts/{travelAccountId}"]["get"]
+    update:
+      security:
+        - OAuth2.clientCredentials:
+            - business-transient/travel-accounts:read
+            - business-travel/travel-accounts:read
+  - target: $["paths"]["/travel-programs"]["get"]["security"]
+    remove: true
+  - target: $["paths"]["/travel-programs"]["get"]
+    update:
+      security:
+        - OAuth2.clientCredentials:
+            - business-transient/travel-programs:read
+            - business-travel/travel-programs:read
+  - target: $["paths"]["/travel-programs/questions"]["get"]["security"]
+    remove: true
+  - target: $["paths"]["/travel-programs/questions"]["get"]
+    update:
+      security:
+        - OAuth2.clientCredentials:
+            - business-transient/travel-program-questions:read
+            - business-travel/travel-program-questions:read
+  - target: $["paths"]["/travel-programs/{programId}"]["get"]["security"]
+    remove: true
+  - target: $["paths"]["/travel-programs/{programId}"]["get"]
+    update:
+      security:
+        - OAuth2.clientCredentials:
+            - business-transient/travel-programs:read
+            - business-travel/travel-programs:read
+  - target: $["paths"]["/travel-programs/{programId}/questions"]["get"]["security"]
+    remove: true
+  - target: $["paths"]["/travel-programs/{programId}/questions"]["get"]
+    update:
+      security:
+        - OAuth2.clientCredentials:
+            - business-transient/travel-program-questions:read
+            - business-travel/travel-program-questions:read
+  - target: $["paths"]["/travel-programs/{programId}/questions/{questionId}"]["get"]["security"]
+    remove: true
+  - target: $["paths"]["/travel-programs/{programId}/questions/{questionId}"]["get"]
+    update:
+      security:
+        - OAuth2.clientCredentials:
+            - business-transient/travel-program-questions:read
+            - business-travel/travel-program-questions:read

@@ -1,0 +1,29 @@
+generated: '2026-09-07'
+method: searched
+source: https://developers.cvent.com/docs/rest-api/tutorials/developer-quickstart; https://developers.cvent.com/docs/rest-api/explanation/concepts;
+  https://developers.cvent.com/docs/legacy-api/soap-api/overview; https://developers.cvent.com/applications
+sandbox_environment: false
+test_credentials: false
+summary: Cvent publishes no separate sandbox host, no test-mode credentials and no test data set for the REST API.
+  There is one live host per region and every call is a production call against the caller’s own Cvent account.
+what_exists:
+- name: Developer console
+  url: https://developers.cvent.com/applications
+  description: Authenticated console where a developer creates workspaces and applications, selects scopes, and
+    issues client id / client secret pairs. Applications can carry Termination Protection so production credentials
+    cannot be deleted by accident.
+  auth_required: true
+- name: Quickstart simulator
+  url: https://developers.cvent.com/docs/rest-api/tutorials/developer-quickstart
+  description: The quickstart page carries an interactive panel that simulates each request with sample credentials
+    so the exact request shape can be seen before real credentials are used. It simulates — it does not call the
+    API.
+  auth_required: false
+- name: Legacy SOAP testing account
+  url: https://developers.cvent.com/docs/legacy-api/soap-api/overview
+  description: For the legacy SOAP API, Cvent provides a testing account plus API login credentials through the
+    customer’s Cvent representative. Not self-serve, and not offered for the REST API.
+  auth_required: true
+test_values: []
+note: Because no sandbox exists, an integration is developed against live account data; the Free usage tier (1,000
+  calls/day) is the practical development budget.

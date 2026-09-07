@@ -1,0 +1,3352 @@
+openapi: 3.0.2
+info:
+  title: Cvent REST APIs — Surveys
+  version: ea
+  description: Surveys are lists of questions deployed to your contacts. Surveys can be standalone or can be associated to
+    a Cvent event. Use these APIs to search for surveys and retrieve the associated questions and responses.
+  contact:
+    name: Cvent Development Platform
+    url: https://developers.cvent.com/
+externalDocs:
+  description: Cvent REST API documentation
+  url: https://developers.cvent.com/documentation
+servers:
+- url: https://api-platform.cvent.com/ea
+- url: https://api-platform-eur.cvent.com/ea
+tags:
+- name: Surveys
+  description: Surveys are lists of questions deployed to your contacts. Surveys can be standalone or can be associated to
+    a Cvent event. Use these APIs to search for surveys and retrieve the associated questions and responses.
+paths:
+  /events/surveys/responses:
+    get:
+      summary: List All Event Responses
+      description: Gets a paginated list of event survey responses for all events and surveys.
+      operationId: getAllEventSurveyResponses
+      security:
+      - OAuth2.clientCredentials:
+        - survey/survey-responses:read
+      - OAuth2.authorizationCode:
+        - survey/survey-responses:read
+      tags:
+      - Surveys
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of event survey responses.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/event-survey-responses-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+      parameters:
+      - $ref: '#/components/parameters/after'
+      - $ref: '#/components/parameters/before'
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      - name: filter
+        in: query
+        required: false
+        description: 'Use filter query parameters to limit results
+
+          to data that matches your criteria. See
+
+          [Filters](/docs/rest-api/reference/filters) for details.
+
+
+          Supported fields and operators are listed below:
+
+
+          | Field         | Operators   |
+
+          |---------------|-------------|
+
+          | id            | `eq`, `ne`  |
+
+          | respondent.id | `eq`, `ne`  |
+
+          | session.id    | `eq`, `ne`  |
+
+          | speaker.id    | `eq`, `ne`  |
+
+          | question.id   | `eq`, `ne`  |
+
+          | event.id      | `eq`, `ne`  |
+
+          '
+        schema:
+          type: string
+          example: id eq '04ca6ae2-0dc3-487b-953e-86d6abbdf7d3'
+  /events/{id}/surveys:
+    parameters:
+    - $ref: '#/components/parameters/id7'
+    get:
+      summary: List Event Surveys
+      description: Gets a paginated list of surveys (id refers to chapter id and parentId is the survey id) associated to
+        a single event.
+      operationId: getEventSurveys
+      security:
+      - OAuth2.clientCredentials:
+        - survey/surveys:read
+      - OAuth2.authorizationCode:
+        - survey/surveys:read
+      tags:
+      - Surveys
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of event surveys (id refers to chapter id and parentId is the
+            survey id).
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/event-surveys-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+      parameters:
+      - $ref: '#/components/parameters/after'
+      - $ref: '#/components/parameters/before'
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      - name: filter
+        in: query
+        required: false
+        description: 'Use filter query parameters to limit results
+
+          to data that matches your criteria. See
+
+          [Filters](/docs/rest-api/reference/filters) for details.
+
+
+          Supported fields and operators are listed below:
+
+
+          | Field    | Operators   | Notes                          |
+
+          |----------|-------------|--------------------------------|
+
+          | id       | `eq`, `ne`  | chapter ID of the event survey |
+
+          | type     | `eq`, `ne`  |                                |
+
+          | sessions | `eq`, `ne`  |                                |
+
+
+          The following logical operators are supported for combining filters:
+
+          * `and`
+
+          * `or`
+
+          '
+        schema:
+          type: string
+          example: id eq '04ca6ae2-0dc3-487b-953e-86d6abbdf7d3' and type eq 'Session Feedback' and sessions eq  '04ca6ae2-0dc3-487b-953e-86d6abbdf7d3'
+            or sessions eq '05ca6ae2-0dc3-487b-953e-86d6abbdf7d3'
+  /events/{id}/surveys/{surveyId}/questions:
+    parameters:
+    - $ref: '#/components/parameters/id7'
+    - $ref: '#/components/parameters/surveyId'
+    get:
+      summary: List Event Survey Questions
+      description: Gets a paginated list of event survey questions for a given event and survey. The <a href="#operation/getLargeChoices">
+        GET List Large Choices </a> endpoint returns choices for the large choice question `type` (`LargeChoices`).
+      operationId: getEventSurveyQuestions
+      security:
+      - OAuth2.clientCredentials:
+        - survey/survey-questions:read
+      - OAuth2.authorizationCode:
+        - survey/survey-questions:read
+      tags:
+      - Surveys
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of event survey questions.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/event-survey-questions-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+      parameters:
+      - $ref: '#/components/parameters/after'
+      - $ref: '#/components/parameters/before'
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+  /events/{id}/surveys/{surveyId}/respondents:
+    parameters:
+    - $ref: '#/components/parameters/id7'
+    - $ref: '#/components/parameters/surveyId'
+    get:
+      summary: List Event Survey Respondents
+      description: Gets a paginated list of event survey respondents for a single event and survey.
+      operationId: getEventSurveyRespondents
+      security:
+      - OAuth2.clientCredentials:
+        - survey/survey-respondents:read
+      - OAuth2.authorizationCode:
+        - survey/survey-respondents:read
+      tags:
+      - Surveys
+      parameters:
+      - $ref: '#/components/parameters/after'
+      - $ref: '#/components/parameters/before'
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      - name: filter
+        in: query
+        required: false
+        description: 'Use filter query parameters to limit results
+
+          to data that matches your criteria. See
+
+          [Filters](/docs/rest-api/reference/filters) for details.
+
+
+          Supported fields and operators are listed below:
+
+
+          | Field | Operators   |
+
+          |-------|-------------|
+
+          | id    | `eq`, `ne`  |
+
+          '
+        schema:
+          type: string
+          example: id eq '04ca6ae2-0dc3-487b-953e-86d6abbdf7d3'
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of event survey respondents.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/event-survey-respondents-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+    post:
+      summary: Create Event Survey Respondent
+      description: Create a respondent for an event survey.
+      operationId: createEventSurveyRespondent
+      security:
+      - OAuth2.clientCredentials:
+        - survey/survey-respondents:write
+      - OAuth2.authorizationCode:
+        - survey/survey-respondents:write
+      tags:
+      - Surveys
+      requestBody:
+        description: Used to create respondent for an event survey.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/event-survey-respondent'
+      responses:
+        '201':
+          description: Successfully created respondent for event survey.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/event-survey-respondent'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+  /events/{id}/surveys/{surveyId}/respondents/{respondentId}:
+    parameters:
+    - $ref: '#/components/parameters/id7'
+    - $ref: '#/components/parameters/surveyId'
+    - $ref: '#/components/parameters/respondentId'
+    put:
+      summary: Update Event Survey Respondent
+      description: Update respondent for an event survey.
+      operationId: updateEventSurveyRespondent
+      security:
+      - OAuth2.clientCredentials:
+        - survey/survey-respondents:write
+      - OAuth2.authorizationCode:
+        - survey/survey-respondents:write
+      tags:
+      - Surveys
+      requestBody:
+        description: Used to update a respondent for an event survey.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/event-survey-respondent'
+      responses:
+        '200':
+          description: Successfully updated respondent for event survey.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/event-survey-respondent'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+  /events/{id}/surveys/{surveyId}/respondents/{respondentId}/responses:
+    parameters:
+    - $ref: '#/components/parameters/id7'
+    - $ref: '#/components/parameters/surveyId'
+    - $ref: '#/components/parameters/respondentId'
+    post:
+      summary: Create Event Survey Responses
+      description: Create responses for a particular respondent in an event survey.
+      operationId: createEventSurveyResponses
+      security:
+      - OAuth2.clientCredentials:
+        - survey/survey-responses:write
+      - OAuth2.authorizationCode:
+        - survey/survey-responses:write
+      tags:
+      - Surveys
+      requestBody:
+        description: Used to create responses for an event survey's respondent.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/event-survey-response'
+      responses:
+        '201':
+          description: Successfully created a response
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/event-survey-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+  /events/{id}/surveys/{surveyId}/responses:
+    parameters:
+    - $ref: '#/components/parameters/id7'
+    - $ref: '#/components/parameters/surveyId'
+    get:
+      summary: List Event Survey Responses
+      description: Gets a paginated list of event survey responses for a single event and survey.
+      operationId: getEventSurveyResponses
+      security:
+      - OAuth2.clientCredentials:
+        - survey/survey-responses:read
+      - OAuth2.authorizationCode:
+        - survey/survey-responses:read
+      tags:
+      - Surveys
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of event survey responses.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/event-survey-responses-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+      parameters:
+      - $ref: '#/components/parameters/after'
+      - $ref: '#/components/parameters/before'
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      - name: filter
+        in: query
+        required: false
+        description: 'Use filter query parameters to limit results
+
+          to data that matches your criteria. See
+
+          [Filters](/docs/rest-api/reference/filters) for details.
+
+
+          Supported fields and operators are listed below:
+
+
+          | Field         | Operators   |
+
+          |---------------|-------------|
+
+          | id            | `eq`, `ne`  |
+
+          | respondent.id | `eq`, `ne`  |
+
+          | session.id    | `eq`, `ne`  |
+
+          | speaker.id    | `eq`, `ne`  |
+
+          | question.id   | `eq`, `ne`  |
+
+          '
+        schema:
+          type: string
+          example: id eq '04ca6ae2-0dc3-487b-953e-86d6abbdf7d3'
+  /large-choices:
+    get:
+      summary: List Large Choices
+      description: Gets a paginated list of choices for large choice question`type` (`LargeChoices`).
+      operationId: getLargeChoices
+      security:
+      - OAuth2.clientCredentials:
+        - survey/questions:read
+      - OAuth2.authorizationCode:
+        - survey/questions:read
+      tags:
+      - Surveys
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of large choices.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/large-choices-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      parameters:
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      - name: filter
+        in: query
+        required: false
+        description: 'Use filter query parameters to limit results
+
+          to data that matches your criteria. See
+
+          [Filters](/docs/rest-api/reference/filters) for details.
+
+
+          Supported fields and operators are listed below:
+
+
+          | Field       | Operators   |
+
+          |-------------|-------------|
+
+          | id          | `eq`, `ne`  |
+
+          | question.id | `eq`, `ne`  |
+
+          '
+        schema:
+          type: string
+          example: id eq '04ca6ae2-0dc3-487b-953e-86d6abbdf7d3'
+  /questions:
+    get:
+      summary: List Questions
+      description: Gets a paginated list of event and standalone survey questions. The <a href="#operation/getLargeChoices">
+        GET List Large Choices </a> endpoint returns choices for the large choice question `type` (`LargeChoices`).
+      operationId: getQuestions
+      security:
+      - OAuth2.clientCredentials:
+        - survey/questions:read
+      - OAuth2.authorizationCode:
+        - survey/questions:read
+      tags:
+      - Surveys
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of questions.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/questions-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      parameters:
+      - $ref: '#/components/parameters/after'
+      - $ref: '#/components/parameters/before'
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      - name: filter
+        in: query
+        required: false
+        description: 'Use filter query parameters to limit results
+
+          to data that matches your criteria. See
+
+          [Filters](/docs/rest-api/reference/filters) for details.
+
+
+          Supported fields and operators are listed below:
+
+
+          | Field      | Operators                          |
+
+          |------------|------------------------------------|
+
+          | id         | `eq`, `ne`                         |
+
+          | survey.id  | `eq`, `ne`                         |
+
+          | code       | `eq`, `ne`                         |
+
+          | type       | `eq`, `ne`                         |
+
+          | chapter.id | `eq`, `ne`                         |
+
+          | maxScore   | `eq`, `ne`, `gt`, `ge`, `lt`, `le` |
+
+          '
+        schema:
+          type: string
+          example: id eq '04ca6ae2-0dc3-487b-953e-86d6abbdf7d3'
+  /respondents:
+    get:
+      summary: List Respondents
+      description: Gets a paginated list of event and standalone surveys respondents.
+      operationId: getRespondents
+      parameters:
+      - $ref: '#/components/parameters/after'
+      - $ref: '#/components/parameters/before'
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      - name: filter
+        in: query
+        required: false
+        description: 'Use filter query parameters to limit results
+
+          to data that matches your criteria. See
+
+          [Filters](/docs/rest-api/reference/filters) for details.
+
+
+          Supported fields and operators are listed below:
+
+
+          | Field                       | Operators                          |
+
+          |-----------------------------|------------------------------------|
+
+          | id                          | `eq`, `ne`                         |
+
+          | survey.id                   | `eq`, `ne`                         |
+
+          | event.id                    | `eq`, `ne`                         |
+
+          | responseCode                | `eq`, `ne`                         |
+
+          | score                       | `eq`, `ne`, `gt`, `ge`, `lt`, `le` |
+
+          | chapters.score              | `eq`, `gt`, `ge`, `lt`, `le`       |
+
+          | chapters.evaluationResult   | `eq`                               |
+
+          | chapters.status             | `eq`                               |
+
+          '
+        schema:
+          type: string
+          example: id eq '04ca6ae2-0dc3-487b-953e-86d6abbdf7d3'
+      security:
+      - OAuth2.clientCredentials:
+        - survey/respondents:read
+      - OAuth2.authorizationCode:
+        - survey/respondents:read
+      tags:
+      - Surveys
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of respondents.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/respondents-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+  /responses:
+    get:
+      summary: List Responses
+      description: Gets a paginated list of event and standalone survey responses.
+      operationId: getResponses
+      security:
+      - OAuth2.clientCredentials:
+        - survey/responses:read
+      - OAuth2.authorizationCode:
+        - survey/responses:read
+      tags:
+      - Surveys
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of responses.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responses-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      parameters:
+      - $ref: '#/components/parameters/after'
+      - $ref: '#/components/parameters/before'
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      - name: filter
+        in: query
+        required: false
+        description: 'Use filter query parameters to limit results
+
+          to data that matches your criteria. See
+
+          [Filters](/docs/rest-api/reference/filters) for details.
+
+
+          Supported fields and operators are listed below:
+
+
+          | Field         | Operators   | Notes                                                                                                                                                                        |
+
+          |---------------|-------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+
+          | id            | `eq`, `ne`  |                                                                                                                                                                              |
+
+          | survey.id     | `eq`        | Use only survey.id to get responses for all questions in the survey.                                                                                                         |
+
+          | respondent.id | `eq`, `ne`  | Use only respondent.id to get responses for specific respondents.                                                                                                            |
+
+          | event.id      | `eq`        |                                                                                                                                                                              |
+
+          | session.id    | `eq`        |                                                                                                                                                                              |
+
+          | question.id   | `eq`        | Use only question.id to get responses for specific questions, which may belong to
+          one or more surveys. question.id can be combined with other fields by ''and'' operator only. |
+
+          | chapter.id    | `eq`        | Use only chapter.id to get responses for all questions in the chapter of a particular
+          survey.                                                                                |
+
+          | attempt       | `eq`        |                                                                                                                                                                              |
+
+
+          The following logical operators are supported for combining filters:
+
+          * `and`
+
+          * `or`
+
+
+          **Usage:**
+
+          1. chapter.id and survey.id cannot be used in combination with any other fields.
+
+          2. Multiple chapter.id or survey.id values must be separated by `or` (not `and`). Example: `filter=chapter.id eq
+          ''04ca6ae2-0dc3-487b-953e-86d6abbdf7d3'' or chapter.id eq ''1983f506-a4a5-4a05-b3f6-ff7f7afc58f1''`
+
+          3. question.id can be combined with other fields using `and` operator only.
+
+          '
+        schema:
+          type: string
+          example: question.id eq '04ca6ae2-0dc3-487b-953e-86d6abbdf7d3' or question.id eq '1983f506-a4a5-4a05-b3f6-ff7f7afc58f1'
+  /standard-surveys:
+    get:
+      summary: List Standalone Surveys
+      description: Gets a paginated list of standalone surveys not associated with an event.
+      operationId: getStandardSurveys
+      security:
+      - OAuth2.clientCredentials:
+        - survey/standard-surveys:read
+      - OAuth2.authorizationCode:
+        - survey/standard-surveys:read
+      tags:
+      - Surveys
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of standalone surveys.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/standard-surveys-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+      parameters:
+      - $ref: '#/components/parameters/after'
+      - $ref: '#/components/parameters/before'
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      - name: filter
+        in: query
+        required: false
+        description: 'Use filter query parameters to limit results
+
+          to data that matches your criteria. See
+
+          [Filters](/docs/rest-api/reference/filters) for details.
+
+
+          Supported fields and operators are listed below:
+
+
+          | Field   | Operators                          |
+
+          |---------|------------------------------------|
+
+          | status  | `eq`, `ne`                         |
+
+          | created | `eq`, `ne`, `gt`, `ge`, `lt`, `le` |
+
+          | title   | `eq`, `ne`                         |
+
+          | code    | `eq`, `ne`                         |
+
+
+          The following logical operators are supported for combining filters:
+
+          * `and`
+
+          * `or`
+
+          '
+        schema:
+          type: string
+          example: status eq 'active' and created gt '2020-12-12T11:30:37.909Z' and title eq 'Survey Demo' and code ne 'NFWHF5DW46A'
+  /standard-surveys/responses:
+    get:
+      summary: List Stdl. Survey Responses
+      description: Gets a paginated list of standalone survey responses.
+      operationId: getStandardSurveyResponses
+      security:
+      - OAuth2.clientCredentials:
+        - survey/standard-survey-responses:read
+      - OAuth2.authorizationCode:
+        - survey/standard-survey-responses:read
+      tags:
+      - Surveys
+      responses:
+        '200':
+          description: Successfully retrieved a paginated response of all the standalone survey responses.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/standard-survey-responses-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+      parameters:
+      - $ref: '#/components/parameters/after'
+      - $ref: '#/components/parameters/before'
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      - name: filter
+        in: query
+        required: false
+        description: 'Use filter query parameters to limit results
+
+          to data that matches your criteria. See
+
+          [Filters](/docs/rest-api/reference/filters) for details.
+
+
+          Supported fields and operators are listed below:
+
+
+          | Field         | Operators | Max # Fields You Can Pass In Filter | Usage                                                                                                               |
+
+          |---------------|-----------|-------------------------------------|---------------------------------------------------------------------------------------------------------------------|
+
+          | survey.id     | `eq`      | 1                                   | Use only survey.id to get responses for all
+          questions in the survey.                                                |
+
+          | question.id   | `eq`      | 100                                 | Use only question.id to get responses for specific
+          questions, which may belong to different surveys or same survey. |
+
+          | respondent.id | `eq`      | 100                                 | Use only respondent.id to get responses for
+          specific respondents.                                                   |
+
+
+          The following logical operators are supported for combining filters:
+
+          * `and`
+
+          * `or`
+
+
+          **Usage:**
+
+          * question.id can be combined with respondent.id using `and` operator only.
+
+          * Multiple question.id/respondent.id values must be separated by `or`.
+
+          '
+        schema:
+          type: string
+          example: question.id eq '04ca6ae2-0dc3-487b-953e-86d6abbdf7d3' or question.id eq '1983f506-a4a5-4a05-b3f6-ff7f7afc58f1'
+  /standard-surveys/{surveyId}/email-templates:
+    parameters:
+    - $ref: '#/components/parameters/surveyId'
+    get:
+      summary: List Stdl. Survey Email Templ.
+      description: Gets a paginated list of standalone survey email templates for a single survey.
+      operationId: getStandardSurveyEmailTemplates
+      security:
+      - OAuth2.clientCredentials:
+        - survey/standard-survey-email-templates:read
+      - OAuth2.authorizationCode:
+        - survey/standard-survey-email-templates:read
+      tags:
+      - Surveys
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of standalone survey email templates.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/standard-survey-email-templates-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+      parameters:
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+  /standard-surveys/{surveyId}/questions:
+    parameters:
+    - $ref: '#/components/parameters/surveyId'
+    get:
+      summary: List Stdl. Survey Questions
+      description: Gets a paginated list of standalone survey questions for a single standalone survey. The <a href="#operation/getLargeChoices">
+        GET List Large Choices </a> endpoint returns choices for the large choice question `type` (`LargeChoices`).
+      operationId: getStandardSurveyQuestions
+      security:
+      - OAuth2.clientCredentials:
+        - survey/standard-survey-questions:read
+      - OAuth2.authorizationCode:
+        - survey/standard-survey-questions:read
+      tags:
+      - Surveys
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of standalone survey questions.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/standard-survey-questions-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+      parameters:
+      - $ref: '#/components/parameters/after'
+      - $ref: '#/components/parameters/before'
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+  /standard-surveys/{surveyId}/respondents:
+    parameters:
+    - $ref: '#/components/parameters/surveyId'
+    get:
+      summary: List Stdl. Survey Respondents
+      description: Gets a paginated list of standalone survey respondents for a single standalone survey.
+      operationId: getStandardSurveyRespondents
+      parameters:
+      - $ref: '#/components/parameters/after'
+      - $ref: '#/components/parameters/before'
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      - name: filter
+        in: query
+        required: false
+        description: 'Use filter query parameters to limit results
+
+          to data that matches your criteria. See
+
+          [Filters](/docs/rest-api/reference/filters) for details.
+
+
+          Supported fields and operators are listed below:
+
+
+          | Field | Operators   |
+
+          |-------|-------------|
+
+          | id    | `eq`, `ne`  |
+
+
+          The following logical operators are supported for combining filters:
+
+          * `and`
+
+          * `or`
+
+          '
+        schema:
+          type: string
+          example: id eq '04ca6ae2-0dc3-487b-953e-86d6abbdf7d3'
+      security:
+      - OAuth2.clientCredentials:
+        - survey/standard-survey-respondents:read
+      - OAuth2.authorizationCode:
+        - survey/standard-survey-respondents:read
+      tags:
+      - Surveys
+      responses:
+        '200':
+          description: Successfully retrieved a paginated response of the standalone survey respondents.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/standard-survey-respondents-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+    post:
+      summary: Create Stdl. Survey Respondent
+      description: Creates a respondent for a standalone survey.
+      operationId: createStandardSurveyRespondent
+      security:
+      - OAuth2.clientCredentials:
+        - survey/standard-survey-respondents:write
+      - OAuth2.authorizationCode:
+        - survey/standard-survey-respondents:write
+      tags:
+      - Surveys
+      requestBody:
+        description: Used to create respondent for a standalone survey.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/standard-survey-respondent'
+      responses:
+        '201':
+          description: Successfully created respondent for a standalone survey.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/standard-survey-respondent'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+  /standard-surveys/{surveyId}/respondents/{respondentId}:
+    parameters:
+    - $ref: '#/components/parameters/surveyId'
+    - $ref: '#/components/parameters/respondentId'
+    put:
+      summary: Update Stdl. Survey Respondent
+      description: Update respondent for a standalone survey.
+      operationId: UpdateStandardSurveyRespondent
+      security:
+      - OAuth2.clientCredentials:
+        - survey/standard-survey-respondents:write
+      - OAuth2.authorizationCode:
+        - survey/standard-survey-respondents:write
+      tags:
+      - Surveys
+      requestBody:
+        required: true
+        description: Used to update respondent for a standalone survey.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/standard-survey-respondent'
+      responses:
+        '200':
+          description: Successfully updated respondent for a standalone survey.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/standard-survey-respondent'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+  /standard-surveys/{surveyId}/respondents/{respondentId}/email-templates/{emailTemplateId}/email:
+    parameters:
+    - $ref: '#/components/parameters/surveyId'
+    - $ref: '#/components/parameters/respondentId'
+    - $ref: '#/components/parameters/emailTemplateId'
+    post:
+      summary: Send Standalone Survey Email
+      description: Sends standalone survey email.
+      operationId: sendStandardSurveyEmail
+      security:
+      - OAuth2.clientCredentials:
+        - survey/standard-survey-email:write
+      - OAuth2.authorizationCode:
+        - survey/standard-survey-email:write
+      tags:
+      - Surveys
+      responses:
+        '201':
+          description: Successfully sent email to given respondent.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/standard-survey-send-email-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+  /standard-surveys/{surveyId}/respondents/{respondentId}/responses:
+    parameters:
+    - $ref: '#/components/parameters/surveyId'
+    - $ref: '#/components/parameters/respondentId'
+    post:
+      summary: Create Stdl. Survey Responses
+      description: Create responses for a particular standalone survey respondent.
+      operationId: createStandardSurveyResponses
+      security:
+      - OAuth2.clientCredentials:
+        - survey/standard-survey-responses:write
+      - OAuth2.authorizationCode:
+        - survey/standard-survey-responses:write
+      tags:
+      - Surveys
+      requestBody:
+        description: Used to create responses for a standalone survey's respondent.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/standard-survey-response'
+      responses:
+        '201':
+          description: Successfully created a response
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/standard-survey-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+  /standard-surveys/{surveyId}/respondents/{respondentId}/responses/{responseId}:
+    parameters:
+    - $ref: '#/components/parameters/surveyId'
+    - $ref: '#/components/parameters/respondentId'
+    - $ref: '#/components/parameters/responseId'
+    put:
+      summary: Update Stdl. Survey Responses
+      description: Update responses for a particular standalone survey respondent.
+      operationId: updateStandardSurveyResponses
+      security:
+      - OAuth2.clientCredentials:
+        - survey/standard-survey-responses:write
+      - OAuth2.authorizationCode:
+        - survey/standard-survey-responses:write
+      tags:
+      - Surveys
+      requestBody:
+        description: Used to update responses for a standalone survey's respondents.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/standard-survey-response'
+      responses:
+        '200':
+          description: Successfully updated a response
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/standard-survey-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+  /surveys:
+    get:
+      summary: List Surveys
+      description: Gets a paginated list of event and standalone surveys associated to an account.
+      operationId: getSurvey
+      security:
+      - OAuth2.clientCredentials:
+        - survey/surveys:read
+      - OAuth2.authorizationCode:
+        - survey/surveys:read
+      tags:
+      - Surveys
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of surveys.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/surveys-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+      parameters:
+      - $ref: '#/components/parameters/after'
+      - $ref: '#/components/parameters/before'
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      - name: filter
+        in: query
+        required: false
+        description: 'Use filter query parameters to limit results
+
+          to data that matches your criteria. See
+
+          [Filters](/docs/rest-api/reference/filters) for details.
+
+
+          Supported fields and operators are listed below:
+
+
+          | Field | Operators   |
+
+          |-------|-------------|
+
+          | id    | `eq`, `ne`  |
+
+          | type  | `eq`, `ne`  |
+
+
+          The following logical operators are supported for combining filters:
+
+          * `and`
+
+          * `or`
+
+          '
+        schema:
+          type: string
+          example: id eq '04ca6ae2-0dc3-487b-953e-86d6abbdf7d3' and type eq 'Standalone'
+components:
+  schemas:
+    questions-paginated-response:
+      title: SurveyQuestionsPaginatedResponse
+      description: Response include paging and collection of questions of surveys
+      required:
+      - paging
+      - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/paging.json'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/question.json1'
+          description: Collection of questions for surveys.
+    looping-choice.json:
+      title: LoopingChoice
+      description: Loop Choice is the choice for which the chapter is looped. Questions in the looping chapter get repeated
+        once for each choice selected in the parent question
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 9463c74e-18c6-401a-a710-ae0f485bf059
+          description: Loop Choice ID.
+    event-survey-respondents-paginated-response:
+      title: EventSurveyRespondentsPaginatedResponse
+      description: Response includes paging and respondents data for a event survey
+      required:
+      - paging
+      - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/paging.json'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/event-survey-respondent'
+          description: Respondent information for an event survey
+    respondent-chapter-reference.json:
+      title: RespondentChapterReference
+      description: Respondent chapter reference.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/respondent-event-survey-reference.json/allOf/0'
+      properties:
+        loopingChoice:
+          $ref: '#/components/schemas/looping-choice.json'
+    uuid-property:
+      title: UUID Property
+      description: A string that has to be a format matching the industry standard uuid
+      type: string
+      format: uuid
+      example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+    surveys-paginated-response:
+      title: SurveysPaginatedResponse
+      description: The response from a request to get the list of surveys. This includes the paging object as well as the
+        collection of surveys.
+      required:
+      - paging
+      - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/paging.json'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/survey.json'
+          description: Collection of surveys.
+    respondent-chapter-reference.json-0:
+      title: RespondentChapterReference
+      description: Respondent chapter details for survey respondents (Event and Standalone).
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/respondent-event-survey-reference.json/allOf/0'
+      properties:
+        loopingChoice:
+          type: object
+          allOf:
+          - readOnly: true
+          - $ref: '#/components/schemas/looping-choice.json'
+        session:
+          type: object
+          description: Associated session.
+          properties:
+            id:
+              type: string
+              format: uuid
+              description: Session ID.
+          readOnly: true
+        evaluationResult:
+          $ref: '#/components/schemas/evaluation-result.json'
+        attempt:
+          $ref: '#/components/schemas/attempt.json'
+    paging.json:
+      title: Paging
+      required:
+      - _links
+      type: object
+      description: Represents pagination information for a collection of resources.
+      properties:
+        previousToken:
+          type: string
+          description: The pagination token for the previous page, if one exists. You can use this token to navigate to the
+            previous page of data.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        nextToken:
+          type: string
+          description: The pagination token for the next page. If this value is present in the response, there is another
+            page of data you can fetch.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        currentToken:
+          type: string
+          description: The pagination token for the current page.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        limit:
+          type: integer
+          description: The number of records to return on the page. Not to exceed 200.
+          example: 100
+        totalCount:
+          type: integer
+          description: The total number of records available. This field may return blank, even if there are more records.
+            To confirm if there are more records, check the `nextToken` field.
+          example: 2
+        _links:
+          $ref: '#/components/schemas/pagination-links.json'
+    invitation-list-common.json:
+      title: InvitationListCommon
+      type: object
+      description: Invitation list of respondents
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 9463c74e-18c6-401a-a710-ae0f485bf059
+          description: ID of the invitation list in which respondent is present.
+    standard-survey-respondent:
+      title: StandardSurveyRespondent
+      description: Standard survey respondent.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/event-survey-respondent/allOf/0'
+      properties:
+        contact:
+          description: Respondent contact.
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+              example: 9463c74e-18c6-401a-a710-ae0f485bf059
+              description: Contact Id of the respondent
+        status:
+          $ref: '#/components/schemas/respondent-status.json'
+        unsubscribed:
+          type: boolean
+          description: Whether or not the respondent has unsubscribed from Survey
+          example: false
+          readOnly: true
+        unsubscribedBy:
+          type: string
+          description: Who unsubscribed the respondent
+          example: Respondent
+          readOnly: true
+        invitationList:
+          $ref: '#/components/schemas/invitation-list-common.json'
+        chapters:
+          description: List of respondent chapters.
+          type: array
+          items:
+            $ref: '#/components/schemas/respondent-chapter-reference.json'
+          readOnly: true
+        transactionId:
+          $ref: '#/components/schemas/transaction-id-common.json'
+    survey-status.json:
+      title: SurveyStatus
+      enum:
+      - Draft
+      - Active
+      - Closed
+      - Archived
+      type: string
+      description: Survey Status
+      example: Active
+      readOnly: true
+    survey-author.json:
+      title: SurveyAuthor
+      description: Author of the survey
+      type: object
+      properties:
+        firstName:
+          type: string
+          description: First Name of Author
+          example: Vivek
+        lastName:
+          type: string
+          description: Last Name of Author
+          example: Singh
+        company:
+          type: string
+          description: Company Name
+          example: Cvent
+        title:
+          type: string
+          description: Designation
+          example: Sales Manager
+        email:
+          type: string
+          format: email
+          description: The email address of the author
+          minLength: 6
+          maxLength: 80
+          example: dummyemail@cvent.com
+    event-survey-availability.json:
+      title: EventSurveyAvailability
+      enum:
+      - Event Registrants
+      - Event Participants
+      - Session Registrants
+      - Session Participants
+      type: string
+      description: Describes the availability of the event survey
+      example: Session Registrants
+      readOnly: true
+    text-field.json:
+      title: TextField
+      description: A survey text field.
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Text field ID.
+          readOnly: true
+        text:
+          type: string
+          description: text Value of the Field
+          example: Field value
+        shortText:
+          type: string
+          description: Reporting value of the Category, Its like a custom abbreviation
+          example: Category 1 Reporting value
+    ErrorResponse-12:
+      title: ErrorResponse
+      description: Represents an error response with additional details of cascading error messages.
+      allOf:
+      - $ref: '#/components/schemas/ErrorResponseBase1'
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorResponseBase1'
+          description: Additional details of cascading error messages.
+    survey.json:
+      title: Survey
+      type: object
+      description: 'Parent survey detail object. It can be of two types namely: ''Event'' and ''Standalone'''
+      allOf:
+      - title: SurveyCommon
+        description: Base model with common properties for a survey.
+        type: object
+        allOf:
+        - $ref: '#/components/schemas/response-common/allOf/0'
+        properties:
+          id:
+            type: string
+            format: uuid
+            description: Id of the survey or Id of the chapter in case of event survey
+            readOnly: true
+            example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+          title:
+            type: string
+            description: Title of the survey or Title of the chapter in case of event survey
+            example: Demo Survey
+          code:
+            type: string
+            description: Survey Code or Chapter Code in case of event survey
+            example: NDOU2RDQH5Q
+          timezone:
+            type: string
+            description: Timezone of the survey
+            maxLength: 29
+            example: America/New_York
+          author:
+            $ref: '#/components/schemas/survey-author.json'
+          description:
+            type: string
+            description: Survey description
+            example: This is a test survey
+          closeAfter:
+            type: string
+            format: date-time
+            description: The survey will be closed after this ISO 8601 formatted date and time.
+            example: '2022-02-01T23:59:00.000Z'
+      properties:
+        responseCount:
+          description: Count of responses.
+          type: integer
+          minimum: 0
+          example: 10
+        status:
+          $ref: '#/components/schemas/survey-status.json'
+        type:
+          $ref: '#/components/schemas/survey-type.json'
+        activateDate:
+          type: string
+          format: date-time
+          description: The survey will be activated on this ISO 8601 formatted date and time.
+          example: '2022-02-01T23:59:00.000Z'
+        events:
+          type: array
+          uniqueItems: true
+          items:
+            $ref: '#/components/schemas/event.json1'
+          description: List of events with which this survey is linked.
+    event-survey-audience-type.json:
+      title: EventSurveyAudienceType
+      enum:
+      - Attendee
+      - Stakeholder
+      - Speaker
+      type: string
+      description: Audience types of event surveys
+      example: Attendee
+      readOnly: true
+    answer.json:
+      title: Answer
+      description: A survey answer.
+      type: object
+      required:
+      - type
+      properties:
+        type:
+          $ref: '#/components/schemas/answer-type.json'
+        value:
+          type: string
+          description: 'Value property is used to send information like string, number and date in case of following types
+            of answers only: ChoiceText, Text, Comment, Other. In case of Rank Order question, rank should be put into value.
+            Refer to questions resource to get choice label or category label from their respective ids.'
+          example: '1'
+        choice:
+          $ref: '#/components/schemas/uuid.json'
+        category:
+          $ref: '#/components/schemas/uuid.json'
+        subCategory:
+          $ref: '#/components/schemas/uuid.json'
+        field:
+          $ref: '#/components/schemas/uuid.json'
+    pagination-links.json:
+      title: PaginationLinks
+      type: object
+      description: Represents pagination links for navigating between pages of data.
+      properties:
+        next:
+          $ref: '#/components/schemas/link.json'
+        self:
+          $ref: '#/components/schemas/link.json'
+        prev:
+          $ref: '#/components/schemas/link.json'
+    standard-survey-send-email-response:
+      title: StandardSurveySendEmailResponse
+      description: A standard survey, sent-email response.
+      type: object
+      properties:
+        survey:
+          description: Survey of response.
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+              example: 9463c74e-18c6-401a-a710-ae0f485bf059
+              description: Id of the the survey
+        respondent:
+          description: Respondent of response.
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+              example: 9463c74e-18c6-401a-a710-ae0f485bf059
+              description: Id of the respondent
+        emailTemplate:
+          description: Email template used.
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+              example: 9463c74e-18c6-401a-a710-ae0f485bf059
+              description: Id of the email template
+    question-type.json:
+      title: QuestionType
+      enum:
+      - SingleChoice
+      - MultiChoice
+      - MatrixSingleChoice
+      - MatrixMultiChoice
+      - MatrixSideBySide
+      - MatrixSpreadSheet
+      - DateTime
+      - Number
+      - Text
+      - CommentBox
+      - Form
+      - RankOrder
+      - FileUpload
+      - NetPromoter
+      - Rating
+      - MatrixRating
+      - NumberAllocation
+      - LargeChoices
+      type: string
+      description: Question Type.
+      example: SingleChoice
+      readOnly: true
+    respondent.json:
+      title: Respondent
+      description: Respondent object for survey respondents.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/event-survey-respondent/allOf/0'
+      properties:
+        event:
+          $ref: '#/components/schemas/event.json1'
+        contact:
+          $ref: '#/components/schemas/uuid.json'
+        attendee:
+          $ref: '#/components/schemas/uuid.json'
+        survey:
+          $ref: '#/components/schemas/uuid.json'
+        status:
+          $ref: '#/components/schemas/respondent-status.json'
+        unsubscribed:
+          type: boolean
+          description: True indicates the respondent has unsubscribed from recieving emails from the survey.
+          example: false
+          readOnly: true
+        unsubscribedBy:
+          type: string
+          description: Who unsubscribed the respondent.
+          example: Respondent
+          readOnly: true
+        chapters:
+          type: array
+          description: Survey respondent chapters.
+          items:
+            $ref: '#/components/schemas/respondent-chapter-reference.json-0'
+        invitationList:
+          $ref: '#/components/schemas/invitation-list-common.json'
+        transactionId:
+          $ref: '#/components/schemas/transaction-id-common.json'
+    event-survey-type.json:
+      title: EventSurveyType
+      enum:
+      - Event Feedback
+      - Session Feedback
+      - Stakeholder Feedback
+      type: string
+      description: This is used to denote the different survey types.
+      example: Session Feedback
+      readOnly: true
+    choice.json:
+      title: Choice
+      description: A survey choice.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/text-field.json'
+      properties:
+        label:
+          type: string
+          description: Label of choice
+          example: Choice A
+    custom-field.json1:
+      title: CustomField
+      description: A survey custom field.
+      required:
+      - id
+      - values
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The unique id representing this custom field.
+          example: bd57aeda-3483-4bcf-886e-c976e9f4454a
+          readOnly: true
+        name:
+          type: string
+          description: The actual text of the custom field.
+          example: What is a your favorite color?
+          readOnly: true
+        code:
+          type: string
+          description: Code to uniquely identify custom field.
+          example: FAVORITE_COLOR_CODE
+          readOnly: true
+        type:
+          type: string
+          allOf:
+          - title: CustomFieldType
+            enum:
+            - Open Ended Text - Date/Time
+            - Open Ended Text - One Line
+            - Open Ended Text - Comment Box
+            - Choice - Single Answer
+            - Choice - Multiple Answers
+            type: string
+            description: This is used to denote the type of data collected by a custom field.
+            example: Open Ended Text - One Line
+          - readOnly: true
+            example: Choice - Multiple Answers
+        values:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+          description: The set of values or possible values to a custom field.
+          example:
+          - Green
+          - Blue
+    event-survey-session-match.json:
+      title: EventSurveySessionMatch
+      enum:
+      - Only certain sessions
+      - All sessions
+      type: string
+      description: What is the criteria of adding sessions to a event survey
+      example: Only certain sessions
+      readOnly: true
+    field.json:
+      title: Field
+      description: A survey field.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/text-field.json'
+      properties:
+        type:
+          $ref: '#/components/schemas/field-type.json'
+        choices:
+          type: array
+          description: List of choices for this field.
+          items:
+            $ref: '#/components/schemas/choice.json'
+        notApplicableAnswer:
+          $ref: '#/components/schemas/additionalChoice.json'
+        otherAnswer:
+          $ref: '#/components/schemas/additionalChoice.json'
+        required:
+          type: boolean
+          default: false
+          description: Is this a mandatory field
+          example: true
+    transaction-id-common.json:
+      title: TransactionIdCommon
+      type: string
+      example: TR5IDS4
+      description: 'Authors use transaction IDs to collect feedback after a customer transaction: invoice numbers or order
+        IDs are common transaction IDs. Respondents can take a survey by entering their transaction ID, and each transaction
+        ID uniquely identifies a response for that transaction.'
+    question-id.json:
+      title: Question
+      description: An object that holds the ID of the question.
+      type: object
+      properties:
+        id:
+          title: Question ID
+          description: ID of the question in a survey.
+          type: string
+          format: uuid
+          example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+    attempt.json:
+      title: Survey Attempt
+      type: integer
+      format: int32
+      example: 2
+      description: Counts the number of times a respondent has attempted the survey and answered the question.
+    field-type.json:
+      title: FieldType
+      enum:
+      - SingleChoice
+      - MultiChoice
+      - DateTime
+      - Number
+      - Text
+      type: string
+      description: Field Type
+      example: SingleChoice
+      readOnly: true
+    responded-through.json:
+      title: RespondedThrough
+      type: string
+      description: 'Indicates the mode by which a respondent submitted their response.
+
+
+        This field contains one of the enumerated, string constants listed below.
+
+
+        Enum values:
+
+
+        - "Not Responded": Respondent did not provide a response.
+
+        - "API": Response was submitted via an API.
+
+        - "Import": Response was created by a bulk import process.
+
+        - "Mobile" (deprecated): Historically indicated submission from a mobile device. This value is deprecated.
+
+        - "Desktop" (deprecated): Historically indicated submission from a desktop device. This value is deprecated.'
+      example: API
+      enum:
+      - Not Responded
+      - API
+      - Import
+      - Mobile
+      - Desktop
+    standard-survey-email-template.json:
+      title: StandardSurveyEmailTemplates
+      description: A standard survey email template
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/standard-survey-email-template-response/allOf/0'
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid-property'
+        active:
+          type: boolean
+          description: Status of the email
+          example: true
+    large-choice.json:
+      title: LargeChoice
+      description: Choice of large choices question.
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The ID of the choice.
+          readOnly: true
+        text:
+          type: string
+          description: The text of the choice.
+          example: Choice A
+        question:
+          $ref: '#/components/schemas/question-id.json'
+    response-common:
+      title: ResponseCommon
+      description: Base model with properties common to a survey response.
+      type: object
+      required:
+      - answers
+      - question
+      allOf:
+      - title: Audit
+        description: Audit information
+        type: object
+        properties:
+          created:
+            type: string
+            format: date-time
+            description: The ISO 8601 zoned date time when this record was created.
+            readOnly: true
+            example: '2017-01-02T02:00:00Z'
+          createdBy:
+            type: string
+            description: The identifier of the user that created this record.
+            readOnly: true
+            example: hporter
+          lastModified:
+            type: string
+            format: date-time
+            description: The ISO 8601 zoned date time when this record was updated.
+            readOnly: true
+            example: '2019-02-12T03:00:00Z'
+          lastModifiedBy:
+            type: string
+            description: The identifier of the user that last updated this record.
+            readOnly: true
+            example: hporter
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Response ID
+          readOnly: true
+        respondent:
+          type: object
+          allOf:
+          - $ref: '#/components/schemas/uuid.json'
+          readOnly: true
+        question:
+          $ref: '#/components/schemas/uuid.json'
+        answers:
+          description: List of responded survey answers.
+          type: array
+          items:
+            $ref: '#/components/schemas/answer.json'
+          minItems: 1
+        score:
+          deprecated: true
+          type: number
+          description: Answer score (This property is not supported).
+          example: 20
+          readOnly: true
+    standard-survey-questions-paginated-response:
+      title: StandardSurveyQuestionsPaginatedResponse
+      description: Response include paging and collection of questions of a particular standard survey
+      required:
+      - paging
+      - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/paging.json'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/standard-survey-question.json'
+          description: Collection of standard survey questions
+    standard-survey.json:
+      title: StandardSurvey
+      description: A standard survey.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/survey.json/allOf/0'
+      properties:
+        responseCount:
+          description: The count of responses.
+          type: integer
+          minimum: 0
+          example: 10
+        status:
+          $ref: '#/components/schemas/survey-status.json'
+        archiveAfter:
+          type: string
+          format: date-time
+          description: The survey will be archived after this ISO 8601 formatted date and time.
+          example: '2022-05-07T12:00:00.000Z'
+        customFields:
+          type: array
+          items:
+            $ref: '#/components/schemas/custom-field.json1'
+          description: Collection of survey custom fields.
+    standard-survey-respondents-paginated-response:
+      title: StandardSurveyRespondentsPaginatedResponse
+      description: Response include paging and respondents for a survey
+      required:
+      - paging
+      - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/paging.json'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/standard-survey-respondent'
+          description: Respondent for a survey
+    respondent-event-survey-reference.json:
+      title: RespondentEventSurveyReference
+      description: Respondent event survey reference.
+      type: object
+      allOf:
+      - title: RespondentChapterReferenceCommon
+        description: The respondent chapter reference common model
+        type: object
+        properties:
+          id:
+            type: string
+            format: uuid
+            description: Respondent chapter reference ID.
+            readOnly: true
+          status:
+            $ref: '#/components/schemas/status.json'
+          score:
+            type: number
+            description: Score
+            example: 70
+            readOnly: true
+          maxPossibleScore:
+            type: number
+            description: Maximum Possible Score
+            example: 100
+            readOnly: true
+          percentageScore:
+            type: number
+            description: Percentage Score
+            example: 70
+            readOnly: true
+      properties:
+        session:
+          description: Associated session.
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+              example: 9463c74e-18c6-401a-a710-ae0f485bf059
+              readOnly: true
+              description: Loop Session is the session for which the survey is looped. Questions in the looping survey get
+                repeated once for each session defined in the configuration depending on eligibility
+    event-survey-response:
+      title: EventSurveyResponse
+      type: object
+      description: Response object for event survey respondent.
+      allOf:
+      - title: ResponseCommon
+        description: Base model with properties common to a survey response.
+        type: object
+        required:
+        - answers
+        - question
+        allOf:
+        - $ref: '#/components/schemas/response-common/allOf/0'
+        properties:
+          id:
+            type: string
+            format: uuid
+            description: Response ID
+            readOnly: true
+          respondent:
+            type: object
+            allOf:
+            - $ref: '#/components/schemas/uuid.json'
+            readOnly: true
+          question:
+            $ref: '#/components/schemas/uuid.json'
+          answers:
+            description: List of responded survey answers.
+            type: array
+            items:
+              $ref: '#/components/schemas/answer.json'
+            minItems: 1
+          score:
+            deprecated: true
+            type: number
+            description: Answer score (This property is not supported).
+            example: 20
+            readOnly: true
+      properties:
+        event:
+          $ref: '#/components/schemas/event.json1'
+        survey:
+          $ref: '#/components/schemas/uuid.json'
+        session:
+          $ref: '#/components/schemas/uuid.json'
+        speaker:
+          $ref: '#/components/schemas/uuid.json'
+    standard-surveys-paginated-response:
+      title: StandardSurveysPaginatedResponse
+      description: The response from a request to get the list of standard surveys. This includes the paging object as well
+        as the collection of surveys.
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/paging.json'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/standard-survey.json'
+          description: Collection of standard surveys.
+      required:
+      - paging
+      - data
+    ErrorResponseBase1:
+      title: ErrorResponseBase
+      type: object
+      description: Represents an error response with no additional details.
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          description: The HTTP status code representing the error.
+          example: 400
+        message:
+          type: string
+          description: A brief description of the error.
+          example: Bad Request
+        target:
+          type: string
+          description: The target resource of the error.
+          example: example target
+    additionalChoice.json:
+      title: additionalChoice
+      description: Contains text of additional choice i.e N/A choice or otherAnswer choice
+      type: object
+      properties:
+        text:
+          type: string
+          description: Text Value of additional choice
+          example: N/A or Other
+        shortText:
+          type: string
+          description: Reporting value of additional choice text
+          example: N/A or Other Reporting value
+    response.json:
+      title: Survey Responses
+      type: object
+      description: Response object for survey responses.
+      allOf:
+      - $ref: '#/components/schemas/event-survey-response/allOf/0'
+      properties:
+        event:
+          $ref: '#/components/schemas/uuid.json'
+        session:
+          $ref: '#/components/schemas/uuid.json'
+        chapter:
+          $ref: '#/components/schemas/uuid.json'
+        survey:
+          $ref: '#/components/schemas/uuid.json'
+        speaker:
+          $ref: '#/components/schemas/uuid.json'
+        loopingChoice:
+          $ref: '#/components/schemas/looping-choice.json'
+        attempt:
+          $ref: '#/components/schemas/attempt.json'
+    event-survey-questions-paginated-response:
+      title: SurveyQuestionPaginatedResponse
+      description: Response include Paging and collection os questions
+      required:
+      - paging
+      - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/paging.json'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/event-survey-question.json'
+          description: Collection of Questions
+    standard-survey-responses-paginated-response:
+      title: StandardSurveyResponsesPaginatedResponse
+      description: Response include paging and responses for a survey
+      required:
+      - paging
+      - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/paging.json'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/standard-survey-response'
+          description: Response for a survey
+    respondent-status.json:
+      title: RespondentStatus
+      enum:
+      - No Response
+      - Preloaded
+      - Visited
+      - Partial Response
+      - Complete Response
+      - Disqualified Response
+      type: string
+      description: Respondent Status
+      example: No Response
+    event-survey-question.json:
+      title: EventSurveyQuestion
+      description: An event survey question.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/question.json1/allOf/0'
+      properties:
+        survey:
+          $ref: '#/components/schemas/uuid.json'
+        event:
+          $ref: '#/components/schemas/uuid.json'
+    category.json:
+      title: Category
+      description: A survey category.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/text-field.json'
+      properties:
+        required:
+          type: boolean
+          default: false
+          description: is the category mandatory for answer
+          example: true
+    question.json1:
+      title: Question
+      description: A survey question.
+      type: object
+      allOf:
+      - title: QuestionCommon
+        description: Base model with common properties for a survey question.
+        type: object
+        allOf:
+        - title: TextFieldWithAudit
+          description: An existing text field.
+          type: object
+          allOf:
+          - $ref: '#/components/schemas/response-common/allOf/0'
+          properties:
+            id:
+              type: string
+              format: uuid
+              description: Text field ID.
+              readOnly: true
+            text:
+              type: string
+              description: text Value of the Field
+              example: Field value
+            shortText:
+              type: string
+              description: Reporting value of the Category, Its like a custom abbreviation
+              example: Category 1 Reporting value
+        properties:
+          htmlText:
+            type: string
+            description: Html of the question
+            example: Question Html
+          code:
+            type: string
+            description: Question Code
+            example: 4l6x
+          type:
+            $ref: '#/components/schemas/question-type.json'
+          choices:
+            type: array
+            description: List of choices for the question.
+            items:
+              $ref: '#/components/schemas/choice.json'
+          categories:
+            type: array
+            description: List of categories for the question.
+            items:
+              $ref: '#/components/schemas/category.json'
+          subCategories:
+            type: array
+            description: List of sub categories for matrix side-by-side questions
+            items:
+              $ref: '#/components/schemas/text-field.json'
+          notApplicableAnswer:
+            $ref: '#/components/schemas/additionalChoice.json'
+          otherAnswer:
+            $ref: '#/components/schemas/additionalChoice.json'
+          comments:
+            type: string
+            description: Text Value of Comments Input box placeholder
+            example: Comments Text
+          required:
+            type: boolean
+            default: false
+            description: Is this a mandatory question
+            example: true
+          fields:
+            type: array
+            description: List of fields for form/matrix questions
+            items:
+              $ref: '#/components/schemas/field.json'
+          maxScore:
+            type: number
+            description: Max possible score
+            example: 20
+          totalSum:
+            type: integer
+            description: Total configured sum of all choices for number allocation question
+            example: 45
+      properties:
+        survey:
+          $ref: '#/components/schemas/uuid.json'
+        chapter:
+          $ref: '#/components/schemas/uuid.json'
+    link.json:
+      title: Link
+      required:
+      - href
+      type: object
+      description: Represents a link to a related resource.
+      properties:
+        href:
+          type: string
+          description: A url provided that can be followed for linking
+          example: ?token=90c5f062-76ad-4ea4-aa53-00eb698d9262
+    event-survey.json:
+      title: EventSurvey
+      description: An event survey.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/survey.json/allOf/0'
+      properties:
+        type:
+          $ref: '#/components/schemas/event-survey-type.json'
+        availableTo:
+          $ref: '#/components/schemas/event-survey-availability.json'
+        audienceType:
+          $ref: '#/components/schemas/event-survey-audience-type.json'
+        sessionMatch:
+          $ref: '#/components/schemas/event-survey-session-match.json'
+        sessions:
+          type: array
+          description: Associated session ids of the survey, this can also be null
+          items:
+            $ref: '#/components/schemas/uuid-property'
+          example:
+          - 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+          - 05ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+        parentId:
+          type: string
+          format: uuid
+          example: 9463c74e-18c6-401a-a710-ae0f485bf059
+          description: Id of the parent survey
+    answer-type.json:
+      title: AnswerType
+      enum:
+      - Choice
+      - Text
+      - ChoiceText
+      - Comment
+      - Other
+      - NA
+      - File
+      type: string
+      description: Type of answer
+      example: ChoiceText
+    event-surveys-paginated-response:
+      title: EventSurveysPaginatedResponse
+      description: The response from a request to get the list of event surveys.  This includes the paging object as well
+        as the collection of surveys.
+      required:
+      - paging
+      - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/paging.json'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/event-survey.json'
+          description: Collection of event surveys.
+    standard-survey-question.json:
+      title: StandardSurveyQuestion
+      description: A standard survey question.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/question.json1/allOf/0'
+      properties:
+        survey:
+          $ref: '#/components/schemas/uuid.json'
+        chapter:
+          $ref: '#/components/schemas/uuid.json'
+    event-survey-respondent:
+      title: EventSurveyRespondent
+      type: object
+      description: Respondent detail object for event survey.
+      allOf:
+      - title: RespondentCommon
+        description: Common base model for a Respondent.
+        type: object
+        allOf:
+        - $ref: '#/components/schemas/response-common/allOf/0'
+        properties:
+          id:
+            description: Id of the respondent that has to be in a format matching the industry standard uuid
+            type: string
+            format: uuid
+            example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+            readOnly: true
+          responseCode:
+            type: string
+            description: Response Code
+            example: 92OM10RO
+            readOnly: true
+          responseDuration:
+            type: number
+            description: Time taken by respondent to respond to the survey (in seconds)
+            example: 1035
+            readOnly: true
+          localeId:
+            type: string
+            description: Locale Id of the respondent using the IETF Language Tag format
+            example: en-US
+          respondedThrough:
+            $ref: '#/components/schemas/responded-through.json'
+          referenceId:
+            type: string
+            example: facebook
+            description: Reference ids are used to track where response is coming from. Survey Author can create multiple
+              weblinks with different values of referenceId query param in them.
+          score:
+            type: number
+            description: Respondent Score
+            example: 70
+            readOnly: true
+          maxPossibleScore:
+            type: number
+            description: Respondent Maximum Possible Score
+            example: 100
+            readOnly: true
+          percentageScore:
+            type: number
+            description: Respondent Percentage Score
+            example: 70
+            readOnly: true
+          _links:
+            type: object
+            description: Related links.
+            properties:
+              surveyUrl:
+                $ref: '#/components/schemas/link.json'
+            readOnly: true
+          sourceId:
+            type: string
+            example: IN4IDS1
+            description: Source IDs track respondents in an external system integrated with the Cvent survey.
+      properties:
+        event:
+          $ref: '#/components/schemas/event.json1'
+        attendee:
+          description: Associated attendee.
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+              example: 9463c74e-18c6-401a-a710-ae0f485bf059
+              description: Id of the attendee
+        contact:
+          description: Associated contact.
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+              example: 9463c74e-18c6-401a-a710-ae0f485bf059
+              description: Contact Id of the respondent
+          readOnly: true
+        surveys:
+          description: List of associated surveys.
+          type: array
+          items:
+            $ref: '#/components/schemas/respondent-event-survey-reference.json'
+          readOnly: true
+    standard-survey-response:
+      title: StandardSurveyResponse
+      description: A standard survey response.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/event-survey-response/allOf/0'
+      properties:
+        survey:
+          $ref: '#/components/schemas/uuid.json'
+        loopingChoice:
+          $ref: '#/components/schemas/looping-choice.json'
+    uuid.json:
+      title: UUID
+      description: The reference to the related entity. Contains only the ID of the related entity.
+      required:
+      - id
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid-property'
+    survey-type.json:
+      title: SurveyType
+      enum:
+      - Standalone
+      - Event
+      - Assessment
+      type: string
+      description: Describes the survey's type. `Standalone` indicates the survey exists independent of an event. `Event`
+        indicates the survey is an event or session feedback survey. `Assessment` indicates the survey is associated with
+        an event and is for assessing attendees.
+      example: Event
+      readOnly: true
+    event.json1:
+      title: Event
+      type: object
+      description: Detail object of an event which is associated to a survey.
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 9463c74e-18c6-401a-a710-ae0f485bf059
+          description: Id of the associated event
+      readOnly: true
+    standard-survey-email-templates-paginated-response:
+      title: StandardSurveyEmailTemplatesPaginatedResponse
+      description: Response include paging and collection of email templates of a particular standard survey
+      required:
+      - paging
+      - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/paging.json'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/standard-survey-email-template.json'
+          description: Collection of standard survey email templates
+    large-choices-paginated-response:
+      title: LargeChoicesPaginatedResponse
+      description: Response include paging and collection of choices for large choices question.
+      required:
+      - paging
+      - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/paging.json'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/large-choice.json'
+          description: Collection of choices for large choices question.
+    status.json:
+      title: Status
+      enum:
+      - Not Started
+      - In Progress
+      - Complete
+      type: string
+      description: In case of Event Survey this represents Survey Status and in case of Standard Survey this represents Chapter
+        Status
+      example: In Progress
+      readOnly: true
+    evaluation-result.json:
+      title: Evaluation Result
+      enum:
+      - Passed
+      - Failed
+      - Unevaluated
+      type: string
+      description: This represents the evaluation status of an assessment chapter.
+      example: Passed
+      readOnly: true
+    responses-paginated-response:
+      title: ResponsesPaginatedResponse
+      description: Response include paging and responses for surveys
+      required:
+      - paging
+      - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/paging.json'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/response.json'
+          description: Responses for a survey.
+    respondents-paginated-response:
+      title: SurveyRespondentsPaginatedResponse
+      description: Response include paging and respondents for surveys
+      required:
+      - paging
+      - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/paging.json'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/respondent.json'
+          description: Respondents for surveys.
+    standard-survey-email-template-response:
+      title: StandardSurveyEmailTemplates
+      description: A standard survey email template
+      type: object
+      allOf:
+      - title: EmailTemplateCommon
+        description: Email Template
+        type: object
+        allOf:
+        - $ref: '#/components/schemas/response-common/allOf/0'
+        properties:
+          name:
+            type: string
+            description: Name of the email template.
+            example: Invitation
+          subject:
+            type: string
+            description: Subject of the email template.
+            example: Email Template Testing
+          fromName:
+            type: string
+            description: Name of the sender.
+            example: Henry Potterfield
+          fromEmail:
+            type: string
+            description: The email address of the sender.
+            example: h.potterfield@test.com
+          plaintextBody:
+            type: string
+            description: Plain text body of the page in the email.
+            example: We’d love to hear your thoughts!\n\nPlease take a few minutes to let us know about your recent experience.\n\nStart
+              Survey Now ({[RES-SURVEY URL]})
+          htmlBody:
+            type: string
+            description: html body of the page sent in the email
+            example: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html><head><title></title></head><body
+              style="margin:0;padding:0" id="body"><table ><tbody><tr><td align="center" bgcolor="#041532"><table ><tbody><tr><td
+              align="center" bgcolor="#DDE2E6" style="padding-top:0;padding-bottom:0;padding-left:0;padding-right:0"><table
+              border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:600px" class="wrapper"><tbody><tr><td><table><tbody><tr><td
+              valign="top"><table><tbody><tr><td><table><tbody><tr><td bgcolor="transparent" style="padding-top:15px;padding-bottom:15px;padding-left:15px;padding-right:15px"><table><tbody><tr><td><table
+              border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>{[C-FIRST NAME]}, <br></td></tr> <tr><td>We&#x2019;d
+              love to hear your thoughts!</td></tr> </table></td></tr></tbody></table></td></tr></tbody></table></td></tr></tbody></table></td></tr><tr><td
+              valign="top"><table border="0" cellpadding="0" cellspacing="0" width="100%" align="left" class="column"><tbody><tr><td><table
+              border="0" cellpadding="0" cellspacing="0" width="100%" data-cvent-id="widget-NucleusText-widget:13ea36d2-1eb4-452f-ae17-9d582dbeb7eb"><tbody><tr><td
+              bgcolor="transparent" style="padding-top:15px;padding-bottom:15px;padding-left:15px;padding-right:15px"><table
+              border="0" cellpadding="0" cellspacing="0" width="100%"><tbody><tr><td><table><tr><td>Please take a few minutes
+              to let us know about your recent experience.</td></tr> </table></td></tr></tbody></table></td></tr></tbody></table></td></tr></tbody></table></td></tr><tr><td
+              valign="top"><table><tbody><tr><td><table><tbody><tr><td><table><tbody><tr><td >Start Survey Now</a></td></tr></tbody></table></td></tr></tbody></table></td></tr></tbody></table></td></tr><tr><td
+              valign="top"><table border="0" cellpadding="0" cellspacing="0" width="100%" align="left" class="column"><tbody><tr><td><table
+              ><tbody><tr><td bgcolor="transparent" style="padding-top:15px;padding-bottom:15px;padding-left:15px;padding-right:15px"><table
+              ><tbody><tr><td><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td style="font-size:16px;line-height:20px;font-family:Arial,Helvetica,sans-serif;color:#273F69;font-style:normal;font-weight:400;text-align:center;
+              padding: 6px 0;">If you have any questions, feel free to email us at {[SUR-AUTHOR EMAIL]}.<br>Thank you,<br>{[SUR-AUTHOR
+              COMPANY]}&#xA0;</td></tr> </table></td></tr></tbody></table></td></tr></tbody></table></td></tr></tbody></table></td></tr><tr><td
+              valign="top"><table><tbody><tr><td><table><tbody><tr><td bgcolor="transparent" style="padding-top:15px;padding-bottom:15px;padding-left:15px;padding-right:15px"><table
+              ><tbody><tr><td><table><tr><td>Click the link below to opt out of receiving emails from {[SUR-AUTHOR FIRST NAME]}
+              {[SUR-AUTHOR LAST NAME]}.<br>{[EMAIL OPT OUT]}&#xA0;</td></tr> </table></td></tr></tbody></table></td></tr></tbody></table></td></tr></tbody></table></td></tr></tbody></table></td></tr></tbody></table></td></tr><tr><td><table><tbody><tr><td><table><tbody></tbody></table></td></tr></tbody></table></td></tr></tbody></table>
+              ></td></tr></tbody></table></body></html>'
+          locale:
+            type: string
+            description: The locale of the email template using the IETF Language Tag format.
+            example: en-US
+          clickTrackingEnabled:
+            type: boolean
+            description: Enables tracking when respondent clicks on the email
+            example: true
+          replyToName:
+            type: string
+            description: Name of the person to reply to
+            example: Henry Potterfield
+          replyToEmail:
+            type: string
+            description: Email address to reply to
+            example: h.potterfield@test.com
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid-property'
+        active:
+          type: boolean
+          description: Status of the email
+          example: true
+    event-survey-responses-paginated-response:
+      title: EventSurveyResponsesPaginatedResponse
+      description: Response include paging and responses for a survey
+      required:
+      - paging
+      - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/paging.json'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/event-survey-response'
+          description: Response for a survey
+  parameters:
+    responseId:
+      in: path
+      name: responseId
+      description: Id of a response
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid-property'
+    id7:
+      in: path
+      name: id
+      description: Id of an event
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid-property'
+    emailTemplateId:
+      in: path
+      name: emailTemplateId
+      description: Id of an email template
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid-property'
+    surveyId:
+      in: path
+      name: surveyId
+      description: Id of a survey or Id of a chapter in event survey
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid-property'
+    before:
+      name: before
+      required: false
+      in: query
+      description: Used to query records that have been added or updated before this time point.
+      schema:
+        type: string
+        format: date-time
+        example: '2017-01-02T02:00:00Z'
+    respondentId:
+      in: path
+      name: respondentId
+      description: Id of a respondent
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid-property'
+    after:
+      name: after
+      required: false
+      description: Used to query records that have been added or updated after this time point. Default to the beginning of
+        time of the data store.
+      in: query
+      schema:
+        type: string
+        format: date-time
+        example: '2017-01-02T02:00:00Z'
+    token:
+      name: token
+      in: query
+      description: 'The continuation token returned from a previous class. This must be a valid UUID v4 if provided.
+
+        This will override any other pageable parameters provided.
+
+        '
+      style: form
+      explode: true
+      schema:
+        type: string
+        example: 0e28af57-511f-47ab-ae46-46cd1ca51a1a
+    limit:
+      name: limit
+      in: query
+      description: The maximum number of records to return per page.
+      style: form
+      explode: true
+      schema:
+        maximum: 200
+        minimum: 1
+        type: integer
+        default: 100
+        example: 100
+  responses:
+    BadRequest1:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 400
+            message: Bad Request
+    TooManyRequests1:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 429
+            message: Limit Exceeded
+    Unauthorized1:
+      description: Bad or expired token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 401
+            message: Unauthorized
+    Forbidden1:
+      description: You do not have access to the resource
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 403
+            message: Access Forbidden
+    NotFound1:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 404
+            message: Not found
+  securitySchemes:
+    OAuth2.clientCredentials:
+      type: oauth2
+      description: OAuth2 Client Credentials Flow.
+      flows:
+        clientCredentials:
+          tokenUrl: https://api-platform.cvent.com/ea/oauth2/token
+          scopes:
+            account/hooks:delete: Allows the deletion of hooks.
+            account/hooks:read: Allows the reading of hooks.
+            account/hooks:write: Allows the creation/updation of hooks.
+            account/user-groups:delete: Allows deletion for user groups
+            account/user-groups:read: Allows the reading of user groups
+            account/user-groups:write: Allows the writing of user groups
+            account/users:delete: Allows the deletion of User
+            account/users:read: Allows the reading of User, User Group
+            account/users:write: Allows the creation/updating of User
+            appointments/appointment-attendees:read: Allows the reading of appointment attendees and their related entities.
+            appointments/appointment-events:read: Allows the reading of appointment events and their related entities.
+            appointments/appointment-types:read: Allows the reading of appointment types and their related entities.
+            appointments/appointments:read: Allows the reading of appointment and their related entities.
+            appointments/appointments:write: Allows the writing of appointments and their related entities.
+            appointments/available-times:read: Allows the reading of availability times.
+            appointments/locations:read: Allows the reading of appointment locations and their related entities.
+            attendee-insights/attendee-insights:read: Allows the reading of engagement scores (attendee insights).
+            attendee-insights/scores:read: Allows the reading of scores.
+            attendee-insights/stats:read: Allows the reading of engagement score (attendee insight) stats.
+            budget/budget-items:delete: Allows the deletion of budget items
+            budget/budget-items:read: Allows the reading of all budget items
+            budget/budget-items:write: Allows creation/updation of budget item
+            budget/budget-totals:read: Allows the reading of all event budget totals
+            budget/budget-vendors:read: Allows reading of account-level budget vendors.
+            budget/cards:read: Allows the reading of cards
+            budget/currency-conversion-rate:delete: Allows deletion of currency conversion rate for currency.
+            budget/currency-conversion-rate:read: Allows reading of currency conversion rate for currency.
+            budget/currency-conversion-rate:write: Allows creation/update of currency conversion rate for currency.
+            budget/payments:delete: Allows deletion of payments.
+            budget/payments:read: Allows reading of payment for budget item.
+            budget/payments:write: Allows creation of payment in a budget item.
+            budget/transactions:delete: Allows delete card transactions.
+            budget/transactions:read: Allows the reading of all card's transactions
+            budget/transactions:write: Allows creation of card transactions.
+            bulk/bulk-jobs:read: Allows the reading of bulk job related entities
+            bulk/bulk-jobs:write: Allows the creation, update and deletion of bulk job related entities
+            business-transient/bids:read: Allows the reading of Business Transient Bid data
+            business-transient/proposals:read: Allows the reading of Business Transient Proposal data
+            business-transient/supplier-brands:read: Allows the reading of a supplier brand or a list of travel supplier brands.
+            business-transient/supplier-chains:read: Allows the reading of a travel supplier chain or a list of travel supplier
+              chains.
+            business-transient/supplier-properties:read: Allows the reading of a travel supplier property or a list of travel
+              supplier properties.
+            business-transient/supplier-property-rooms:read: Allows the reading of a list of travel supplier property rooms.
+            business-transient/travel-accounts:read: Allows the reading of business transient travel account data.
+            business-transient/travel-program-questions:read: Allows the reading of business transient travel program question
+              data.
+            business-transient/travel-programs:read: Allows the reading of business transient travel program data.
+            business-transient/travel-supplier-accounts:read: Allows the reading of business transient travel supplier account
+              data.
+            business-travel/bids:read: Allows the reading of Business Travel Bid data
+            business-travel/proposals:read: Allows the reading of Business Travel Proposal data
+            business-travel/travel-accounts:read: Allows the reading of business travel account data.
+            business-travel/travel-program-questions:read: Allows the reading of business travel program question data.
+            business-travel/travel-programs:read: Allows the reading of business travel program data.
+            compliance/communications:read: Allows the reading of communication compliance
+            compliance/communications:write: Allows the writing of communication compliance
+            email/bounces:read: Allow the reading of email bounces.
+            email/email-status:read: Allows the reading of email statuses.
+            email/emails:read: Allows the reading of emails.
+            eMarketing/campaigns:read: Allows the reading of campaigns.
+            emarketing/emarketing-email-status:read: Allows the reading of eMarketing email statuses.
+            eMarketing/eMarketing-email-templates:read: Allows the reading of email-templates.
+            eMarketing/eMarketing-send-emails:write: Allows the writing of eMarketing emails.
+            event/admission-items:read: Allows the reading of admission items
+            event/air-request:read: Allow reading the air request or air actual detail for attendees.
+            event/alternate-travel:read: Allow reading the alternate travel answers for attendees.
+            event/attendance-durations:read: Allows the read of Duration records
+            event/attendee-activities-metadata:delete: Allows the deletion of attendees activities metadata.
+            event/attendee-activities-metadata:read: Allows the reading of attendee activities metadata.
+            event/attendee-activities-metadata:write: Allows the creation/updating of attendees activities metadata.
+            event/attendee-activities:read: Allows the reading of attendee activities.
+            event/attendee-activities:write: Allows the writing of external attendee activities.
+            event/attendee-credits:read: Allows the reading of attendee credits.
+            event/attendee-links:delete: Allows the deletion of attendee links
+            event/attendee-links:read: Allows the reading of attendee links
+            event/attendee-links:write: Allows the creation of attendee links
+            event/attendee-messages:read: Allows the reading of attendee messages
+            event/attendees:read: Allows the reading of attendees.
+            event/attendees:write: Allows the creation of an attendee in an event.
+            event/audience-segments:read: Allows the reading of audience segments.
+            event/audience-segments:write: Allows the creation/updating/deletion of audience segments.
+            event/contact-groups:read: Allows the reading of contact groups.
+            event/contact-groups:write: Allows the creation/updating of contact groups.
+            event/contact-types:read: Allows the reading of contact types.
+            event/contacts:delete: Allows the deletion of contacts.
+            event/contacts:read: Allows the reading of contacts.
+            event/contacts:write: Allows the creation/updating of contacts.
+            event/contacts:write-sensitive: Allows the creation/updating of sensitive data related to contacts.
+            event/custom-fields:read: Allows the reading of custom fields
+            event/custom-fields:write: Allows the writing of custom fields
+            event/discounts:write: Allows the writing of discounts
+            event/donation-items:read: Allows the reading of donation items.
+            event/event-discounts:read: Allows the reading of event discounts.
+            event/event-discounts:write: Allows the writing of event discounts.
+            event/event-email-status:read: Allows the reading of event email statuses.
+            event/event-emails:read: Allows the reading of event emails
+            event/event-emails:write: Allows to send event emails.
+            event/event-features:read: Allows the reading of events-features
+            event/event-features:write: Allows updating the event-features
+            event/event-user-groups:read: Allows the reading of user groups
+            event/event-user-groups:write: Allows associating/disassociating user groups to event
+            event/events:read: Allows the reading of events
+            event/events:write: Allows the creation/updating of events
+            event/fee-items:read: Allows the reading of fee items.
+            event/hotel-request:read: Allow reading the hotel request or housing reservation request detail for attendees.
+            event/invitation-lists:read: Allows the reading of the invitation lists for an event
+            event/meeting-request-forms:read: Allows the reading of meeting request forms.
+            event/meeting-requests:read: Allows the reading of meeting requests.
+            event/meeting-requests:write: Allows the creation/updating of meeting requests.
+            event/membership-items:read: Allows reading of membership items.
+            event/orders:read: Allows the reading of orders
+            event/planning-documents:read: Allows the reading of event planning documents
+            event/players:read: Allows the reading of players
+            event/process-form-submissions:read: Allows the reading of process form submissions.
+            event/program-items:delete: Allows deletion of session program items
+            event/program-items:read: Allows reading of session program items
+            event/program-items:write: Allows writing of session program items
+            event/quantity-items:read: Allows the reading of quantity items.
+            event/quantity-items:write: Allows the writing of quantity items
+            event/registration-paths:read: Allows the reading of registration paths
+            event/registration-types:read: Allows the reading of registration types
+            event/registration-types:write: Allows the writing of registration types
+            event/role-assignments:read: Allows the reading of event role assignment.
+            event/session-attendance:read: Allows the reading of sessions attendance
+            event/session-attendance:write: Allows the creation/updating of sessions attendance
+            event/session-categories:read: Allows reading of session categories
+            event/session-categories:write: Allows writing of session categories
+            event/session-enrollment:delete: Allows the deletion of session registrations
+            event/session-enrollment:read: Allows the reading of sessions registrations
+            event/session-enrollment:write: Allows the writing of sessions registrations
+            event/session-segments:read: Allows reading of session segments
+            event/sessions:delete: Allows the deletion of a session in an event
+            event/sessions:read: Allows the reading of sessions
+            event/sessions:write: Allows the creation of a session in an event
+            event/speaker-categories:read: Allows reading of speaker categories
+            event/speaker-categories:write: Allows writing of speaker categories
+            event/speakers:delete: Allows the deletion of a speaker in an event
+            event/speakers:read: Allows the reading of speakers
+            event/speakers:write: Allows the creation of a speaker in an event
+            event/taxes:read: Allows the reading of taxes.
+            event/transactions:read: Allows the reading of transactions
+            event/transactions:write: Allows the writing of transactions
+            event/video-views:read: Allows reading of video views.
+            event/videos:read: Allows the reading of video data.
+            event/videos:write: Allows the creation/updating of video data.
+            event/vouchers:read: Allows reading of event vouchers.
+            event/webcasts:delete: Allows the deletion of webcast
+            event/webcasts:read: Allows the reading of webcasts
+            event/webcasts:write: Allows the creation of webcast
+            event/weblinks:read: Allows the reading of event weblinks
+            events-plus/hubs:read: Allows the reading of Events+ hub data.
+            exhibitor/badges:read: Allows reading badges
+            exhibitor/badges:write: Allows creating/updating badges
+            exhibitor/booth-staff:delete: Allows deleting booth staff
+            exhibitor/booth-staff:read: Allows reading booth staff
+            exhibitor/booth-staff:write: Allows creating booth staff
+            exhibitor/eliterature-requests:read: Allows reading eliterature document request data
+            exhibitor/exhibitor-admins:read: Allows reading exhibitor admins
+            exhibitor/exhibitor-admins:write: Allows creating/updating exhibitor admins
+            exhibitor/exhibitor-answers:read: Allows reading exhibitor answers
+            exhibitor/exhibitor-answers:write: Allows updating exhibitor answers
+            exhibitor/exhibitor-categories:delete: Allows deleting exhibitor categories
+            exhibitor/exhibitor-categories:read: Allows reading exhibitor categories
+            exhibitor/exhibitor-categories:write: Allows creating/updating exhibitor categories
+            exhibitor/exhibitor-contents:delete: Allows deleting exhibitor content
+            exhibitor/exhibitor-contents:read: Allows reading exhibitor content
+            exhibitor/exhibitor-contents:write: Allows creating/updating exhibitor content
+            exhibitor/exhibitor-questions:read: Allows reading exhibitor questions
+            exhibitor/exhibitors:delete: Allows deleting exhibitors
+            exhibitor/exhibitors:read: Allows reading exhibitors
+            exhibitor/exhibitors:write: Allows creating/updating exhibitors
+            exhibitor/lead-qualification-answers:read: Allows reading Lead Qualification Answers
+            exhibitor/lead-qualification-questions:read: Allows reading Lead Qualification Questions.
+            exhibitor/leads:read: Allows reading leads.
+            exhibitor/registration-packs:delete: Allows deleting registration pack
+            exhibitor/registration-packs:read: Allows reading registration pack
+            exhibitor/registration-packs:write: Allows creating/updating registration pack
+            exhibitor/sponsorship-levels:read: Allows reading sponsorship level
+            file/file:read: Allows the reading of file
+            file/file:write: Allows the uploading of file
+            housing/connections:write: Allows the user to connect to the Reglink APIs.
+            housing/hotel-room-rates:write: Allows the user to create/update hotel room rates.
+            housing/housing-event-available-nights:read: Allows the user to read availability information for given event.
+            housing/housing-event-hotels:read: Allows the user to read information about event hotels.
+            housing/housing-event-inventory:read: Allows the user to get information about housing event inventory.
+            housing/housing-event-room-types:read: Allows the user to read information about event room types.
+            housing/housing-events:read: Allows the user to read information about events.
+            housing/reservation-requests:delete: Allows the user to cancel reservation request.
+            housing/reservation-requests:read: Allows the user to read reservation request information.
+            housing/reservation-requests:write: Allows the user to create/update reservation request.
+            housing/reservations-link:delete: Allows the user to remove association from reservation.
+            housing/reservations-link:write: Allows the user to associate reservation to reservation request.
+            housing/reservations:delete: Allows the user to cancel reservation.
+            housing/reservations:read: Allows the user to read reservation details information.
+            housing/reservations:write: Allows the user to create/update reservation.
+            onsite/signatures:read: Allows reading signatures.
+            proposal/proposals:write: Allows the creation/writing of proposal
+            remote-printing/badge-print-jobs:read: Allows reading print jobs.
+            remote-printing/badge-print-jobs:write: Allows creating print jobs.
+            remote-printing/badge-printer-pools:read: Allows reading pools.
+            rfp/rfp-agenda-items:read: Allows the reading of RFP agenda items.
+            rfp/rfp-attachments:read: Allows the reading of RFP attachments.
+            rfp/rfp-custom-fields:read: Allows the reading of RFP custom fields.
+            rfp/rfp-guest-rooms:read: Allows the reading of RFP guest rooms.
+            rfp/rfp-internal-documents:read: Allows the reading of RFP internal documents.
+            rfp/rfp-lead-sources:read: Allows the reading of RFP lead sources.
+            rfp/rfp-past-events:read: Allows the reading of past events similar to rfp event.
+            rfp/rfp-questions:read: Allows the reading of RFP questions.
+            rfp/rfp-recipients-history:read: Allows the reading of RFP recipients history.
+            rfp/rfp-suppliers:read: Allows the reading of RFP suppliers.
+            rfp/rfps:read: Allows the reading of basic details of RFP.
+            seating/assignments:read: Allows to read attendee seat assignment information.
+            seating/event-seatings:read: Allows to read event seating.
+            seating/seats:read: Allows to read seat information.
+            seating/tables:read: Allows to read table information.
+            secure-ecommerce/card-tokens:write: Allows creation of credit card tokens
+            survey/questions:read: Allows the reading of survey questions
+            survey/respondents:read: Allows reading the survey respondents
+            survey/responses:read: Allows reading the survey responses
+            survey/standard-survey-email-templates:read: Allows reading the standalone survey email templates
+            survey/standard-survey-email:write: Allows writing operations on standalone survey emails
+            survey/standard-survey-questions:read: Allows the reading of standalone surveys questions
+            survey/standard-survey-respondents:read: Allows reading the standalone survey respondents
+            survey/standard-survey-respondents:write: Allows write operations on standalone survey respondents
+            survey/standard-survey-responses:read: Allows reading the standalone survey responses
+            survey/standard-survey-responses:write: Allows write operations on standalone surveys respondent's responses
+            survey/standard-surveys:read: Allows the reading of standalone surveys
+            survey/survey-questions:read: Allows the reading of event survey questions
+            survey/survey-respondents:read: Allows reading the event survey respondents
+            survey/survey-respondents:write: Allows write operations on the event survey respondents
+            survey/survey-responses:read: Allows reading the event survey responses
+            survey/survey-responses:write: Allows write operations on the event surveys respondent's responses
+            survey/surveys:read: Allows the reading of event surveys
+            venue/meeting-room-images:delete: Allows disassociating images from meeting rooms.
+            venue/meeting-room-images:read: Allows retrieving meeting room images.
+            venue/meeting-room-images:write: Allows associating images with meeting rooms.
+            venue/meeting-room-overviews:read: Allows read access for overview of meeting room.
+            venue/meeting-rooms:write: Allows the creation and modification of meeting rooms.
+            venue/venue-details-overview:read: Allows read access for overview of venue details.
+            venue/venue-details:write: Allows the creation and modification of venue details.
+            venue/venue-facility:write: Allows the modification of venue facility information.
+    OAuth2.authorizationCode:
+      type: oauth2
+      description: OAuth2 Authorization Code Flow.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api-platform.cvent.com/ea/oauth2/authorize
+          tokenUrl: https://api-platform.cvent.com/ea/oauth2/token
+          scopes:
+            account/hooks:delete: Allows the deletion of hooks.
+            account/hooks:read: Allows the reading of hooks.
+            account/hooks:write: Allows the creation/updation of hooks.
+            account/user-groups:delete: Allows deletion for user groups
+            account/user-groups:read: Allows the reading of user groups
+            account/user-groups:write: Allows the writing of user groups
+            account/users:delete: Allows the deletion of User
+            account/users:read: Allows the reading of User, User Group
+            account/users:write: Allows the creation/updating of User
+            appointments/appointment-attendees:read: Allows the reading of appointment attendees and their related entities.
+            appointments/appointment-events:read: Allows the reading of appointment events and their related entities.
+            appointments/appointment-types:read: Allows the reading of appointment types and their related entities.
+            appointments/appointments:read: Allows the reading of appointment and their related entities.
+            appointments/appointments:write: Allows the writing of appointments and their related entities.
+            appointments/available-times:read: Allows the reading of available times.
+            appointments/locations:read: Allows the reading of appointment locations and their related entities.
+            attendee-insights/attendee-insights:read: Allows the reading of engagement scores (attendee insights).
+            attendee-insights/scores:read: Allows the reading of scores.
+            attendee-insights/stats:read: Allows the reading of engagement score (attendee insight) stats.
+            budget/budget-items:delete: Allows the deletion of budget items
+            budget/budget-items:read: Allows the reading of all budget items
+            budget/budget-items:write: Allows creation/updation of budget item
+            budget/budget-totals:read: Allows the reading of all event budget totals
+            budget/budget-vendors:read: Allows reading of account-level budget vendors.
+            budget/cards:read: Allows the reading of cards
+            budget/currency-conversion-rate:delete: Allows deletion of currency conversion rate for currency.
+            budget/currency-conversion-rate:read: Allows reading of currency conversion rate for currency.
+            budget/currency-conversion-rate:write: Allows creation/update of currency conversion rate for currency.
+            budget/payments:delete: Allows deletion of payments.
+            budget/payments:read: Allows reading of payment for budget item.
+            budget/payments:write: Allows creation of payment in a budget item.
+            budget/transactions:delete: Allows delete card transactions.
+            budget/transactions:read: Allows the reading of all card's transactions
+            budget/transactions:write: Allows creation of card transactions.
+            business-transient/bids:read: Allows the reading of BT Bid data
+            business-transient/proposals:read: Allows the reading of BT Proposal data
+            business-travel/bids:read: Allows the reading of BT Bid data
+            business-travel/proposals:read: Allows the reading of BT Proposal data
+            compliance/communications:read: Allows the reading of communication compliance
+            compliance/communications:write: Allows the writing of communication compliance
+            email/bounces:read: Allow the reading of email bounces.
+            email/email-status:read: Allows the reading of email statuses.
+            email/emails:read: Allows the reading of emails.
+            eMarketing/campaigns:read: Allows the reading of campaigns.
+            emarketing/emarketing-email-status:read: Allows the reading of eMarketing email statuses.
+            eMarketing/eMarketing-email-templates:read: Allows the reading of email-templates.
+            eMarketing/eMarketing-send-emails:write: Allows the writing of eMarketing emails.
+            event/admission-items:read: Allows the reading of admission items
+            event/air-request:read: Allow reading the air request or air actual detail for attendees.
+            event/alternate-travel:read: Allow reading the alternate travel answers for attendees.
+            event/attendance-durations:read: Allows the read of Duration records
+            event/attendee-activities-metadata:delete: Allows the deletion of attendees activities metadata.
+            event/attendee-activities-metadata:read: Allows the reading of attendee activities metadata.
+            event/attendee-activities-metadata:write: Allows the creation/updating of attendees activities metadata.
+            event/attendee-activities:read: Allows the reading of attendee activities.
+            event/attendee-activities:write: Allows the writing of attendee activities.
+            event/attendee-credits:read: Allows the reading of attendee credits.
+            event/attendee-links:delete: Allows the deletion of attendee links
+            event/attendee-links:read: Allows the reading of attendee links
+            event/attendee-links:write: Allows the creation of attendee links
+            event/attendee-messages:read: Allows the reading of attendee messages
+            event/attendees:read: Allows the reading of attendees.
+            event/attendees:write: Allows the creation of an attendee in an event.
+            event/audience-segments:read: Allows the reading of audience segments.
+            event/audience-segments:write: Allows the creation/updating/deletion of audience segments.
+            event/contact-groups:read: Allows the reading of contact groups.
+            event/contact-groups:write: Allows the creation/updating of contact groups.
+            event/contact-types:read: Allows the reading of contact types.
+            event/contacts:delete: Allows the deletion of contacts.
+            event/contacts:read: Allows the reading of contacts.
+            event/contacts:write: Allows the creation/updating of contacts.
+            event/contacts:write-sensitive: Allows the creation/updating of sensitive data related to contacts.
+            event/custom-fields:read: Allows the reading of custom fields
+            event/custom-fields:write: Allows the writing of custom fields
+            event/discounts:write: Allows the writing of discounts
+            event/donation-items:read: Allows the reading of donation items.
+            event/event-discounts:read: Allows the reading of event discounts.
+            event/event-discounts:write: Allows the writing of event discounts.
+            event/event-email-status:read: Allows the reading of event email statuses.
+            event/event-emails:read: Allows the reading of event emails
+            event/event-emails:write: Allows to send event emails.
+            event/event-features:read: Allows the reading of events-features
+            event/event-features:write: Allows updating the event-features
+            event/event-user-groups:read: Allows the reading of user groups
+            event/event-user-groups:write: Allows associating/disassociating user groups to event
+            event/events:read: Allows the reading of events
+            event/events:write: Allows the creation/updating of events
+            event/fee-items:read: Allows the reading of fee items.
+            event/hotel-request:read: Allow reading the hotel request or housing reservation request detail for attendees.
+            event/invitation-lists:read: Allows the reading of the invitation lists for an event
+            event/meeting-request-forms:read: Allows the reading of meeting request forms.
+            event/meeting-requests:read: Allows the reading of meeting requests.
+            event/meeting-requests:write: Allows the creation/updating of meeting requests.
+            event/membership-items:read: Allows reading of membership items.
+            event/orders:read: Allows the reading of orders
+            event/planning-documents:read: Allows the reading of event planning documents
+            event/players:read: Allows the reading of players
+            event/process-form-submissions:read: Allows the reading of process form submissions.
+            event/program-items:delete: Allows deletion of session program items
+            event/program-items:read: Allows reading of session program items
+            event/program-items:write: Allows writing of session program items
+            event/quantity-items:read: Allows the reading of quantity items.
+            event/quantity-items:write: Allows the writing of quantity items
+            event/registration-paths:read: Allows the reading of registration paths
+            event/registration-types:read: Allows the reading of registration types
+            event/registration-types:write: Allows the writing of registration types
+            event/role-assignments:read: Allows the reading of event role assignment.
+            event/session-attendance:read: Allows the reading of sessions attendance
+            event/session-attendance:write: Allows the creation/updating of sessions attendance
+            event/session-categories:read: Allows reading of session categories
+            event/session-categories:write: Allows writing of session categories
+            event/session-enrollment:delete: Allows the deletion of session registrations
+            event/session-enrollment:read: Allows the reading of sessions registrations
+            event/session-enrollment:write: Allows the writing of sessions registrations
+            event/session-segments:read: Allows reading of session segments
+            event/sessions:delete: Allows the deletion of a session in an event
+            event/sessions:read: Allows the reading of sessions
+            event/sessions:write: Allows the creation of a session in an event
+            event/speaker-categories:read: Allows reading of speaker categories
+            event/speaker-categories:write: Allows writing of speaker categories
+            event/speakers:delete: Allows the deletion of a speaker in an event
+            event/speakers:read: Allows the reading of speakers
+            event/speakers:write: Allows the creation of a speaker in an event
+            event/taxes:read: Allows the reading of taxes.
+            event/transactions:read: Allows the reading of transactions
+            event/transactions:write: Allows the writing of transactions
+            event/video-views:read: Allows reading of video views.
+            event/videos:read: Allows the reading of video data.
+            event/videos:write: Allows the creation/updating of video data.
+            event/vouchers:read: Allows reading of event vouchers and their associated attendees.
+            event/webcasts:delete: Allows the deletion of webcast
+            event/webcasts:read: Allows the reading of webcasts
+            event/webcasts:write: Allows the creation of webcast
+            event/weblinks:read: Allows the reading of event weblinks
+            events-plus/hubs:read: Allows the reading of Events+ hub data.
+            exhibitor/badges:read: Allows reading badges
+            exhibitor/badges:write: Allows creating/updating badges
+            exhibitor/booth-staff:delete: Allows deleting booth staff
+            exhibitor/booth-staff:read: Allows reading booth staff
+            exhibitor/booth-staff:write: Allows creating booth staff
+            exhibitor/eliterature-requests:read: Allows reading eliterature document request data
+            exhibitor/exhibitor-admins:read: Allows reading exhibitor admins
+            exhibitor/exhibitor-admins:write: Allows creating/updating exhibitor admins
+            exhibitor/exhibitor-answers:read: Allows reading exhibitor answers
+            exhibitor/exhibitor-answers:write: Allows updating exhibitor answers
+            exhibitor/exhibitor-categories:delete: Allows deleting exhibitor categories
+            exhibitor/exhibitor-categories:read: Allows reading exhibitor categories
+            exhibitor/exhibitor-categories:write: Allows creating/updating exhibitor categories
+            exhibitor/exhibitor-contents:delete: Allows deleting exhibitor content
+            exhibitor/exhibitor-contents:read: Allows reading exhibitor content
+            exhibitor/exhibitor-contents:write: Allows creating/updating exhibitor content
+            exhibitor/exhibitor-questions:read: Allows reading exhibitor questions
+            exhibitor/exhibitors:delete: Allows deleting exhibitors
+            exhibitor/exhibitors:read: Allows reading exhibitors
+            exhibitor/exhibitors:write: Allows creating/updating exhibitors
+            exhibitor/lead-qualification-answers:read: Allows reading Lead Qualification Answers
+            exhibitor/lead-qualification-questions:read: Allows reading Lead Qualification Questions.
+            exhibitor/leads:read: Allows reading leads.
+            exhibitor/registration-packs:delete: Allows deleting registration pack
+            exhibitor/registration-packs:read: Allows reading registration pack
+            exhibitor/registration-packs:write: Allows creating/updating registration pack
+            exhibitor/sponsorship-levels:read: Allows reading sponsorship level
+            file/file:read: Allows the reading of file
+            file/file:write: Allows the uploading of file
+            onsite/signatures:read: Allows reading signatures.
+            remote-printing/badge-print-jobs:read: Allows reading print jobs.
+            remote-printing/badge-print-jobs:write: Allows creating print jobs.
+            remote-printing/badge-printer-pools:read: Allows reading pools.
+            rfp/rfp-agenda-items:read: Allows the reading of RFP agenda items.
+            rfp/rfp-attachments:read: Allows the reading of RFP attachments.
+            rfp/rfp-custom-fields:read: Allows the reading of RFP custom fields.
+            rfp/rfp-guest-rooms:read: Allows the reading of RFP guest rooms.
+            rfp/rfp-internal-documents:read: Allows the reading of RFP internal documents.
+            rfp/rfp-lead-sources:read: Allows the reading of RFP lead sources.
+            rfp/rfp-past-events:read: Allows the reading of past events similar to rfp event.
+            rfp/rfp-questions:read: Allows the reading of RFP questions.
+            rfp/rfp-recipients-history:read: Allows the reading of RFP recipients history.
+            rfp/rfp-suppliers:read: Allows the reading of RFP suppliers.
+            rfp/rfps:read: Allows the reading of basic details of RFP.
+            seating/assignments:read: Allows to read attendee seat assignment information.
+            seating/event-seatings:read: Allows to read event seating.
+            seating/seats:read: Allows to read seat information.
+            seating/tables:read: Allows to read table information.
+            survey/questions:read: Allows the reading of survey questions
+            survey/respondents:read: Allows reading the survey respondents
+            survey/responses:read: Allows reading the survey responses
+            survey/standard-survey-email-templates:read: Allows reading the standalone survey email templates
+            survey/standard-survey-email:write: Allows writing operations on standalone survey emails
+            survey/standard-survey-questions:read: Allows the reading of standalone surveys questions
+            survey/standard-survey-respondents:read: Allows reading the standalone survey respondents
+            survey/standard-survey-respondents:write: Allows write operations on standalone survey respondents
+            survey/standard-survey-responses:read: Allows reading the standalone survey responses
+            survey/standard-survey-responses:write: Allows write operations on standalone surveys respondent's responses
+            survey/standard-surveys:read: Allows the reading of standalone surveys
+            survey/survey-questions:read: Allows the reading of event survey questions
+            survey/survey-respondents:read: Allows reading the event survey respondents
+            survey/survey-respondents:write: Allows write operations on the event survey respondents
+            survey/survey-responses:read: Allows reading the event survey responses
+            survey/survey-responses:write: Allows write operations on the event surveys respondent's responses
+            survey/surveys:read: Allows the reading of event surveys
+            venue/meeting-room-images:delete: Allows disassociating images from meeting rooms.
+            venue/meeting-room-images:read: Allows retrieving meeting room images.
+            venue/meeting-room-images:write: Allows associating images with meeting rooms.
+            venue/meeting-room-overviews:read: Allows read access for overview of meeting room.
+            venue/meeting-rooms:write: Allows the creation and modification of meeting rooms.
+            venue/venue-details-overview:read: Allows read access for overview of venue details.
+            venue/venue-details:write: Allows the creation and modification of venue details.
+            venue/venue-facility:write: Allows the modification of venue facility information.

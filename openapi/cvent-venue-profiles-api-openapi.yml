@@ -1,0 +1,2939 @@
+openapi: 3.0.2
+info:
+  title: Cvent REST APIs — Venue Profiles
+  version: ea
+  description: Manage venue profile details including type, contact information, address, and other venue properties.
+  contact:
+    name: Cvent Development Platform
+    url: https://developers.cvent.com/
+externalDocs:
+  description: Cvent REST API documentation
+  url: https://developers.cvent.com/documentation
+servers:
+- url: https://api-platform.cvent.com/ea
+- url: https://api-platform-eur.cvent.com/ea
+tags:
+- name: Venue Profiles
+  description: Manage venue profile details including type, contact information, address, and other venue properties.
+paths:
+  /venues/{venueId}/details:
+    put:
+      operationId: updateVenueDetails
+      summary: Update Venue Details
+      description: Update venue details for the specified venue, replacing the existing venue details data.
+      security:
+      - OAuth2.authorizationCode:
+        - venue/venue-details:write
+      - OAuth2.clientCredentials:
+        - venue/venue-details:write
+      parameters:
+      - $ref: '#/components/parameters/venueId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/existingVenueDetails'
+      tags:
+      - Venue Profiles
+      responses:
+        '200':
+          description: Successfully updated the venue details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/existingVenueDetails'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+    patch:
+      operationId: patchVenueDetails
+      summary: Patch Venue Details
+      description: 'Partially updates the specified venue''s details using JSON Merge Patch, as defined in [RFC 7396](https://www.rfc-editor.org/rfc/rfc7396.html).
+
+
+        - Only fields present in the request body are updated; omitted fields remain unchanged.
+
+        - Set a field to `null` to unset it.
+
+        - If any part of the patch fails, the entire request will fail.
+
+
+        **Array Handling:**
+
+        - Arrays (`locationTypes`) are treated as **full replacements**, not partial updates.
+
+        - If an array property is not included in the payload, no updates are made to that field.
+
+        - If an empty array is sent, it replaces the existing array with an empty array.
+
+        '
+      security:
+      - OAuth2.authorizationCode:
+        - venue/venue-details:write
+      - OAuth2.clientCredentials:
+        - venue/venue-details:write
+      parameters:
+      - $ref: '#/components/parameters/venueId'
+      requestBody:
+        required: true
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/venueDetailsPatch'
+      tags:
+      - Venue Profiles
+      responses:
+        '200':
+          description: Successfully updated the venue details. The response contains only the fields that were provided in
+            the request payload.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/venueDetailsPatch'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+  /venues/{venueId}/details/overview:
+    get:
+      operationId: getVenueDetailsOverview
+      summary: Get Venue Details Overview
+      description: Retrieve an overview of venue details for the specified venue.
+      security:
+      - OAuth2.authorizationCode:
+        - venue/venue-details-overview:read
+      - OAuth2.clientCredentials:
+        - venue/venue-details-overview:read
+      parameters:
+      - $ref: '#/components/parameters/venueId'
+      tags:
+      - Venue Profiles
+      responses:
+        '200':
+          description: Successfully retrieved the venue details overview.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/venueDetailsOverview'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+  /venues/{venueId}/facility:
+    put:
+      operationId: updateVenueFacility
+      summary: Update Venue Facility
+      description: 'Update the facility information for the specified venue, replacing all existing values with those provided
+        in the request body.
+
+
+        Field applicability varies by venue type:
+
+        - Most facility information fields do not apply to CVB/DMC or Restaurant venues.
+
+        '
+      security:
+      - OAuth2.authorizationCode:
+        - venue/venue-facility:write
+      - OAuth2.clientCredentials:
+        - venue/venue-facility:write
+      parameters:
+      - $ref: '#/components/parameters/venueId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/existingVenueFacility'
+      tags:
+      - Venue Profiles
+      responses:
+        '200':
+          description: Successfully updated the venue facility information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/existingVenueFacility'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+    patch:
+      operationId: patchVenueFacility
+      summary: Patch Venue Facility
+      description: 'Partially update the facility information for the specified venue using JSON Merge Patch, as defined in
+        [RFC 7396](https://www.rfc-editor.org/rfc/rfc7396.html).
+
+
+        - Only fields present in the request body are updated; omitted fields remain unchanged.
+
+        - Set a field to `null` to unset it.
+
+        - If any part of the patch fails, the entire request will fail.
+
+        - `proximityFromAirport.unit` is required when `proximityFromAirport.distance` is provided.
+
+
+        Field applicability varies by venue type:
+
+        - Most facility information fields do not apply to CVB/DMC or Restaurant venues.
+
+        '
+      security:
+      - OAuth2.authorizationCode:
+        - venue/venue-facility:write
+      - OAuth2.clientCredentials:
+        - venue/venue-facility:write
+      parameters:
+      - $ref: '#/components/parameters/venueId'
+      requestBody:
+        required: true
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/venueFacilityPatch'
+      tags:
+      - Venue Profiles
+      responses:
+        '200':
+          description: Successfully updated the venue facility information. The response contains only the fields that were
+            provided in the request payload.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/venueFacilityPatch'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+components:
+  schemas:
+    existingVenueDetails:
+      title: ExistingVenueDetails
+      description: An existing venue details model with read-only generated properties.
+      type: object
+      required:
+      - id
+      - name
+      allOf:
+      - $ref: '#/components/schemas/venueDetails'
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Venue ID.
+          readOnly: true
+          example: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+        name:
+          type: string
+          description: Venue name.
+          readOnly: true
+          minLength: 1
+          maxLength: 100
+          example: Vienna Wolf Trap Hotel
+        metroArea:
+          type: string
+          description: Metro area name. Populated once the venue is approved.
+          readOnly: true
+          example: Washington DC Metro
+    VenueID:
+      title: Venue ID
+      description: A unique identifier for a venue
+      type: string
+      format: uuid
+      example: 6bb0e2db-861f-46e3-a923-eb4d959ffa00
+    StateProvince:
+      type: string
+      title: StateProvince
+      description: The state province code used for contact information.
+      enum:
+      - BLANK
+      - AA
+      - AB
+      - ABD
+      - ABE
+      - ACT_AUS
+      - AE
+      - AGB
+      - AGY
+      - AK
+      - AL
+      - ANS
+      - ANT
+      - AP
+      - AR
+      - ARD
+      - ARM
+      - AS
+      - AT_1
+      - AT_2
+      - AT_3
+      - AT_4
+      - AT_5
+      - AT_6
+      - AT_7
+      - AT_8
+      - AT_9
+      - AZ
+      - BAN
+      - BAS
+      - BBD
+      - BC
+      - BDF
+      - BE_BRU
+      - BEN
+      - BE_VAN
+      - BE_VBR
+      - BE_VLI
+      - BE_VOV
+      - BE_VWV
+      - BE_WBR
+      - BE_WHT
+      - BE_WLG
+      - BE_WLX
+      - BE_WNA
+      - BEX
+      - BFS
+      - BGE
+      - BGW
+      - BIR
+      - BKM
+      - BLA
+      - BLY
+      - BMH
+      - BNB
+      - BNE
+      - BNH
+      - BNS
+      - BOL
+      - BPL
+      - BR_AC
+      - BR_AL
+      - BR_AM
+      - BR_AP
+      - BR_BA
+      - BRC
+      - BR_CE
+      - BRD
+      - BR_DF
+      - BR_ES
+      - BR_GO
+      - BRK
+      - BR_MA
+      - BR_MG
+      - BR_MS
+      - BR_MT
+      - BR_PA
+      - BR_PB
+      - BR_PE
+      - BR_PI
+      - BR_PR
+      - BR_RJ
+      - BR_RN
+      - BR_RO
+      - BR_RR
+      - BR_RS
+      - BR_SC
+      - BR_SE
+      - BR_SP
+      - BR_TO
+      - BRY
+      - BST
+      - BUR
+      - CA
+      - CAM
+      - CAY
+      - CGN
+      - CGV
+      - CH_AG
+      - CH_AI
+      - CH_AR
+      - CH_BE
+      - CH_BL
+      - CH_BS
+      - CH_FR
+      - CH_GE
+      - CH_GL
+      - CH_GR
+      - CHI
+      - CH_JU
+      - CH_LU
+      - CH_NE
+      - CH_NW
+      - CH_OW
+      - CHS
+      - CH_SG
+      - CH_SH
+      - CH_SO
+      - CH_SZ
+      - CH_TG
+      - CH_TI
+      - CH_UR
+      - CH_VD
+      - CH_VS
+      - CH_ZG
+      - CH_ZH
+      - CKF
+      - CKT
+      - CLD
+      - CLK
+      - CLR
+      - CMA
+      - CMD
+      - CMN
+      - CN_11
+      - CN_12
+      - CN_13
+      - CN_14
+      - CN_15
+      - CN_21
+      - CN_22
+      - CN_23
+      - CN_31
+      - CN_32
+      - CN_33
+      - CN_34
+      - CN_35
+      - CN_36
+      - CN_37
+      - CN_41
+      - CN_42
+      - CN_43
+      - CN_44
+      - CN_45
+      - CN_46
+      - CN_50
+      - CN_51
+      - CN_52
+      - CN_53
+      - CN_54
+      - CN_61
+      - CN_62
+      - CN_63
+      - CN_64
+      - CN_65
+      - CN_91
+      - CN_92
+      - CO
+      - CON
+      - COV
+      - CRF
+      - CRY
+      - CSR
+      - CT
+      - CWD
+      - CWY
+      - DAL
+      - DBY
+      - DC
+      - DE
+      - DEN
+      - DER
+      - DEV
+      - DGN
+      - DGY
+      - DK_015
+      - DK_020
+      - DK_025
+      - DK_030
+      - DK_035
+      - DK_040
+      - DK_042
+      - DK_050
+      - DK_055
+      - DK_060
+      - DK_065
+      - DK_070
+      - DK_076
+      - DK_080
+      - DK_101
+      - DK_147
+      - DK_81
+      - DK_82
+      - DK_83
+      - DK_84
+      - DK_85
+      - DNC
+      - DND
+      - DOR
+      - DOW
+      - DRY
+      - DUD
+      - DUR
+      - EAL
+      - EAY
+      - EDH
+      - EDU
+      - ELN
+      - ELS
+      - ENF
+      - ERW
+      - ERY
+      - ESS
+      - ESX
+      - FAL
+      - FER
+      - FIF
+      - FL
+      - FLN
+      - FM
+      - GA
+      - GAT
+      - GB
+      - GLG
+      - GLN
+      - GLS
+      - GR_01
+      - GR_03
+      - GR_04
+      - GR_05
+      - GR_06
+      - GR_07
+      - GR_11
+      - GR_12
+      - GR_13
+      - GR_14
+      - GR_15
+      - GR_16
+      - GR_17
+      - GR_21
+      - GR_22
+      - GR_23
+      - GR_24
+      - GR_31
+      - GR_32
+      - GR_33
+      - GR_34
+      - GR_41
+      - GR_42
+      - GR_43
+      - GR_44
+      - GR_51
+      - GR_52
+      - GR_53
+      - GR_54
+      - GR_55
+      - GR_56
+      - GR_57
+      - GR_58
+      - GR_59
+      - GR_61
+      - GR_62
+      - GR_63
+      - GR_64
+      - GR_69
+      - GR_71
+      - GR_72
+      - GR_73
+      - GR_81
+      - GR_82
+      - GR_83
+      - GR_84
+      - GR_85
+      - GR_91
+      - GR_92
+      - GR_93
+      - GR_94
+      - GR_A_1
+      - GRE
+      - GTM
+      - GU
+      - GWN
+      - HAL
+      - HAM
+      - HAV
+      - HCK
+      - HEF
+      - HI
+      - HIL
+      - HLD
+      - HMF
+      - HNS
+      - HPL
+      - HRT
+      - HRW
+      - HRY
+      - IA
+      - ID
+      - IE_C
+      - IE_CE
+      - IE_CN
+      - IE_CW
+      - IE_D
+      - IE_DL
+      - IE_G
+      - IE_KE
+      - IE_KK
+      - IE_KY
+      - IE_LD
+      - IE_LH
+      - IE_LK
+      - IE_LM
+      - IE_LS
+      - IE_MH
+      - IE_MN
+      - IE_MO
+      - IE_OY
+      - IE_RN
+      - IE_SO
+      - IE_TA
+      - IE_WD
+      - IE_WH
+      - IE_WW
+      - IE_WX
+      - IL
+      - IN
+      - IN_AN
+      - IN_AP
+      - IN_AR
+      - IN_AS
+      - IN_BR
+      - IN_CH
+      - IN_CT
+      - IN_DD
+      - IN_DL
+      - IN_DN
+      - IN_GA
+      - IN_GJ
+      - IN_HP
+      - IN_HR
+      - IN_JH
+      - IN_JK
+      - IN_KA
+      - IN_KL
+      - IN_LD
+      - IN_MH
+      - IN_ML
+      - IN_MN
+      - IN_MP
+      - IN_MZ
+      - IN_NL
+      - IN_OR
+      - IN_PB
+      - IN_PY
+      - IN_RJ
+      - IN_SK
+      - IN_TG
+      - IN_TN
+      - IN_TR
+      - IN_UL
+      - IN_UP
+      - IN_WB
+      - IOA
+      - IOI
+      - IOL
+      - IOM
+      - IOS
+      - IOW
+      - IOY
+      - ISL
+      - IT_21
+      - IT_23
+      - IT_25
+      - IT_32
+      - IT_34
+      - IT_36
+      - IT_42
+      - IT_45
+      - IT_52
+      - IT_55
+      - IT_57
+      - IT_62
+      - IT_65
+      - IT_67
+      - IT_72
+      - IT_75
+      - IT_77
+      - IT_78
+      - IT_82
+      - IT_88
+      - IT_AG
+      - IT_AL
+      - IT_AN
+      - IT_AO
+      - IT_AP
+      - IT_AQ
+      - IT_AR
+      - IT_AT
+      - IT_AV
+      - IT_BA
+      - IT_BG
+      - IT_BI
+      - IT_BL
+      - IT_BN
+      - IT_BO
+      - IT_BR
+      - IT_BS
+      - IT_BT
+      - IT_BZ
+      - IT_CA
+      - IT_CB
+      - IT_CE
+      - IT_CH
+      - IT_CI
+      - IT_CL
+      - IT_CN
+      - IT_CO
+      - IT_CR
+      - IT_CS
+      - IT_CT
+      - IT_CZ
+      - IT_EN
+      - IT_FC
+      - IT_FE
+      - IT_FG
+      - IT_FI
+      - IT_FM
+      - IT_FR
+      - IT_GE
+      - IT_GO
+      - IT_GR
+      - IT_IM
+      - IT_IS
+      - IT_KR
+      - IT_LC
+      - IT_LE
+      - IT_LI
+      - IT_LO
+      - IT_LT
+      - IT_LU
+      - IT_MB
+      - IT_MC
+      - IT_ME
+      - IT_MI
+      - IT_MN
+      - IT_MO
+      - IT_MS
+      - IT_MT
+      - IT_NA
+      - IT_NO
+      - IT_NU
+      - IT_OG
+      - IT_OR
+      - IT_OT
+      - IT_PA
+      - IT_PC
+      - IT_PD
+      - IT_PE
+      - IT_PG
+      - IT_PI
+      - IT_PN
+      - IT_PO
+      - IT_PR
+      - IT_PT
+      - IT_PU
+      - IT_PV
+      - IT_PZ
+      - IT_RA
+      - IT_RC
+      - IT_RE
+      - IT_RG
+      - IT_RI
+      - IT_RM
+      - IT_RN
+      - IT_RO
+      - IT_SA
+      - IT_SI
+      - IT_SO
+      - IT_SP
+      - IT_SR
+      - IT_SS
+      - IT_SV
+      - IT_TA
+      - IT_TE
+      - IT_TN
+      - IT_TO
+      - IT_TP
+      - IT_TR
+      - IT_TS
+      - IT_TV
+      - IT_UD
+      - IT_VA
+      - IT_VB
+      - IT_VC
+      - IT_VE
+      - IT_VI
+      - IT_VR
+      - IT_VS
+      - IT_VT
+      - IT_VV
+      - IVK
+      - JP_01
+      - JP_02
+      - JP_03
+      - JP_04
+      - JP_05
+      - JP_06
+      - JP_07
+      - JP_08
+      - JP_09
+      - JP_10
+      - JP_11
+      - JP_12
+      - JP_13
+      - JP_14
+      - JP_15
+      - JP_16
+      - JP_17
+      - JP_18
+      - JP_19
+      - JP_20
+      - JP_21
+      - JP_22
+      - JP_23
+      - JP_24
+      - JP_25
+      - JP_26
+      - JP_27
+      - JP_28
+      - JP_29
+      - JP_30
+      - JP_31
+      - JP_32
+      - JP_33
+      - JP_34
+      - JP_35
+      - JP_36
+      - JP_37
+      - JP_38
+      - JP_39
+      - JP_40
+      - JP_41
+      - JP_42
+      - JP_43
+      - JP_44
+      - JP_45
+      - JP_46
+      - JP_47
+      - KEC
+      - KEN
+      - KHL
+      - KIR
+      - KS
+      - KTT
+      - KWL
+      - KY
+      - LA
+      - LAN
+      - LBH
+      - LCE
+      - LDS
+      - LEC
+      - LEW
+      - LIN
+      - LIV
+      - LMV
+      - LND
+      - LRN
+      - LSB
+      - LU_D
+      - LU_G
+      - LU_L
+      - LUT
+      - MA
+      - MAN
+      - MB
+      - MD
+      - MDB
+      - MDS
+      - MDW
+      - ME
+      - MFT
+      - MGM
+      - MH
+      - MI
+      - MIK
+      - MLN
+      - MN
+      - MO
+      - MON
+      - MP
+      - MRT
+      - MRY
+      - MS
+      - MSY
+      - MT
+      - MTY
+      - MX_AGU
+      - MX_BCN
+      - MX_BCS
+      - MX_CAM
+      - MX_CHH
+      - MX_CHP
+      - MX_COA
+      - MX_COL
+      - MX_DIF
+      - MX_DUR
+      - MX_GRO
+      - MX_GUA
+      - MX_HID
+      - MX_JAL
+      - MX_MEX
+      - MX_MIC
+      - MX_MOR
+      - MX_NAY
+      - MX_NLE
+      - MX_OAX
+      - MX_PUE
+      - MX_QUE
+      - MX_ROO
+      - MX_SIN
+      - MX_SLP
+      - MX_SON
+      - MX_TAB
+      - MX_TAM
+      - MX_TLA
+      - MX_VER
+      - MX_YUC
+      - MX_ZAC
+      - MYL
+      - NAY
+      - NB
+      - NBL
+      - NC
+      - ND
+      - NDN
+      - NE
+      - NEL
+      - NET
+      - NFK
+      - NGM
+      - NH
+      - NJ
+      - NL
+      - NL_DR
+      - NL_FL
+      - NL_FR
+      - NL_GE
+      - NL_GR
+      - NLK
+      - NL_LI
+      - NLN
+      - NL_NB
+      - NL_NH
+      - NL_OV
+      - NL_UT
+      - NL_ZE
+      - NL_ZH
+      - NM
+      - NO_01
+      - NO_02
+      - NO_03
+      - NO_04
+      - NO_05
+      - NO_06
+      - NO_07
+      - NO_08
+      - NO_09
+      - NO_10
+      - NO_11
+      - NO_12
+      - NO_14
+      - NO_15
+      - NO_16
+      - NO_17
+      - NO_18
+      - NO_19
+      - NO_20
+      - NO_21
+      - NO_22
+      - NRY
+      - NS
+      - NSM
+      - NSW_AUS
+      - NT
+      - NT_AUS
+      - NTA
+      - NTH
+      - NTL
+      - NTT
+      - NTY
+      - NU
+      - NV
+      - NWM
+      - NWP
+      - NY
+      - NYK
+      - NYM
+      - OH
+      - OK
+      - OLD
+      - OMH
+      - 'ON'
+      - OR
+      - ORK
+      - OXF
+      - PA
+      - PE
+      - PEM
+      - PKN
+      - PLY
+      - POL
+      - POR
+      - POW
+      - PR
+      - PTE
+      - PW
+      - QC
+      - QLD_AUS
+      - RCC
+      - RCH
+      - RCT
+      - RDB
+      - RDG
+      - RFW
+      - RI
+      - RIC
+      - ROT
+      - RUT
+      - SA_AUS
+      - SAW
+      - SAY
+      - SC
+      - SCB
+      - SD
+      - SFK
+      - SFT
+      - SGC
+      - SGM
+      - SHF
+      - SHN
+      - SHR
+      - SK
+      - SKP
+      - SLF
+      - SLG
+      - SLK
+      - SOL
+      - SOM
+      - SOS
+      - SRY
+      - STB
+      - STE
+      - STG
+      - STH
+      - STN
+      - STS
+      - STT
+      - STY
+      - SWA
+      - SWD
+      - SWK
+      - SYK
+      - TAM
+      - TAS_AUS
+      - TFW
+      - THR
+      - TN
+      - TOB
+      - TOF
+      - TRF
+      - TWH
+      - TWR
+      - TX
+      - TYR
+      - UT
+      - VA
+      - VGL
+      - VI
+      - VIC_AUS
+      - VT
+      - WA
+      - WA_AUS
+      - WAR
+      - WBK
+      - WDU
+      - WFT
+      - WGM
+      - WGN
+      - WI
+      - WIL
+      - WIS
+      - WKF
+      - WLL
+      - WLN
+      - WLV
+      - WMD
+      - WND
+      - WNM
+      - WOK
+      - WOR
+      - WRL
+      - WRT
+      - WRX
+      - WSM
+      - WSX
+      - WV
+      - WY
+      - WYK
+      - YOR
+      - YT
+      - ZET
+    LocationType:
+      title: LocationType
+      description: Location classification for the venue.
+      type: string
+      enum:
+      - AIRPORT
+      - INTERSTATE
+      - RESORT
+      - SMALL_METRO_TOWN
+      - SUBURBAN
+      - URBAN
+      example: SUBURBAN
+    Country:
+      title: Country
+      description: ISO 3166 two-letter (alpha-2) country codes with some additional non-standard cvent specific codes.
+      type: string
+      enum:
+      - BLANK
+      - AD
+      - AE
+      - AF
+      - AG
+      - AI
+      - AL
+      - AM
+      - AN
+      - AO
+      - AQ
+      - AR
+      - AS
+      - AT
+      - AU
+      - AW
+      - AX
+      - AZ
+      - BA
+      - BB
+      - BD
+      - BE
+      - BF
+      - BG
+      - BH
+      - BI
+      - BJ
+      - BL
+      - BM
+      - BN
+      - BO
+      - BQ
+      - BR
+      - BS
+      - BT
+      - BV
+      - BW
+      - BY
+      - BZ
+      - CA
+      - CC
+      - CD
+      - CF
+      - CG
+      - CH
+      - CI
+      - CK
+      - CL
+      - CM
+      - CN
+      - CO
+      - CR
+      - CU
+      - CV
+      - CW
+      - CX
+      - CY
+      - CZ
+      - DE
+      - DJ
+      - DK
+      - DM
+      - DO
+      - DZ
+      - EC
+      - EE
+      - EG
+      - EH
+      - ER
+      - ES
+      - ET
+      - FI
+      - FJ
+      - FK
+      - FM
+      - FO
+      - FR
+      - GA
+      - GB
+      - GB_1
+      - GB_2
+      - GB_3
+      - GB_4
+      - GD
+      - GE
+      - GF
+      - GG
+      - GH
+      - GI
+      - GL
+      - GM
+      - GN
+      - GP
+      - GQ
+      - GR
+      - GS
+      - GT
+      - GU
+      - GW
+      - GY
+      - HK
+      - HM
+      - HN
+      - HR
+      - HT
+      - HU
+      - ID
+      - IE
+      - IL
+      - IM
+      - IN
+      - IO
+      - IQ
+      - IR
+      - IS
+      - IT
+      - JE
+      - JM
+      - JO
+      - JP
+      - KE
+      - KG
+      - KH
+      - KI
+      - KM
+      - KN
+      - KO
+      - KP
+      - KR
+      - KW
+      - KY
+      - KZ
+      - LA
+      - LB
+      - LC
+      - LI
+      - LK
+      - LR
+      - LS
+      - LT
+      - LU
+      - LV
+      - LY
+      - MA
+      - MC
+      - MD
+      - ME
+      - MF
+      - MG
+      - MH
+      - MK
+      - ML
+      - MM
+      - MN
+      - MO
+      - MP
+      - MQ
+      - MR
+      - MS
+      - MT
+      - MU
+      - MV
+      - MW
+      - MX
+      - MY
+      - MZ
+      - NA
+      - NC
+      - NE
+      - NF
+      - NG
+      - NI
+      - NL
+      - 'NO'
+      - NP
+      - NR
+      - NU
+      - NZ
+      - OM
+      - PA
+      - PE
+      - PF
+      - PG
+      - PH
+      - PK
+      - PL
+      - PM
+      - PN
+      - PR
+      - PS
+      - PT
+      - PW
+      - PY
+      - QA
+      - RE
+      - RO
+      - RS
+      - RU
+      - RW
+      - SA
+      - SB
+      - SC
+      - SD
+      - SE
+      - SG
+      - SH
+      - SI
+      - SJ
+      - SK
+      - SL
+      - SM
+      - SN
+      - SO
+      - SR
+      - SS
+      - ST
+      - SV
+      - SX
+      - SY
+      - SZ
+      - TC
+      - TD
+      - TF
+      - TG
+      - TH
+      - TJ
+      - TK
+      - TL
+      - TM
+      - TN
+      - TO
+      - TP
+      - TR
+      - TT
+      - TV
+      - TW
+      - TZ
+      - UA
+      - UG
+      - UM
+      - US
+      - UY
+      - UZ
+      - VA
+      - VC
+      - VE
+      - VG
+      - VI
+      - VN
+      - VU
+      - WF
+      - WS
+      - YE
+      - YT
+      - ZA
+      - ZM
+      - ZW
+    AddressInfo:
+      title: AddressInfo
+      description: Venue address information.
+      type: object
+      required:
+      - city
+      - country
+      properties:
+        streetAddress1:
+          type: string
+          description: Street address line 1.
+          maxLength: 40
+          example: 1234 Trap Road
+        streetAddress2:
+          type: string
+          description: Street address line 2.
+          maxLength: 40
+          example: Suite 100
+        city:
+          type: string
+          description: City.
+          minLength: 1
+          maxLength: 40
+          example: Vienna
+        stateProvince:
+          $ref: '#/components/schemas/StateProvince'
+        zipPostalCode:
+          type: string
+          description: ZIP or postal code.
+          maxLength: 25
+          example: '22182'
+        country:
+          $ref: '#/components/schemas/Country'
+        directions:
+          type: string
+          description: Directions or instructions for getting to the venue.
+          maxLength: 2500
+          example: Take I-66 West to Exit 67, then follow signs to Trap Road.
+    venueFacilityPatch:
+      title: VenueFacilityPatch
+      description: Partial update payload for venue facility information. Only fields present in the request body are updated;
+        omitted fields remain unchanged. Set leaf fields to `null` to unset them. For grouped objects, update or clear each
+        child field explicitly instead of setting the entire group to `null`. Field applicability varies by venue type; values
+        supplied for fields that do not apply to the venue's type will be rejected.
+      type: object
+      properties:
+        numberOfMeetingRooms:
+          type: integer
+          nullable: true
+          description: Total number of meeting rooms at the venue.
+          minimum: 0
+          maximum: 10000
+          example: 25
+        space:
+          type: object
+          description: Facility space measurements at the venue.
+          properties:
+            unitOfMeasurement:
+              type: string
+              allOf:
+              - $ref: '#/components/schemas/MeasurementUnit'
+              nullable: true
+            totalMeetingRoomSpace:
+              type: integer
+              nullable: true
+              description: Total meeting room space at the venue.
+              minimum: 0
+              maximum: 99999999
+              example: 50000
+            totalExhibitSpace:
+              type: integer
+              nullable: true
+              description: Total exhibit space at the venue.
+              minimum: 0
+              maximum: 99999999
+              example: 75000
+        sleeping:
+          type: object
+          description: Sleeping room inventory at the venue.
+          properties:
+            totalRooms:
+              type: integer
+              nullable: true
+              description: Total number of sleeping rooms at the venue.
+              minimum: 0
+              maximum: 10000
+              example: 350
+            suites:
+              type: integer
+              nullable: true
+              description: Total number of suites at the venue.
+              minimum: 0
+              maximum: 10000
+              example: 20
+            singleRooms:
+              type: integer
+              nullable: true
+              description: Total number of single-occupancy rooms at the venue.
+              minimum: 0
+              maximum: 10000
+              example: 200
+            doubleRooms:
+              type: integer
+              nullable: true
+              description: Total number of double-occupancy rooms at the venue.
+              minimum: 0
+              maximum: 10000
+              example: 130
+        singleRate:
+          type: object
+          description: Published rate range for single-occupancy rooms, expressed in the venue's configured currency.
+          properties:
+            low:
+              type: number
+              nullable: true
+              description: Lowest published rate for a single-occupancy room.
+              minimum: 0
+              maximum: 999999999
+              example: 129.99
+            high:
+              type: number
+              nullable: true
+              description: Highest published rate for a single-occupancy room.
+              minimum: 0
+              maximum: 999999999
+              example: 249.99
+        doubleRate:
+          type: object
+          description: Published rate range for double-occupancy rooms, expressed in the venue's configured currency.
+          properties:
+            low:
+              type: number
+              nullable: true
+              description: Lowest published rate for a double-occupancy room.
+              minimum: 0
+              maximum: 999999999
+              example: 149.99
+            high:
+              type: number
+              nullable: true
+              description: Highest published rate for a double-occupancy room.
+              minimum: 0
+              maximum: 999999999
+              example: 299.99
+        taxRate:
+          type: number
+          nullable: true
+          description: Tax rate applied at the venue, expressed as a percentage.
+          minimum: 0
+          maximum: 999999999
+          example: 8.5
+        occupancyRate:
+          type: number
+          nullable: true
+          description: Occupancy rate at the venue, expressed as a percentage.
+          minimum: 0
+          maximum: 999999999
+          example: 75.5
+        yearBuilt:
+          type: integer
+          nullable: true
+          description: Four-digit year the venue was built.
+          minimum: 0
+          maximum: 9999
+          example: 1998
+        yearRenovated:
+          type: integer
+          nullable: true
+          description: Four-digit year the venue was last renovated.
+          minimum: 0
+          maximum: 9999
+          example: 2021
+        proximityFromAirport:
+          type: object
+          description: Distance from the nearest airport. `unit` is required when `distance` is provided.
+          properties:
+            distance:
+              type: number
+              nullable: true
+              description: Distance from the nearest airport, expressed in `unit`. Up to four digits.
+              minimum: 0
+              maximum: 9999
+              example: 12.5
+            unit:
+              type: string
+              allOf:
+              - $ref: '#/components/schemas/DistanceMeasurementUnit'
+              nullable: true
+        restrictions:
+          type: string
+          nullable: true
+          description: Free-form description of any facility restrictions at the venue.
+          maxLength: 2500
+          example: No outside food or beverage permitted. Music must end by 11 PM.
+        maximumCapacity:
+          type: object
+          description: 'Maximum attendee capacity at the venue. Applicable only to venue types: Aquarium/Zoo, Arena/Stadium,
+            Banquet Facility, Bar/Club, Corporate Office Space, Educational Facility, Entertainment Venue, Gallery/Museum,
+            Golf Course, Movie Theatre, and Special Event Venue.'
+          properties:
+            seated:
+              type: integer
+              nullable: true
+              description: Maximum seated capacity at the venue.
+              minimum: 0
+              maximum: 10000
+              example: 500
+            standing:
+              type: integer
+              nullable: true
+              description: Maximum standing capacity at the venue.
+              minimum: 0
+              maximum: 10000
+              example: 800
+        eventInsurance:
+          type: string
+          allOf:
+          - $ref: '#/components/schemas/EventInsurance'
+          nullable: true
+    VenueFacility:
+      title: VenueFacility
+      description: Facility information for a venue. Field applicability varies by venue type; values supplied for fields
+        that do not apply to the venue's type will be rejected.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/Audit'
+      properties:
+        numberOfMeetingRooms:
+          type: integer
+          description: Total number of meeting rooms at the venue.
+          minimum: 0
+          maximum: 10000
+          example: 25
+        space:
+          type: object
+          description: Facility space measurements at the venue.
+          properties:
+            unitOfMeasurement:
+              $ref: '#/components/schemas/MeasurementUnit'
+            totalMeetingRoomSpace:
+              type: integer
+              description: Total meeting room space at the venue.
+              minimum: 0
+              maximum: 99999999
+              example: 50000
+            totalExhibitSpace:
+              type: integer
+              description: Total exhibit space at the venue.
+              minimum: 0
+              maximum: 99999999
+              example: 75000
+        sleeping:
+          type: object
+          description: Sleeping room inventory at the venue.
+          properties:
+            totalRooms:
+              type: integer
+              description: Total number of sleeping rooms at the venue.
+              minimum: 0
+              maximum: 10000
+              example: 350
+            suites:
+              type: integer
+              description: Total number of suites at the venue.
+              minimum: 0
+              maximum: 10000
+              example: 20
+            singleRooms:
+              type: integer
+              description: Total number of single-occupancy rooms at the venue.
+              minimum: 0
+              maximum: 10000
+              example: 200
+            doubleRooms:
+              type: integer
+              description: Total number of double-occupancy rooms at the venue.
+              minimum: 0
+              maximum: 10000
+              example: 130
+        singleRate:
+          type: object
+          description: Published rate range for single-occupancy rooms, expressed in the venue's configured currency.
+          properties:
+            low:
+              type: number
+              description: Lowest published rate for a single-occupancy room.
+              minimum: 0
+              maximum: 999999999
+              example: 129.99
+            high:
+              type: number
+              description: Highest published rate for a single-occupancy room.
+              minimum: 0
+              maximum: 999999999
+              example: 249.99
+        doubleRate:
+          type: object
+          description: Published rate range for double-occupancy rooms, expressed in the venue's configured currency.
+          properties:
+            low:
+              type: number
+              description: Lowest published rate for a double-occupancy room.
+              minimum: 0
+              maximum: 999999999
+              example: 149.99
+            high:
+              type: number
+              description: Highest published rate for a double-occupancy room.
+              minimum: 0
+              maximum: 999999999
+              example: 299.99
+        taxRate:
+          type: number
+          description: Tax rate applied at the venue, expressed as a percentage.
+          minimum: 0
+          maximum: 999999999
+          example: 8.5
+        occupancyRate:
+          type: number
+          description: Occupancy rate at the venue, expressed as a percentage.
+          minimum: 0
+          maximum: 999999999
+          example: 75.5
+        yearBuilt:
+          type: integer
+          description: Four-digit year the venue was built.
+          minimum: 0
+          maximum: 9999
+          example: 1998
+        yearRenovated:
+          type: integer
+          description: Four-digit year the venue was last renovated.
+          minimum: 0
+          maximum: 9999
+          example: 2021
+        proximityFromAirport:
+          type: object
+          description: Distance from the nearest airport. `unit` is required when `distance` is provided.
+          properties:
+            distance:
+              type: number
+              description: Distance from the nearest airport, expressed in `unit`. Up to four digits.
+              minimum: 0
+              maximum: 9999
+              example: 12.5
+            unit:
+              $ref: '#/components/schemas/DistanceMeasurementUnit'
+        restrictions:
+          type: string
+          description: Free-form description of any facility restrictions at the venue.
+          maxLength: 2500
+          example: No outside food or beverage permitted. Music must end by 11 PM.
+        maximumCapacity:
+          type: object
+          description: 'Maximum attendee capacity at the venue. Applicable only to venue types: Aquarium/Zoo, Arena/Stadium,
+            Banquet Facility, Bar/Club, Corporate Office Space, Educational Facility, Entertainment Venue, Gallery/Museum,
+            Golf Course, Movie Theatre, and Special Event Venue.'
+          properties:
+            seated:
+              type: integer
+              description: Maximum seated capacity at the venue.
+              minimum: 0
+              maximum: 10000
+              example: 500
+            standing:
+              type: integer
+              description: Maximum standing capacity at the venue.
+              minimum: 0
+              maximum: 10000
+              example: 800
+        eventInsurance:
+          $ref: '#/components/schemas/EventInsurance'
+    VenueType:
+      title: Venue Type
+      description: 'Type of venue.
+
+
+        Values:
+
+        - `AQUARIUM_ZOO` — Aquarium/Zoo
+
+        - `ARENA_STADIUM` — Arena/Stadium
+
+        - `BANQUET_FACILITY` — Banquet Facility
+
+        - `BAR_CLUB` — Bar/Club
+
+        - `BLANK` — Blank
+
+        - `BOUTIQUE_HOTEL` — Boutique Hotel
+
+        - `CONFERENCE_CENTER` — Conference Center
+
+        - `CONVENTION_CENTER` — Convention Center
+
+        - `CORPORATE_OFFICE_SPACE` — Corporate Office Space
+
+        - `CVB` — CVB
+
+        - `DMC` — Destination Management Company
+
+        - `EDUCATIONAL_FACILITY` — Educational Facility
+
+        - `ENTERTAINMENT_VENUE` — Entertainment Venue
+
+        - `EXPOSITION_CENTER` — Exposition Center
+
+        - `GALLERY_MUSEUM` — Gallery/Museum
+
+        - `GOLF_COURSE` — Golf Course
+
+        - `HOTEL` — Hotel
+
+        - `INTERNAL_VENUE` — Internal Venue
+
+        - `LUXURY_HOTEL` — Luxury Hotel
+
+        - `MOVIE_THEATRE` — Movie Theatre
+
+        - `RESORT` — Resort
+
+        - `RESTAURANT` — Restaurant
+
+        - `SPECIAL_EVENT_VENUE` — Special Event Venue'
+      type: string
+      enum:
+      - AQUARIUM_ZOO
+      - ARENA_STADIUM
+      - BANQUET_FACILITY
+      - BAR_CLUB
+      - BLANK
+      - BOUTIQUE_HOTEL
+      - CONFERENCE_CENTER
+      - CONVENTION_CENTER
+      - CORPORATE_OFFICE_SPACE
+      - CVB
+      - DMC
+      - EDUCATIONAL_FACILITY
+      - ENTERTAINMENT_VENUE
+      - EXPOSITION_CENTER
+      - GALLERY_MUSEUM
+      - GOLF_COURSE
+      - HOTEL
+      - INTERNAL_VENUE
+      - LUXURY_HOTEL
+      - MOVIE_THEATRE
+      - RESORT
+      - RESTAURANT
+      - SPECIAL_EVENT_VENUE
+      example: HOTEL
+    ErrorResponseBase1:
+      title: ErrorResponseBase
+      type: object
+      description: Represents an error response with no additional details.
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          description: The HTTP status code representing the error.
+          example: 400
+        message:
+          type: string
+          description: A brief description of the error.
+          example: Bad Request
+        target:
+          type: string
+          description: The target resource of the error.
+          example: example target
+    venueDetailsPatch:
+      title: VenueDetailsPatch
+      description: Partial update payload for venue details.
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/VenueType'
+        timeZone:
+          type: string
+          description: Time zone identifier for the venue. See the supported timezones reference for valid values.
+          example: America/New_York
+          nullable: true
+          externalDocs:
+            description: Supported Timezones
+            url: https://developers.cvent.com/docs/rest-api/reference/api-standards#supported-timezones
+        brand:
+          type: string
+          nullable: true
+          description: Venue brand. Brands vary by venue type.
+          example: Quality Hotels
+          maxLength: 100
+        chainScale:
+          type: string
+          allOf:
+          - $ref: '#/components/schemas/ChainScale'
+          nullable: true
+        mainPhoneNumber:
+          type: string
+          description: Primary phone number for the venue.
+          example: +1-703-555-0100
+          minLength: 1
+          maxLength: 30
+        mainFaxNumber:
+          type: string
+          description: Primary fax number for the venue.
+          example: +1-703-555-0101
+          minLength: 1
+          maxLength: 30
+        salesPhoneNumber:
+          type: string
+          nullable: true
+          description: Sales phone number of the venue.
+          example: +1-703-555-0102
+          maxLength: 30
+        salesFaxNumber:
+          type: string
+          nullable: true
+          description: Sales fax number of the venue.
+          example: +1-703-555-0103
+          maxLength: 30
+        tollFreeNumber:
+          type: string
+          nullable: true
+          description: Toll-free number of the venue.
+          example: 1-800-555-0100
+          maxLength: 30
+        websiteAddress:
+          type: string
+          nullable: true
+          format: uri
+          description: Website address.
+          maxLength: 300
+          example: https://www.example-hotel.com
+        currency:
+          type: string
+          allOf:
+          - $ref: '#/components/schemas/Currency'
+          nullable: true
+        openingDate:
+          type: string
+          nullable: true
+          description: Venue opening date as free-form text.
+          example: Spring 2025
+          maxLength: 30
+        description:
+          type: string
+          nullable: true
+          description: Venue description.
+          example: A premier conference and event venue in the heart of Northern Virginia.
+          maxLength: 4000
+        additionalInformation:
+          type: string
+          nullable: true
+          description: Additional information about the venue.
+          example: Complimentary parking available for all event attendees.
+          maxLength: 2500
+        cancellationPolicy:
+          type: string
+          nullable: true
+          description: Cancellation policy for bookings at the venue.
+          example: 48-hour cancellation policy applies for all event bookings.
+          maxLength: 2500
+        locationTypes:
+          type: array
+          nullable: true
+          description: Location classifications.
+          maxItems: 6
+          items:
+            $ref: '#/components/schemas/LocationType'
+        address:
+          type: object
+          nullable: true
+          description: Venue address information.
+          properties:
+            streetAddress1:
+              type: string
+              nullable: true
+              description: Street address line 1.
+              example: 1234 Trap Road
+              maxLength: 40
+            streetAddress2:
+              type: string
+              nullable: true
+              description: Street address line 2.
+              example: Suite 100
+              maxLength: 40
+            city:
+              type: string
+              description: City.
+              minLength: 1
+              maxLength: 40
+              example: Vienna
+            stateProvince:
+              $ref: '#/components/schemas/StateProvince'
+            zipPostalCode:
+              type: string
+              nullable: true
+              description: ZIP or postal code.
+              example: '22182'
+              maxLength: 25
+            country:
+              $ref: '#/components/schemas/Country'
+            directions:
+              type: string
+              nullable: true
+              description: Directions or instructions for getting to the venue.
+              example: Take I-66 West to Exit 67, then follow signs to Trap Road.
+              maxLength: 2500
+    ChainScale:
+      title: Chain Scale
+      description: 'A market segment classification of a venue chain based on Average Daily Rate and other factors.
+
+
+        Values:
+
+        - `BLANK` — Blank
+
+        - `ECONOMYCHAINS` — Economy Chains
+
+        - `INDEPENDENTS` — Independents
+
+        - `LUXURY_CHAINS` — Luxury Chains
+
+        - `MIDSCALE_CHAINS` — Midscale Chains
+
+        - `MIDSCALE_WITH_FB_CHAINS` — Midscale With F&B Chains
+
+        - `MIDSCALE_WITHOUT_FB_CHAINS` — Midscale Without F&B Chains
+
+        - `UPPER_MIDSCALE_CHAINS` — Upper Midscale Chains
+
+        - `UPPER_UPSCALE_CHAINS` — Upper Upscale Chains
+
+        - `UPSCALE_CHAINS` — Upscale Chains'
+      type: string
+      enum:
+      - BLANK
+      - ECONOMYCHAINS
+      - INDEPENDENTS
+      - LUXURY_CHAINS
+      - MIDSCALE_CHAINS
+      - MIDSCALE_WITH_FB_CHAINS
+      - MIDSCALE_WITHOUT_FB_CHAINS
+      - UPPER_MIDSCALE_CHAINS
+      - UPPER_UPSCALE_CHAINS
+      - UPSCALE_CHAINS
+      example: UPSCALE_CHAINS
+    EventInsurance:
+      title: Event Insurance
+      description: 'Indicates whether event insurance is required at the venue. Applicable only to venue types: Aquarium/Zoo,
+        Arena/Stadium, Banquet Facility, Bar/Club, Corporate Office Space, Educational Facility, Entertainment Venue, Gallery/Museum,
+        Golf Course, Movie Theatre, and Special Event Venue.
+
+
+        Values:
+
+        - `BLANK` — Indicates no selection, leaves the field blank
+
+        - `REQUIRED` — Required
+
+        - `MAY_BE_REQUIRED` — May Be Required
+
+        - `NOT_REQUIRED` — Not Required'
+      type: string
+      enum:
+      - BLANK
+      - REQUIRED
+      - MAY_BE_REQUIRED
+      - NOT_REQUIRED
+    DistanceMeasurementUnit:
+      title: Distance Measurement Unit
+      description: 'Unit of measurement for distance.
+
+
+        Values:
+
+        - `MILES` — Miles
+
+        - `KILOMETERS` — Kilometers'
+      type: string
+      enum:
+      - MILES
+      - KILOMETERS
+    venueDetails:
+      title: VenueDetails
+      description: Venue details model.
+      allOf:
+      - $ref: '#/components/schemas/Audit'
+      type: object
+      required:
+      - type
+      - mainPhoneNumber
+      - mainFaxNumber
+      - address
+      properties:
+        type:
+          $ref: '#/components/schemas/VenueType'
+        timeZone:
+          type: string
+          description: Time zone identifier for the venue. See the supported timezones reference for valid values.
+          example: America/New_York
+          externalDocs:
+            description: Supported Timezones
+            url: https://developers.cvent.com/docs/rest-api/reference/api-standards#supported-timezones
+        brand:
+          type: string
+          description: Venue brand.
+          maxLength: 100
+          example: Quality Hotels
+        chainScale:
+          $ref: '#/components/schemas/ChainScale'
+        mainPhoneNumber:
+          type: string
+          description: Primary phone number for the venue.
+          minLength: 1
+          maxLength: 30
+          example: +1-703-555-0100
+        mainFaxNumber:
+          type: string
+          description: Primary fax number for the venue.
+          minLength: 1
+          maxLength: 30
+          example: +1-703-555-0101
+        salesPhoneNumber:
+          type: string
+          description: Sales phone number of the venue.
+          maxLength: 30
+          example: +1-703-555-0102
+        salesFaxNumber:
+          type: string
+          description: Sales fax number of the venue.
+          maxLength: 30
+          example: +1-703-555-0103
+        tollFreeNumber:
+          type: string
+          description: Toll-free number of the venue.
+          maxLength: 30
+          example: 1-800-555-0100
+        websiteAddress:
+          type: string
+          format: uri
+          description: Website address.
+          maxLength: 300
+          example: https://www.example-hotel.com
+        currency:
+          $ref: '#/components/schemas/Currency'
+        openingDate:
+          type: string
+          description: Venue opening date as free-form text.
+          maxLength: 30
+          example: Spring 2025
+        description:
+          type: string
+          description: Venue description.
+          maxLength: 4000
+          example: A modern conference venue in downtown.
+        additionalInformation:
+          type: string
+          description: Additional information about the venue.
+          maxLength: 2500
+          example: Free parking available on-site.
+        cancellationPolicy:
+          type: string
+          description: Cancellation policy for bookings at the venue.
+          maxLength: 2500
+          example: Full refund if cancelled 48 hours before event.
+        locationTypes:
+          type: array
+          description: Location classifications.
+          items:
+            $ref: '#/components/schemas/LocationType'
+          maxItems: 6
+        address:
+          $ref: '#/components/schemas/AddressInfo'
+    venueDetailsOverview:
+      title: Venue Details Overview
+      description: An overview of venue details containing key identifiers and display properties.
+      type: object
+      required:
+      - id
+      - name
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Venue ID.
+          readOnly: true
+          example: b2c3d4e5-f6a7-8901-bcde-f12345678901
+        name:
+          type: string
+          description: Venue name.
+          maxLength: 100
+          example: Vienna Wolf Trap Hotel
+    Currency:
+      title: Currency
+      type: string
+      description: The ISO 4217 standard format currency code used for RFPs.
+      enum:
+      - USD
+      - CAD
+      - AUD
+      - EUR
+      - GBP
+      - HKD
+      - NZD
+      - AED
+      - NOK
+      - INR
+      - MXN
+      - SEK
+      - DKK
+      - MYR
+      - JPY
+      - SGD
+      - THB
+      - IDR
+      - KRW
+      - CNY
+      - TWD
+      - RUB
+      - CHF
+      - CZK
+      - HUF
+      - QAR
+      - ZAR
+      - RON
+      - HRK
+      - TRY
+      - BRL
+      - PHP
+      - SAR
+      - PLN
+      - ARS
+      - AWG
+      - AZN
+      - BSD
+      - BBD
+      - BMD
+      - CLP
+      - COP
+      - CRC
+      - DOP
+      - XCD
+      - ILS
+      - JMD
+      - LVL
+      - LTL
+      - MDL
+      - ANG
+      - OMR
+      - TTD
+      - UAH
+      - UYU
+      - RSD
+      - AFN
+      - AMD
+      - AOA
+      - BAM
+      - BDT
+      - BGN
+      - BHD
+      - BOB
+      - DZD
+      - EEK
+      - EGP
+      - FJD
+      - GTQ
+      - HNL
+      - ISK
+      - JOD
+      - KYD
+      - KZT
+      - LBP
+      - MAD
+      - NGN
+      - NIO
+      - ESP
+      - FRF
+      - PAB
+      - PEN
+      - PKR
+      - PYG
+      - SVC
+      - SYP
+      - VEF
+      - VND
+      - XPF
+      - GYD
+      - MOP
+      - PGK
+      - XOF
+      - XAF
+      - BZD
+      - BYR
+      - BWP
+      - BND
+      - BIF
+      - KHR
+      - CVE
+      - KMF
+      - CDF
+      - DJF
+      - ERN
+      - FKP
+      - GMD
+      - GEL
+      - GHS
+      - GIP
+      - GNF
+      - HTG
+      - KES
+      - KWD
+      - KGS
+      - LAK
+      - LRD
+      - MKD
+      - MGA
+      - MWK
+      - MVR
+      - MRO
+      - MUR
+      - MNT
+      - MZN
+      - MMK
+      - NAD
+      - NPR
+      - RWF
+      - SHP
+      - WST
+      - STD
+      - SLL
+      - SBD
+      - SOS
+      - LKR
+      - SRD
+      - SZL
+      - TOP
+      - TND
+      - UGX
+      - UZS
+      - VUV
+      - YER
+      - ZMK
+      - ZWD
+      - SR
+      - ETB
+      - GH
+      - GWP
+      - IQD
+      - IRR
+      - KPW
+      - LSL
+      - ROL
+      - SDG
+      - SKK
+      - TJS
+      - TMT
+      - TZS
+      - ALL
+      - BTN
+      - CUP
+      - LD
+      - SCR
+      - ZMW
+      - ZWL
+    MeasurementUnit:
+      title: MeasurementUnit
+      description: 'Unit of measurement for area or space.
+
+
+        Values:
+
+        - `SQUARE_FEET` — Square Feet
+
+        - `SQUARE_METERS` — Square Meters'
+      type: string
+      enum:
+      - SQUARE_FEET
+      - SQUARE_METERS
+    Audit:
+      title: Audit
+      description: Audit information
+      type: object
+      properties:
+        created:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date time when this record was created.
+          readOnly: true
+          example: '2017-01-02T02:00:00Z'
+        createdBy:
+          type: string
+          description: The identifier of the user that created this record.
+          readOnly: true
+          example: hporter
+        lastModified:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date time when this record was updated.
+          readOnly: true
+          example: '2019-02-12T03:00:00Z'
+        lastModifiedBy:
+          type: string
+          description: The identifier of the user that last updated this record.
+          readOnly: true
+          example: hporter
+    existingVenueFacility:
+      title: ExistingVenueFacility
+      description: An existing venue facility model with read-only generated properties.
+      type: object
+      required:
+      - id
+      - name
+      allOf:
+      - $ref: '#/components/schemas/VenueFacility'
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Venue ID.
+          readOnly: true
+          example: e1c05096-e352-4f2e-af1c-a6e022d36b34
+        name:
+          type: string
+          description: Venue name.
+          readOnly: true
+          minLength: 1
+          maxLength: 100
+          example: Vienna Wolf Trap Hotel
+    ErrorResponse-12:
+      title: ErrorResponse
+      description: Represents an error response with additional details of cascading error messages.
+      allOf:
+      - $ref: '#/components/schemas/ErrorResponseBase1'
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorResponseBase1'
+          description: Additional details of cascading error messages.
+  responses:
+    NotFound1:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 404
+            message: Not found
+    BadRequest1:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 400
+            message: Bad Request
+    TooManyRequests1:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 429
+            message: Limit Exceeded
+    Unauthorized1:
+      description: Bad or expired token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 401
+            message: Unauthorized
+    Forbidden1:
+      description: You do not have access to the resource
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 403
+            message: Access Forbidden
+  parameters:
+    venueId:
+      description: Unique Cvent based identifier for a Venue.
+      name: venueId
+      required: true
+      in: path
+      schema:
+        $ref: '#/components/schemas/VenueID'
+  securitySchemes:
+    OAuth2.clientCredentials:
+      type: oauth2
+      description: OAuth2 Client Credentials Flow.
+      flows:
+        clientCredentials:
+          tokenUrl: https://api-platform.cvent.com/ea/oauth2/token
+          scopes:
+            account/hooks:delete: Allows the deletion of hooks.
+            account/hooks:read: Allows the reading of hooks.
+            account/hooks:write: Allows the creation/updation of hooks.
+            account/user-groups:delete: Allows deletion for user groups
+            account/user-groups:read: Allows the reading of user groups
+            account/user-groups:write: Allows the writing of user groups
+            account/users:delete: Allows the deletion of User
+            account/users:read: Allows the reading of User, User Group
+            account/users:write: Allows the creation/updating of User
+            appointments/appointment-attendees:read: Allows the reading of appointment attendees and their related entities.
+            appointments/appointment-events:read: Allows the reading of appointment events and their related entities.
+            appointments/appointment-types:read: Allows the reading of appointment types and their related entities.
+            appointments/appointments:read: Allows the reading of appointment and their related entities.
+            appointments/appointments:write: Allows the writing of appointments and their related entities.
+            appointments/available-times:read: Allows the reading of availability times.
+            appointments/locations:read: Allows the reading of appointment locations and their related entities.
+            attendee-insights/attendee-insights:read: Allows the reading of engagement scores (attendee insights).
+            attendee-insights/scores:read: Allows the reading of scores.
+            attendee-insights/stats:read: Allows the reading of engagement score (attendee insight) stats.
+            budget/budget-items:delete: Allows the deletion of budget items
+            budget/budget-items:read: Allows the reading of all budget items
+            budget/budget-items:write: Allows creation/updation of budget item
+            budget/budget-totals:read: Allows the reading of all event budget totals
+            budget/budget-vendors:read: Allows reading of account-level budget vendors.
+            budget/cards:read: Allows the reading of cards
+            budget/currency-conversion-rate:delete: Allows deletion of currency conversion rate for currency.
+            budget/currency-conversion-rate:read: Allows reading of currency conversion rate for currency.
+            budget/currency-conversion-rate:write: Allows creation/update of currency conversion rate for currency.
+            budget/payments:delete: Allows deletion of payments.
+            budget/payments:read: Allows reading of payment for budget item.
+            budget/payments:write: Allows creation of payment in a budget item.
+            budget/transactions:delete: Allows delete card transactions.
+            budget/transactions:read: Allows the reading of all card's transactions
+            budget/transactions:write: Allows creation of card transactions.
+            bulk/bulk-jobs:read: Allows the reading of bulk job related entities
+            bulk/bulk-jobs:write: Allows the creation, update and deletion of bulk job related entities
+            business-transient/bids:read: Allows the reading of Business Transient Bid data
+            business-transient/proposals:read: Allows the reading of Business Transient Proposal data
+            business-transient/supplier-brands:read: Allows the reading of a supplier brand or a list of travel supplier brands.
+            business-transient/supplier-chains:read: Allows the reading of a travel supplier chain or a list of travel supplier
+              chains.
+            business-transient/supplier-properties:read: Allows the reading of a travel supplier property or a list of travel
+              supplier properties.
+            business-transient/supplier-property-rooms:read: Allows the reading of a list of travel supplier property rooms.
+            business-transient/travel-accounts:read: Allows the reading of business transient travel account data.
+            business-transient/travel-program-questions:read: Allows the reading of business transient travel program question
+              data.
+            business-transient/travel-programs:read: Allows the reading of business transient travel program data.
+            business-transient/travel-supplier-accounts:read: Allows the reading of business transient travel supplier account
+              data.
+            business-travel/bids:read: Allows the reading of Business Travel Bid data
+            business-travel/proposals:read: Allows the reading of Business Travel Proposal data
+            business-travel/travel-accounts:read: Allows the reading of business travel account data.
+            business-travel/travel-program-questions:read: Allows the reading of business travel program question data.
+            business-travel/travel-programs:read: Allows the reading of business travel program data.
+            compliance/communications:read: Allows the reading of communication compliance
+            compliance/communications:write: Allows the writing of communication compliance
+            email/bounces:read: Allow the reading of email bounces.
+            email/email-status:read: Allows the reading of email statuses.
+            email/emails:read: Allows the reading of emails.
+            eMarketing/campaigns:read: Allows the reading of campaigns.
+            emarketing/emarketing-email-status:read: Allows the reading of eMarketing email statuses.
+            eMarketing/eMarketing-email-templates:read: Allows the reading of email-templates.
+            eMarketing/eMarketing-send-emails:write: Allows the writing of eMarketing emails.
+            event/admission-items:read: Allows the reading of admission items
+            event/air-request:read: Allow reading the air request or air actual detail for attendees.
+            event/alternate-travel:read: Allow reading the alternate travel answers for attendees.
+            event/attendance-durations:read: Allows the read of Duration records
+            event/attendee-activities-metadata:delete: Allows the deletion of attendees activities metadata.
+            event/attendee-activities-metadata:read: Allows the reading of attendee activities metadata.
+            event/attendee-activities-metadata:write: Allows the creation/updating of attendees activities metadata.
+            event/attendee-activities:read: Allows the reading of attendee activities.
+            event/attendee-activities:write: Allows the writing of external attendee activities.
+            event/attendee-credits:read: Allows the reading of attendee credits.
+            event/attendee-links:delete: Allows the deletion of attendee links
+            event/attendee-links:read: Allows the reading of attendee links
+            event/attendee-links:write: Allows the creation of attendee links
+            event/attendee-messages:read: Allows the reading of attendee messages
+            event/attendees:read: Allows the reading of attendees.
+            event/attendees:write: Allows the creation of an attendee in an event.
+            event/audience-segments:read: Allows the reading of audience segments.
+            event/audience-segments:write: Allows the creation/updating/deletion of audience segments.
+            event/contact-groups:read: Allows the reading of contact groups.
+            event/contact-groups:write: Allows the creation/updating of contact groups.
+            event/contact-types:read: Allows the reading of contact types.
+            event/contacts:delete: Allows the deletion of contacts.
+            event/contacts:read: Allows the reading of contacts.
+            event/contacts:write: Allows the creation/updating of contacts.
+            event/contacts:write-sensitive: Allows the creation/updating of sensitive data related to contacts.
+            event/custom-fields:read: Allows the reading of custom fields
+            event/custom-fields:write: Allows the writing of custom fields
+            event/discounts:write: Allows the writing of discounts
+            event/donation-items:read: Allows the reading of donation items.
+            event/event-discounts:read: Allows the reading of event discounts.
+            event/event-discounts:write: Allows the writing of event discounts.
+            event/event-email-status:read: Allows the reading of event email statuses.
+            event/event-emails:read: Allows the reading of event emails
+            event/event-emails:write: Allows to send event emails.
+            event/event-features:read: Allows the reading of events-features
+            event/event-features:write: Allows updating the event-features
+            event/event-user-groups:read: Allows the reading of user groups
+            event/event-user-groups:write: Allows associating/disassociating user groups to event
+            event/events:read: Allows the reading of events
+            event/events:write: Allows the creation/updating of events
+            event/fee-items:read: Allows the reading of fee items.
+            event/hotel-request:read: Allow reading the hotel request or housing reservation request detail for attendees.
+            event/invitation-lists:read: Allows the reading of the invitation lists for an event
+            event/meeting-request-forms:read: Allows the reading of meeting request forms.
+            event/meeting-requests:read: Allows the reading of meeting requests.
+            event/meeting-requests:write: Allows the creation/updating of meeting requests.
+            event/membership-items:read: Allows reading of membership items.
+            event/orders:read: Allows the reading of orders
+            event/planning-documents:read: Allows the reading of event planning documents
+            event/players:read: Allows the reading of players
+            event/process-form-submissions:read: Allows the reading of process form submissions.
+            event/program-items:delete: Allows deletion of session program items
+            event/program-items:read: Allows reading of session program items
+            event/program-items:write: Allows writing of session program items
+            event/quantity-items:read: Allows the reading of quantity items.
+            event/quantity-items:write: Allows the writing of quantity items
+            event/registration-paths:read: Allows the reading of registration paths
+            event/registration-types:read: Allows the reading of registration types
+            event/registration-types:write: Allows the writing of registration types
+            event/role-assignments:read: Allows the reading of event role assignment.
+            event/session-attendance:read: Allows the reading of sessions attendance
+            event/session-attendance:write: Allows the creation/updating of sessions attendance
+            event/session-categories:read: Allows reading of session categories
+            event/session-categories:write: Allows writing of session categories
+            event/session-enrollment:delete: Allows the deletion of session registrations
+            event/session-enrollment:read: Allows the reading of sessions registrations
+            event/session-enrollment:write: Allows the writing of sessions registrations
+            event/session-segments:read: Allows reading of session segments
+            event/sessions:delete: Allows the deletion of a session in an event
+            event/sessions:read: Allows the reading of sessions
+            event/sessions:write: Allows the creation of a session in an event
+            event/speaker-categories:read: Allows reading of speaker categories
+            event/speaker-categories:write: Allows writing of speaker categories
+            event/speakers:delete: Allows the deletion of a speaker in an event
+            event/speakers:read: Allows the reading of speakers
+            event/speakers:write: Allows the creation of a speaker in an event
+            event/taxes:read: Allows the reading of taxes.
+            event/transactions:read: Allows the reading of transactions
+            event/transactions:write: Allows the writing of transactions
+            event/video-views:read: Allows reading of video views.
+            event/videos:read: Allows the reading of video data.
+            event/videos:write: Allows the creation/updating of video data.
+            event/vouchers:read: Allows reading of event vouchers.
+            event/webcasts:delete: Allows the deletion of webcast
+            event/webcasts:read: Allows the reading of webcasts
+            event/webcasts:write: Allows the creation of webcast
+            event/weblinks:read: Allows the reading of event weblinks
+            events-plus/hubs:read: Allows the reading of Events+ hub data.
+            exhibitor/badges:read: Allows reading badges
+            exhibitor/badges:write: Allows creating/updating badges
+            exhibitor/booth-staff:delete: Allows deleting booth staff
+            exhibitor/booth-staff:read: Allows reading booth staff
+            exhibitor/booth-staff:write: Allows creating booth staff
+            exhibitor/eliterature-requests:read: Allows reading eliterature document request data
+            exhibitor/exhibitor-admins:read: Allows reading exhibitor admins
+            exhibitor/exhibitor-admins:write: Allows creating/updating exhibitor admins
+            exhibitor/exhibitor-answers:read: Allows reading exhibitor answers
+            exhibitor/exhibitor-answers:write: Allows updating exhibitor answers
+            exhibitor/exhibitor-categories:delete: Allows deleting exhibitor categories
+            exhibitor/exhibitor-categories:read: Allows reading exhibitor categories
+            exhibitor/exhibitor-categories:write: Allows creating/updating exhibitor categories
+            exhibitor/exhibitor-contents:delete: Allows deleting exhibitor content
+            exhibitor/exhibitor-contents:read: Allows reading exhibitor content
+            exhibitor/exhibitor-contents:write: Allows creating/updating exhibitor content
+            exhibitor/exhibitor-questions:read: Allows reading exhibitor questions
+            exhibitor/exhibitors:delete: Allows deleting exhibitors
+            exhibitor/exhibitors:read: Allows reading exhibitors
+            exhibitor/exhibitors:write: Allows creating/updating exhibitors
+            exhibitor/lead-qualification-answers:read: Allows reading Lead Qualification Answers
+            exhibitor/lead-qualification-questions:read: Allows reading Lead Qualification Questions.
+            exhibitor/leads:read: Allows reading leads.
+            exhibitor/registration-packs:delete: Allows deleting registration pack
+            exhibitor/registration-packs:read: Allows reading registration pack
+            exhibitor/registration-packs:write: Allows creating/updating registration pack
+            exhibitor/sponsorship-levels:read: Allows reading sponsorship level
+            file/file:read: Allows the reading of file
+            file/file:write: Allows the uploading of file
+            housing/connections:write: Allows the user to connect to the Reglink APIs.
+            housing/hotel-room-rates:write: Allows the user to create/update hotel room rates.
+            housing/housing-event-available-nights:read: Allows the user to read availability information for given event.
+            housing/housing-event-hotels:read: Allows the user to read information about event hotels.
+            housing/housing-event-inventory:read: Allows the user to get information about housing event inventory.
+            housing/housing-event-room-types:read: Allows the user to read information about event room types.
+            housing/housing-events:read: Allows the user to read information about events.
+            housing/reservation-requests:delete: Allows the user to cancel reservation request.
+            housing/reservation-requests:read: Allows the user to read reservation request information.
+            housing/reservation-requests:write: Allows the user to create/update reservation request.
+            housing/reservations-link:delete: Allows the user to remove association from reservation.
+            housing/reservations-link:write: Allows the user to associate reservation to reservation request.
+            housing/reservations:delete: Allows the user to cancel reservation.
+            housing/reservations:read: Allows the user to read reservation details information.
+            housing/reservations:write: Allows the user to create/update reservation.
+            onsite/signatures:read: Allows reading signatures.
+            proposal/proposals:write: Allows the creation/writing of proposal
+            remote-printing/badge-print-jobs:read: Allows reading print jobs.
+            remote-printing/badge-print-jobs:write: Allows creating print jobs.
+            remote-printing/badge-printer-pools:read: Allows reading pools.
+            rfp/rfp-agenda-items:read: Allows the reading of RFP agenda items.
+            rfp/rfp-attachments:read: Allows the reading of RFP attachments.
+            rfp/rfp-custom-fields:read: Allows the reading of RFP custom fields.
+            rfp/rfp-guest-rooms:read: Allows the reading of RFP guest rooms.
+            rfp/rfp-internal-documents:read: Allows the reading of RFP internal documents.
+            rfp/rfp-lead-sources:read: Allows the reading of RFP lead sources.
+            rfp/rfp-past-events:read: Allows the reading of past events similar to rfp event.
+            rfp/rfp-questions:read: Allows the reading of RFP questions.
+            rfp/rfp-recipients-history:read: Allows the reading of RFP recipients history.
+            rfp/rfp-suppliers:read: Allows the reading of RFP suppliers.
+            rfp/rfps:read: Allows the reading of basic details of RFP.
+            seating/assignments:read: Allows to read attendee seat assignment information.
+            seating/event-seatings:read: Allows to read event seating.
+            seating/seats:read: Allows to read seat information.
+            seating/tables:read: Allows to read table information.
+            secure-ecommerce/card-tokens:write: Allows creation of credit card tokens
+            survey/questions:read: Allows the reading of survey questions
+            survey/respondents:read: Allows reading the survey respondents
+            survey/responses:read: Allows reading the survey responses
+            survey/standard-survey-email-templates:read: Allows reading the standalone survey email templates
+            survey/standard-survey-email:write: Allows writing operations on standalone survey emails
+            survey/standard-survey-questions:read: Allows the reading of standalone surveys questions
+            survey/standard-survey-respondents:read: Allows reading the standalone survey respondents
+            survey/standard-survey-respondents:write: Allows write operations on standalone survey respondents
+            survey/standard-survey-responses:read: Allows reading the standalone survey responses
+            survey/standard-survey-responses:write: Allows write operations on standalone surveys respondent's responses
+            survey/standard-surveys:read: Allows the reading of standalone surveys
+            survey/survey-questions:read: Allows the reading of event survey questions
+            survey/survey-respondents:read: Allows reading the event survey respondents
+            survey/survey-respondents:write: Allows write operations on the event survey respondents
+            survey/survey-responses:read: Allows reading the event survey responses
+            survey/survey-responses:write: Allows write operations on the event surveys respondent's responses
+            survey/surveys:read: Allows the reading of event surveys
+            venue/meeting-room-images:delete: Allows disassociating images from meeting rooms.
+            venue/meeting-room-images:read: Allows retrieving meeting room images.
+            venue/meeting-room-images:write: Allows associating images with meeting rooms.
+            venue/meeting-room-overviews:read: Allows read access for overview of meeting room.
+            venue/meeting-rooms:write: Allows the creation and modification of meeting rooms.
+            venue/venue-details-overview:read: Allows read access for overview of venue details.
+            venue/venue-details:write: Allows the creation and modification of venue details.
+            venue/venue-facility:write: Allows the modification of venue facility information.
+    OAuth2.authorizationCode:
+      type: oauth2
+      description: OAuth2 Authorization Code Flow.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api-platform.cvent.com/ea/oauth2/authorize
+          tokenUrl: https://api-platform.cvent.com/ea/oauth2/token
+          scopes:
+            account/hooks:delete: Allows the deletion of hooks.
+            account/hooks:read: Allows the reading of hooks.
+            account/hooks:write: Allows the creation/updation of hooks.
+            account/user-groups:delete: Allows deletion for user groups
+            account/user-groups:read: Allows the reading of user groups
+            account/user-groups:write: Allows the writing of user groups
+            account/users:delete: Allows the deletion of User
+            account/users:read: Allows the reading of User, User Group
+            account/users:write: Allows the creation/updating of User
+            appointments/appointment-attendees:read: Allows the reading of appointment attendees and their related entities.
+            appointments/appointment-events:read: Allows the reading of appointment events and their related entities.
+            appointments/appointment-types:read: Allows the reading of appointment types and their related entities.
+            appointments/appointments:read: Allows the reading of appointment and their related entities.
+            appointments/appointments:write: Allows the writing of appointments and their related entities.
+            appointments/available-times:read: Allows the reading of available times.
+            appointments/locations:read: Allows the reading of appointment locations and their related entities.
+            attendee-insights/attendee-insights:read: Allows the reading of engagement scores (attendee insights).
+            attendee-insights/scores:read: Allows the reading of scores.
+            attendee-insights/stats:read: Allows the reading of engagement score (attendee insight) stats.
+            budget/budget-items:delete: Allows the deletion of budget items
+            budget/budget-items:read: Allows the reading of all budget items
+            budget/budget-items:write: Allows creation/updation of budget item
+            budget/budget-totals:read: Allows the reading of all event budget totals
+            budget/budget-vendors:read: Allows reading of account-level budget vendors.
+            budget/cards:read: Allows the reading of cards
+            budget/currency-conversion-rate:delete: Allows deletion of currency conversion rate for currency.
+            budget/currency-conversion-rate:read: Allows reading of currency conversion rate for currency.
+            budget/currency-conversion-rate:write: Allows creation/update of currency conversion rate for currency.
+            budget/payments:delete: Allows deletion of payments.
+            budget/payments:read: Allows reading of payment for budget item.
+            budget/payments:write: Allows creation of payment in a budget item.
+            budget/transactions:delete: Allows delete card transactions.
+            budget/transactions:read: Allows the reading of all card's transactions
+            budget/transactions:write: Allows creation of card transactions.
+            business-transient/bids:read: Allows the reading of BT Bid data
+            business-transient/proposals:read: Allows the reading of BT Proposal data
+            business-travel/bids:read: Allows the reading of BT Bid data
+            business-travel/proposals:read: Allows the reading of BT Proposal data
+            compliance/communications:read: Allows the reading of communication compliance
+            compliance/communications:write: Allows the writing of communication compliance
+            email/bounces:read: Allow the reading of email bounces.
+            email/email-status:read: Allows the reading of email statuses.
+            email/emails:read: Allows the reading of emails.
+            eMarketing/campaigns:read: Allows the reading of campaigns.
+            emarketing/emarketing-email-status:read: Allows the reading of eMarketing email statuses.
+            eMarketing/eMarketing-email-templates:read: Allows the reading of email-templates.
+            eMarketing/eMarketing-send-emails:write: Allows the writing of eMarketing emails.
+            event/admission-items:read: Allows the reading of admission items
+            event/air-request:read: Allow reading the air request or air actual detail for attendees.
+            event/alternate-travel:read: Allow reading the alternate travel answers for attendees.
+            event/attendance-durations:read: Allows the read of Duration records
+            event/attendee-activities-metadata:delete: Allows the deletion of attendees activities metadata.
+            event/attendee-activities-metadata:read: Allows the reading of attendee activities metadata.
+            event/attendee-activities-metadata:write: Allows the creation/updating of attendees activities metadata.
+            event/attendee-activities:read: Allows the reading of attendee activities.
+            event/attendee-activities:write: Allows the writing of attendee activities.
+            event/attendee-credits:read: Allows the reading of attendee credits.
+            event/attendee-links:delete: Allows the deletion of attendee links
+            event/attendee-links:read: Allows the reading of attendee links
+            event/attendee-links:write: Allows the creation of attendee links
+            event/attendee-messages:read: Allows the reading of attendee messages
+            event/attendees:read: Allows the reading of attendees.
+            event/attendees:write: Allows the creation of an attendee in an event.
+            event/audience-segments:read: Allows the reading of audience segments.
+            event/audience-segments:write: Allows the creation/updating/deletion of audience segments.
+            event/contact-groups:read: Allows the reading of contact groups.
+            event/contact-groups:write: Allows the creation/updating of contact groups.
+            event/contact-types:read: Allows the reading of contact types.
+            event/contacts:delete: Allows the deletion of contacts.
+            event/contacts:read: Allows the reading of contacts.
+            event/contacts:write: Allows the creation/updating of contacts.
+            event/contacts:write-sensitive: Allows the creation/updating of sensitive data related to contacts.
+            event/custom-fields:read: Allows the reading of custom fields
+            event/custom-fields:write: Allows the writing of custom fields
+            event/discounts:write: Allows the writing of discounts
+            event/donation-items:read: Allows the reading of donation items.
+            event/event-discounts:read: Allows the reading of event discounts.
+            event/event-discounts:write: Allows the writing of event discounts.
+            event/event-email-status:read: Allows the reading of event email statuses.
+            event/event-emails:read: Allows the reading of event emails
+            event/event-emails:write: Allows to send event emails.
+            event/event-features:read: Allows the reading of events-features
+            event/event-features:write: Allows updating the event-features
+            event/event-user-groups:read: Allows the reading of user groups
+            event/event-user-groups:write: Allows associating/disassociating user groups to event
+            event/events:read: Allows the reading of events
+            event/events:write: Allows the creation/updating of events
+            event/fee-items:read: Allows the reading of fee items.
+            event/hotel-request:read: Allow reading the hotel request or housing reservation request detail for attendees.
+            event/invitation-lists:read: Allows the reading of the invitation lists for an event
+            event/meeting-request-forms:read: Allows the reading of meeting request forms.
+            event/meeting-requests:read: Allows the reading of meeting requests.
+            event/meeting-requests:write: Allows the creation/updating of meeting requests.
+            event/membership-items:read: Allows reading of membership items.
+            event/orders:read: Allows the reading of orders
+            event/planning-documents:read: Allows the reading of event planning documents
+            event/players:read: Allows the reading of players
+            event/process-form-submissions:read: Allows the reading of process form submissions.
+            event/program-items:delete: Allows deletion of session program items
+            event/program-items:read: Allows reading of session program items
+            event/program-items:write: Allows writing of session program items
+            event/quantity-items:read: Allows the reading of quantity items.
+            event/quantity-items:write: Allows the writing of quantity items
+            event/registration-paths:read: Allows the reading of registration paths
+            event/registration-types:read: Allows the reading of registration types
+            event/registration-types:write: Allows the writing of registration types
+            event/role-assignments:read: Allows the reading of event role assignment.
+            event/session-attendance:read: Allows the reading of sessions attendance
+            event/session-attendance:write: Allows the creation/updating of sessions attendance
+            event/session-categories:read: Allows reading of session categories
+            event/session-categories:write: Allows writing of session categories
+            event/session-enrollment:delete: Allows the deletion of session registrations
+            event/session-enrollment:read: Allows the reading of sessions registrations
+            event/session-enrollment:write: Allows the writing of sessions registrations
+            event/session-segments:read: Allows reading of session segments
+            event/sessions:delete: Allows the deletion of a session in an event
+            event/sessions:read: Allows the reading of sessions
+            event/sessions:write: Allows the creation of a session in an event
+            event/speaker-categories:read: Allows reading of speaker categories
+            event/speaker-categories:write: Allows writing of speaker categories
+            event/speakers:delete: Allows the deletion of a speaker in an event
+            event/speakers:read: Allows the reading of speakers
+            event/speakers:write: Allows the creation of a speaker in an event
+            event/taxes:read: Allows the reading of taxes.
+            event/transactions:read: Allows the reading of transactions
+            event/transactions:write: Allows the writing of transactions
+            event/video-views:read: Allows reading of video views.
+            event/videos:read: Allows the reading of video data.
+            event/videos:write: Allows the creation/updating of video data.
+            event/vouchers:read: Allows reading of event vouchers and their associated attendees.
+            event/webcasts:delete: Allows the deletion of webcast
+            event/webcasts:read: Allows the reading of webcasts
+            event/webcasts:write: Allows the creation of webcast
+            event/weblinks:read: Allows the reading of event weblinks
+            events-plus/hubs:read: Allows the reading of Events+ hub data.
+            exhibitor/badges:read: Allows reading badges
+            exhibitor/badges:write: Allows creating/updating badges
+            exhibitor/booth-staff:delete: Allows deleting booth staff
+            exhibitor/booth-staff:read: Allows reading booth staff
+            exhibitor/booth-staff:write: Allows creating booth staff
+            exhibitor/eliterature-requests:read: Allows reading eliterature document request data
+            exhibitor/exhibitor-admins:read: Allows reading exhibitor admins
+            exhibitor/exhibitor-admins:write: Allows creating/updating exhibitor admins
+            exhibitor/exhibitor-answers:read: Allows reading exhibitor answers
+            exhibitor/exhibitor-answers:write: Allows updating exhibitor answers
+            exhibitor/exhibitor-categories:delete: Allows deleting exhibitor categories
+            exhibitor/exhibitor-categories:read: Allows reading exhibitor categories
+            exhibitor/exhibitor-categories:write: Allows creating/updating exhibitor categories
+            exhibitor/exhibitor-contents:delete: Allows deleting exhibitor content
+            exhibitor/exhibitor-contents:read: Allows reading exhibitor content
+            exhibitor/exhibitor-contents:write: Allows creating/updating exhibitor content
+            exhibitor/exhibitor-questions:read: Allows reading exhibitor questions
+            exhibitor/exhibitors:delete: Allows deleting exhibitors
+            exhibitor/exhibitors:read: Allows reading exhibitors
+            exhibitor/exhibitors:write: Allows creating/updating exhibitors
+            exhibitor/lead-qualification-answers:read: Allows reading Lead Qualification Answers
+            exhibitor/lead-qualification-questions:read: Allows reading Lead Qualification Questions.
+            exhibitor/leads:read: Allows reading leads.
+            exhibitor/registration-packs:delete: Allows deleting registration pack
+            exhibitor/registration-packs:read: Allows reading registration pack
+            exhibitor/registration-packs:write: Allows creating/updating registration pack
+            exhibitor/sponsorship-levels:read: Allows reading sponsorship level
+            file/file:read: Allows the reading of file
+            file/file:write: Allows the uploading of file
+            onsite/signatures:read: Allows reading signatures.
+            remote-printing/badge-print-jobs:read: Allows reading print jobs.
+            remote-printing/badge-print-jobs:write: Allows creating print jobs.
+            remote-printing/badge-printer-pools:read: Allows reading pools.
+            rfp/rfp-agenda-items:read: Allows the reading of RFP agenda items.
+            rfp/rfp-attachments:read: Allows the reading of RFP attachments.
+            rfp/rfp-custom-fields:read: Allows the reading of RFP custom fields.
+            rfp/rfp-guest-rooms:read: Allows the reading of RFP guest rooms.
+            rfp/rfp-internal-documents:read: Allows the reading of RFP internal documents.
+            rfp/rfp-lead-sources:read: Allows the reading of RFP lead sources.
+            rfp/rfp-past-events:read: Allows the reading of past events similar to rfp event.
+            rfp/rfp-questions:read: Allows the reading of RFP questions.
+            rfp/rfp-recipients-history:read: Allows the reading of RFP recipients history.
+            rfp/rfp-suppliers:read: Allows the reading of RFP suppliers.
+            rfp/rfps:read: Allows the reading of basic details of RFP.
+            seating/assignments:read: Allows to read attendee seat assignment information.
+            seating/event-seatings:read: Allows to read event seating.
+            seating/seats:read: Allows to read seat information.
+            seating/tables:read: Allows to read table information.
+            survey/questions:read: Allows the reading of survey questions
+            survey/respondents:read: Allows reading the survey respondents
+            survey/responses:read: Allows reading the survey responses
+            survey/standard-survey-email-templates:read: Allows reading the standalone survey email templates
+            survey/standard-survey-email:write: Allows writing operations on standalone survey emails
+            survey/standard-survey-questions:read: Allows the reading of standalone surveys questions
+            survey/standard-survey-respondents:read: Allows reading the standalone survey respondents
+            survey/standard-survey-respondents:write: Allows write operations on standalone survey respondents
+            survey/standard-survey-responses:read: Allows reading the standalone survey responses
+            survey/standard-survey-responses:write: Allows write operations on standalone surveys respondent's responses
+            survey/standard-surveys:read: Allows the reading of standalone surveys
+            survey/survey-questions:read: Allows the reading of event survey questions
+            survey/survey-respondents:read: Allows reading the event survey respondents
+            survey/survey-respondents:write: Allows write operations on the event survey respondents
+            survey/survey-responses:read: Allows reading the event survey responses
+            survey/survey-responses:write: Allows write operations on the event surveys respondent's responses
+            survey/surveys:read: Allows the reading of event surveys
+            venue/meeting-room-images:delete: Allows disassociating images from meeting rooms.
+            venue/meeting-room-images:read: Allows retrieving meeting room images.
+            venue/meeting-room-images:write: Allows associating images with meeting rooms.
+            venue/meeting-room-overviews:read: Allows read access for overview of meeting room.
+            venue/meeting-rooms:write: Allows the creation and modification of meeting rooms.
+            venue/venue-details-overview:read: Allows read access for overview of venue details.
+            venue/venue-details:write: Allows the creation and modification of venue details.
+            venue/venue-facility:write: Allows the modification of venue facility information.

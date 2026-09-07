@@ -1,0 +1,89 @@
+generated: '2026-09-07'
+method: searched
+source: openapi/_original/cvent-openapi.json; https://developers.cvent.com/docs/rest-api/reference/api-standards;
+  https://developers.cvent.com/docs/legacy-api/soap-api/framework; https://www.cvent.com/en/trust
+conformance:
+- id: openapi-3.0.2
+  conforms: true
+  evidence: 'openapi/_original/cvent-openapi.json — openapi: 3.0.2, 356 paths, 469 operations, 1,309 component schemas,
+    published by Cvent at https://developers.cvent.com/documentation'
+- id: oauth2
+  conforms: true
+  evidence: components.securitySchemes OAuth2.clientCredentials and OAuth2.authorizationCode; token endpoint https://api-platform.cvent.com/ea/oauth2/token;
+    238 declared scopes
+- id: oauth2-client-credentials
+  conforms: true
+  evidence: RFC 6749 §4.4 client credentials grant with HTTP Basic client authentication — documented at https://developers.cvent.com/docs/rest-api/tutorials/developer-quickstart
+- id: oauth2-authorization-code
+  conforms: true
+  evidence: authorizationUrl https://api-platform.cvent.com/ea/oauth2/authorize; restricted to planner administrators
+- id: oidc
+  conforms: false
+  evidence: No /.well-known/openid-configuration on any Cvent host (404 on 5 hosts, see well-known/cvent-well-known.yml).
+    OpenID Connect is offered for SSO into Cvent products, not for API authorization.
+- id: rfc9457
+  conforms: false
+  evidence: All 2,149 error responses use application/json with the Cvent ErrorResponse schema; application/problem+json
+    does not occur in the contract.
+- id: rfc8594-sunset
+  conforms: false
+  evidence: No Deprecation or Sunset header is declared or documented; the deprecation policy is prose only.
+- id: idempotency
+  conforms: false
+  evidence: No Idempotency-Key header on any of the 211 mutating operations.
+- id: pagination
+  conforms: true
+  evidence: Opaque cursor tokens with a documented paging object (currentToken/nextToken/previousToken/limit/totalCount)
+    across list operations
+- id: iso-4217
+  conforms: true
+  evidence: https://developers.cvent.com/docs/rest-api/reference/api-standards — currency codes are ISO 4217
+- id: iso-3166
+  conforms: true
+  evidence: https://developers.cvent.com/docs/rest-api/reference/api-standards — country codes are ISO 3166, extended
+    with Cvent GB1–GB4 sub-codes
+- id: iso-8601
+  conforms: true
+  evidence: 'Date-time fields are ISO 8601 UTC throughout the contract (format: date-time)'
+- id: soap-1.1
+  conforms: true
+  evidence: wsdl/cvent-soap-api-v200611.wsdl — WSDL 1.1 with SOAP 1.1 and SOAP 1.2 bindings; Cvent states compliance
+    with SOAP 1.1, WSDL 1.1 and WS-I Basic Profile 1.1 at https://developers.cvent.com/docs/legacy-api/soap-api/framework
+- id: ws-i-basic-profile-1.1
+  conforms: true
+  evidence: https://developers.cvent.com/docs/legacy-api/soap-api/framework
+domain_standards:
+- id: scim-2.0
+  name: SCIM 2.0 (RFC 7643 / RFC 7644)
+  conforms: true
+  evidence: openapi/_original/cvent-openapi.json declares the full SCIM 2.0 service surface — /scim/v2/ServiceProviderConfig,
+    /scim/v2/Schemas, /scim/v2/ResourceTypes, /scim/v2/Users, /scim/v2/Groups (11 operations) — and the schemas
+    carry the registered URNs urn:ietf:params:scim:schemas:core:2.0:User, urn:ietf:params:scim:schemas:extension:enterprise:2.0:User,
+    urn:ietf:params:scim:api:messages:2.0:ListResponse and urn:ietf:params:scim:api:messages:2.0:Error.
+  why_it_matters: An identity platform that already speaks SCIM can provision and de-provision Cvent users with
+    no bespoke connector.
+  docs: https://developers.cvent.com/docs/platform/data-models/user-scim
+compliance:
+  source: https://www.cvent.com/en/trust (fetched 2026-09-07, HTTP 200) and https://trust.cvent.com/
+  certifications:
+  - ISO 27001
+  - ISO 27701
+  - SOC 1 Type II
+  - SOC 2 Type II
+  - PCI DSS Level 1
+  - CSA STAR
+  - TX-RAMP
+  privacy:
+  - GDPR (EU & UK)
+  - CCPA
+  - APEC CBPR & PRP
+  - EU-U.S. Data Privacy Framework
+  - Swiss-U.S. Data Privacy Framework
+  not_claimed:
+  - HIPAA
+  - FedRAMP
+  - ISO 27017
+  - ISO 27018
+  note: A prior sweep of this repo recorded HIPAA, FedRAMP, ISO 27017 and ISO 27018 for Cvent. None of those four
+    appears on cvent.com/en/trust or in the trust-centre listing read on 2026-09-07; they have been removed rather
+    than carried forward.

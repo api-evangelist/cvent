@@ -1,0 +1,2566 @@
+openapi: 3.0.2
+info:
+  title: Cvent REST APIs — Attendee Activities
+  version: ea
+  description: 'The Attendee Activities API gives valuable insight into your customer''s experience at your Cvent event.
+
+    Now, you can get a fuller picture of your customer''s journey, including onsite activities, offsite meetings,
+
+    breakout sessions, booth visits, and virtual seminars. You can use that data to compile a unified customer
+
+    profile that integrates with your external systems and data.
+
+
+    By gathering all this info into a single interface, the API allows you to see your customer''s engagement
+
+    at every step of the journey, create engagement models, and integrate that data with your external tools.
+
+    You can use this data to understand what your customers are looking for, keep them engaged, build loyalty,
+
+    drive upsell, and increase the long-term value of your events.
+
+
+    Please note that attendee activities data is retained for a maximum of 2 years and is purged thereafter.
+
+
+    For more details on [attendee activities](https://developers.cvent.com/docs/rest-api/explanation/attendee-activities).
+
+    '
+  contact:
+    name: Cvent Development Platform
+    url: https://developers.cvent.com/
+externalDocs:
+  description: Cvent REST API documentation
+  url: https://developers.cvent.com/documentation
+servers:
+- url: https://api-platform.cvent.com/ea
+- url: https://api-platform-eur.cvent.com/ea
+tags:
+- name: Attendee Activities
+  description: 'The Attendee Activities API gives valuable insight into your customer''s experience at your Cvent event.
+
+    Now, you can get a fuller picture of your customer''s journey, including onsite activities, offsite meetings,
+
+    breakout sessions, booth visits, and virtual seminars. You can use that data to compile a unified customer
+
+    profile that integrates with your external systems and data.
+
+
+    By gathering all this info into a single interface, the API allows you to see your customer''s engagement
+
+    at every step of the journey, create engagement models, and integrate that data with your external tools.
+
+    You can use this data to understand what your customers are looking for, keep them engaged, build loyalty,
+
+    drive upsell, and increase the long-term value of your events.
+
+
+    Please note that attendee activities data is retained for a maximum of 2 years and is purged thereafter.
+
+
+    For more details on [attendee activities](https://developers.cvent.com/docs/rest-api/explanation/attendee-activities).
+
+    '
+paths:
+  /attendees/activities:
+    get:
+      security:
+      - OAuth2.clientCredentials:
+        - event/attendee-activities:read
+      - OAuth2.authorizationCode:
+        - event/attendee-activities:read
+      summary: List Activities
+      description: Gets a paginated list of attendee activities.
+      operationId: listAttendeeActivities
+      parameters:
+      - $ref: '#/components/parameters/after'
+      - $ref: '#/components/parameters/before'
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      - name: filter
+        in: query
+        required: false
+        description: 'Use filter query parameters to limit results
+
+          to data that matches your criteria. See
+
+          [Filters](/docs/rest-api/reference/filters) for details.
+
+
+          Supported fields and operators are listed below:
+
+
+          | Field                | Operators                          |
+
+          |----------------------|------------------------------------|
+
+          | id                   | `eq`, `ne`                         |
+
+          | created              | `eq`, `ne`, `lt`, `le`, `gt`, `ge` |
+
+          | event.id             | `eq`, `ne`                         |
+
+          | attendee.id          | `eq`, `ne`                         |
+
+          | type                 | `eq`, `ne`                         |
+
+          | exhibitor.id         | `eq`, `ne`                         |
+
+          | session.id           | `eq`, `ne`                         |
+
+          | appointment.id       | `eq`, `ne`                         |
+
+          | speaker.id           | `eq`, `ne`                         |
+
+          | data.id              | `eq`, `ne`                         |
+
+          | name                 | `eq`, `ne`                         |
+
+          | externalActivityDate | `eq`, `ne`, `lt`, `le`, `gt`, `ge` |
+
+          | time                 | `eq`, `ne`, `lt`, `le`, `gt`, `ge` |
+
+
+          The following logical operators are supported for combining filters:
+
+          * and
+
+          * or
+
+          '
+        schema:
+          type: string
+          example: type eq 'event.registered' or type eq 'session.enrolled' and (attendee.id eq 'uuid1' or attendee.id eq
+            'uuid2')
+      tags:
+      - Attendee Activities
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of attendee activities and their related details.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/attendee-activities-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+    post:
+      security:
+      - OAuth2.clientCredentials:
+        - event/attendee-activities:write
+      - OAuth2.authorizationCode:
+        - event/attendee-activities:write
+      summary: Add External Activity
+      description: 'Create an external attendee activity.
+
+        '
+      operationId: createAttendeeActivity
+      requestBody:
+        description: Creates a single external attendee activity for an attendee.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/external-activity'
+      tags:
+      - Attendee Activities
+      responses:
+        '201':
+          description: Successfully created an external attendee activity.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/external-activity'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+  /attendees/activities/external/metadata:
+    get:
+      security:
+      - OAuth2.clientCredentials:
+        - event/attendee-activities-metadata:read
+      - OAuth2.authorizationCode:
+        - event/attendee-activities-metadata:read
+      summary: List Ext. Activities Metadata
+      description: Gets a paginated list of external attendee activities metadata.
+      operationId: listExternalAttendeeActivitiesMetadata
+      parameters:
+      - $ref: '#/components/parameters/after'
+      - $ref: '#/components/parameters/before'
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      - name: filter
+        in: query
+        required: false
+        description: 'Use filter query parameters to limit results
+
+          to data that matches your criteria. See
+
+          [Filters](/docs/rest-api/reference/filters) for details.
+
+
+          Supported fields and operators are listed below:
+
+
+          | Field        | Operators                          |
+
+          |--------------|------------------------------------|
+
+          | id           | `eq`, `ne`                         |
+
+          | name         | `eq`, `ne`                         |
+
+          | type         | `eq`, `ne`                         |
+
+          | created      | `eq`, `ne`, `lt`, `le`, `gt`, `ge` |
+
+          | lastModified | `eq`, `ne`, `lt`, `le`, `gt`, `ge` |
+
+
+          The following logical operators are supported for combining filters:
+
+          * and
+
+          * or
+
+          '
+        schema:
+          type: string
+          example: id eq 'd94aff58-175d-41a5-9612-64e71202f8c3' and 'type eq 'event.external' and name ne 'social.media' and
+            created ge '2021-03-15T09:33:13.750Z' and lastModified le '2021-03-15T09:33:13.750Z'
+      tags:
+      - Attendee Activities
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of external attendee activities metadata.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/external-activity-metadata-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+    post:
+      security:
+      - OAuth2.clientCredentials:
+        - event/attendee-activities-metadata:write
+      - OAuth2.authorizationCode:
+        - event/attendee-activities-metadata:write
+      summary: Add Ext. Activities Metadata
+      description: 'Creates external attendee activity metadata.
+
+        '
+      operationId: createExternalAttendeeActivityMetadata
+      requestBody:
+        description: Create external attendee activity metadata, where external attendee activity records can be stored.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/external-activity-metadata'
+      tags:
+      - Attendee Activities
+      responses:
+        '201':
+          description: Successfully created attendee activity metadata.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/external-activity-metadata'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+  /attendees/activities/external/metadata/{id}:
+    delete:
+      summary: Delete Ext Activities Metadata
+      description: Deletes external attendee activity metadata.
+      operationId: deleteExternalAttendeeActivityMetadata
+      parameters:
+      - $ref: '#/components/parameters/id11'
+      security:
+      - OAuth2.clientCredentials:
+        - event/attendee-activities-metadata:delete
+      - OAuth2.authorizationCode:
+        - event/attendee-activities-metadata:delete
+      tags:
+      - Attendee Activities
+      responses:
+        '204':
+          description: Successfully deleted external attendee activity metadata.
+          headers: {}
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+    put:
+      tags:
+      - Attendee Activities
+      operationId: updateExternalAttendeeActivityMetadata
+      parameters:
+      - $ref: '#/components/parameters/id11'
+      security:
+      - OAuth2.clientCredentials:
+        - event/attendee-activities-metadata:write
+      - OAuth2.authorizationCode:
+        - event/attendee-activities-metadata:write
+      summary: Update Ext Activities Metadata
+      description: Update external attendee activity metadata.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/external-activity-metadata'
+        required: true
+      responses:
+        '200':
+          description: External Attendee Activity Metadata was successfully updated.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/external-activity-metadata'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+components:
+  schemas:
+    Link:
+      title: Link
+      required:
+      - href
+      type: object
+      description: Represents a link to a related resource.
+      properties:
+        href:
+          type: string
+          description: A url provided that can be followed for linking
+          example: ?token=90c5f062-76ad-4ea4-aa53-00eb698d9262
+    ActivityType:
+      title: ActivityType
+      description: This is used to denote the type of the attendee activity.
+      enum:
+      - appointment.accepted
+      - appointment.cancelled
+      - appointment.checkedIn
+      - appointment.created
+      - appointment.declined
+      - appointment.denied
+      - appointment.rescheduled
+      - email.bounced
+      - email.clicked
+      - email.opened
+      - email.sent
+      - email.undelivered
+      - event.attendeeHubVisited
+      - event.attendeeSubstituted
+      - event.bannerLinkClicked
+      - event.checkedIn
+      - event.checkedOut
+      - event.customCardOpened
+      - event.feedbackSubmitted
+      - event.noShow
+      - event.pageVisitTracked
+      - event.registered
+      - event.registrationAbandoned
+      - event.registrationCancelled
+      - event.videoPlayed
+      - event.waitlisted
+      - exhibitor.documentOpened
+      - exhibitor.socialLinkOpened
+      - exhibitor.viewed
+      - exhibitor.virtualBoothJoined
+      - exhibitor.weblinkOpened
+      - lead.inboundCreated
+      - lead.qualified
+      - lead.scanned
+      - session.checkedIn
+      - session.checkedOut
+      - session.enrolled
+      - session.feedbackSubmitted
+      - session.noShow
+      - session.pollResponseSubmitted
+      - session.questionAsked
+      - session.questionUpvoted
+      - session.unenrolled
+      - session.waitlisted
+      - speaker.feedbackSubmitted
+      - speaker.fileDownloaded
+      - appointment.external
+      - event.external
+      - exhibitor.external
+      - session.external
+      - event.adViewed
+      - event.adClicked
+      type: string
+      example: event.registered
+    BaseQuestion:
+      title: BaseQuestion
+      type: object
+      description: The question that was answered.
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The unique identifier of the question.
+          example: 861b51ec-aa7e-475f-b38d-4c8e35c47d63
+        text:
+          type: string
+          description: Question text.
+          example: How would you rate this session?
+    ExternalActivityType:
+      title: ExternalActivityType
+      description: This is used to denote the type of the external attendee activity.
+      enum:
+      - event.external
+      - session.external
+      - appointment.external
+      - exhibitor.external
+      type: string
+      example: event.external
+    SpeakerFeedbackSubmitted:
+      type: object
+      title: speaker.feedbackSubmitted
+      description: A speaker feedback-submitted activity.
+      allOf:
+      - $ref: '#/components/schemas/SessionActivity'
+      properties:
+        speaker:
+          $ref: '#/components/schemas/Speaker1'
+        survey:
+          $ref: '#/components/schemas/SurveyResponse'
+    ActivityBaseAppointment:
+      type: object
+      title: ActivityBaseAppointment
+      description: Base entity of an activity appointment.
+      properties:
+        id:
+          $ref: '#/components/schemas/UUIDProperty'
+        name:
+          type: string
+          description: The name of the appointment.
+          example: Meeting with Cvent
+        code:
+          type: string
+          description: The code of an appointment.
+          example: NTNHR3XMX5Z
+        appointmentEvent:
+          type: object
+          description: ''
+          properties:
+            title:
+              type: string
+              description: The title of linked appointment event.
+              example: Demo- Attendee Activity
+            code:
+              type: string
+              description: The code of linked appointment event.
+              example: VFNGZT7LH7D
+    LeadQualifiedAnswer:
+      title: LeadQualifiedAnswer
+      description: A question answer.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/BaseQuestion'
+      properties:
+        type:
+          type: string
+          description: Data type of an answer.
+          example: simple
+    ActivityContact:
+      title: ActivityContact
+      description: An activity contact.
+      type: object
+      properties:
+        firstName:
+          type: string
+          description: The first name of the attendee.
+          maxLength: 30
+          example: Henry
+        lastName:
+          type: string
+          description: The last name of the attendee.
+          maxLength: 50
+          example: Potterfield
+        email:
+          type: string
+          format: email
+          description: The email address of the attendee.
+          minLength: 6
+          maxLength: 80
+          example: h.potterfield@test.com
+    ExternalActivitiesAdditionalFields:
+      title: External Activities Additional Fields
+      description: Additional fields for external activities.
+      required:
+      - id
+      - externalActivityDate
+      properties:
+        id:
+          description: The identifier to the related entity i.e. Event, Session, Appointment or Exhibitor
+          type: string
+          format: uuid
+          example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+        externalActivityDate:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date time when the external activity was created.
+          example: '2019-08-24T14:15:22Z'
+        additionalFields:
+          type: object
+          description: Additional fields provided for the external attendee activity
+          additionalProperties:
+            type: string
+          example:
+            venue: tokyo
+            submitted: 'true'
+    EmailBounced:
+      type: object
+      title: email.bounced
+      description: An email-bounced activity.
+      allOf:
+      - $ref: '#/components/schemas/EmailActivity'
+      properties:
+        reason:
+          type: string
+          description: Reason for the bounced email.
+          example: 5.x.x - delivery error
+        contact:
+          $ref: '#/components/schemas/ActivityContact'
+        bounced:
+          type: string
+          format: date-time
+          description: ISO 8601 date and time when an email bounced.
+          example: '2020-02-03T13:00:00.000Z'
+        smtpCode:
+          type: integer
+          description: The Simple Mail Transfer Protocol (SMTP) response status code.
+          example: 500
+        dsnDiagnostic:
+          type: string
+          description: Delivery Status Notification diagnostic details.
+          example: smtp;500 ESS - global exclusion
+        optOut:
+          type: boolean
+          default: false
+          description: Used to denote if a recipient has opted-out of receiving emails.
+          example: false
+    SessionPollResponseSubmitted:
+      type: object
+      title: session.pollResponseSubmitted
+      description: The poll created for a session.
+      allOf:
+      - $ref: '#/components/schemas/SessionActivity'
+      properties:
+        poll:
+          $ref: '#/components/schemas/PollResponse'
+    EventActivityDetail:
+      title: Event Activity Detail
+      description: Details for an event activity.
+      type: object
+      properties:
+        id:
+          description: The identifier of the event.
+          type: string
+          format: uuid
+          example: d84855b0-eeda-41c4-8e7a-53e80364cb95
+        title:
+          type: string
+          description: The title of the event.
+          example: Cvent Connect 2020
+          readOnly: true
+        code:
+          type: string
+          description: The code of the event.
+          example: XRNGB4YY3CX
+          readOnly: true
+        timezone:
+          type: string
+          description: The timezone of the event.
+          example: America/New_York
+          readOnly: true
+    AdLocation:
+      title: AdLocation
+      description: The placement of the ad within the specific product.
+      enum:
+      - Home Page
+      - Exhibitor List
+      - Session List
+      type: string
+      example: Home Page
+    UUID:
+      title: UUID
+      description: The reference to the related entity. Contains only the ID of the related entity.
+      required:
+      - id
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/UUIDProperty'
+    EventBannerLinkClicked:
+      type: object
+      title: event.bannerLinkClicked
+      description: The link on the banner clicked by an attendee.
+      allOf:
+      - $ref: '#/components/schemas/ActivityExhibitorBase'
+      properties:
+        banner:
+          type: object
+          description: The related banner
+          properties:
+            id:
+              type: string
+              format: uuid
+              description: Banner ID
+        target:
+          $ref: '#/components/schemas/BannerLinkTarget'
+    AttendeeStatus:
+      title: AttendeeStatus
+      enum:
+      - No Response
+      - Accepted
+      - Declined
+      - Visited
+      - Waitlisted
+      - Cancelled
+      - Pending Approval
+      - Denied Approval
+      type: string
+      description: This is used to denote the status of an attendee.
+      example: Accepted
+    ActivityLead:
+      type: object
+      title: ActivityLead
+      description: An activity lead.
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Activity Lead ID
+        deviceId:
+          type: string
+          description: The unique identifier of the device.
+          example: '123'
+        deviceName:
+          type: string
+          description: Name of the device.
+          example: Jack's iPhone
+        boothStaff:
+          $ref: '#/components/schemas/ActivityBoothStaff'
+    SessionQuestionAsked:
+      type: object
+      title: session.questionAsked
+      description: The question asked activity details for the session.
+      allOf:
+      - $ref: '#/components/schemas/SessionQuestionActivity'
+      properties:
+        anonymous:
+          type: boolean
+          description: True indicates the question was posted anonymously.
+          example: false
+    SessionCheckedIn:
+      title: Session Checked In
+      description: A session checked-in activity.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/SessionActivity'
+      properties:
+        checkedIn:
+          type: string
+          format: date-time
+          description: ISO 8601 date and time when an attendee checked in to a session.
+          example: '2020-02-03T13:00:00.000Z'
+    SessionQuestionActivity:
+      type: object
+      title: session.questionActivity
+      description: This denotes the question asked in the session.
+      allOf:
+      - $ref: '#/components/schemas/SessionActivity'
+      properties:
+        question:
+          $ref: '#/components/schemas/QuestionDetail'
+        platform:
+          $ref: '#/components/schemas/UserPlatform'
+        votes:
+          type: integer
+          description: The number of votes for a question.
+          example: 0
+    EventRegistrationAbandoned:
+      title: event.registrationAbandoned
+      description: An event registration-abandoned activity.
+      type: object
+      properties:
+        lastSavedRegistrationPageName:
+          type: string
+          description: The last page where an invitee left during the registration.
+          maxLength: 200
+          example: Personal Information
+        lastActivity:
+          type: string
+          format: date-time
+          description: ISO 8601 date and time when an invitee left the registration process.
+          example: '2020-02-03T13:00:00.000Z'
+        contact:
+          type: object
+          description: Related contact.
+          allOf:
+          - $ref: '#/components/schemas/ActivityContact'
+          deprecated: true
+    EventAttendeeHubVisited:
+      type: object
+      title: event.attendeeHubVisited
+      description: An event attendee-hub-visited activity.
+      allOf:
+      - $ref: '#/components/schemas/ActivityEventWebsite'
+      properties:
+        pageName:
+          type: string
+          description: The name of the event website page before the attendee arrived in Attendee Hub.
+          example: event website visits
+        buttonText:
+          type: string
+          description: Text on the button.
+          example: Go to My Event 11
+    Audit:
+      title: Audit
+      description: Audit information
+      type: object
+      properties:
+        created:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date time when this record was created.
+          readOnly: true
+          example: '2017-01-02T02:00:00Z'
+        createdBy:
+          type: string
+          description: The identifier of the user that created this record.
+          readOnly: true
+          example: hporter
+        lastModified:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date time when this record was updated.
+          readOnly: true
+          example: '2019-02-12T03:00:00Z'
+        lastModifiedBy:
+          type: string
+          description: The identifier of the user that last updated this record.
+          readOnly: true
+          example: hporter
+    ErrorResponse-12:
+      title: ErrorResponse
+      description: Represents an error response with additional details of cascading error messages.
+      allOf:
+      - $ref: '#/components/schemas/ErrorResponseBase1'
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorResponseBase1'
+          description: Additional details of cascading error messages.
+    EventCustomCardOpened:
+      type: object
+      title: event.customCardOpened
+      description: This is used to denote the attendee activity fetched when a custom card is opened by an attendee.
+      properties:
+        name:
+          type: string
+          description: The name of the custom card.
+          example: Join our mailing list.
+        url:
+          type: string
+          format: uri
+          description: The URL associated with the custom card.
+          example: https://cvent.com
+        type:
+          type: string
+          description: The type of the custom card. This value can be Link, Video, Appointment etc.
+          example: Video
+        multipleLinks:
+          type: boolean
+          description: True indicates the custom card contains multiple links. An attendee uses only one link at a time in
+            a custom card.
+          example: false
+    AppointmentCreated:
+      title: appointment.created
+      type: object
+      description: Appointment created activity.
+      properties:
+        appointment:
+          $ref: '#/components/schemas/ActivityAppointment'
+        contact:
+          $ref: '#/components/schemas/ActivityContact'
+    QuestionDetail:
+      title: QuestionDetail
+      description: The question asked in a session.
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/UUIDProperty'
+        text:
+          type: string
+          description: Question text.
+          example: Is this a new session?
+    ActivityAppointment:
+      type: object
+      title: ActivityAppointment
+      description: An activity appointment.
+      allOf:
+      - $ref: '#/components/schemas/ActivityBaseAppointment'
+      properties:
+        start:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date time when an appointment starts.
+          example: '2020-02-03T13:00:00.000Z'
+        end:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date time when an appointment ends.
+          example: '2020-02-03T14:00:00.000Z'
+    Answer2:
+      title: Answer
+      description: A question answer.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/BaseQuestion'
+      properties:
+        type:
+          type: string
+          description: 'Data type of an answer. DEPRECATED: This field is deprecated and not applicable to this activity.'
+          example: simple
+          deprecated: true
+    AttendeeActivity:
+      title: AttendeeActivity
+      description: An attendee activity.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/ActivityCommon'
+      properties:
+        name:
+          type: string
+          description: Unique name corresponding to the attendee activity type.
+          example: Registered for Event
+        type:
+          $ref: '#/components/schemas/ActivityType'
+        data:
+          $ref: '#/components/schemas/ActivityData'
+    ActivityExhibitorWeblink:
+      type: object
+      title: ActivityExhibitorWeblink
+      description: A web-link for an activity exhibitor.
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+          description: The unique identifier of the weblink.
+        name:
+          type: string
+          description: The name of the weblink.
+          example: Cvent's website
+    LeadInboundCreated:
+      title: lead.inboundCreated
+      description: A lead inbound-created activity.
+      type: object
+      properties:
+        exhibitor:
+          $ref: '#/components/schemas/ActivityExhibitor'
+        lead:
+          $ref: '#/components/schemas/LeadObject'
+    SurveyResponse:
+      title: SurveyResponse
+      description: A survey response.
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The unique identifier of the survey.
+        responseMethod:
+          type: string
+          description: The method used to capture the survey response.
+          example: sample method
+        responses:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuestionResponse'
+          description: The list of question and answers for a survey.
+    external-activity:
+      title: ExternalAttendeeActivity
+      description: An external attendee activity.
+      type: object
+      required:
+      - type
+      - data
+      - name
+      allOf:
+      - $ref: '#/components/schemas/ActivityCommon'
+      properties:
+        name:
+          type: string
+          description: Name for the external attendee activity.
+          example: Registered for Event
+          minLength: 1
+          maxLength: 100
+        type:
+          $ref: '#/components/schemas/ExternalActivityType'
+        data:
+          $ref: '#/components/schemas/ExternalActivityData'
+    EventPageVisitTracked:
+      type: object
+      title: event.pageVisitTracked
+      description: Contains Urchin Tracking Module (UTM) data.
+      allOf:
+      - $ref: '#/components/schemas/EventActivity'
+      properties:
+        source:
+          type: string
+          description: Identifies which site sent the traffic.
+          example: twitter
+        medium:
+          type: string
+          description: Identifies what type of link was used, such as cost per click or email.
+          example: social
+        campaign:
+          type: string
+          description: Identifies a specific product promotion or strategic campaign.
+          example: sale
+        term:
+          type: string
+          description: Identifies search terms.
+          example: social-media
+        content:
+          type: string
+          description: Identifies what specifically was clicked to bring the user to the site, such as a banner ad or a text
+            link.
+          example: register-button
+        custom:
+          type: string
+          description: An additional tracking parameter which can be used to compliment the standard UTM parameters.
+          example: custom-param
+        additional:
+          type: object
+          description: Contains any additional non-standard UTM parameters. Key represents the custom parameters added by
+            the planner. Value represents the corresponding value recorded about the page viewer.
+          additionalProperties:
+            type: string
+          example:
+            id: d89eaf5b-b2dc-4ffb-964e-affbb0942e65
+            submitted: 'true'
+    UUIDProperty:
+      title: UUID Property
+      description: A string that has to be a format matching the industry standard uuid
+      type: string
+      format: uuid
+      example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+    ExhibitorWeblinkOpened:
+      title: exhibitor.weblinkOpened
+      description: An exhibitor weblink-opened activity.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/ActivityExhibitorBase'
+      properties:
+        weblink:
+          $ref: '#/components/schemas/ActivityExhibitorWeblink'
+    EventVideoPlayed:
+      type: object
+      title: event.videoPlayed
+      description: An event video-played activity.
+      allOf:
+      - $ref: '#/components/schemas/ActivityEventWebsite'
+      properties:
+        title:
+          type: string
+          description: The title of video.
+          example: We are Cvent!
+        pageName:
+          type: string
+          description: The name of the page.
+          example: Agenda
+    EmailActivity:
+      type: object
+      title: EmailActivity
+      description: An email activity.
+      properties:
+        type:
+          type: string
+          description: Type of the email.
+          example: Invitation Reminder
+    external-activity-metadata-paginated-response:
+      title: ActivityMetadataPaginatedResponse
+      description: The response from a request to get the list of activities metadata in an account.  This includes the paging
+        object as well as the collection of activities metadata in an account.
+      required:
+      - paging
+      - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/external-activity-metadata'
+          description: Collection of external attendee activities metadata in an account.
+    ExternalActivityAdditionalFieldsMetadata:
+      title: ExternalActivityAdditionalFieldsMetadata
+      description: Additional fields metadata for an external activity.
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          description: The name of the additional field.
+          minLength: 1
+          maxLength: 100
+          example: facebook_social.media
+        description:
+          type: string
+          description: Description of the additional field.
+          maxLength: 250
+          example: Contains data for facebook social media activity.
+    ExhibitorSocialLinkOpened:
+      title: exhibitor.socialLinkOpened
+      description: An exhibitor social-link-opened activity.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/ActivityExhibitorBase'
+      properties:
+        sponsorshipLevel:
+          $ref: '#/components/schemas/ActivityExhibitorSponsorshipLevel'
+        socialNetwork:
+          type: string
+          description: The name of the social network.
+          example: LinkedIn
+        url:
+          type: string
+          format: uri
+          description: The link opened by the attendee.
+          example: https://www.linkedin.com/company/cvent/mycompany/
+    EventRegistered:
+      type: object
+      title: Event Registered
+      description: An event-registered activity.
+      allOf:
+      - $ref: '#/components/schemas/EventActivity'
+      properties:
+        status:
+          $ref: '#/components/schemas/AttendeeStatus'
+    ActivityData:
+      title: ActivityData
+      description: This is used to denote the type of the attendee activity
+      readOnly: true
+      anyOf:
+      - title: appointment.accepted
+        allOf:
+        - $ref: '#/components/schemas/AppointmentActivity'
+      - title: appointment.cancelled
+        allOf:
+        - $ref: '#/components/schemas/AppointmentActivity'
+      - title: appointment.checkedIn
+        allOf:
+        - $ref: '#/components/schemas/AppointmentCheckedIn'
+      - $ref: '#/components/schemas/AppointmentCreated'
+      - title: appointment.declined
+        allOf:
+        - $ref: '#/components/schemas/AppointmentActivity'
+      - title: appointment.denied
+        allOf:
+        - $ref: '#/components/schemas/AppointmentDenied'
+      - title: appointment.rescheduled
+        allOf:
+        - $ref: '#/components/schemas/AppointmentCreated'
+      - $ref: '#/components/schemas/EmailBounced'
+      - $ref: '#/components/schemas/EmailClicked'
+      - $ref: '#/components/schemas/EmailOpened'
+      - $ref: '#/components/schemas/EmailSent'
+      - $ref: '#/components/schemas/EmailUndelivered'
+      - $ref: '#/components/schemas/EventAttendeeHubVisited'
+      - $ref: '#/components/schemas/EventAttendeeSubstituted'
+      - $ref: '#/components/schemas/EventBannerLinkClicked'
+      - title: event.checkedIn
+        allOf:
+        - $ref: '#/components/schemas/EventCheckedIn'
+      - title: event.checkedOut
+        allOf:
+        - $ref: '#/components/schemas/EventCheckedOut'
+      - $ref: '#/components/schemas/EventCustomCardOpened'
+      - $ref: '#/components/schemas/EventFeedbackSubmitted'
+      - title: event.noShow
+        allOf:
+        - $ref: '#/components/schemas/EventActivity'
+      - $ref: '#/components/schemas/EventPageVisitTracked'
+      - title: event.registered
+        allOf:
+        - $ref: '#/components/schemas/EventRegistered'
+      - $ref: '#/components/schemas/EventRegistrationAbandoned'
+      - title: event.registrationCancelled
+        allOf:
+        - $ref: '#/components/schemas/EventRegistered'
+      - $ref: '#/components/schemas/EventVideoPlayed'
+      - title: event.waitlisted
+        allOf:
+        - $ref: '#/components/schemas/EventRegistered'
+      - $ref: '#/components/schemas/ExhibitorDocumentOpened'
+      - $ref: '#/components/schemas/ExhibitorSocialLinkOpened'
+      - $ref: '#/components/schemas/ExhibitorViewed'
+      - $ref: '#/components/schemas/ExhibitorVirtualBoothJoined'
+      - $ref: '#/components/schemas/ExhibitorWeblinkOpened'
+      - title: lead.inboundCreated
+        allOf:
+        - $ref: '#/components/schemas/LeadInboundCreated'
+      - $ref: '#/components/schemas/LeadQualified'
+      - title: lead.scanned
+        allOf:
+        - $ref: '#/components/schemas/LeadActivity'
+      - title: session.checkedIn
+        allOf:
+        - $ref: '#/components/schemas/SessionCheckedIn'
+      - title: session.checkedOut
+        allOf:
+        - $ref: '#/components/schemas/SessionCheckedOut'
+      - title: session.enrolled
+        allOf:
+        - $ref: '#/components/schemas/SessionActivity'
+      - $ref: '#/components/schemas/SessionFeedbackSubmitted'
+      - title: session.noShow
+        allOf:
+        - $ref: '#/components/schemas/SessionActivity'
+      - $ref: '#/components/schemas/SessionPollResponseSubmitted'
+      - $ref: '#/components/schemas/SessionQuestionAsked'
+      - title: session.questionUpvoted
+        allOf:
+        - $ref: '#/components/schemas/SessionQuestionActivity'
+      - title: session.unenrolled
+        allOf:
+        - $ref: '#/components/schemas/SessionActivity'
+      - title: session.waitlisted
+        allOf:
+        - $ref: '#/components/schemas/SessionActivity'
+      - $ref: '#/components/schemas/SpeakerFeedbackSubmitted'
+      - $ref: '#/components/schemas/SpeakerFileDownloaded'
+      - title: appointment.external
+        allOf:
+        - $ref: '#/components/schemas/ExternalActivitiesAdditionalFields'
+      - title: event.external
+        allOf:
+        - $ref: '#/components/schemas/ExternalActivitiesAdditionalFields'
+      - title: exhibitor.external
+        allOf:
+        - $ref: '#/components/schemas/ExternalActivitiesAdditionalFields'
+      - title: session.external
+        allOf:
+        - $ref: '#/components/schemas/ExternalActivitiesAdditionalFields'
+      - title: event.adViewed
+        allOf:
+        - $ref: '#/components/schemas/EventAdViewed'
+      - title: event.adClicked
+        allOf:
+        - $ref: '#/components/schemas/EventAdClicked'
+    ActivityExhibitorDocument:
+      type: object
+      title: ActivityExhibitorDocument
+      description: Document for an activity exhibitor.
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+          description: The unique identifier of the document.
+        title:
+          type: string
+          description: The title of the document.
+          example: FAQs
+        format:
+          type: string
+          description: The format of the document eg. doc, docx, gif, jpg, pdf, etc.
+          example: pdf
+        downloaded:
+          type: boolean
+          description: If the document is downloaded.
+          example: true
+    ActivityBoothStaff:
+      type: object
+      title: ActivityBoothStaff
+      description: Booth staff for an activity.
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The unique identifier of the exhibitor booth staff.
+        firstName:
+          type: string
+          description: The first name of the booth staff that captured the lead.
+          example: John
+        lastName:
+          type: string
+          description: The last name of the booth staff that captured the lead.
+          example: Doe
+        email:
+          type: string
+          format: email
+          description: The email address of the booth staff that captured the lead.
+          minLength: 6
+          maxLength: 80
+          example: h.potterfield@test.com
+    AppointmentActivity:
+      title: Appointment Activity
+      description: Appointment activity
+      type: object
+      properties:
+        appointment:
+          $ref: '#/components/schemas/ActivityAppointment'
+        contact:
+          $ref: '#/components/schemas/ActivityContact'
+    LeadQualified:
+      title: lead.qualified
+      description: A qualified lead.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/LeadActivity'
+      properties:
+        responses:
+          type: array
+          items:
+            $ref: '#/components/schemas/LeadQualifiedQuestionResponse'
+          description: The list of responses provided by the attendee.
+    AppointmentDenied:
+      title: AppointmentDenied
+      description: Appointment denied activity.
+      type: object
+      properties:
+        appointment:
+          $ref: '#/components/schemas/ActivityBaseAppointment'
+        contact:
+          $ref: '#/components/schemas/ActivityContact'
+    AppointmentCheckedIn:
+      type: object
+      title: appointment.checkedIn
+      description: Appointment checked-in activity.
+      allOf:
+      - $ref: '#/components/schemas/AppointmentActivity'
+      properties:
+        checkedIn:
+          type: string
+          format: date-time
+          description: ISO 8601 date and time when an attendee checked in to the appointment.
+          example: '2020-02-03T13:00:00.000Z'
+    external-activity-metadata:
+      title: ActivityMetadata
+      description: Metadata for an activity.
+      type: object
+      required:
+      - type
+      - name
+      allOf:
+      - $ref: '#/components/schemas/Audit'
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The identifier of external attendee activity metadata.
+          example: 9463c74e-18c6-401a-a710-ae0f485bf059
+          readOnly: true
+        type:
+          $ref: '#/components/schemas/ExternalActivityType'
+        name:
+          type: string
+          description: Name of an external attendee activity.
+          example: social.media
+          minLength: 1
+          maxLength: 100
+        description:
+          type: string
+          description: Description of an external attendee activity.
+          example: This external activity contains data of social activities for an attendee.
+          maxLength: 500
+        fields:
+          description: Metadata for the fields.
+          type: array
+          items:
+            $ref: '#/components/schemas/ExternalActivityAdditionalFieldsMetadata'
+    ErrorResponseBase1:
+      title: ErrorResponseBase
+      type: object
+      description: Represents an error response with no additional details.
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          description: The HTTP status code representing the error.
+          example: 400
+        message:
+          type: string
+          description: A brief description of the error.
+          example: Bad Request
+        target:
+          type: string
+          description: The target resource of the error.
+          example: example target
+    ContactFields:
+      title: ContactFields
+      description: Details of a contact.
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Contact ID
+        firstName:
+          type: string
+          description: The first name of the contact.
+          maxLength: 30
+          example: Henry
+        lastName:
+          type: string
+          description: The last name of the contact.
+          maxLength: 50
+          example: Potterfield
+        email:
+          type: string
+          format: email
+          description: The email address of the contact.
+          minLength: 6
+          maxLength: 80
+          example: h.potterfield@test.com
+    LeadObject:
+      type: object
+      title: LeadObject
+      description: A Lead
+      properties:
+        id:
+          $ref: '#/components/schemas/UUIDProperty'
+        deviceId:
+          type: string
+          deprecated: true
+          description: The unique identifier of the device.
+          example: ID1
+        deviceName:
+          type: string
+          deprecated: true
+          description: Name of the device.
+          example: Device 1
+        boothStaff:
+          type: object
+          description: Booth staff for the lead.
+          allOf:
+          - $ref: '#/components/schemas/ActivityBoothStaff'
+          deprecated: true
+    LeadActivity:
+      title: Lead Activity
+      description: A lead activity
+      type: object
+      properties:
+        exhibitor:
+          $ref: '#/components/schemas/ActivityExhibitor'
+        lead:
+          $ref: '#/components/schemas/ActivityLead'
+    EventAdViewed:
+      type: object
+      title: event.adViewed
+      description: Viewed an Event Ad.
+      allOf:
+      - $ref: '#/components/schemas/EventActivity'
+      properties:
+        platform:
+          type: string
+          description: The platform used by the user.
+          example: UserPlatform
+        ad:
+          $ref: '#/components/schemas/ActivityAd'
+    ExternalActivityData:
+      title: ExternalActivityData
+      description: This is used to denote the type of the external attendee activity.
+      type: object
+      anyOf:
+      - title: event.external
+        allOf:
+        - $ref: '#/components/schemas/ExternalActivitiesAdditionalFields'
+      - title: session.external
+        allOf:
+        - $ref: '#/components/schemas/ExternalActivitiesAdditionalFields'
+      - title: appointment.external
+        allOf:
+        - $ref: '#/components/schemas/ExternalActivitiesAdditionalFields'
+      - title: exhibitor.external
+        allOf:
+        - $ref: '#/components/schemas/ExternalActivitiesAdditionalFields'
+    EventCheckedOut:
+      type: object
+      title: event.checkedOut
+      description: An email-checked-out activity.
+      allOf:
+      - $ref: '#/components/schemas/EventActivity'
+      properties:
+        checkOut:
+          type: string
+          format: date-time
+          description: ISO 8601 date and time when an attendee checked out from an event.
+          example: '2020-02-03T13:00:00.000Z'
+    SessionCheckedOut:
+      title: Session Checked Out
+      description: A session checked-Out activity.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/SessionActivity'
+      properties:
+        checkOut:
+          type: string
+          format: date-time
+          description: ISO 8601 date and time when an attendee checked out from a session.
+          example: '2020-02-03T13:00:00.000Z'
+    EmailSent:
+      type: object
+      title: email.sent
+      description: An email-sent activity.
+      allOf:
+      - $ref: '#/components/schemas/EmailActivity'
+      properties:
+        sent:
+          type: string
+          format: date-time
+          description: ISO 8601 date and time when an email was sent.
+          example: '2020-02-03T13:00:00.000Z'
+    BaseQuestionResponse:
+      title: BaseQuestionResponse
+      description: Base entity for a question response.
+      type: object
+      properties:
+        question:
+          $ref: '#/components/schemas/BaseQuestion'
+        answers:
+          type: array
+          items:
+            $ref: '#/components/schemas/BaseAnswer'
+          description: List of answers.
+    ActivityExhibitorNavigationSource:
+      type: object
+      title: ActivityExhibitorNavigationSource
+      description: Navigation source for an activity exhibitor.
+      properties:
+        type:
+          type: string
+          description: The source type in the attendee hub from where the user navigated to the exhibitor booth.
+          example: Sponsored Session
+        name:
+          type: string
+          description: The source name in the attendee hub from where the user navigated to the exhibitor booth.
+          example: Session name
+    EventAdClicked:
+      type: object
+      title: event.adClicked
+      description: Clicked an Event Ad.
+      allOf:
+      - $ref: '#/components/schemas/EventActivity'
+      properties:
+        platform:
+          type: string
+          description: The platform used by the user.
+          example: UserPlatform
+        ad:
+          $ref: '#/components/schemas/ActivityAd'
+    PaginationLinks:
+      title: PaginationLinks
+      type: object
+      description: Represents pagination links for navigating between pages of data.
+      properties:
+        next:
+          $ref: '#/components/schemas/Link'
+        self:
+          $ref: '#/components/schemas/Link'
+        prev:
+          $ref: '#/components/schemas/Link'
+    ExhibitorDocumentOpened:
+      title: exhibitor.documentOpened
+      description: An exhibitor document-opened activity.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/ActivityExhibitorBase'
+      properties:
+        document:
+          $ref: '#/components/schemas/ActivityExhibitorDocument'
+    Paging:
+      title: Paging
+      required:
+      - _links
+      type: object
+      description: Represents pagination information for a collection of resources.
+      properties:
+        previousToken:
+          type: string
+          description: The pagination token for the previous page, if one exists. You can use this token to navigate to the
+            previous page of data.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        nextToken:
+          type: string
+          description: The pagination token for the next page. If this value is present in the response, there is another
+            page of data you can fetch.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        currentToken:
+          type: string
+          description: The pagination token for the current page.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        limit:
+          type: integer
+          description: The number of records to return on the page. Not to exceed 200.
+          example: 100
+        totalCount:
+          type: integer
+          description: The total number of records available. This field may return blank, even if there are more records.
+            To confirm if there are more records, check the `nextToken` field.
+          example: 2
+        _links:
+          $ref: '#/components/schemas/PaginationLinks'
+    QuestionResponse:
+      title: QuestionResponse
+      description: A Question response.
+      type: object
+      properties:
+        question:
+          $ref: '#/components/schemas/Question2'
+        answers:
+          type: array
+          description: List of answers.
+          items:
+            $ref: '#/components/schemas/Answer2'
+    ActivityAd:
+      type: object
+      title: ActivityAd
+      description: The details of the advertisement.
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The unique identifier of the ad.
+          example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+        name:
+          type: string
+          description: The name of the ad.
+          example: New Year Sale
+        product:
+          type: string
+          description: The product for which ad is created
+          example: ATTENDEE_HUB
+        location:
+          $ref: '#/components/schemas/AdLocation'
+        attribution:
+          type: object
+          description: The entity to which the ad is associated.
+          properties:
+            id:
+              type: string
+              format: uuid
+              description: The unique identifier of the attribution.
+            type:
+              type: string
+              description: The type of attribution.
+              example: CUSTOM
+    EmailClicked:
+      type: object
+      title: email.clicked
+      description: An email-clicked activity.
+      allOf:
+      - $ref: '#/components/schemas/EmailActivity'
+      properties:
+        clicked:
+          type: string
+          format: date-time
+          description: ISO 8601 date and time when an email link was clicked.
+          example: '2020-02-03T13:00:00.000Z'
+        url:
+          type: string
+          description: The URL clicked in the email.
+          example: http://www.cvent.com
+        urlText:
+          type: string
+          description: The URL text of the link.
+          example: Click Here
+    EmailUndelivered:
+      type: object
+      title: email.undelivered
+      description: An email-undelivered activity.
+      allOf:
+      - $ref: '#/components/schemas/EmailActivity'
+      properties:
+        contact:
+          $ref: '#/components/schemas/ActivityContact'
+        undelivered:
+          type: string
+          format: date-time
+          description: ISO 8601 date and time when an email was undelivered.
+          example: '2020-02-03T13:00:00.000Z'
+    ActivityExhibitor:
+      type: object
+      title: ActivityExhibitor
+      description: An activity exhibitor.
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The unique identifier of the exhibitor.
+        code:
+          type: string
+          description: Unique code of an exhibitor at a booth.
+          example: CODE_UPDATE_1
+        marketingCode:
+          type: string
+          description: The marketing code of an exhibitor.
+          example: MARKETING_CODE_1
+        name:
+          type: string
+          description: The Name of an exhibitor.
+          example: Example Company
+    EventAttendeeSubstituted:
+      type: object
+      title: event.attendeeSubstituted
+      description: An attendee-substituted activity.
+      allOf:
+      - $ref: '#/components/schemas/EventActivity'
+      properties:
+        oldContact:
+          $ref: '#/components/schemas/ContactFields'
+        newContact:
+          $ref: '#/components/schemas/ContactFields'
+    ExhibitorViewed:
+      title: exhibitor.viewed
+      description: An exhibitor viewed activity.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/ActivityExhibitorBase'
+      properties:
+        sponsorshipLevel:
+          $ref: '#/components/schemas/ActivityExhibitorSponsorshipLevel'
+        navigationSource:
+          $ref: '#/components/schemas/ActivityExhibitorNavigationSource'
+    Question2:
+      title: Question
+      type: object
+      description: The question that was answered.
+      allOf:
+      - $ref: '#/components/schemas/BaseQuestion'
+      properties:
+        code:
+          type: string
+          description: Question code.
+          example: CODE_A
+    ActivityExhibitorSponsorshipLevel:
+      type: object
+      title: ActivityExhibitorSponsorshipLevel
+      description: Sponsorship level for an activity exhibitor.
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+          description: The unique identifier of the sponsorship level.
+        name:
+          type: string
+          description: The name of the sponsorship level.
+          example: Gold
+    ActivityEventWebsite:
+      type: object
+      title: ActivityEventWebsite
+      description: Web browser details for an activity.
+      properties:
+        browser:
+          type: string
+          description: The name of the web browser.
+          example: firefox
+        operatingSystem:
+          type: string
+          description: The name of the operating system.
+          example: windows
+    BaseAnswer:
+      type: object
+      title: BaseAnswer
+      description: Base entity of a question answer.
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The unique identifier of the Answer
+        value:
+          type: string
+          description: Value of an answer.
+          example: my answer
+    ExhibitorVirtualBoothJoined:
+      title: exhibitor.virtualBoothJoined
+      description: An exhibitor virtual-booth-joined activity.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/ActivityExhibitorBase'
+      properties:
+        sponsorshipLevel:
+          $ref: '#/components/schemas/ActivityExhibitorSponsorshipLevel'
+        solutionType:
+          type: string
+          description: The solution type used for the virtual booth.
+          example: CVC
+    BannerLinkTarget:
+      title: BannerLinkTarget
+      description: The target of the link clicked on the banner.
+      type: object
+      properties:
+        type:
+          description: The type of target associated with the banner link.
+          type: string
+          enum:
+          - Attendee Hub Page
+          - Discussion Topic
+          - External Url
+          - Floor Plan Details
+          - Session Details
+          - Speaker Details
+          - Virtual Booth
+        details:
+          type: string
+          description: The details of the target associated with the banner link.
+          example: https://www.cvent.com
+    LeadQualifiedQuestionResponse:
+      title: LeadQualifiedQuestionResponse
+      description: A Question response.
+      type: object
+      properties:
+        question:
+          $ref: '#/components/schemas/Question2'
+        answers:
+          type: array
+          description: List of answers.
+          items:
+            $ref: '#/components/schemas/LeadQualifiedAnswer'
+    ActivityCommon:
+      type: object
+      title: Activity Common
+      description: Common base entity for an activity.
+      required:
+      - attendee
+      - event
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The identifier of the attendee activity.
+          example: 9463c74e-18c6-401a-a710-ae0f485bf059
+          readOnly: true
+        attendee:
+          $ref: '#/components/schemas/UUID'
+        event:
+          $ref: '#/components/schemas/EventActivityDetail'
+        time:
+          type: string
+          format: date-time
+          description: ISO 8601 date and time when this attendee activity occurred.
+          readOnly: true
+          example: '2019-08-24T14:15:22Z'
+        created:
+          type: string
+          format: date-time
+          description: ISO 8601 date and time when this record was created.
+          readOnly: true
+          example: '2019-08-24T14:15:22Z'
+    EventCheckedIn:
+      type: object
+      title: event.checkedIn
+      description: An email-checked-in activity.
+      allOf:
+      - $ref: '#/components/schemas/EventActivity'
+      properties:
+        checkedIn:
+          type: string
+          format: date-time
+          description: ISO 8601 date and time when an attendee checked in to an event.
+          example: '2020-02-03T13:00:00.000Z'
+    SpeakerFileDownloaded:
+      type: object
+      title: speaker.fileDownloaded
+      description: A speaker file-downloaded activity.
+      allOf:
+      - $ref: '#/components/schemas/ActivityEventWebsite'
+      properties:
+        name:
+          type: string
+          description: The name of the file.
+          example: Instructions
+        type:
+          type: string
+          description: The type of the file.
+          example: docx
+        speaker:
+          $ref: '#/components/schemas/Speaker1'
+    attendee-activities-paginated-response:
+      title: AttendeeActivitiesPaginatedResponse
+      description: The response from a request to get the list of attendee activities. This includes the paging object as
+        well as the collection of attendee activities.
+      required:
+      - paging
+      - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttendeeActivity'
+          description: Collection of attendee activities.
+    UserPlatform:
+      title: UserPlatform
+      description: The platform used by the user.
+      type: string
+      example: Attendee Hub
+    ActivityExhibitorBase:
+      type: object
+      title: ActivityExhibitorBase
+      description: Base entity for an Activity Exhibitor.
+      properties:
+        exhibitor:
+          $ref: '#/components/schemas/Exhibitor1'
+        platform:
+          $ref: '#/components/schemas/UserPlatform'
+    SessionFeedbackSubmitted:
+      type: object
+      title: session.feedbackSubmitted
+      description: A session feedback-submitted activity.
+      allOf:
+      - $ref: '#/components/schemas/SessionActivity'
+      properties:
+        survey:
+          $ref: '#/components/schemas/SurveyResponse'
+    SessionActivity:
+      title: Session Activity
+      description: A session activity.
+      type: object
+      properties:
+        session:
+          type: object
+          title: SessionActivity
+          description: The activity session.
+          properties:
+            id:
+              $ref: '#/components/schemas/UUIDProperty'
+            title:
+              type: string
+              description: The title of the session.
+              example: tech_session
+            code:
+              type: string
+              description: The code of the session.
+              example: XRNGB4YY3CX
+              readOnly: true
+    Exhibitor1:
+      type: object
+      title: Exhibitor
+      description: An exhibitor.
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+          description: The unique identifier of the exhibitor.
+        name:
+          type: string
+          description: The Name of an exhibitor.
+          example: AutoExpo
+        featured:
+          type: boolean
+          description: If the exhibitor is featured.
+          example: true
+        eventSponsor:
+          type: boolean
+          description: If the exhibitor is an event sponsor.
+          example: true
+    EmailOpened:
+      type: object
+      title: email.opened
+      description: An email-opened activity.
+      allOf:
+      - $ref: '#/components/schemas/EmailActivity'
+      properties:
+        opened:
+          type: string
+          format: date-time
+          description: ISO 8601 date and time when an email was opened.
+          example: '2020-02-03T13:00:00.000Z'
+    Speaker1:
+      type: object
+      title: Speaker
+      description: An activity speaker.
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The unique identifier of the speaker.
+        name:
+          type: string
+          description: Name of the speaker.
+          example: Henry Ford
+    PollResponse:
+      title: PollResponse
+      description: This is used to denote the poll details.
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the poll.
+          example: Do you like the session?
+        responses:
+          type: array
+          items:
+            $ref: '#/components/schemas/BaseQuestionResponse'
+          description: The list of question and answers for a poll.
+    EventActivity:
+      type: object
+      title: Event Activity
+      description: An email activity.
+      properties:
+        event:
+          type: object
+          description: The event in which this activity occurred.
+          properties:
+            id:
+              type: string
+              format: uuid
+              description: Event ID.
+    EventFeedbackSubmitted:
+      title: event.feedbackSubmitted
+      description: An event-feedback-submitted activity.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/EventActivity'
+      properties:
+        survey:
+          $ref: '#/components/schemas/SurveyResponse'
+  responses:
+    BadRequest1:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 400
+            message: Bad Request
+    TooManyRequests1:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 429
+            message: Limit Exceeded
+    Unauthorized1:
+      description: Bad or expired token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 401
+            message: Unauthorized
+    Forbidden1:
+      description: You do not have access to the resource
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 403
+            message: Access Forbidden
+    NotFound1:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 404
+            message: Not found
+  parameters:
+    before:
+      name: before
+      required: false
+      in: query
+      description: Used to query records that have been added or updated before this time point.
+      schema:
+        type: string
+        format: date-time
+        example: '2017-01-02T02:00:00Z'
+    id11:
+      in: path
+      name: id
+      required: true
+      description: ID of the activity metadata.
+      schema:
+        type: string
+        example: 9463c74e-18c6-401a-a710-ae0f485bf059
+    after:
+      name: after
+      required: false
+      description: Used to query records that have been added or updated after this time point. Default to the beginning of
+        time of the data store.
+      in: query
+      schema:
+        type: string
+        format: date-time
+        example: '2017-01-02T02:00:00Z'
+    token:
+      name: token
+      in: query
+      description: 'The continuation token returned from a previous class. This must be a valid UUID v4 if provided.
+
+        This will override any other pageable parameters provided.
+
+        '
+      style: form
+      explode: true
+      schema:
+        type: string
+        example: 0e28af57-511f-47ab-ae46-46cd1ca51a1a
+    limit:
+      name: limit
+      in: query
+      description: The maximum number of records to return per page.
+      style: form
+      explode: true
+      schema:
+        maximum: 200
+        minimum: 1
+        type: integer
+        default: 100
+        example: 100
+  securitySchemes:
+    OAuth2.clientCredentials:
+      type: oauth2
+      description: OAuth2 Client Credentials Flow.
+      flows:
+        clientCredentials:
+          tokenUrl: https://api-platform.cvent.com/ea/oauth2/token
+          scopes:
+            account/hooks:delete: Allows the deletion of hooks.
+            account/hooks:read: Allows the reading of hooks.
+            account/hooks:write: Allows the creation/updation of hooks.
+            account/user-groups:delete: Allows deletion for user groups
+            account/user-groups:read: Allows the reading of user groups
+            account/user-groups:write: Allows the writing of user groups
+            account/users:delete: Allows the deletion of User
+            account/users:read: Allows the reading of User, User Group
+            account/users:write: Allows the creation/updating of User
+            appointments/appointment-attendees:read: Allows the reading of appointment attendees and their related entities.
+            appointments/appointment-events:read: Allows the reading of appointment events and their related entities.
+            appointments/appointment-types:read: Allows the reading of appointment types and their related entities.
+            appointments/appointments:read: Allows the reading of appointment and their related entities.
+            appointments/appointments:write: Allows the writing of appointments and their related entities.
+            appointments/available-times:read: Allows the reading of availability times.
+            appointments/locations:read: Allows the reading of appointment locations and their related entities.
+            attendee-insights/attendee-insights:read: Allows the reading of engagement scores (attendee insights).
+            attendee-insights/scores:read: Allows the reading of scores.
+            attendee-insights/stats:read: Allows the reading of engagement score (attendee insight) stats.
+            budget/budget-items:delete: Allows the deletion of budget items
+            budget/budget-items:read: Allows the reading of all budget items
+            budget/budget-items:write: Allows creation/updation of budget item
+            budget/budget-totals:read: Allows the reading of all event budget totals
+            budget/budget-vendors:read: Allows reading of account-level budget vendors.
+            budget/cards:read: Allows the reading of cards
+            budget/currency-conversion-rate:delete: Allows deletion of currency conversion rate for currency.
+            budget/currency-conversion-rate:read: Allows reading of currency conversion rate for currency.
+            budget/currency-conversion-rate:write: Allows creation/update of currency conversion rate for currency.
+            budget/payments:delete: Allows deletion of payments.
+            budget/payments:read: Allows reading of payment for budget item.
+            budget/payments:write: Allows creation of payment in a budget item.
+            budget/transactions:delete: Allows delete card transactions.
+            budget/transactions:read: Allows the reading of all card's transactions
+            budget/transactions:write: Allows creation of card transactions.
+            bulk/bulk-jobs:read: Allows the reading of bulk job related entities
+            bulk/bulk-jobs:write: Allows the creation, update and deletion of bulk job related entities
+            business-transient/bids:read: Allows the reading of Business Transient Bid data
+            business-transient/proposals:read: Allows the reading of Business Transient Proposal data
+            business-transient/supplier-brands:read: Allows the reading of a supplier brand or a list of travel supplier brands.
+            business-transient/supplier-chains:read: Allows the reading of a travel supplier chain or a list of travel supplier
+              chains.
+            business-transient/supplier-properties:read: Allows the reading of a travel supplier property or a list of travel
+              supplier properties.
+            business-transient/supplier-property-rooms:read: Allows the reading of a list of travel supplier property rooms.
+            business-transient/travel-accounts:read: Allows the reading of business transient travel account data.
+            business-transient/travel-program-questions:read: Allows the reading of business transient travel program question
+              data.
+            business-transient/travel-programs:read: Allows the reading of business transient travel program data.
+            business-transient/travel-supplier-accounts:read: Allows the reading of business transient travel supplier account
+              data.
+            business-travel/bids:read: Allows the reading of Business Travel Bid data
+            business-travel/proposals:read: Allows the reading of Business Travel Proposal data
+            business-travel/travel-accounts:read: Allows the reading of business travel account data.
+            business-travel/travel-program-questions:read: Allows the reading of business travel program question data.
+            business-travel/travel-programs:read: Allows the reading of business travel program data.
+            compliance/communications:read: Allows the reading of communication compliance
+            compliance/communications:write: Allows the writing of communication compliance
+            email/bounces:read: Allow the reading of email bounces.
+            email/email-status:read: Allows the reading of email statuses.
+            email/emails:read: Allows the reading of emails.
+            eMarketing/campaigns:read: Allows the reading of campaigns.
+            emarketing/emarketing-email-status:read: Allows the reading of eMarketing email statuses.
+            eMarketing/eMarketing-email-templates:read: Allows the reading of email-templates.
+            eMarketing/eMarketing-send-emails:write: Allows the writing of eMarketing emails.
+            event/admission-items:read: Allows the reading of admission items
+            event/air-request:read: Allow reading the air request or air actual detail for attendees.
+            event/alternate-travel:read: Allow reading the alternate travel answers for attendees.
+            event/attendance-durations:read: Allows the read of Duration records
+            event/attendee-activities-metadata:delete: Allows the deletion of attendees activities metadata.
+            event/attendee-activities-metadata:read: Allows the reading of attendee activities metadata.
+            event/attendee-activities-metadata:write: Allows the creation/updating of attendees activities metadata.
+            event/attendee-activities:read: Allows the reading of attendee activities.
+            event/attendee-activities:write: Allows the writing of external attendee activities.
+            event/attendee-credits:read: Allows the reading of attendee credits.
+            event/attendee-links:delete: Allows the deletion of attendee links
+            event/attendee-links:read: Allows the reading of attendee links
+            event/attendee-links:write: Allows the creation of attendee links
+            event/attendee-messages:read: Allows the reading of attendee messages
+            event/attendees:read: Allows the reading of attendees.
+            event/attendees:write: Allows the creation of an attendee in an event.
+            event/audience-segments:read: Allows the reading of audience segments.
+            event/audience-segments:write: Allows the creation/updating/deletion of audience segments.
+            event/contact-groups:read: Allows the reading of contact groups.
+            event/contact-groups:write: Allows the creation/updating of contact groups.
+            event/contact-types:read: Allows the reading of contact types.
+            event/contacts:delete: Allows the deletion of contacts.
+            event/contacts:read: Allows the reading of contacts.
+            event/contacts:write: Allows the creation/updating of contacts.
+            event/contacts:write-sensitive: Allows the creation/updating of sensitive data related to contacts.
+            event/custom-fields:read: Allows the reading of custom fields
+            event/custom-fields:write: Allows the writing of custom fields
+            event/discounts:write: Allows the writing of discounts
+            event/donation-items:read: Allows the reading of donation items.
+            event/event-discounts:read: Allows the reading of event discounts.
+            event/event-discounts:write: Allows the writing of event discounts.
+            event/event-email-status:read: Allows the reading of event email statuses.
+            event/event-emails:read: Allows the reading of event emails
+            event/event-emails:write: Allows to send event emails.
+            event/event-features:read: Allows the reading of events-features
+            event/event-features:write: Allows updating the event-features
+            event/event-user-groups:read: Allows the reading of user groups
+            event/event-user-groups:write: Allows associating/disassociating user groups to event
+            event/events:read: Allows the reading of events
+            event/events:write: Allows the creation/updating of events
+            event/fee-items:read: Allows the reading of fee items.
+            event/hotel-request:read: Allow reading the hotel request or housing reservation request detail for attendees.
+            event/invitation-lists:read: Allows the reading of the invitation lists for an event
+            event/meeting-request-forms:read: Allows the reading of meeting request forms.
+            event/meeting-requests:read: Allows the reading of meeting requests.
+            event/meeting-requests:write: Allows the creation/updating of meeting requests.
+            event/membership-items:read: Allows reading of membership items.
+            event/orders:read: Allows the reading of orders
+            event/planning-documents:read: Allows the reading of event planning documents
+            event/players:read: Allows the reading of players
+            event/process-form-submissions:read: Allows the reading of process form submissions.
+            event/program-items:delete: Allows deletion of session program items
+            event/program-items:read: Allows reading of session program items
+            event/program-items:write: Allows writing of session program items
+            event/quantity-items:read: Allows the reading of quantity items.
+            event/quantity-items:write: Allows the writing of quantity items
+            event/registration-paths:read: Allows the reading of registration paths
+            event/registration-types:read: Allows the reading of registration types
+            event/registration-types:write: Allows the writing of registration types
+            event/role-assignments:read: Allows the reading of event role assignment.
+            event/session-attendance:read: Allows the reading of sessions attendance
+            event/session-attendance:write: Allows the creation/updating of sessions attendance
+            event/session-categories:read: Allows reading of session categories
+            event/session-categories:write: Allows writing of session categories
+            event/session-enrollment:delete: Allows the deletion of session registrations
+            event/session-enrollment:read: Allows the reading of sessions registrations
+            event/session-enrollment:write: Allows the writing of sessions registrations
+            event/session-segments:read: Allows reading of session segments
+            event/sessions:delete: Allows the deletion of a session in an event
+            event/sessions:read: Allows the reading of sessions
+            event/sessions:write: Allows the creation of a session in an event
+            event/speaker-categories:read: Allows reading of speaker categories
+            event/speaker-categories:write: Allows writing of speaker categories
+            event/speakers:delete: Allows the deletion of a speaker in an event
+            event/speakers:read: Allows the reading of speakers
+            event/speakers:write: Allows the creation of a speaker in an event
+            event/taxes:read: Allows the reading of taxes.
+            event/transactions:read: Allows the reading of transactions
+            event/transactions:write: Allows the writing of transactions
+            event/video-views:read: Allows reading of video views.
+            event/videos:read: Allows the reading of video data.
+            event/videos:write: Allows the creation/updating of video data.
+            event/vouchers:read: Allows reading of event vouchers.
+            event/webcasts:delete: Allows the deletion of webcast
+            event/webcasts:read: Allows the reading of webcasts
+            event/webcasts:write: Allows the creation of webcast
+            event/weblinks:read: Allows the reading of event weblinks
+            events-plus/hubs:read: Allows the reading of Events+ hub data.
+            exhibitor/badges:read: Allows reading badges
+            exhibitor/badges:write: Allows creating/updating badges
+            exhibitor/booth-staff:delete: Allows deleting booth staff
+            exhibitor/booth-staff:read: Allows reading booth staff
+            exhibitor/booth-staff:write: Allows creating booth staff
+            exhibitor/eliterature-requests:read: Allows reading eliterature document request data
+            exhibitor/exhibitor-admins:read: Allows reading exhibitor admins
+            exhibitor/exhibitor-admins:write: Allows creating/updating exhibitor admins
+            exhibitor/exhibitor-answers:read: Allows reading exhibitor answers
+            exhibitor/exhibitor-answers:write: Allows updating exhibitor answers
+            exhibitor/exhibitor-categories:delete: Allows deleting exhibitor categories
+            exhibitor/exhibitor-categories:read: Allows reading exhibitor categories
+            exhibitor/exhibitor-categories:write: Allows creating/updating exhibitor categories
+            exhibitor/exhibitor-contents:delete: Allows deleting exhibitor content
+            exhibitor/exhibitor-contents:read: Allows reading exhibitor content
+            exhibitor/exhibitor-contents:write: Allows creating/updating exhibitor content
+            exhibitor/exhibitor-questions:read: Allows reading exhibitor questions
+            exhibitor/exhibitors:delete: Allows deleting exhibitors
+            exhibitor/exhibitors:read: Allows reading exhibitors
+            exhibitor/exhibitors:write: Allows creating/updating exhibitors
+            exhibitor/lead-qualification-answers:read: Allows reading Lead Qualification Answers
+            exhibitor/lead-qualification-questions:read: Allows reading Lead Qualification Questions.
+            exhibitor/leads:read: Allows reading leads.
+            exhibitor/registration-packs:delete: Allows deleting registration pack
+            exhibitor/registration-packs:read: Allows reading registration pack
+            exhibitor/registration-packs:write: Allows creating/updating registration pack
+            exhibitor/sponsorship-levels:read: Allows reading sponsorship level
+            file/file:read: Allows the reading of file
+            file/file:write: Allows the uploading of file
+            housing/connections:write: Allows the user to connect to the Reglink APIs.
+            housing/hotel-room-rates:write: Allows the user to create/update hotel room rates.
+            housing/housing-event-available-nights:read: Allows the user to read availability information for given event.
+            housing/housing-event-hotels:read: Allows the user to read information about event hotels.
+            housing/housing-event-inventory:read: Allows the user to get information about housing event inventory.
+            housing/housing-event-room-types:read: Allows the user to read information about event room types.
+            housing/housing-events:read: Allows the user to read information about events.
+            housing/reservation-requests:delete: Allows the user to cancel reservation request.
+            housing/reservation-requests:read: Allows the user to read reservation request information.
+            housing/reservation-requests:write: Allows the user to create/update reservation request.
+            housing/reservations-link:delete: Allows the user to remove association from reservation.
+            housing/reservations-link:write: Allows the user to associate reservation to reservation request.
+            housing/reservations:delete: Allows the user to cancel reservation.
+            housing/reservations:read: Allows the user to read reservation details information.
+            housing/reservations:write: Allows the user to create/update reservation.
+            onsite/signatures:read: Allows reading signatures.
+            proposal/proposals:write: Allows the creation/writing of proposal
+            remote-printing/badge-print-jobs:read: Allows reading print jobs.
+            remote-printing/badge-print-jobs:write: Allows creating print jobs.
+            remote-printing/badge-printer-pools:read: Allows reading pools.
+            rfp/rfp-agenda-items:read: Allows the reading of RFP agenda items.
+            rfp/rfp-attachments:read: Allows the reading of RFP attachments.
+            rfp/rfp-custom-fields:read: Allows the reading of RFP custom fields.
+            rfp/rfp-guest-rooms:read: Allows the reading of RFP guest rooms.
+            rfp/rfp-internal-documents:read: Allows the reading of RFP internal documents.
+            rfp/rfp-lead-sources:read: Allows the reading of RFP lead sources.
+            rfp/rfp-past-events:read: Allows the reading of past events similar to rfp event.
+            rfp/rfp-questions:read: Allows the reading of RFP questions.
+            rfp/rfp-recipients-history:read: Allows the reading of RFP recipients history.
+            rfp/rfp-suppliers:read: Allows the reading of RFP suppliers.
+            rfp/rfps:read: Allows the reading of basic details of RFP.
+            seating/assignments:read: Allows to read attendee seat assignment information.
+            seating/event-seatings:read: Allows to read event seating.
+            seating/seats:read: Allows to read seat information.
+            seating/tables:read: Allows to read table information.
+            secure-ecommerce/card-tokens:write: Allows creation of credit card tokens
+            survey/questions:read: Allows the reading of survey questions
+            survey/respondents:read: Allows reading the survey respondents
+            survey/responses:read: Allows reading the survey responses
+            survey/standard-survey-email-templates:read: Allows reading the standalone survey email templates
+            survey/standard-survey-email:write: Allows writing operations on standalone survey emails
+            survey/standard-survey-questions:read: Allows the reading of standalone surveys questions
+            survey/standard-survey-respondents:read: Allows reading the standalone survey respondents
+            survey/standard-survey-respondents:write: Allows write operations on standalone survey respondents
+            survey/standard-survey-responses:read: Allows reading the standalone survey responses
+            survey/standard-survey-responses:write: Allows write operations on standalone surveys respondent's responses
+            survey/standard-surveys:read: Allows the reading of standalone surveys
+            survey/survey-questions:read: Allows the reading of event survey questions
+            survey/survey-respondents:read: Allows reading the event survey respondents
+            survey/survey-respondents:write: Allows write operations on the event survey respondents
+            survey/survey-responses:read: Allows reading the event survey responses
+            survey/survey-responses:write: Allows write operations on the event surveys respondent's responses
+            survey/surveys:read: Allows the reading of event surveys
+            venue/meeting-room-images:delete: Allows disassociating images from meeting rooms.
+            venue/meeting-room-images:read: Allows retrieving meeting room images.
+            venue/meeting-room-images:write: Allows associating images with meeting rooms.
+            venue/meeting-room-overviews:read: Allows read access for overview of meeting room.
+            venue/meeting-rooms:write: Allows the creation and modification of meeting rooms.
+            venue/venue-details-overview:read: Allows read access for overview of venue details.
+            venue/venue-details:write: Allows the creation and modification of venue details.
+            venue/venue-facility:write: Allows the modification of venue facility information.
+    OAuth2.authorizationCode:
+      type: oauth2
+      description: OAuth2 Authorization Code Flow.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api-platform.cvent.com/ea/oauth2/authorize
+          tokenUrl: https://api-platform.cvent.com/ea/oauth2/token
+          scopes:
+            account/hooks:delete: Allows the deletion of hooks.
+            account/hooks:read: Allows the reading of hooks.
+            account/hooks:write: Allows the creation/updation of hooks.
+            account/user-groups:delete: Allows deletion for user groups
+            account/user-groups:read: Allows the reading of user groups
+            account/user-groups:write: Allows the writing of user groups
+            account/users:delete: Allows the deletion of User
+            account/users:read: Allows the reading of User, User Group
+            account/users:write: Allows the creation/updating of User
+            appointments/appointment-attendees:read: Allows the reading of appointment attendees and their related entities.
+            appointments/appointment-events:read: Allows the reading of appointment events and their related entities.
+            appointments/appointment-types:read: Allows the reading of appointment types and their related entities.
+            appointments/appointments:read: Allows the reading of appointment and their related entities.
+            appointments/appointments:write: Allows the writing of appointments and their related entities.
+            appointments/available-times:read: Allows the reading of available times.
+            appointments/locations:read: Allows the reading of appointment locations and their related entities.
+            attendee-insights/attendee-insights:read: Allows the reading of engagement scores (attendee insights).
+            attendee-insights/scores:read: Allows the reading of scores.
+            attendee-insights/stats:read: Allows the reading of engagement score (attendee insight) stats.
+            budget/budget-items:delete: Allows the deletion of budget items
+            budget/budget-items:read: Allows the reading of all budget items
+            budget/budget-items:write: Allows creation/updation of budget item
+            budget/budget-totals:read: Allows the reading of all event budget totals
+            budget/budget-vendors:read: Allows reading of account-level budget vendors.
+            budget/cards:read: Allows the reading of cards
+            budget/currency-conversion-rate:delete: Allows deletion of currency conversion rate for currency.
+            budget/currency-conversion-rate:read: Allows reading of currency conversion rate for currency.
+            budget/currency-conversion-rate:write: Allows creation/update of currency conversion rate for currency.
+            budget/payments:delete: Allows deletion of payments.
+            budget/payments:read: Allows reading of payment for budget item.
+            budget/payments:write: Allows creation of payment in a budget item.
+            budget/transactions:delete: Allows delete card transactions.
+            budget/transactions:read: Allows the reading of all card's transactions
+            budget/transactions:write: Allows creation of card transactions.
+            business-transient/bids:read: Allows the reading of BT Bid data
+            business-transient/proposals:read: Allows the reading of BT Proposal data
+            business-travel/bids:read: Allows the reading of BT Bid data
+            business-travel/proposals:read: Allows the reading of BT Proposal data
+            compliance/communications:read: Allows the reading of communication compliance
+            compliance/communications:write: Allows the writing of communication compliance
+            email/bounces:read: Allow the reading of email bounces.
+            email/email-status:read: Allows the reading of email statuses.
+            email/emails:read: Allows the reading of emails.
+            eMarketing/campaigns:read: Allows the reading of campaigns.
+            emarketing/emarketing-email-status:read: Allows the reading of eMarketing email statuses.
+            eMarketing/eMarketing-email-templates:read: Allows the reading of email-templates.
+            eMarketing/eMarketing-send-emails:write: Allows the writing of eMarketing emails.
+            event/admission-items:read: Allows the reading of admission items
+            event/air-request:read: Allow reading the air request or air actual detail for attendees.
+            event/alternate-travel:read: Allow reading the alternate travel answers for attendees.
+            event/attendance-durations:read: Allows the read of Duration records
+            event/attendee-activities-metadata:delete: Allows the deletion of attendees activities metadata.
+            event/attendee-activities-metadata:read: Allows the reading of attendee activities metadata.
+            event/attendee-activities-metadata:write: Allows the creation/updating of attendees activities metadata.
+            event/attendee-activities:read: Allows the reading of attendee activities.
+            event/attendee-activities:write: Allows the writing of attendee activities.
+            event/attendee-credits:read: Allows the reading of attendee credits.
+            event/attendee-links:delete: Allows the deletion of attendee links
+            event/attendee-links:read: Allows the reading of attendee links
+            event/attendee-links:write: Allows the creation of attendee links
+            event/attendee-messages:read: Allows the reading of attendee messages
+            event/attendees:read: Allows the reading of attendees.
+            event/attendees:write: Allows the creation of an attendee in an event.
+            event/audience-segments:read: Allows the reading of audience segments.
+            event/audience-segments:write: Allows the creation/updating/deletion of audience segments.
+            event/contact-groups:read: Allows the reading of contact groups.
+            event/contact-groups:write: Allows the creation/updating of contact groups.
+            event/contact-types:read: Allows the reading of contact types.
+            event/contacts:delete: Allows the deletion of contacts.
+            event/contacts:read: Allows the reading of contacts.
+            event/contacts:write: Allows the creation/updating of contacts.
+            event/contacts:write-sensitive: Allows the creation/updating of sensitive data related to contacts.
+            event/custom-fields:read: Allows the reading of custom fields
+            event/custom-fields:write: Allows the writing of custom fields
+            event/discounts:write: Allows the writing of discounts
+            event/donation-items:read: Allows the reading of donation items.
+            event/event-discounts:read: Allows the reading of event discounts.
+            event/event-discounts:write: Allows the writing of event discounts.
+            event/event-email-status:read: Allows the reading of event email statuses.
+            event/event-emails:read: Allows the reading of event emails
+            event/event-emails:write: Allows to send event emails.
+            event/event-features:read: Allows the reading of events-features
+            event/event-features:write: Allows updating the event-features
+            event/event-user-groups:read: Allows the reading of user groups
+            event/event-user-groups:write: Allows associating/disassociating user groups to event
+            event/events:read: Allows the reading of events
+            event/events:write: Allows the creation/updating of events
+            event/fee-items:read: Allows the reading of fee items.
+            event/hotel-request:read: Allow reading the hotel request or housing reservation request detail for attendees.
+            event/invitation-lists:read: Allows the reading of the invitation lists for an event
+            event/meeting-request-forms:read: Allows the reading of meeting request forms.
+            event/meeting-requests:read: Allows the reading of meeting requests.
+            event/meeting-requests:write: Allows the creation/updating of meeting requests.
+            event/membership-items:read: Allows reading of membership items.
+            event/orders:read: Allows the reading of orders
+            event/planning-documents:read: Allows the reading of event planning documents
+            event/players:read: Allows the reading of players
+            event/process-form-submissions:read: Allows the reading of process form submissions.
+            event/program-items:delete: Allows deletion of session program items
+            event/program-items:read: Allows reading of session program items
+            event/program-items:write: Allows writing of session program items
+            event/quantity-items:read: Allows the reading of quantity items.
+            event/quantity-items:write: Allows the writing of quantity items
+            event/registration-paths:read: Allows the reading of registration paths
+            event/registration-types:read: Allows the reading of registration types
+            event/registration-types:write: Allows the writing of registration types
+            event/role-assignments:read: Allows the reading of event role assignment.
+            event/session-attendance:read: Allows the reading of sessions attendance
+            event/session-attendance:write: Allows the creation/updating of sessions attendance
+            event/session-categories:read: Allows reading of session categories
+            event/session-categories:write: Allows writing of session categories
+            event/session-enrollment:delete: Allows the deletion of session registrations
+            event/session-enrollment:read: Allows the reading of sessions registrations
+            event/session-enrollment:write: Allows the writing of sessions registrations
+            event/session-segments:read: Allows reading of session segments
+            event/sessions:delete: Allows the deletion of a session in an event
+            event/sessions:read: Allows the reading of sessions
+            event/sessions:write: Allows the creation of a session in an event
+            event/speaker-categories:read: Allows reading of speaker categories
+            event/speaker-categories:write: Allows writing of speaker categories
+            event/speakers:delete: Allows the deletion of a speaker in an event
+            event/speakers:read: Allows the reading of speakers
+            event/speakers:write: Allows the creation of a speaker in an event
+            event/taxes:read: Allows the reading of taxes.
+            event/transactions:read: Allows the reading of transactions
+            event/transactions:write: Allows the writing of transactions
+            event/video-views:read: Allows reading of video views.
+            event/videos:read: Allows the reading of video data.
+            event/videos:write: Allows the creation/updating of video data.
+            event/vouchers:read: Allows reading of event vouchers and their associated attendees.
+            event/webcasts:delete: Allows the deletion of webcast
+            event/webcasts:read: Allows the reading of webcasts
+            event/webcasts:write: Allows the creation of webcast
+            event/weblinks:read: Allows the reading of event weblinks
+            events-plus/hubs:read: Allows the reading of Events+ hub data.
+            exhibitor/badges:read: Allows reading badges
+            exhibitor/badges:write: Allows creating/updating badges
+            exhibitor/booth-staff:delete: Allows deleting booth staff
+            exhibitor/booth-staff:read: Allows reading booth staff
+            exhibitor/booth-staff:write: Allows creating booth staff
+            exhibitor/eliterature-requests:read: Allows reading eliterature document request data
+            exhibitor/exhibitor-admins:read: Allows reading exhibitor admins
+            exhibitor/exhibitor-admins:write: Allows creating/updating exhibitor admins
+            exhibitor/exhibitor-answers:read: Allows reading exhibitor answers
+            exhibitor/exhibitor-answers:write: Allows updating exhibitor answers
+            exhibitor/exhibitor-categories:delete: Allows deleting exhibitor categories
+            exhibitor/exhibitor-categories:read: Allows reading exhibitor categories
+            exhibitor/exhibitor-categories:write: Allows creating/updating exhibitor categories
+            exhibitor/exhibitor-contents:delete: Allows deleting exhibitor content
+            exhibitor/exhibitor-contents:read: Allows reading exhibitor content
+            exhibitor/exhibitor-contents:write: Allows creating/updating exhibitor content
+            exhibitor/exhibitor-questions:read: Allows reading exhibitor questions
+            exhibitor/exhibitors:delete: Allows deleting exhibitors
+            exhibitor/exhibitors:read: Allows reading exhibitors
+            exhibitor/exhibitors:write: Allows creating/updating exhibitors
+            exhibitor/lead-qualification-answers:read: Allows reading Lead Qualification Answers
+            exhibitor/lead-qualification-questions:read: Allows reading Lead Qualification Questions.
+            exhibitor/leads:read: Allows reading leads.
+            exhibitor/registration-packs:delete: Allows deleting registration pack
+            exhibitor/registration-packs:read: Allows reading registration pack
+            exhibitor/registration-packs:write: Allows creating/updating registration pack
+            exhibitor/sponsorship-levels:read: Allows reading sponsorship level
+            file/file:read: Allows the reading of file
+            file/file:write: Allows the uploading of file
+            onsite/signatures:read: Allows reading signatures.
+            remote-printing/badge-print-jobs:read: Allows reading print jobs.
+            remote-printing/badge-print-jobs:write: Allows creating print jobs.
+            remote-printing/badge-printer-pools:read: Allows reading pools.
+            rfp/rfp-agenda-items:read: Allows the reading of RFP agenda items.
+            rfp/rfp-attachments:read: Allows the reading of RFP attachments.
+            rfp/rfp-custom-fields:read: Allows the reading of RFP custom fields.
+            rfp/rfp-guest-rooms:read: Allows the reading of RFP guest rooms.
+            rfp/rfp-internal-documents:read: Allows the reading of RFP internal documents.
+            rfp/rfp-lead-sources:read: Allows the reading of RFP lead sources.
+            rfp/rfp-past-events:read: Allows the reading of past events similar to rfp event.
+            rfp/rfp-questions:read: Allows the reading of RFP questions.
+            rfp/rfp-recipients-history:read: Allows the reading of RFP recipients history.
+            rfp/rfp-suppliers:read: Allows the reading of RFP suppliers.
+            rfp/rfps:read: Allows the reading of basic details of RFP.
+            seating/assignments:read: Allows to read attendee seat assignment information.
+            seating/event-seatings:read: Allows to read event seating.
+            seating/seats:read: Allows to read seat information.
+            seating/tables:read: Allows to read table information.
+            survey/questions:read: Allows the reading of survey questions
+            survey/respondents:read: Allows reading the survey respondents
+            survey/responses:read: Allows reading the survey responses
+            survey/standard-survey-email-templates:read: Allows reading the standalone survey email templates
+            survey/standard-survey-email:write: Allows writing operations on standalone survey emails
+            survey/standard-survey-questions:read: Allows the reading of standalone surveys questions
+            survey/standard-survey-respondents:read: Allows reading the standalone survey respondents
+            survey/standard-survey-respondents:write: Allows write operations on standalone survey respondents
+            survey/standard-survey-responses:read: Allows reading the standalone survey responses
+            survey/standard-survey-responses:write: Allows write operations on standalone surveys respondent's responses
+            survey/standard-surveys:read: Allows the reading of standalone surveys
+            survey/survey-questions:read: Allows the reading of event survey questions
+            survey/survey-respondents:read: Allows reading the event survey respondents
+            survey/survey-respondents:write: Allows write operations on the event survey respondents
+            survey/survey-responses:read: Allows reading the event survey responses
+            survey/survey-responses:write: Allows write operations on the event surveys respondent's responses
+            survey/surveys:read: Allows the reading of event surveys
+            venue/meeting-room-images:delete: Allows disassociating images from meeting rooms.
+            venue/meeting-room-images:read: Allows retrieving meeting room images.
+            venue/meeting-room-images:write: Allows associating images with meeting rooms.
+            venue/meeting-room-overviews:read: Allows read access for overview of meeting room.
+            venue/meeting-rooms:write: Allows the creation and modification of meeting rooms.
+            venue/venue-details-overview:read: Allows read access for overview of venue details.
+            venue/venue-details:write: Allows the creation and modification of venue details.
+            venue/venue-facility:write: Allows the modification of venue facility information.

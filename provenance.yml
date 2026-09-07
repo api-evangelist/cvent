@@ -6,60 +6,33 @@ artifacts:
   agentic-access/cvent-agentic-access.yml:
     method: generated
     evidence: declared in the artifact
+  asyncapi/cvent-webhooks-catalog.yml:
+    method: searched
+    evidence: declared in the artifact
   authentication/cvent-authentication.yml:
     method: derived
     evidence: declared in the artifact
-  capabilities/cvent-capability-edges.yml:
-    method: unknown
-    evidence: no authorship recorded
-  collections/cvent-attendees-api.opencollection.json:
+  changelog/cvent-changelog.yml:
+    method: searched
+    evidence: declared in the artifact
+  components/cvent-components.yml:
+    method: searched
+    evidence: declared in the artifact
+  conformance/cvent-conformance.yml:
+    method: searched
+    evidence: declared in the artifact
+  conventions/cvent-conventions.yml:
+    method: searched
+    evidence: declared in the artifact
+  data-model/cvent-data-model.yml:
     method: derived
-    evidence: openapi/cvent-attendees-api
-  collections/cvent-attendees-api.postman_collection.json:
+    evidence: declared in the artifact
+  errors/cvent-error-codes.yml:
+    method: searched
+    evidence: declared in the artifact
+  errors/cvent-problem-types.yml:
     method: derived
-    evidence: openapi/cvent-attendees-api
-  collections/cvent-contacts-api.opencollection.json:
-    method: derived
-    evidence: openapi/cvent-contacts-api
-  collections/cvent-contacts-api.postman_collection.json:
-    method: derived
-    evidence: openapi/cvent-contacts-api
-  collections/cvent-events-api.opencollection.json:
-    method: derived
-    evidence: openapi/cvent-events-api
-  collections/cvent-events-api.postman_collection.json:
-    method: derived
-    evidence: openapi/cvent-events-api
-  collections/cvent-exhibitors-api.opencollection.json:
-    method: derived
-    evidence: openapi/cvent-exhibitors-api
-  collections/cvent-exhibitors-api.postman_collection.json:
-    method: derived
-    evidence: openapi/cvent-exhibitors-api
-  collections/cvent-oauth-api.opencollection.json:
-    method: derived
-    evidence: openapi/cvent-oauth-api
-  collections/cvent-oauth-api.postman_collection.json:
-    method: derived
-    evidence: openapi/cvent-oauth-api
-  collections/cvent-sessions-api.opencollection.json:
-    method: derived
-    evidence: openapi/cvent-sessions-api
-  collections/cvent-sessions-api.postman_collection.json:
-    method: derived
-    evidence: openapi/cvent-sessions-api
-  collections/cvent-webhooks-api.opencollection.json:
-    method: derived
-    evidence: openapi/cvent-webhooks-api
-  collections/cvent-webhooks-api.postman_collection.json:
-    method: derived
-    evidence: openapi/cvent-webhooks-api
-  collections/cvent.opencollection.json:
-    method: derived
-    evidence: openapi/cvent
-  collections/cvent.postman_collection.json:
-    method: derived
-    evidence: openapi/cvent
+    evidence: declared in the artifact
   finops/cvent-finops.yml:
     method: generated
     evidence: declared in the artifact
@@ -105,73 +78,7 @@ artifacts:
   integrations/cvent-zoom.yaml:
     method: unknown
     evidence: no authorship recorded
-  kin/checks-2026-08-28T221322.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-07-23T094130.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-07-23T182523.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-07-26T223651.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-07-27T083119.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-07-27T190208.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-07-28T115055.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-07-28T170848.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-07-28T172558.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-07-28T192327.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-07-28T200725.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-07-31T133250.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-07-31T151044.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-07-31T162206.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-07-31T202106.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-01T163141.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-01T163302.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-01T171935.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-03T113057.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-03T161012.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-04T083143.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-05T153418.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-06T210741.yml:
+  kin/checks-2026-09-06T224210.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
   kin/score-2026-08-07T135032.yml:
@@ -252,32 +159,284 @@ artifacts:
   kin/score-2026-08-28T221322.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
-  openapi/cvent-attendees-api-openapi.yml:
-    method: unknown
-    evidence: no authorship recorded
-  openapi/cvent-contacts-api-openapi.yml:
-    method: unknown
-    evidence: no authorship recorded
-  openapi/cvent-events-api-openapi.yml:
-    method: unknown
-    evidence: no authorship recorded
-  openapi/cvent-exhibitors-api-openapi.yml:
-    method: unknown
-    evidence: no authorship recorded
-  openapi/cvent-oauth-api-openapi.yml:
-    method: unknown
-    evidence: no authorship recorded
-  openapi/cvent-sessions-api-openapi.yml:
-    method: unknown
-    evidence: no authorship recorded
-  openapi/cvent-webhooks-api-openapi.yml:
-    method: unknown
-    evidence: no authorship recorded
-  plans/cvent-plans-pricing.yml:
+  kin/score-2026-08-29T213958.yml:
     method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-08-29T230545.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-08-30T203505.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-08-30T220315.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-08-31T223420.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-01T063623.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-01T210448.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-01T222808.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-02T211804.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-02T224043.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-03T161828.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-03T174231.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-04T062714.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-04T212454.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-04T224856.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-05T055819.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-05T072335.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-05T144739.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-05T195450.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-05T211839.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-06T011047.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-06T211804.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-06T224210.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  lifecycle/cvent-lifecycle.yml:
+    method: searched
+    evidence: declared in the artifact
+  llms/cvent-llms.txt:
+    method: unknown
+    evidence: no authorship recorded
+  mcp/cvent-mcp.yml:
+    method: searched
+    evidence: declared in the artifact
+  openapi/_original/cvent-openapi.json:
+    method: harvested
+    evidence: fetched from the provider as-is; byte-identical to the source
+  openapi/_original/cvent-public-spec-openapi.yaml:
+    method: harvested
+    evidence: fetched from the provider as-is; byte-identical to the source
+  openapi/cvent-appointments-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-attendee-activities-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-attendee-insights-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-attendee-messages-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-attendees-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-audience-segments-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-badge-print-job-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-badge-printer-pools-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-budget-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-bulk-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-campaigns-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-card-tokens-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-compliance-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-contacts-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-custom-fields-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-discounts-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-emails-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-event-credits-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-event-features-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-event-role-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-event-travel-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-events-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-events-plus-hub-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-exhibitor-content-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-exhibitor-team-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-exhibitors-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-file-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-housing-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-housing-hotels-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-leads-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-meeting-request-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-oauth-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-orders-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-process-form-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-proposal-draft-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-rfp-additional-details-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-rfp-management-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-rfp-requirements-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-rfp-suppliers-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-seating-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-sessions-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-signatures-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-speakers-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-surveys-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-transactions-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-travel-accounts-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-travel-rfps-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-travel-suppliers-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-usage-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-user-scim-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-users-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-venue-meeting-rooms-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-venue-profiles-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-video-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-webcasts-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/cvent-webhooks-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  overlays/cvent-description-overlay.yaml:
+    method: unknown
+    evidence: no authorship recorded
+  overlays/cvent-operation-level-pagination-overlay.yaml:
+    method: unknown
+    evidence: no authorship recorded
+  overlays/cvent-public-overlay.yaml:
+    method: unknown
+    evidence: no authorship recorded
+  overlays/cvent-retries-overlay.yaml:
+    method: unknown
+    evidence: no authorship recorded
+  overlays/cvent-segments-error-response-overlay.yaml:
+    method: unknown
+    evidence: no authorship recorded
+  packages/cvent-packages.yml:
+    method: searched
+    evidence: declared in the artifact
+  plans/cvent-plans-pricing.yml:
+    method: searched
     evidence: declared in the artifact
   rate-limits/cvent-rate-limits.yml:
-    method: generated
+    method: searched
+    evidence: declared in the artifact
+  sandbox/cvent-sandbox.yml:
+    method: searched
     evidence: declared in the artifact
   scopes/cvent-scopes.yml:
     method: derived
@@ -288,3 +447,33 @@ artifacts:
   security/cvent-trust-center.yml:
     method: searched
     evidence: declared in the artifact
+  security/cvent-vulnerability-disclosure.yml:
+    method: searched
+    evidence: declared in the artifact
+  skills/_index.yml:
+    method: generated
+    evidence: declared in the artifact
+  skills/cvent-authenticate-and-check-quota.md:
+    method: generated
+    evidence: declared in the artifact
+  skills/cvent-build-event-agenda.md:
+    method: generated
+    evidence: declared in the artifact
+  skills/cvent-bulk-load-data.md:
+    method: generated
+    evidence: declared in the artifact
+  skills/cvent-manage-event-registration.md:
+    method: generated
+    evidence: declared in the artifact
+  skills/cvent-provision-users-scim.md:
+    method: generated
+    evidence: declared in the artifact
+  skills/cvent-sync-contacts.md:
+    method: generated
+    evidence: declared in the artifact
+  well-known/cvent-well-known.yml:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/cvent-soap-api-v200611.wsdl:
+    method: unknown
+    evidence: no authorship recorded

@@ -1,0 +1,29 @@
+generated: '2026-09-07'
+method: searched
+source: searched developers.cvent.com (all 564 documented routes), github.com/cvent, npm, and the public MCP directories
+status: candidate
+deployment:
+  mode: none
+  auth: unknown
+  verified: searched
+  note: Cvent publishes no first-party MCP server — no endpoint, no package, no documentation route mentioning MCP.
+    The Cvent MCP servers that exist are third-party wrappers over the REST API (CData JDBC-backed read-only server,
+    Zapier MCP, and community projects); none is operated or endorsed by Cvent, so none is recorded as a Cvent agent
+    surface.
+third_party_servers:
+- name: cvent-mcp-server-by-cdata
+  vendor: CData Software
+  url: https://github.com/CDataSoftware/cvent-mcp-server-by-cdata
+  mode: local-stdio
+  official: false
+  note: Read-only; wraps the CData Cvent JDBC driver.
+- name: Zapier MCP — Cvent
+  vendor: Zapier
+  url: https://zapier.com/mcp/cvent
+  mode: remote
+  official: false
+  note: Zapier-hosted action bridge, not a Cvent endpoint.
+candidate_tools_source: openapi/_original/cvent-openapi.json (469 operations, 56 tags)
+candidate_note: A derived candidate tool set would be a 1:1 projection of the 469 published REST operations; it
+  is not written as a tool list here because no server exists to serve it and a fabricated tool list would read
+  as an agent surface Cvent does not run.

@@ -1,0 +1,151 @@
+generated: '2026-09-07'
+method: searched
+source: https://developers.cvent.com/docs/rest-api/changelog
+url: https://developers.cvent.com/docs/rest-api/changelog
+scheme: dated release notes per API release, grouped by year (2022–2026); no semantic version numbers — the API
+  version string stays ea
+current_version: ea
+cadence: biweekly (a release pair roughly every two weeks)
+entry_count: 71
+latest: REST API Updates (August 19–20, 2026)
+breaking_changes_recorded: false
+note: Every entry is additive or corrective — new operations, new tags, new fields, filter documentation reformatting.
+  The changelog records field-level deprecations (e.g. the attendee unsubscribed field) but no removal of an operation
+  or a version retirement in the published window.
+entries:
+- title: REST API Updates (August 19–20, 2026)
+  date: '2026-08-19'
+  url: https://developers.cvent.com/docs/rest-api/changelog#rest-api-updates-august-1920-2026
+  change_types:
+  - Added
+  - Updated
+- title: REST API Updates (August 5–6, 2026)
+  date: '2026-08-05'
+  url: https://developers.cvent.com/docs/rest-api/changelog#rest-api-updates-august-56-2026
+  change_types:
+  - Updated
+- title: REST API Updates (July 22-23)
+  date: null
+  url: https://developers.cvent.com/docs/rest-api/changelog#rest-api-updates-july-22-23
+  change_types:
+  - Added
+  - Updated
+- title: REST API Updates (July 7–8, 2026)
+  date: '2026-07-07'
+  url: https://developers.cvent.com/docs/rest-api/changelog#rest-api-updates-july-78-2026
+  change_types:
+  - Updated
+- title: REST API Updates (June 17–18, 2026)
+  date: '2026-06-17'
+  url: https://developers.cvent.com/docs/rest-api/changelog#rest-api-updates-june-1718-2026
+  change_types:
+  - Added
+  - Updated
+- title: REST API Updates (June 3–4, 2026)
+  date: '2026-06-03'
+  url: https://developers.cvent.com/docs/rest-api/changelog#rest-api-updates-june-34-2026
+  change_types:
+  - Added
+  - Updated
+- title: REST API Updates (May 20–21, 2026)
+  date: '2026-05-20'
+  url: https://developers.cvent.com/docs/rest-api/changelog#rest-api-updates-may-2021-2026
+  change_types:
+  - Added
+  - Updated
+- title: REST API Updates (May 6–7, 2026)
+  date: '2026-05-06'
+  url: https://developers.cvent.com/docs/rest-api/changelog#rest-api-updates-may-67-2026
+  change_types:
+  - Updated
+- title: REST API Updates (April 22–23, 2026)
+  date: '2026-04-22'
+  url: https://developers.cvent.com/docs/rest-api/changelog#rest-api-updates-april-2223-2026
+  change_types:
+  - Added
+  - Updated
+- title: REST API Updates (April 8–9, 2026)
+  date: '2026-04-08'
+  url: https://developers.cvent.com/docs/rest-api/changelog#rest-api-updates-april-89-2026
+  change_types:
+  - Updated
+- title: REST API Updates (March 25–26, 2026)
+  date: '2026-03-25'
+  url: https://developers.cvent.com/docs/rest-api/changelog#rest-api-updates-march-2526-2026
+  change_types:
+  - Updated
+- title: REST API Updates (March 12, 2026)
+  date: '2026-03-12'
+  url: https://developers.cvent.com/docs/rest-api/changelog#rest-api-updates-march-12-2026
+  change_types:
+  - Added
+  - Updated
+- title: REST API Updates (February 25–26, 2026)
+  date: '2026-02-25'
+  url: https://developers.cvent.com/docs/rest-api/changelog#rest-api-updates-february-2526-2026
+  change_types:
+  - Updated
+- title: REST API Updates (February 11–12, 2026)
+  date: '2026-02-11'
+  url: https://developers.cvent.com/docs/rest-api/changelog#rest-api-updates-february-1112-2026
+  change_types:
+  - Added
+  - Updated
+- title: REST API Updates (January 14–15, 2026)
+  date: '2026-01-14'
+  url: https://developers.cvent.com/docs/rest-api/changelog#rest-api-updates-january-1415-2026
+  change_types:
+  - Added
+  - Updated
+- title: REST API Updates (December 17–18, 2025)
+  date: '2025-12-17'
+  url: https://developers.cvent.com/docs/rest-api/changelog#rest-api-updates-december-1718-2025
+  change_types:
+  - Added
+- title: REST API Updates (December 03–04, 2025)
+  date: '2025-12-03'
+  url: https://developers.cvent.com/docs/rest-api/changelog#rest-api-updates-december-0304-2025
+  change_types:
+  - Added
+  - Updated
+- title: REST API Updates (November 20, 2025)
+  date: '2025-11-20'
+  url: https://developers.cvent.com/docs/rest-api/changelog#rest-api-updates-november-20-2025
+  change_types:
+  - Added
+- title: REST API Updates (November 5–6, 2025)
+  date: '2025-11-05'
+  url: https://developers.cvent.com/docs/rest-api/changelog#rest-api-updates-november-56-2025
+  change_types:
+  - Updated
+- title: REST API Updates (October 22–23, 2025)
+  date: '2025-10-22'
+  url: https://developers.cvent.com/docs/rest-api/changelog#rest-api-updates-october-2223-2025
+  change_types:
+  - Added
+  - Updated
+- title: REST API Updates (October 1–2, 2025)
+  date: '2025-10-01'
+  url: https://developers.cvent.com/docs/rest-api/changelog#rest-api-updates-october-12-2025
+  change_types:
+  - Added
+- title: REST API Updates (September 17–18, 2025)
+  date: '2025-09-17'
+  url: https://developers.cvent.com/docs/rest-api/changelog#rest-api-updates-september-1718-2025
+  change_types:
+  - Updated
+- title: REST API Updates (September 3–4, 2025)
+  date: '2025-09-03'
+  url: https://developers.cvent.com/docs/rest-api/changelog#rest-api-updates-september-34-2025
+  change_types:
+  - Updated
+- title: REST API Updates (August 20–21, 2025)
+  date: '2025-08-20'
+  url: https://developers.cvent.com/docs/rest-api/changelog#rest-api-updates-august-2021-2025
+  change_types:
+  - Added
+  - Updated
+entries_truncated_at: 24
+legacy:
+  api: SOAP API
+  url: https://developers.cvent.com/docs/legacy-api/soap-api/changelog

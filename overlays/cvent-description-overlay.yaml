@@ -1,0 +1,10 @@
+overlay: 1.0.0
+x-speakeasy-jsonpath: rfc9535
+info:
+  title: Description overlay
+  version: 0.0.0
+actions:
+  - target: $["info"]["description"]
+    update: |
+      Official Cvent SDK providing typed access to Cvent REST APIs for event management, contacts, attendees, and more using OAuth2 authentication.
+      For documentation, see the README and USAGE. To get credentials, visit https://developers.cvent.com/docs/rest-api/overview.

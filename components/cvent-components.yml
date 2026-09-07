@@ -1,0 +1,39 @@
+generated: '2026-09-07'
+method: searched
+source: https://developers.cvent.com/docs/custom-widgets/overview; https://developers.cvent.com/docs/white-label/overview;
+  https://github.com/cvent/custom-widgets-labs
+families:
+- name: Custom Widgets
+  type: embedded UI components
+  description: A JavaScript SDK for building custom interactive widgets that render inside Cvent event registration
+    pages. Widgets ship as a widget element plus a configuration file and an editor definition.
+  docs: https://developers.cvent.com/docs/custom-widgets/overview
+  repository: https://github.com/cvent/custom-widgets-labs
+  surface:
+  - name: Custom widget element
+    docs: https://developers.cvent.com/docs/custom-widgets/required-assets/custom-widget-element
+  - name: Custom widget configuration
+    docs: https://developers.cvent.com/docs/custom-widgets/required-assets/custom-widget-configuration
+  - name: Custom widget editor
+    docs: https://developers.cvent.com/docs/custom-widgets/required-assets/custom-widget-editor
+  - name: 'SDK: navigation'
+    docs: https://developers.cvent.com/docs/custom-widgets/sdk/navigation
+  - name: 'SDK: registration methods'
+    docs: https://developers.cvent.com/docs/custom-widgets/sdk/registration-methods
+  - name: 'SDK: retrieving event objects'
+    docs: https://developers.cvent.com/docs/custom-widgets/sdk/retrieving-event-objects
+  - name: 'SDK: supported expressions'
+    docs: https://developers.cvent.com/docs/custom-widgets/sdk/supported-expressions
+  examples:
+  - featured-session-widget
+  - featured-session-logic
+  - registration-widget
+  publishing: https://developers.cvent.com/docs/custom-widgets/publishing
+- name: White Label RFP
+  type: embeddable hosted surface
+  description: Embeds Cvent RFP functionality into a venue or supplier’s own website with custom branding, theming
+    and analytics.
+  docs: https://developers.cvent.com/docs/white-label/overview
+loader_libraries: []
+note: 'No npm-published component library: the custom widget SDK is delivered inside the Cvent registration runtime
+  and the examples live in the cvent/custom-widgets-labs repository.'

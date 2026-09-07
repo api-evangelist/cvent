@@ -1,24 +1,137 @@
-generated: '2026-07-11'
+generated: '2026-09-07'
 method: derived
-source: openapi/cvent-openapi.yml
+source: openapi/cvent-appointments-api-openapi.yml, openapi/cvent-attendee-activities-api-openapi.yml,
+  openapi/cvent-attendee-insights-api-openapi.yml, openapi/cvent-attendee-messages-api-openapi.yml,
+  openapi/cvent-attendees-api-openapi.yml, openapi/cvent-audience-segments-api-openapi.yml,
+  openapi/cvent-badge-print-job-api-openapi.yml, openapi/cvent-badge-printer-pools-api-openapi.yml,
+  openapi/cvent-budget-api-openapi.yml, openapi/cvent-bulk-api-openapi.yml, openapi/cvent-campaigns-api-openapi.yml,
+  openapi/cvent-card-tokens-api-openapi.yml ...
 summary:
   types:
-  - http
   - oauth2
   oauth2_flows:
+  - authorizationCode
   - clientCredentials
 schemes:
-- name: OAuth2ClientCredentials
+- name: OAuth2.clientCredentials
   type: oauth2
   flows:
   - flow: clientCredentials
     tokenUrl: https://api-platform.cvent.com/ea/oauth2/token
-    scopes: 9
+    scopes: 238
+  description: OAuth2 Client Credentials Flow.
   sources:
-  - openapi/cvent-openapi.yml
-- name: BasicAuth
-  type: http
-  scheme: basic
-  description: Client ID / client secret Basic auth used only for the /ea/oauth2/token call.
+  - openapi/cvent-appointments-api-openapi.yml
+  - openapi/cvent-attendee-activities-api-openapi.yml
+  - openapi/cvent-attendee-insights-api-openapi.yml
+  - openapi/cvent-attendee-messages-api-openapi.yml
+  - openapi/cvent-attendees-api-openapi.yml
+  - openapi/cvent-audience-segments-api-openapi.yml
+  - openapi/cvent-badge-print-job-api-openapi.yml
+  - openapi/cvent-badge-printer-pools-api-openapi.yml
+  - openapi/cvent-budget-api-openapi.yml
+  - openapi/cvent-bulk-api-openapi.yml
+  - openapi/cvent-campaigns-api-openapi.yml
+  - openapi/cvent-card-tokens-api-openapi.yml
+  - openapi/cvent-compliance-api-openapi.yml
+  - openapi/cvent-contacts-api-openapi.yml
+  - openapi/cvent-custom-fields-api-openapi.yml
+  - openapi/cvent-discounts-api-openapi.yml
+  - openapi/cvent-emails-api-openapi.yml
+  - openapi/cvent-event-credits-api-openapi.yml
+  - openapi/cvent-event-features-api-openapi.yml
+  - openapi/cvent-event-role-api-openapi.yml
+  - openapi/cvent-event-travel-api-openapi.yml
+  - openapi/cvent-events-api-openapi.yml
+  - openapi/cvent-events-plus-hub-api-openapi.yml
+  - openapi/cvent-exhibitor-content-api-openapi.yml
+  - openapi/cvent-exhibitor-team-api-openapi.yml
+  - openapi/cvent-exhibitors-api-openapi.yml
+  - openapi/cvent-file-api-openapi.yml
+  - openapi/cvent-housing-api-openapi.yml
+  - openapi/cvent-housing-hotels-api-openapi.yml
+  - openapi/cvent-leads-api-openapi.yml
+  - openapi/cvent-meeting-request-api-openapi.yml
+  - openapi/cvent-oauth-api-openapi.yml
+  - openapi/cvent-orders-api-openapi.yml
+  - openapi/cvent-process-form-api-openapi.yml
+  - openapi/cvent-proposal-draft-api-openapi.yml
+  - openapi/cvent-rfp-additional-details-api-openapi.yml
+  - openapi/cvent-rfp-management-api-openapi.yml
+  - openapi/cvent-rfp-requirements-api-openapi.yml
+  - openapi/cvent-rfp-suppliers-api-openapi.yml
+  - openapi/cvent-seating-api-openapi.yml
+  - openapi/cvent-sessions-api-openapi.yml
+  - openapi/cvent-signatures-api-openapi.yml
+  - openapi/cvent-speakers-api-openapi.yml
+  - openapi/cvent-surveys-api-openapi.yml
+  - openapi/cvent-transactions-api-openapi.yml
+  - openapi/cvent-travel-accounts-api-openapi.yml
+  - openapi/cvent-travel-rfps-api-openapi.yml
+  - openapi/cvent-travel-suppliers-api-openapi.yml
+  - openapi/cvent-usage-api-openapi.yml
+  - openapi/cvent-user-scim-api-openapi.yml
+  - openapi/cvent-users-api-openapi.yml
+  - openapi/cvent-venue-meeting-rooms-api-openapi.yml
+  - openapi/cvent-venue-profiles-api-openapi.yml
+  - openapi/cvent-video-api-openapi.yml
+  - openapi/cvent-webcasts-api-openapi.yml
+  - openapi/cvent-webhooks-api-openapi.yml
+- name: OAuth2.authorizationCode
+  type: oauth2
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: https://api-platform.cvent.com/ea/oauth2/authorize
+    tokenUrl: https://api-platform.cvent.com/ea/oauth2/token
+    scopes: 208
+  description: OAuth2 Authorization Code Flow.
   sources:
-  - openapi/cvent-openapi.yml
+  - openapi/cvent-appointments-api-openapi.yml
+  - openapi/cvent-attendee-activities-api-openapi.yml
+  - openapi/cvent-attendee-insights-api-openapi.yml
+  - openapi/cvent-attendee-messages-api-openapi.yml
+  - openapi/cvent-attendees-api-openapi.yml
+  - openapi/cvent-audience-segments-api-openapi.yml
+  - openapi/cvent-badge-print-job-api-openapi.yml
+  - openapi/cvent-badge-printer-pools-api-openapi.yml
+  - openapi/cvent-budget-api-openapi.yml
+  - openapi/cvent-campaigns-api-openapi.yml
+  - openapi/cvent-compliance-api-openapi.yml
+  - openapi/cvent-contacts-api-openapi.yml
+  - openapi/cvent-custom-fields-api-openapi.yml
+  - openapi/cvent-discounts-api-openapi.yml
+  - openapi/cvent-emails-api-openapi.yml
+  - openapi/cvent-event-credits-api-openapi.yml
+  - openapi/cvent-event-features-api-openapi.yml
+  - openapi/cvent-event-role-api-openapi.yml
+  - openapi/cvent-event-travel-api-openapi.yml
+  - openapi/cvent-events-api-openapi.yml
+  - openapi/cvent-events-plus-hub-api-openapi.yml
+  - openapi/cvent-exhibitor-content-api-openapi.yml
+  - openapi/cvent-exhibitor-team-api-openapi.yml
+  - openapi/cvent-exhibitors-api-openapi.yml
+  - openapi/cvent-file-api-openapi.yml
+  - openapi/cvent-leads-api-openapi.yml
+  - openapi/cvent-meeting-request-api-openapi.yml
+  - openapi/cvent-oauth-api-openapi.yml
+  - openapi/cvent-orders-api-openapi.yml
+  - openapi/cvent-process-form-api-openapi.yml
+  - openapi/cvent-rfp-additional-details-api-openapi.yml
+  - openapi/cvent-rfp-management-api-openapi.yml
+  - openapi/cvent-rfp-requirements-api-openapi.yml
+  - openapi/cvent-rfp-suppliers-api-openapi.yml
+  - openapi/cvent-seating-api-openapi.yml
+  - openapi/cvent-sessions-api-openapi.yml
+  - openapi/cvent-signatures-api-openapi.yml
+  - openapi/cvent-speakers-api-openapi.yml
+  - openapi/cvent-surveys-api-openapi.yml
+  - openapi/cvent-transactions-api-openapi.yml
+  - openapi/cvent-travel-rfps-api-openapi.yml
+  - openapi/cvent-usage-api-openapi.yml
+  - openapi/cvent-user-scim-api-openapi.yml
+  - openapi/cvent-users-api-openapi.yml
+  - openapi/cvent-venue-meeting-rooms-api-openapi.yml
+  - openapi/cvent-venue-profiles-api-openapi.yml
+  - openapi/cvent-video-api-openapi.yml
+  - openapi/cvent-webcasts-api-openapi.yml
+  - openapi/cvent-webhooks-api-openapi.yml

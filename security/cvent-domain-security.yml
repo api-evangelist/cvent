@@ -1,4 +1,4 @@
-generated: '2026-07-11'
+generated: '2026-09-07'
 method: probed
 source: live DNS/TLS/HTTP probes of apis.yml + OpenAPI hosts
 hosts:
@@ -17,18 +17,18 @@ hosts:
 - host: api-platform.cvent.com
   https: true
   tls_version: TLSv1.3
-  cert_expires: Sep 16 23:59:59 2026 GMT
+  cert_expires: Feb  1 23:59:59 2027 GMT
   hsts: null
 domains:
 - domain: cvent.com
   dnssec: false
   caa:
-  - 0 issue "amazon.com"
-  - 0 issue "comodo.com"
   - 0 issue "digicert.com"
   - 0 issue "globalsign.com"
   - 0 issue "letsencrypt.org"
   - 0 issuewild "amazon.com"
+  - 0 issuewild "digicert.com"
+  - 0 issue "amazon.com"
   spf: true
   dmarc: true
   dmarc_policy: none

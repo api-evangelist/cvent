@@ -1,0 +1,1833 @@
+openapi: 3.0.2
+info:
+  title: Cvent REST APIs — RFP Management
+  version: ea
+  description: RFP (Request for Proposal) management APIs for core RFP operations including CRUD operations for base RFPs.
+  contact:
+    name: Cvent Development Platform
+    url: https://developers.cvent.com/
+externalDocs:
+  description: Cvent REST API documentation
+  url: https://developers.cvent.com/documentation
+servers:
+- url: https://api-platform.cvent.com/ea
+- url: https://api-platform-eur.cvent.com/ea
+tags:
+- name: RFP Management
+  description: RFP (Request for Proposal) management APIs for core RFP operations including CRUD operations for base RFPs.
+paths:
+  /rfps/lead-sources/{leadSourceId}:
+    get:
+      tags:
+      - RFP Management
+      summary: Get RFP Lead Source
+      description: Returns details about a given lead source of an RFP. The lead source indicates the primary origin of the
+        RFP or the supplier being added to the RFP, such as a particular software or website.
+      operationId: getRfpLeadSource
+      security:
+      - OAuth2.clientCredentials:
+        - rfp/rfp-lead-sources:read
+      - OAuth2.authorizationCode:
+        - rfp/rfp-lead-sources:read
+      parameters:
+      - $ref: '#/components/parameters/leadSourceId'
+      responses:
+        '200':
+          description: Successfully retrieved the lead source of an RFP.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RfpLeadSource'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+  /rfps/lead-sources/{leadSourceId}/sections/{leadSourceSectionId}:
+    get:
+      tags:
+      - RFP Management
+      summary: Get RFP Lead Source Section
+      description: Returns details about the lead source section of an RFP. The lead source section identifies the specific
+        segment or channel within the broader lead source, such as a particular website domain, form, or integration point,
+        where the RFP originated. This enables more granular tracking and attribution of RFPs by pinpointing the exact section
+        within the overall lead source. See the [Lead Source](#tag/RFP-Management/operation/getRfpLeadSource) endpoint for
+        more information about lead sources.
+      operationId: getRfpLeadSourceSection
+      security:
+      - OAuth2.clientCredentials:
+        - rfp/rfp-lead-sources:read
+      - OAuth2.authorizationCode:
+        - rfp/rfp-lead-sources:read
+      parameters:
+      - $ref: '#/components/parameters/leadSourceId'
+      - $ref: '#/components/parameters/leadSourceSectionId'
+      responses:
+        '200':
+          description: Successfully retrieved the lead source section of an RFP.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RfpLeadSourceSection'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+  /rfps/{rfpId}:
+    get:
+      tags:
+      - RFP Management
+      summary: Get RFP
+      description: Returns basic details of the given RFP.
+      operationId: getRFP
+      security:
+      - OAuth2.clientCredentials:
+        - rfp/rfps:read
+      - OAuth2.authorizationCode:
+        - rfp/rfps:read
+      parameters:
+      - $ref: '#/components/parameters/rfpId'
+      - $ref: '#/components/parameters/leadSourceExpand'
+      responses:
+        '200':
+          description: Successfully returns the basic details of the RFP.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rfp'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+components:
+  schemas:
+    CancellationDetails:
+      title: CancellationDetails
+      description: Information about cancellation of RFP.
+      type: object
+      properties:
+        dateTime:
+          type: string
+          format: date-time
+          description: The ISO 8601 date time (in UTC) when RFP was cancelled.
+          example: '2021-01-13T14:06:20.080Z'
+        reason:
+          $ref: '#/components/schemas/CancelledReason-1'
+        comments:
+          type: string
+          description: Additional comments while cancelling the RFP.
+          minLength: 0
+          maxLength: 300
+          example: I am cancelling my event, postponing to Q4.
+    DatePattern-1:
+      title: DatePattern
+      description: Date pattern for days on which event can occur. Used when dateMode is DATE_PATTERN.
+      required:
+      - durationDays
+      - startDays
+      - startDate
+      - endDate
+      type: object
+      properties:
+        note:
+          type: string
+          minLength: 0
+          maxLength: 2500
+          description: Note along with date pattern requirements.
+          example: Flexible dates on weekends.
+        endDate:
+          type: string
+          format: date
+          description: The ISO 8601 end date of the event.
+          example: '2016-10-15'
+        startDate:
+          type: string
+          format: date
+          description: The ISO 8601 start date of the event.
+          example: '2016-10-13'
+        durationDays:
+          type: integer
+          description: Number of days the event will go on.
+          example: 3
+        startDays:
+          type: array
+          description: Days of the week when event can start.
+          items:
+            $ref: '#/components/schemas/DayOfWeek'
+        generatedDates:
+          type: array
+          maxItems: 200
+          description: List of dates generated based on the date pattern.
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/Dates-1'
+    RfpType-1:
+      title: RfpType
+      description: RFP types based on event requirements.
+      type: string
+      enum:
+      - MEETING_SPACE_AND_GUEST_ROOMS
+      - MEETING_SPACE_ONLY
+      - GUEST_ROOMS_ONLY
+      - RESTAURANT_RFP
+      - SERVICE_PROVIDER
+    Event-1:
+      title: Event
+      description: Event details.
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the event linked with the RFP, if any.
+          example: 50dc08af-24a9-4d01-84be-3d43133dc945
+    RfpEvent:
+      title: RfpEvent
+      description: RFP event details.
+      type: object
+      properties:
+        event:
+          $ref: '#/components/schemas/Event-1'
+        name:
+          type: string
+          description: Name of the event linked with the RFP.
+          minLength: 1
+          maxLength: 300
+          example: friday event
+        contractSignatureLocation:
+          type: string
+          description: Location where the contract will be signed.
+          minLength: 0
+          maxLength: 2500
+          example: Atlanta
+        destinationsUnderConsideration:
+          type: string
+          description: Destinations under consideration for the event.
+          minLength: 0
+          maxLength: 2500
+          example: New York
+        externalMeetingRequest:
+          type: boolean
+          description: True indicates that the event is associated with an external meeting request.
+          example: true
+        type:
+          $ref: '#/components/schemas/EventType-1'
+        totalMeetingSpaceRequired:
+          $ref: '#/components/schemas/SpaceArea'
+        audioVisualNeeds:
+          type: string
+          description: Audio visual requirements.
+          maxLength: 2500
+          example: Need a projector in each meeting room.
+        peakMeetingRooms:
+          type: integer
+          description: Maximum number of meeting rooms required during the event.
+          minimum: 0
+          maximum: 999999999
+          example: 14
+        flexibleDates:
+          type: boolean
+          description: True indicates the event dates are flexible.
+        repeat:
+          type: boolean
+          readOnly: true
+          example: true
+          description: True indicates similar event(s) have been held in the past.
+        attendeesPerDay:
+          type: integer
+          description: Number of in-person attendees per day.
+          minimum: 0
+          maximum: 99999
+          example: 500
+        referenceNumber:
+          type: string
+          description: Reference number for the event.
+          maxLength: 30
+          example: XVYMP8970S
+        largestMeetingSpaceRequired:
+          $ref: '#/components/schemas/SpaceArea'
+        meetingRequestId:
+          type: string
+          format: uuid
+          description: Unique identifier for meeting request associated with the event.
+          example: 50dc08af-24a9-4d01-84be-3d43133dc945
+        formatType:
+          $ref: '#/components/schemas/EventFormatType'
+        virtualAttendeesPerDay:
+          type: integer
+          description: Number of virtual attendees per day.
+          minimum: 0
+          maximum: 99999
+          example: 2000
+        budget:
+          type: number
+          minimum: 0
+          maximum: 999999999
+          description: Total budget amount.
+          example: 10000
+        roomRateBudget:
+          type: number
+          minimum: 0
+          maximum: 999999999
+          description: Budget for rooms rates.
+          example: 200
+        foodBeverageBudget:
+          type: number
+          minimum: 0
+          maximum: 999999999
+          description: Budget for food and beverage.
+          example: 1000
+    Dates-1:
+      title: Dates
+      description: Dates on which event will occur.
+      type: object
+      properties:
+        preferred:
+          type: boolean
+          description: True indicates these are preferred dates.
+          example: true
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for dates.
+          example: 50dc08af-24a9-4d01-84be-3d43133dc945
+        endDate:
+          type: string
+          format: date
+          description: The ISO 8601 end date of the event.
+          example: '2016-10-13'
+        startDate:
+          type: string
+          format: date
+          description: The ISO 8601 start date of the event.
+          example: '2016-10-15'
+        note:
+          type: string
+          minLength: 0
+          maxLength: 2500
+          description: A note detailing the requirements for the dates.
+          example: Flexible dates
+    CancelledReason-1:
+      title: CancelledReason
+      description: Reason for cancelling the RFP.
+      type: string
+      enum:
+      - BOOKED_ANOTHER_VENUE_OR_DESTINATION
+      - CLIENT_BOOKED_DIRECTLY
+      - EPIDEMIC_OR_PANDEMIC
+      - EVENT_CANCELLED
+      - EVENT_POSTPONED
+      - MEDICAL_EMERGENCY
+      - NATURAL_DISASTER
+      - OTHER
+      - POLITICAL_OR_CIVIL_UNREST
+      - REQUIREMENTS_CHANGED
+    RfpLeadSource:
+      type: object
+      title: RfpLeadSource
+      description: Lead source of the RFP.
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+          description: The unique identifier of the lead source.
+          example: f56a51a4-84b0-46c9-a612-716dc95a1c96
+        name:
+          type: string
+          description: Name of the lead source.
+          maxLength: 100
+          example: Cvent Supplier Network
+    VenueIntegrationType:
+      title: VenueIntegrationType
+      description: The type of venue integration a planner prefers when sourcing venues through an RFP. PASSKEY represents
+        Passkey room-block management. CED represents Cvent Event Diagramming (3D diagramming / Interactive Floor Plans).
+      type: string
+      enum:
+      - CED
+      - PASSKEY
+      example: PASSKEY
+    DayOfWeek:
+      title: DayOfWeek
+      description: DayOfWeek
+      type: string
+      enum:
+      - SUNDAY
+      - MONDAY
+      - TUESDAY
+      - WEDNESDAY
+      - THURSDAY
+      - FRIDAY
+      - SATURDAY
+    PackagePricingPreference:
+      title: PackagePricingPreference
+      description: Represents different preferences by planner for pricing packages response that supplier has to provide.
+        NO_PREFERENCE means no pricing package information is need, OPTIONAL means it's not mandatory to provide pricing preference,
+        and REQUIRED means package information is mandatory to be provided by supplier.
+      type: string
+      enum:
+      - NO_PREFERENCE
+      - OPTIONAL
+      - REQUIRED
+      example: OPTIONAL
+      default: NO_PREFERENCE
+    EventFormatType:
+      title: EventFormatType
+      description: Event format type.
+      type: string
+      enum:
+      - IN_PERSON
+      - HYBRID
+      - VIRTUAL
+    Contact-1:
+      title: Contact
+      description: Contact details of planner.
+      type: object
+      required:
+      - firstName
+      - lastName
+      - email
+      - phone
+      - organizationName
+      properties:
+        firstName:
+          type: string
+          maxLength: 50
+          description: The first name of the planner.
+          example: James
+        lastName:
+          type: string
+          maxLength: 50
+          description: The last name of the planner.
+          example: West
+        email:
+          type: string
+          format: email
+          maxLength: 80
+          description: Email address of the planner.
+          example: jwest@example.com
+        address:
+          $ref: '#/components/schemas/Address-1'
+        commissionRate:
+          type: number
+          description: Rate of commission chargeable by the planner. Precision up to 2 decimal places is accepted.
+          minimum: 0
+          maximum: 100
+          example: 10.75
+        commissionable:
+          type: boolean
+          description: True indicates commission is to be charged from supplier.
+        phone:
+          type: string
+          description: Phone number of the planner.
+          maxLength: 30
+          example: 555-555-5555
+        organizationName:
+          type: string
+          maxLength: 100
+          description: Name of the organization.
+          example: Five Star Planners Inc.
+        thirdPartyPlanner:
+          type: boolean
+          description: True indicates planner is a third party planner.
+        preferredContactMethods:
+          type: array
+          description: List of preferred contact methods for the planner.
+          minItems: 1
+          maxItems: 5
+          items:
+            $ref: '#/components/schemas/ContactMethods'
+          example:
+          - CVENT
+    ErrorResponseBase1:
+      title: ErrorResponseBase
+      type: object
+      description: Represents an error response with no additional details.
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          description: The HTTP status code representing the error.
+          example: 400
+        message:
+          type: string
+          description: A brief description of the error.
+          example: Bad Request
+        target:
+          type: string
+          description: The target resource of the error.
+          example: example target
+    WeddingPartner:
+      title: WeddingPartner
+      description: Represents wedding partner.
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/BrideGroomType'
+        name:
+          type: string
+          description: Name of the partner of the wedding couple.
+          minLength: 0
+          maxLength: 300
+          example: John Doe
+    DateRequirements-1:
+      title: DateRequirements
+      description: Date requirements for the event.
+      required:
+      - mode
+      type: object
+      properties:
+        mode:
+          $ref: '#/components/schemas/RfpDateMode'
+        alternateDates:
+          type: array
+          minItems: 1
+          maxItems: 12
+          description: List of dates for the event. Can be used to provide set of alternate event dates when mode is ALTERNATE_DATE.
+          items:
+            $ref: '#/components/schemas/Dates-1'
+        pattern:
+          $ref: '#/components/schemas/DatePattern-1'
+        availabilityRangeRequired:
+          type: boolean
+          description: True indicates that the event requires a range of availability dates.
+          default: false
+    EventOrganization-1:
+      title: EventOrganization
+      description: Details of organization which is hosting the event.
+      type: object
+      required:
+      - name
+      - type
+      properties:
+        organization:
+          $ref: '#/components/schemas/Organization'
+        confidentialProfile:
+          type: boolean
+          description: True indicates organization profile has to be kept confidential.
+        industry:
+          $ref: '#/components/schemas/Industry-1'
+        name:
+          type: string
+          description: Name of the organization hosting the event.
+          maxLength: 100
+          example: Cvent Inc.
+        type:
+          $ref: '#/components/schemas/OrganizationType-1'
+        address:
+          $ref: '#/components/schemas/Address-1'
+        eventsPerYear:
+          type: integer
+          description: Number of events per year.
+          minimum: 0
+          maximum: 999999
+          example: 450
+    EventType-1:
+      title: EventType
+      description: Event type.
+      type: string
+      enum:
+      - ANNIVERSARY_BIRTHDAY
+      - BACHELOR_BACHELORETTE_PARTY
+      - BAR_BAT_MITZVAH
+      - BUSINESS_MEETING
+      - CONFERENCE_CONVENTION
+      - CORPORATE_EVENT
+      - CUSTOMER_EVENT
+      - EDUCATIONAL_SEMINAR
+      - FRATERNITY_SORORITY_GROUP
+      - FUNDRAISER_CHARITY_EVENT
+      - RECEPTION_HOLIDAY_PARTY
+      - INCENTIVE_TRAVEL
+      - REUNION
+      - SHAREHOLDERS_MEETING
+      - SPECIAL_EVENT
+      - SPORTS_EVENT
+      - TEAM_BUILDING_EVENT
+      - TOUR_GROUP_VACATION
+      - TRADE_SHOW_CONSUMER_SHOW
+      - TRAINING
+      - WEDDING
+      - OTHER
+    RfpRequest:
+      title: RfpRequest
+      description: Request body for creating or updating an RFP.
+      type: object
+      required:
+      - needsGuestRooms
+      - needsMeetingSpace
+      allOf:
+      - $ref: '#/components/schemas/Audit'
+      properties:
+        needsMeetingSpace:
+          type: boolean
+          description: True indicates meeting space is needed for event.
+        needsGuestRooms:
+          type: boolean
+          description: True indicates guest rooms are needed for event.
+        description:
+          type: string
+          description: Description of RFP.
+          minLength: 0
+          maxLength: 2500
+          example: Planning to host company's annual event in an outdoor location.
+        dateRequirements:
+          $ref: '#/components/schemas/DateRequirements-1'
+        rfpEvent:
+          $ref: '#/components/schemas/RfpEvent'
+        agendaStartDate:
+          type: string
+          format: date
+          description: The ISO 8601 date representing the start date of agenda.
+          example: '2025-10-13'
+        contact:
+          $ref: '#/components/schemas/Contact-1'
+        rfpEventOrganization:
+          $ref: '#/components/schemas/EventOrganization-1'
+        decisionFactors:
+          type: string
+          description: Decision factors based on which RFP will be awarded. These can be price, location, or quality of service.
+          minLength: 0
+          maxLength: 2500
+          example: Price, location, and quality of service.
+        citywideEvent:
+          type: boolean
+          description: True indicates event is city wide and might require multiple venues.
+        responseDueDate:
+          type: string
+          format: date
+          description: The ISO 8601 date by when the response for RFP is expected from suppliers.
+          example: '2016-10-13'
+        decisionDate:
+          type: string
+          format: date
+          description: The ISO 8601 date by which RFP will be awarded.
+          example: '2016-10-13'
+        billingDetails:
+          $ref: '#/components/schemas/BillingDetails-1'
+        internalNote:
+          type: string
+          description: Internal note for planners. This note is not shared with suppliers.
+          minLength: 0
+          maxLength: 300
+          example: Don't award this RFP to the same venue as last year.
+        currencyCode:
+          type: string
+          description: The ISO 4217 standard format currency code.
+          format: ^[A-Z]{3}$
+          example: USD
+        measurementUnit:
+          $ref: '#/components/schemas/MeasurementUnit'
+        requiredCostItems:
+          type: array
+          description: This contains cost items which are marked as required for suppliers in the RFP.
+          maxItems: 100
+          items:
+            $ref: '#/components/schemas/OfferingCostType-1'
+          example:
+          - BREAK_AM
+          - BREAK_PM
+        hiddenCostItems:
+          type: array
+          description: This contains cost items which are marked as not needed for suppliers in the RFP.
+          maxItems: 100
+          items:
+            $ref: '#/components/schemas/OfferingCostType-1'
+          example:
+          - BREAK_DRINKS_ONLY
+          - BREAK_SNACKS_AND_DRINKS
+        forwardable:
+          type: boolean
+          description: True indicates suppliers added on the RFP should be allowed to forward the RFP.
+        cvbForwardLimit:
+          type: integer
+          minimum: 0
+          maximum: 99999
+          description: Limits the number of venues that a CVB (Convention and Visitors Bureau) can forward an RFP to.
+          example: 5
+        allowEmailNotifications:
+          type: boolean
+          description: True indicates email notifications are allowed for this RFP.
+        notificationRecipients:
+          type: array
+          description: This contains recipients who would get notified every time a new response is received back from the
+            suppliers
+          maxItems: 3
+          items:
+            $ref: '#/components/schemas/RecipientInfo'
+          example:
+          - order: 1
+            type: EMAIL
+            value: johnDoe@example.com
+          - order: 2
+            type: ACCOUNT_USER
+            value: 50dc08af-24a9-4d01-84be-3d43133dc945
+          - order: 3
+            type: ACCOUNT_USER_GROUP
+            value: 70de07af-24a9-4d01-84be-3d43133dc932
+        shareAwardDetails:
+          type: boolean
+          description: True indicates award details can be shared with other suppliers added in RFP.
+        leadSource:
+          $ref: '#/components/schemas/LeadSource'
+        sourceId:
+          type: string
+          minLength: 0
+          maxLength: 100
+          description: Unique identifier for RFPs originating from outside Cvent network provided by source system where RFP
+            was created.
+          example: '123456'
+        showcaseEnabled:
+          type: boolean
+          description: True indicates showcase is enabled for this RFP.
+        autoAddToShowcaseEnabled:
+          type: boolean
+          description: True indicates that the RFP will be automatically added to showcase in case there is a low response
+            rate.
+        destinationExpertsRequiredOnProposal:
+          type: boolean
+          description: True indicates suppliers are required to copy the destination experts (i.e. CVB/DMC) on the proposal
+            that is sent back through Cvent.
+        weddingDetails:
+          $ref: '#/components/schemas/WeddingDetails-1'
+        needsCatering:
+          type: boolean
+          description: True indicates catering is required.
+          default: false
+        packagePricingPreference:
+          $ref: '#/components/schemas/PackagePricingPreference'
+        feeTransparencyEnabled:
+          type: boolean
+          description: True indicates RFP was created with fee transparency enabled.
+          default: false
+        preferredVenueIntegrations:
+          type: array
+          deprecated: true
+          description: 'DEPRECATED: Use [venueIntegrationPreference](#schema/VenueIntegrationPreference) instead. Venue integrations
+            the planner prefers when sourcing venues. An empty array or absent field indicates no preference has been recorded.'
+          maxItems: 1
+          uniqueItems: true
+          items:
+            $ref: '#/components/schemas/VenueIntegrationType'
+        venueIntegrationPreference:
+          $ref: '#/components/schemas/VenueIntegrationPreference'
+    BillingDetails-1:
+      title: BillingDetails
+      description: Billing details for RFP.
+      type: object
+      properties:
+        additionalInformation:
+          type: string
+          description: Information regarding billing.
+          minLength: 0
+          maxLength: 2500
+          example: Guest rooms will be a mix of IPO and RM&TX to master. Will submit rooming list with billing specified.
+            Credit card will be provided as guarantee.
+        concessionsContractualInfo:
+          type: string
+          description: Concessions and contractual information.
+          minLength: 0
+          maxLength: 2500
+          example: Request use of LOI or Express Agreement.
+        rebateType:
+          $ref: '#/components/schemas/RebateType'
+        acceptingRebatesAndIncentives:
+          type: boolean
+          description: True indicates that rebates and incentives are accepted, applicable only for citywide RFPs.
+          default: true
+        rebateValue:
+          type: number
+          description: The value of the rebate. The impact of this value on the price is determined by `RebateType`.
+          minimum: 0
+          maximum: 999999
+          example: 10
+    SpaceArea:
+      title: SpaceArea
+      description: Space area divisons.
+      type: string
+      enum:
+      - LESS_THAN_ONE_THOUSAND_SQ_FT
+      - ONE_THOUSAND_SQ_FT
+      - TWO_THOUSAND_SQ_FT
+      - THREE_THOUSAND_SQ_FT
+      - FOUR_THOUSAND_SQ_FT
+      - FIVE_THOUSAND_SQ_FT
+      - SIX_THOUSAND_SQ_FT
+      - SEVEN_THOUSAND_SQ_FT
+      - EIGHT_THOUSAND_SQ_FT
+      - NINE_THOUSAND_SQ_FT
+      - TEN_THOUSAND_SQ_FT
+      - ELEVEN_THOUSAND_SQ_FT
+      - TWELVE_THOUSAND_SQ_FT
+      - THIRTEEN_THOUSAND_SQ_FT
+      - FOURTEEN_THOUSAND_SQ_FT
+      - FIFTEEN_THOUSAND_SQ_FT
+      - SIXTEEN_THOUSAND_SQ_FT
+      - SEVENTEEN_THOUSAND_SQ_FT
+      - EIGHTEEN_THOUSAND_SQ_FT
+      - NINETEEN_THOUSAND_SQ_FT
+      - TWENTY_THOUSAND_SQ_FT
+      - TWENTY_FIVE_THOUSAND_SQ_FT
+      - THIRTY_THOUSAND_SQ_FT
+      - THIRTY_FIVE_THOUSAND_SQ_FT
+      - FORTY_THOUSAND_SQ_FT
+      - FORTY_FIVE_THOUSAND_SQ_FT
+      - FIFTY_THOUSAND_SQ_FT
+      - FIFTY_FIVE_THOUSAND_SQ_FT
+      - SIXTY_THOUSAND_SQ_FT
+      - SIXTY_FIVE_THOUSAND_SQ_FT
+      - SEVENTY_THOUSAND_SQ_FT
+      - SEVENTY_FIVE_THOUSAND_SQ_FT
+      - EIGHTY_THOUSAND_SQ_FT
+      - EIGHTY_FIVE_THOUSAND_SQ_FT
+      - NINETY_THOUSAND_SQ_FT
+      - ONE_HUNDRED_THOUSAND_SQ_FT
+      - GREATER_THAN_ONE_HUNDRED_THOUSAND_SQ_FT
+      - LESS_THAN_ONE_HUNDRED_SQ_MTR
+      - ONE_HUNDRED_SQ_MTR
+      - TWO_HUNDRED_SQ_MTR
+      - THREE_HUNDRED_SQ_MTR
+      - FOUR_HUNDRED_SQ_MTR
+      - FIVE_HUNDRED_SQ_MTR
+      - SIX_HUNDRED_SQ_MTR
+      - SEVEN_HUNDRED_SQ_MTR
+      - EIGHT_HUNDRED_SQ_MTR
+      - NINE_HUNDRED_SQ_MTR
+      - ONE_THOUSAND_SQ_MTR
+      - ELEVEN_HUNDRED_SQ_MTR
+      - TWELVE_HUNDRED_SQ_MTR
+      - THIRTEEN_HUNDRED_SQ_MTR
+      - FOURTEEN_HUNDRED_SQ_MTR
+      - FIFTEEN_HUNDRED_SQ_MTR
+      - SIXTEEN_HUNDRED_SQ_MTR
+      - SEVENTEEN_HUNDRED_SQ_MTR
+      - EIGHTEEN_HUNDRED_SQ_MTR
+      - NINETEEN_HUNDRED_SQ_MTR
+      - TWO_THOUSAND_SQ_MTR
+      - TWENTY_FIVE_HUNDRED_SQ_MTR
+      - THREE_THOUSAND_SQ_MTR
+      - THIRTY_FIVE_HUNDRED_SQ_MTR
+      - FOUR_THOUSAND_SQ_MTR
+      - FORTY_FIVE_HUNDRED_SQ_MTR
+      - FIVE_THOUSAND_SQ_MTR
+      - FIFTY_FIVE_HUNDRED_SQ_MTR
+      - SIX_THOUSAND_SQ_MTR
+      - SIXTY_FIVE_HUNDRED_SQ_MTR
+      - SEVEN_THOUSAND_SQ_MTR
+      - SEVENTY_FIVE_HUNDRED_SQ_MTR
+      - EIGHT_THOUSAND_SQ_MTR
+      - EIGHTY_FIVE_HUNDRED_SQ_MTR
+      - NINE_THOUSAND_SQ_MTR
+      - TEN_THOUSAND_SQ_MTR
+      - GREATER_THAN_TEN_THOUSAND_SQ_MTR
+    RebateType:
+      title: RebateType
+      description: Rebate type for specifying the rebate value on citywide RFPs. If rebateType is `BY_AMOUNT`, the rebate
+        value will be in decimal format. If rebateType is `BY_PERCENTAGE`, the rebate value will represent a percentage.
+      type: string
+      enum:
+      - BY_AMOUNT
+      - BY_PERCENTAGE
+    Organization:
+      title: Organization
+      description: Organization details.
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the organization.
+          example: 50dc08af-24a9-4d01-84be-3d43133dc945
+    RfpDateMode:
+      title: RfpDateMode
+      description: RfpDateMode
+      type: string
+      enum:
+      - ALTERNATE_DATE
+      - DATE_PATTERN
+    RfpLeadSourceSection:
+      type: object
+      title: RfpLeadSourceSection
+      description: Lead source section of the RFP.
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+          description: The unique identifier of the lead source section.
+          example: f56a51a4-84b0-46c9-a612-716dc95a1c96
+        name:
+          type: string
+          description: Name of the lead source section.
+          maxLength: 200
+          example: Cvent Supplier Network
+    OrganizationType-1:
+      title: OrganizationType
+      description: Organization type.
+      type: string
+      enum:
+      - CORPORATE
+      - ASSOCIATION
+      - EDUCATION
+      - GOVERNMENT
+      - SOCIAL_LEISURE
+      - RELIGIOUS
+      - MILITARY
+      - OTHER
+      - NON_PROFIT
+    Rfp:
+      title: Rfp
+      description: Basic RFP details
+      type: object
+      required:
+      - id
+      allOf:
+      - $ref: '#/components/schemas/RfpRequest'
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for RFP.
+          example: a3edf581-b80c-4a0b-bdcf-ab8bf5fdcd1b
+        code:
+          type: string
+          readOnly: true
+          description: Unique code of RFP.
+          example: JBNJN7BGJ5J
+        status:
+          $ref: '#/components/schemas/RfpStatus-1'
+        type:
+          $ref: '#/components/schemas/RfpType-1'
+        approvedBy:
+          type: string
+          readOnly: true
+          minLength: 0
+          maxLength: 50
+          description: Details of the user who approved the RFP.
+          example: approver@example.com
+        approvedDateTime:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The ISO 8601 date time (in UTC) when the RFP was approved. The initial value when RFP is not approved
+            is 1900-01-01 00:00:00.000.
+          example: '2021-01-13T14:06:20.080Z'
+        approved:
+          type: boolean
+          readOnly: true
+          description: True indicates RFP is approved.
+          example: true
+        cancellationDetails:
+          $ref: '#/components/schemas/CancellationDetails'
+        lastSentDateTime:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The ISO 8601 date time (in UTC) when RFP was last sent.
+          example: '2021-01-13T14:06:20.080Z'
+        originalSentDateTime:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The ISO 8601 date time (in UTC) when RFP was first sent.
+          example: '2021-01-13T14:06:20.080Z'
+        sentVenueCount:
+          type: integer
+          readOnly: true
+          description: Number of venues to which the planner has sent the RFP.
+          minimum: 0
+          example: 5
+          maximum: 2000
+        archived:
+          type: boolean
+          description: True indicates RFP is archived.
+          default: false
+        archivalDate:
+          type: string
+          format: date-time
+          description: The ISO 8601 date time (in UTC) representing the archival date.
+          example: '2021-01-13T14:06:20.080Z'
+        awardedExternally:
+          type: boolean
+          description: True indicates RFP has been awarded to a venue outside of Cvent Supplier Network.
+          readOnly: true
+          default: false
+        finishedAwarding:
+          type: boolean
+          description: True indicates venue sourcing process for this RFP has been marked as finished after awarding the eligible
+            venues.
+          readOnly: true
+          default: false
+        aiRfpGenerationSource:
+          type: string
+          maxLength: 100
+          readOnly: true
+          description: Represents the AI generation source for the RFP. This field is set during RFP creation and cannot be
+            modified afterwards.
+          example: MCP-Visual Studio Code/1.107.1
+    LeadSource:
+      title: LeadSource
+      description: Lead source details.
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for source generating the RFP. Details about this lead source can be fetched using
+            <a href="#tag/RFP-Management/operation/getRfpLeadSource">lead source API.</a>
+          example: 50dc08af-24a9-4d01-84be-3d43133dc945
+        section:
+          $ref: '#/components/schemas/LeadSourceSection'
+    Industry-1:
+      title: Industry
+      description: Industry
+      type: string
+      enum:
+      - AGRICULTURE_AND_MINING
+      - BUSINESS_SERVICES
+      - COMPUTERS_AND_ELECTRONICS
+      - CONSUMER_SERVICES
+      - EDUCATION
+      - ENERGY_AND_UTILITIES
+      - FINANCIAL_SERVICES
+      - GOVERNMENT
+      - HEALTHCARE_PHARMACEUTICALS_AND_BIOTECH
+      - MANUFACTURING
+      - MEDIA_AND_ENTERTAINMENT
+      - OTHER
+      - REAL_ESTATE_AND_CONSTRUCTION
+      - RETAIL
+      - SOFTWARE_AND_INTERNET
+      - TELECOMMUNICATIONS
+      - TRANSPORTATION_AND_STORAGE
+      - TRAVEL_RECREATION_AND_LEISURE
+      - WHOLESALE_AND_DISTRIBUTION
+    LeadSourceSection:
+      title: LeadSourceSection
+      description: Represents lead source section details, which is a sub area of source generating the RFP.
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for sub area of source generating the RFP. Details about this lead source section
+            can be fetched using <a href="#tag/RFP-Management/operation/getRfpLeadSourceSection">lead source section API.</a>
+          example: 40dc08af-24a9-4d01-84be-3d43133dc945
+    VenueIntegrationPreference:
+      title: VenueIntegrationPreference
+      description: Venue integration preference for an RFP.
+      type: object
+      required:
+      - type
+      - optIn
+      properties:
+        type:
+          $ref: '#/components/schemas/VenueIntegrationType'
+        optIn:
+          type: boolean
+          description: True indicates the planner opted to share their preference for venues equipped with the specified integration
+            with suppliers.
+          example: true
+    RfpStatus-1:
+      title: RfpStatus
+      readOnly: true
+      description: Represents state of the RFP.
+      type: string
+      enum:
+      - PENDING
+      - ACTIVE
+      - AWARDED
+      - DRAFT
+      - HISTORIC
+      - CANCELLED
+      - DELETED
+    Address-1:
+      type: object
+      title: Address
+      description: Address details.
+      required:
+      - city
+      - countryCode
+      properties:
+        countryCode:
+          type: string
+          description: ISO 3166 code for the country.
+          example: US
+        city:
+          type: string
+          maxLength: 100
+          description: The name of the city.
+          example: Austin
+        regionCode:
+          type: string
+          description: ISO 3166-2 code for the state/province/region.
+          example: US-AL
+    RecipientInfo:
+      title: RecipientInfo
+      description: Represents the details of the RFP recipient.
+      type: object
+      properties:
+        order:
+          type: integer
+          description: The position at which this recipient will be displayed.
+          maximum: 3
+          minimum: 1
+          example: 2
+        type:
+          $ref: '#/components/schemas/RecipientType'
+        value:
+          type: string
+          maxLength: 100
+          description: If the recipient is ACCOUNT_USER or ACCOUNT_USER_GROUP, this field holds their unique ID. If the recipient
+            is EMAIL, this field holds the email provided by the user.
+          example: janeDoe@example.com
+    MeasurementUnit:
+      title: MeasurementUnit
+      description: 'Unit of measurement for area or space.
+
+
+        Values:
+
+        - `SQUARE_FEET` — Square Feet
+
+        - `SQUARE_METERS` — Square Meters'
+      type: string
+      enum:
+      - SQUARE_FEET
+      - SQUARE_METERS
+    OfferingCostType-1:
+      title: OfferingCostType
+      description: Cost type associated with organizing and hosting events and meetings.
+      type: string
+      enum:
+      - AIRPORT_TRANSPORTATION
+      - AIR_CONDITIONING_HEATING
+      - AUDIO_PATCH
+      - AV_EQUIPMENT
+      - BELLMAN_DELIVERY
+      - BREAKFAST_BUFFET
+      - BREAKFAST_CONTINENTAL
+      - BREAKFAST_PLATED
+      - BREAKOUT_LARGE
+      - BREAKOUT_MEDIUM
+      - BREAKOUT_SMALL
+      - BREAKOUT_TOTAL
+      - BREAK_AM
+      - BREAK_DRINKS_ONLY
+      - BREAK_PM
+      - BREAK_SNACKS_AND_DRINKS
+      - BUILDING_OVERTIME
+      - BUSINESS_CENTER
+      - CMP
+      - CONFERENCE_CONCIERGE
+      - CONFERENCE_PLANNING_MANAGER
+      - DDR_FULL_DAY
+      - DDR_HALF_DAY
+      - DINNER_BUFFET
+      - DINNER_PLATED
+      - EXHIBIT_SPACE
+      - FACILITY_FEE
+      - FITNESS_CENTER
+      - GALLON_COFFEE
+      - GENERAL_SESSION
+      - HOUSEKEEPING
+      - INTERNET_GUEST_ROOM
+      - INTERNET_MEETING_ROOM
+      - LABOR
+      - LIGHTING
+      - LOCAL_TRANSPORTATION
+      - LUNCH_BOXED
+      - LUNCH_BUFFET
+      - LUNCH_PLATED
+      - MEETING_ROOMS_TOTAL
+      - NONE
+      - OFFICE
+      - OTHER_FB
+      - OTHER_MISC
+      - OTHER_RENTAL
+      - OTHER_TRANSPORTATION
+      - PARKING_FEE_SELF
+      - PARKING_FEE_VALET
+      - POWER_DROP
+      - RECEPTION_BEVERAGE
+      - RECEPTION_FOOD
+      - RECEPTION_HEAVY_HORS_D_OEUVRES
+      - RECEPTION_LIGHT_APPETIZERS
+      - RESORT_FEE
+      - ROOM_DROP
+      - SERVICE_CHARGES
+      - SETUP
+      - SHIPPING_RECEIVING
+      - GUEST_ROOMS
+      - STORAGE
+      - TEARDOWN
+      - TOTAL_FB_MINIMUM
+    RecipientType:
+      title: Recipient Type
+      description: Type of Recipient
+      type: string
+      enum:
+      - EMAIL
+      - ACCOUNT_USER
+      - ACCOUNT_USER_GROUP
+    WeddingDetails-1:
+      title: Wedding Details
+      description: Wedding details.
+      type: object
+      properties:
+        firstPartner:
+          $ref: '#/components/schemas/WeddingPartner'
+        secondPartner:
+          $ref: '#/components/schemas/WeddingPartner'
+        ceremony:
+          type: boolean
+          description: True indicates ceremony is planned.
+        reception:
+          type: boolean
+          description: True indicates reception is planned.
+        farewellBrunch:
+          type: boolean
+          description: True indicates farewell brunch is planned.
+        rehearsalDinner:
+          type: boolean
+          description: True indicates rehearsal dinner is planned.
+    ContactMethods:
+      title: ContactMethods
+      description: Medium for contacting the person.
+      type: string
+      enum:
+      - CVENT
+      - EMAIL
+      - FAX
+      - MOBILE
+      - PHONE
+    Audit:
+      title: Audit
+      description: Audit information
+      type: object
+      properties:
+        created:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date time when this record was created.
+          readOnly: true
+          example: '2017-01-02T02:00:00Z'
+        createdBy:
+          type: string
+          description: The identifier of the user that created this record.
+          readOnly: true
+          example: hporter
+        lastModified:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date time when this record was updated.
+          readOnly: true
+          example: '2019-02-12T03:00:00Z'
+        lastModifiedBy:
+          type: string
+          description: The identifier of the user that last updated this record.
+          readOnly: true
+          example: hporter
+    BrideGroomType:
+      title: BrideGroomType
+      description: BrideGroomType
+      type: string
+      enum:
+      - BRIDE
+      - GROOM
+    ErrorResponse-12:
+      title: ErrorResponse
+      description: Represents an error response with additional details of cascading error messages.
+      allOf:
+      - $ref: '#/components/schemas/ErrorResponseBase1'
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorResponseBase1'
+          description: Additional details of cascading error messages.
+  responses:
+    NotFound1:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 404
+            message: Not found
+    TooManyRequests1:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 429
+            message: Limit Exceeded
+    BadRequest1:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 400
+            message: Bad Request
+    Unauthorized1:
+      description: Bad or expired token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 401
+            message: Unauthorized
+    Forbidden1:
+      description: You do not have access to the resource
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 403
+            message: Access Forbidden
+  parameters:
+    leadSourceExpand:
+      name: expand
+      in: query
+      explode: false
+      required: false
+      description: "This endpoint allows you to request additional information as an expanded response using the expand query\
+        \ parameter. The expanded entity is retrieved and displayed inline for each specified expand value.\n\nAn object contains\
+        \ the ID of a related object in its response properties. You can expand these objects in-line using the expand query\
+        \ parameter.\n\nYou can expand multiple objects at the same time by identifying multiple items in the expand array.\n\
+        \nThe respective scopes for each expansion are required.\n\nThe following fields are expandable:\n  * leadSource\n\
+        \    * **Scope**: rfp/rfp-lead-sources:read\n    * **Reference**: <a href=\"#tag/RFP-Management/operation/getRfpLeadSource\"\
+        >Get RFP Lead Source</a>\n  * leadSource.section\n    * **Scope**: rfp/rfp-lead-sources:read\n    * **Reference**:\
+        \ <a href=\"#tag/RFP-Management/operation/getRfpLeadSourceSection\">Get RFP Lead Source Section</a>\n"
+      example:
+      - leadSource
+      - leadSource.section
+      schema:
+        type: array
+        items:
+          type: string
+          enum:
+          - leadSource
+          - leadSource.section
+    leadSourceId:
+      name: leadSourceId
+      description: The unique identifier of the lead source.
+      style: simple
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+    leadSourceSectionId:
+      name: leadSourceSectionId
+      description: The unique identifier of the lead source section.
+      style: simple
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      example: 779934d2-f6eb-4815-bcfa-a2dd8655c164
+    rfpId:
+      name: rfpId
+      description: The unique identifier of the RFP we are requesting
+      style: simple
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+  securitySchemes:
+    OAuth2.clientCredentials:
+      type: oauth2
+      description: OAuth2 Client Credentials Flow.
+      flows:
+        clientCredentials:
+          tokenUrl: https://api-platform.cvent.com/ea/oauth2/token
+          scopes:
+            account/hooks:delete: Allows the deletion of hooks.
+            account/hooks:read: Allows the reading of hooks.
+            account/hooks:write: Allows the creation/updation of hooks.
+            account/user-groups:delete: Allows deletion for user groups
+            account/user-groups:read: Allows the reading of user groups
+            account/user-groups:write: Allows the writing of user groups
+            account/users:delete: Allows the deletion of User
+            account/users:read: Allows the reading of User, User Group
+            account/users:write: Allows the creation/updating of User
+            appointments/appointment-attendees:read: Allows the reading of appointment attendees and their related entities.
+            appointments/appointment-events:read: Allows the reading of appointment events and their related entities.
+            appointments/appointment-types:read: Allows the reading of appointment types and their related entities.
+            appointments/appointments:read: Allows the reading of appointment and their related entities.
+            appointments/appointments:write: Allows the writing of appointments and their related entities.
+            appointments/available-times:read: Allows the reading of availability times.
+            appointments/locations:read: Allows the reading of appointment locations and their related entities.
+            attendee-insights/attendee-insights:read: Allows the reading of engagement scores (attendee insights).
+            attendee-insights/scores:read: Allows the reading of scores.
+            attendee-insights/stats:read: Allows the reading of engagement score (attendee insight) stats.
+            budget/budget-items:delete: Allows the deletion of budget items
+            budget/budget-items:read: Allows the reading of all budget items
+            budget/budget-items:write: Allows creation/updation of budget item
+            budget/budget-totals:read: Allows the reading of all event budget totals
+            budget/budget-vendors:read: Allows reading of account-level budget vendors.
+            budget/cards:read: Allows the reading of cards
+            budget/currency-conversion-rate:delete: Allows deletion of currency conversion rate for currency.
+            budget/currency-conversion-rate:read: Allows reading of currency conversion rate for currency.
+            budget/currency-conversion-rate:write: Allows creation/update of currency conversion rate for currency.
+            budget/payments:delete: Allows deletion of payments.
+            budget/payments:read: Allows reading of payment for budget item.
+            budget/payments:write: Allows creation of payment in a budget item.
+            budget/transactions:delete: Allows delete card transactions.
+            budget/transactions:read: Allows the reading of all card's transactions
+            budget/transactions:write: Allows creation of card transactions.
+            bulk/bulk-jobs:read: Allows the reading of bulk job related entities
+            bulk/bulk-jobs:write: Allows the creation, update and deletion of bulk job related entities
+            business-transient/bids:read: Allows the reading of Business Transient Bid data
+            business-transient/proposals:read: Allows the reading of Business Transient Proposal data
+            business-transient/supplier-brands:read: Allows the reading of a supplier brand or a list of travel supplier brands.
+            business-transient/supplier-chains:read: Allows the reading of a travel supplier chain or a list of travel supplier
+              chains.
+            business-transient/supplier-properties:read: Allows the reading of a travel supplier property or a list of travel
+              supplier properties.
+            business-transient/supplier-property-rooms:read: Allows the reading of a list of travel supplier property rooms.
+            business-transient/travel-accounts:read: Allows the reading of business transient travel account data.
+            business-transient/travel-program-questions:read: Allows the reading of business transient travel program question
+              data.
+            business-transient/travel-programs:read: Allows the reading of business transient travel program data.
+            business-transient/travel-supplier-accounts:read: Allows the reading of business transient travel supplier account
+              data.
+            business-travel/bids:read: Allows the reading of Business Travel Bid data
+            business-travel/proposals:read: Allows the reading of Business Travel Proposal data
+            business-travel/travel-accounts:read: Allows the reading of business travel account data.
+            business-travel/travel-program-questions:read: Allows the reading of business travel program question data.
+            business-travel/travel-programs:read: Allows the reading of business travel program data.
+            compliance/communications:read: Allows the reading of communication compliance
+            compliance/communications:write: Allows the writing of communication compliance
+            email/bounces:read: Allow the reading of email bounces.
+            email/email-status:read: Allows the reading of email statuses.
+            email/emails:read: Allows the reading of emails.
+            eMarketing/campaigns:read: Allows the reading of campaigns.
+            emarketing/emarketing-email-status:read: Allows the reading of eMarketing email statuses.
+            eMarketing/eMarketing-email-templates:read: Allows the reading of email-templates.
+            eMarketing/eMarketing-send-emails:write: Allows the writing of eMarketing emails.
+            event/admission-items:read: Allows the reading of admission items
+            event/air-request:read: Allow reading the air request or air actual detail for attendees.
+            event/alternate-travel:read: Allow reading the alternate travel answers for attendees.
+            event/attendance-durations:read: Allows the read of Duration records
+            event/attendee-activities-metadata:delete: Allows the deletion of attendees activities metadata.
+            event/attendee-activities-metadata:read: Allows the reading of attendee activities metadata.
+            event/attendee-activities-metadata:write: Allows the creation/updating of attendees activities metadata.
+            event/attendee-activities:read: Allows the reading of attendee activities.
+            event/attendee-activities:write: Allows the writing of external attendee activities.
+            event/attendee-credits:read: Allows the reading of attendee credits.
+            event/attendee-links:delete: Allows the deletion of attendee links
+            event/attendee-links:read: Allows the reading of attendee links
+            event/attendee-links:write: Allows the creation of attendee links
+            event/attendee-messages:read: Allows the reading of attendee messages
+            event/attendees:read: Allows the reading of attendees.
+            event/attendees:write: Allows the creation of an attendee in an event.
+            event/audience-segments:read: Allows the reading of audience segments.
+            event/audience-segments:write: Allows the creation/updating/deletion of audience segments.
+            event/contact-groups:read: Allows the reading of contact groups.
+            event/contact-groups:write: Allows the creation/updating of contact groups.
+            event/contact-types:read: Allows the reading of contact types.
+            event/contacts:delete: Allows the deletion of contacts.
+            event/contacts:read: Allows the reading of contacts.
+            event/contacts:write: Allows the creation/updating of contacts.
+            event/contacts:write-sensitive: Allows the creation/updating of sensitive data related to contacts.
+            event/custom-fields:read: Allows the reading of custom fields
+            event/custom-fields:write: Allows the writing of custom fields
+            event/discounts:write: Allows the writing of discounts
+            event/donation-items:read: Allows the reading of donation items.
+            event/event-discounts:read: Allows the reading of event discounts.
+            event/event-discounts:write: Allows the writing of event discounts.
+            event/event-email-status:read: Allows the reading of event email statuses.
+            event/event-emails:read: Allows the reading of event emails
+            event/event-emails:write: Allows to send event emails.
+            event/event-features:read: Allows the reading of events-features
+            event/event-features:write: Allows updating the event-features
+            event/event-user-groups:read: Allows the reading of user groups
+            event/event-user-groups:write: Allows associating/disassociating user groups to event
+            event/events:read: Allows the reading of events
+            event/events:write: Allows the creation/updating of events
+            event/fee-items:read: Allows the reading of fee items.
+            event/hotel-request:read: Allow reading the hotel request or housing reservation request detail for attendees.
+            event/invitation-lists:read: Allows the reading of the invitation lists for an event
+            event/meeting-request-forms:read: Allows the reading of meeting request forms.
+            event/meeting-requests:read: Allows the reading of meeting requests.
+            event/meeting-requests:write: Allows the creation/updating of meeting requests.
+            event/membership-items:read: Allows reading of membership items.
+            event/orders:read: Allows the reading of orders
+            event/planning-documents:read: Allows the reading of event planning documents
+            event/players:read: Allows the reading of players
+            event/process-form-submissions:read: Allows the reading of process form submissions.
+            event/program-items:delete: Allows deletion of session program items
+            event/program-items:read: Allows reading of session program items
+            event/program-items:write: Allows writing of session program items
+            event/quantity-items:read: Allows the reading of quantity items.
+            event/quantity-items:write: Allows the writing of quantity items
+            event/registration-paths:read: Allows the reading of registration paths
+            event/registration-types:read: Allows the reading of registration types
+            event/registration-types:write: Allows the writing of registration types
+            event/role-assignments:read: Allows the reading of event role assignment.
+            event/session-attendance:read: Allows the reading of sessions attendance
+            event/session-attendance:write: Allows the creation/updating of sessions attendance
+            event/session-categories:read: Allows reading of session categories
+            event/session-categories:write: Allows writing of session categories
+            event/session-enrollment:delete: Allows the deletion of session registrations
+            event/session-enrollment:read: Allows the reading of sessions registrations
+            event/session-enrollment:write: Allows the writing of sessions registrations
+            event/session-segments:read: Allows reading of session segments
+            event/sessions:delete: Allows the deletion of a session in an event
+            event/sessions:read: Allows the reading of sessions
+            event/sessions:write: Allows the creation of a session in an event
+            event/speaker-categories:read: Allows reading of speaker categories
+            event/speaker-categories:write: Allows writing of speaker categories
+            event/speakers:delete: Allows the deletion of a speaker in an event
+            event/speakers:read: Allows the reading of speakers
+            event/speakers:write: Allows the creation of a speaker in an event
+            event/taxes:read: Allows the reading of taxes.
+            event/transactions:read: Allows the reading of transactions
+            event/transactions:write: Allows the writing of transactions
+            event/video-views:read: Allows reading of video views.
+            event/videos:read: Allows the reading of video data.
+            event/videos:write: Allows the creation/updating of video data.
+            event/vouchers:read: Allows reading of event vouchers.
+            event/webcasts:delete: Allows the deletion of webcast
+            event/webcasts:read: Allows the reading of webcasts
+            event/webcasts:write: Allows the creation of webcast
+            event/weblinks:read: Allows the reading of event weblinks
+            events-plus/hubs:read: Allows the reading of Events+ hub data.
+            exhibitor/badges:read: Allows reading badges
+            exhibitor/badges:write: Allows creating/updating badges
+            exhibitor/booth-staff:delete: Allows deleting booth staff
+            exhibitor/booth-staff:read: Allows reading booth staff
+            exhibitor/booth-staff:write: Allows creating booth staff
+            exhibitor/eliterature-requests:read: Allows reading eliterature document request data
+            exhibitor/exhibitor-admins:read: Allows reading exhibitor admins
+            exhibitor/exhibitor-admins:write: Allows creating/updating exhibitor admins
+            exhibitor/exhibitor-answers:read: Allows reading exhibitor answers
+            exhibitor/exhibitor-answers:write: Allows updating exhibitor answers
+            exhibitor/exhibitor-categories:delete: Allows deleting exhibitor categories
+            exhibitor/exhibitor-categories:read: Allows reading exhibitor categories
+            exhibitor/exhibitor-categories:write: Allows creating/updating exhibitor categories
+            exhibitor/exhibitor-contents:delete: Allows deleting exhibitor content
+            exhibitor/exhibitor-contents:read: Allows reading exhibitor content
+            exhibitor/exhibitor-contents:write: Allows creating/updating exhibitor content
+            exhibitor/exhibitor-questions:read: Allows reading exhibitor questions
+            exhibitor/exhibitors:delete: Allows deleting exhibitors
+            exhibitor/exhibitors:read: Allows reading exhibitors
+            exhibitor/exhibitors:write: Allows creating/updating exhibitors
+            exhibitor/lead-qualification-answers:read: Allows reading Lead Qualification Answers
+            exhibitor/lead-qualification-questions:read: Allows reading Lead Qualification Questions.
+            exhibitor/leads:read: Allows reading leads.
+            exhibitor/registration-packs:delete: Allows deleting registration pack
+            exhibitor/registration-packs:read: Allows reading registration pack
+            exhibitor/registration-packs:write: Allows creating/updating registration pack
+            exhibitor/sponsorship-levels:read: Allows reading sponsorship level
+            file/file:read: Allows the reading of file
+            file/file:write: Allows the uploading of file
+            housing/connections:write: Allows the user to connect to the Reglink APIs.
+            housing/hotel-room-rates:write: Allows the user to create/update hotel room rates.
+            housing/housing-event-available-nights:read: Allows the user to read availability information for given event.
+            housing/housing-event-hotels:read: Allows the user to read information about event hotels.
+            housing/housing-event-inventory:read: Allows the user to get information about housing event inventory.
+            housing/housing-event-room-types:read: Allows the user to read information about event room types.
+            housing/housing-events:read: Allows the user to read information about events.
+            housing/reservation-requests:delete: Allows the user to cancel reservation request.
+            housing/reservation-requests:read: Allows the user to read reservation request information.
+            housing/reservation-requests:write: Allows the user to create/update reservation request.
+            housing/reservations-link:delete: Allows the user to remove association from reservation.
+            housing/reservations-link:write: Allows the user to associate reservation to reservation request.
+            housing/reservations:delete: Allows the user to cancel reservation.
+            housing/reservations:read: Allows the user to read reservation details information.
+            housing/reservations:write: Allows the user to create/update reservation.
+            onsite/signatures:read: Allows reading signatures.
+            proposal/proposals:write: Allows the creation/writing of proposal
+            remote-printing/badge-print-jobs:read: Allows reading print jobs.
+            remote-printing/badge-print-jobs:write: Allows creating print jobs.
+            remote-printing/badge-printer-pools:read: Allows reading pools.
+            rfp/rfp-agenda-items:read: Allows the reading of RFP agenda items.
+            rfp/rfp-attachments:read: Allows the reading of RFP attachments.
+            rfp/rfp-custom-fields:read: Allows the reading of RFP custom fields.
+            rfp/rfp-guest-rooms:read: Allows the reading of RFP guest rooms.
+            rfp/rfp-internal-documents:read: Allows the reading of RFP internal documents.
+            rfp/rfp-lead-sources:read: Allows the reading of RFP lead sources.
+            rfp/rfp-past-events:read: Allows the reading of past events similar to rfp event.
+            rfp/rfp-questions:read: Allows the reading of RFP questions.
+            rfp/rfp-recipients-history:read: Allows the reading of RFP recipients history.
+            rfp/rfp-suppliers:read: Allows the reading of RFP suppliers.
+            rfp/rfps:read: Allows the reading of basic details of RFP.
+            seating/assignments:read: Allows to read attendee seat assignment information.
+            seating/event-seatings:read: Allows to read event seating.
+            seating/seats:read: Allows to read seat information.
+            seating/tables:read: Allows to read table information.
+            secure-ecommerce/card-tokens:write: Allows creation of credit card tokens
+            survey/questions:read: Allows the reading of survey questions
+            survey/respondents:read: Allows reading the survey respondents
+            survey/responses:read: Allows reading the survey responses
+            survey/standard-survey-email-templates:read: Allows reading the standalone survey email templates
+            survey/standard-survey-email:write: Allows writing operations on standalone survey emails
+            survey/standard-survey-questions:read: Allows the reading of standalone surveys questions
+            survey/standard-survey-respondents:read: Allows reading the standalone survey respondents
+            survey/standard-survey-respondents:write: Allows write operations on standalone survey respondents
+            survey/standard-survey-responses:read: Allows reading the standalone survey responses
+            survey/standard-survey-responses:write: Allows write operations on standalone surveys respondent's responses
+            survey/standard-surveys:read: Allows the reading of standalone surveys
+            survey/survey-questions:read: Allows the reading of event survey questions
+            survey/survey-respondents:read: Allows reading the event survey respondents
+            survey/survey-respondents:write: Allows write operations on the event survey respondents
+            survey/survey-responses:read: Allows reading the event survey responses
+            survey/survey-responses:write: Allows write operations on the event surveys respondent's responses
+            survey/surveys:read: Allows the reading of event surveys
+            venue/meeting-room-images:delete: Allows disassociating images from meeting rooms.
+            venue/meeting-room-images:read: Allows retrieving meeting room images.
+            venue/meeting-room-images:write: Allows associating images with meeting rooms.
+            venue/meeting-room-overviews:read: Allows read access for overview of meeting room.
+            venue/meeting-rooms:write: Allows the creation and modification of meeting rooms.
+            venue/venue-details-overview:read: Allows read access for overview of venue details.
+            venue/venue-details:write: Allows the creation and modification of venue details.
+            venue/venue-facility:write: Allows the modification of venue facility information.
+    OAuth2.authorizationCode:
+      type: oauth2
+      description: OAuth2 Authorization Code Flow.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api-platform.cvent.com/ea/oauth2/authorize
+          tokenUrl: https://api-platform.cvent.com/ea/oauth2/token
+          scopes:
+            account/hooks:delete: Allows the deletion of hooks.
+            account/hooks:read: Allows the reading of hooks.
+            account/hooks:write: Allows the creation/updation of hooks.
+            account/user-groups:delete: Allows deletion for user groups
+            account/user-groups:read: Allows the reading of user groups
+            account/user-groups:write: Allows the writing of user groups
+            account/users:delete: Allows the deletion of User
+            account/users:read: Allows the reading of User, User Group
+            account/users:write: Allows the creation/updating of User
+            appointments/appointment-attendees:read: Allows the reading of appointment attendees and their related entities.
+            appointments/appointment-events:read: Allows the reading of appointment events and their related entities.
+            appointments/appointment-types:read: Allows the reading of appointment types and their related entities.
+            appointments/appointments:read: Allows the reading of appointment and their related entities.
+            appointments/appointments:write: Allows the writing of appointments and their related entities.
+            appointments/available-times:read: Allows the reading of available times.
+            appointments/locations:read: Allows the reading of appointment locations and their related entities.
+            attendee-insights/attendee-insights:read: Allows the reading of engagement scores (attendee insights).
+            attendee-insights/scores:read: Allows the reading of scores.
+            attendee-insights/stats:read: Allows the reading of engagement score (attendee insight) stats.
+            budget/budget-items:delete: Allows the deletion of budget items
+            budget/budget-items:read: Allows the reading of all budget items
+            budget/budget-items:write: Allows creation/updation of budget item
+            budget/budget-totals:read: Allows the reading of all event budget totals
+            budget/budget-vendors:read: Allows reading of account-level budget vendors.
+            budget/cards:read: Allows the reading of cards
+            budget/currency-conversion-rate:delete: Allows deletion of currency conversion rate for currency.
+            budget/currency-conversion-rate:read: Allows reading of currency conversion rate for currency.
+            budget/currency-conversion-rate:write: Allows creation/update of currency conversion rate for currency.
+            budget/payments:delete: Allows deletion of payments.
+            budget/payments:read: Allows reading of payment for budget item.
+            budget/payments:write: Allows creation of payment in a budget item.
+            budget/transactions:delete: Allows delete card transactions.
+            budget/transactions:read: Allows the reading of all card's transactions
+            budget/transactions:write: Allows creation of card transactions.
+            business-transient/bids:read: Allows the reading of BT Bid data
+            business-transient/proposals:read: Allows the reading of BT Proposal data
+            business-travel/bids:read: Allows the reading of BT Bid data
+            business-travel/proposals:read: Allows the reading of BT Proposal data
+            compliance/communications:read: Allows the reading of communication compliance
+            compliance/communications:write: Allows the writing of communication compliance
+            email/bounces:read: Allow the reading of email bounces.
+            email/email-status:read: Allows the reading of email statuses.
+            email/emails:read: Allows the reading of emails.
+            eMarketing/campaigns:read: Allows the reading of campaigns.
+            emarketing/emarketing-email-status:read: Allows the reading of eMarketing email statuses.
+            eMarketing/eMarketing-email-templates:read: Allows the reading of email-templates.
+            eMarketing/eMarketing-send-emails:write: Allows the writing of eMarketing emails.
+            event/admission-items:read: Allows the reading of admission items
+            event/air-request:read: Allow reading the air request or air actual detail for attendees.
+            event/alternate-travel:read: Allow reading the alternate travel answers for attendees.
+            event/attendance-durations:read: Allows the read of Duration records
+            event/attendee-activities-metadata:delete: Allows the deletion of attendees activities metadata.
+            event/attendee-activities-metadata:read: Allows the reading of attendee activities metadata.
+            event/attendee-activities-metadata:write: Allows the creation/updating of attendees activities metadata.
+            event/attendee-activities:read: Allows the reading of attendee activities.
+            event/attendee-activities:write: Allows the writing of attendee activities.
+            event/attendee-credits:read: Allows the reading of attendee credits.
+            event/attendee-links:delete: Allows the deletion of attendee links
+            event/attendee-links:read: Allows the reading of attendee links
+            event/attendee-links:write: Allows the creation of attendee links
+            event/attendee-messages:read: Allows the reading of attendee messages
+            event/attendees:read: Allows the reading of attendees.
+            event/attendees:write: Allows the creation of an attendee in an event.
+            event/audience-segments:read: Allows the reading of audience segments.
+            event/audience-segments:write: Allows the creation/updating/deletion of audience segments.
+            event/contact-groups:read: Allows the reading of contact groups.
+            event/contact-groups:write: Allows the creation/updating of contact groups.
+            event/contact-types:read: Allows the reading of contact types.
+            event/contacts:delete: Allows the deletion of contacts.
+            event/contacts:read: Allows the reading of contacts.
+            event/contacts:write: Allows the creation/updating of contacts.
+            event/contacts:write-sensitive: Allows the creation/updating of sensitive data related to contacts.
+            event/custom-fields:read: Allows the reading of custom fields
+            event/custom-fields:write: Allows the writing of custom fields
+            event/discounts:write: Allows the writing of discounts
+            event/donation-items:read: Allows the reading of donation items.
+            event/event-discounts:read: Allows the reading of event discounts.
+            event/event-discounts:write: Allows the writing of event discounts.
+            event/event-email-status:read: Allows the reading of event email statuses.
+            event/event-emails:read: Allows the reading of event emails
+            event/event-emails:write: Allows to send event emails.
+            event/event-features:read: Allows the reading of events-features
+            event/event-features:write: Allows updating the event-features
+            event/event-user-groups:read: Allows the reading of user groups
+            event/event-user-groups:write: Allows associating/disassociating user groups to event
+            event/events:read: Allows the reading of events
+            event/events:write: Allows the creation/updating of events
+            event/fee-items:read: Allows the reading of fee items.
+            event/hotel-request:read: Allow reading the hotel request or housing reservation request detail for attendees.
+            event/invitation-lists:read: Allows the reading of the invitation lists for an event
+            event/meeting-request-forms:read: Allows the reading of meeting request forms.
+            event/meeting-requests:read: Allows the reading of meeting requests.
+            event/meeting-requests:write: Allows the creation/updating of meeting requests.
+            event/membership-items:read: Allows reading of membership items.
+            event/orders:read: Allows the reading of orders
+            event/planning-documents:read: Allows the reading of event planning documents
+            event/players:read: Allows the reading of players
+            event/process-form-submissions:read: Allows the reading of process form submissions.
+            event/program-items:delete: Allows deletion of session program items
+            event/program-items:read: Allows reading of session program items
+            event/program-items:write: Allows writing of session program items
+            event/quantity-items:read: Allows the reading of quantity items.
+            event/quantity-items:write: Allows the writing of quantity items
+            event/registration-paths:read: Allows the reading of registration paths
+            event/registration-types:read: Allows the reading of registration types
+            event/registration-types:write: Allows the writing of registration types
+            event/role-assignments:read: Allows the reading of event role assignment.
+            event/session-attendance:read: Allows the reading of sessions attendance
+            event/session-attendance:write: Allows the creation/updating of sessions attendance
+            event/session-categories:read: Allows reading of session categories
+            event/session-categories:write: Allows writing of session categories
+            event/session-enrollment:delete: Allows the deletion of session registrations
+            event/session-enrollment:read: Allows the reading of sessions registrations
+            event/session-enrollment:write: Allows the writing of sessions registrations
+            event/session-segments:read: Allows reading of session segments
+            event/sessions:delete: Allows the deletion of a session in an event
+            event/sessions:read: Allows the reading of sessions
+            event/sessions:write: Allows the creation of a session in an event
+            event/speaker-categories:read: Allows reading of speaker categories
+            event/speaker-categories:write: Allows writing of speaker categories
+            event/speakers:delete: Allows the deletion of a speaker in an event
+            event/speakers:read: Allows the reading of speakers
+            event/speakers:write: Allows the creation of a speaker in an event
+            event/taxes:read: Allows the reading of taxes.
+            event/transactions:read: Allows the reading of transactions
+            event/transactions:write: Allows the writing of transactions
+            event/video-views:read: Allows reading of video views.
+            event/videos:read: Allows the reading of video data.
+            event/videos:write: Allows the creation/updating of video data.
+            event/vouchers:read: Allows reading of event vouchers and their associated attendees.
+            event/webcasts:delete: Allows the deletion of webcast
+            event/webcasts:read: Allows the reading of webcasts
+            event/webcasts:write: Allows the creation of webcast
+            event/weblinks:read: Allows the reading of event weblinks
+            events-plus/hubs:read: Allows the reading of Events+ hub data.
+            exhibitor/badges:read: Allows reading badges
+            exhibitor/badges:write: Allows creating/updating badges
+            exhibitor/booth-staff:delete: Allows deleting booth staff
+            exhibitor/booth-staff:read: Allows reading booth staff
+            exhibitor/booth-staff:write: Allows creating booth staff
+            exhibitor/eliterature-requests:read: Allows reading eliterature document request data
+            exhibitor/exhibitor-admins:read: Allows reading exhibitor admins
+            exhibitor/exhibitor-admins:write: Allows creating/updating exhibitor admins
+            exhibitor/exhibitor-answers:read: Allows reading exhibitor answers
+            exhibitor/exhibitor-answers:write: Allows updating exhibitor answers
+            exhibitor/exhibitor-categories:delete: Allows deleting exhibitor categories
+            exhibitor/exhibitor-categories:read: Allows reading exhibitor categories
+            exhibitor/exhibitor-categories:write: Allows creating/updating exhibitor categories
+            exhibitor/exhibitor-contents:delete: Allows deleting exhibitor content
+            exhibitor/exhibitor-contents:read: Allows reading exhibitor content
+            exhibitor/exhibitor-contents:write: Allows creating/updating exhibitor content
+            exhibitor/exhibitor-questions:read: Allows reading exhibitor questions
+            exhibitor/exhibitors:delete: Allows deleting exhibitors
+            exhibitor/exhibitors:read: Allows reading exhibitors
+            exhibitor/exhibitors:write: Allows creating/updating exhibitors
+            exhibitor/lead-qualification-answers:read: Allows reading Lead Qualification Answers
+            exhibitor/lead-qualification-questions:read: Allows reading Lead Qualification Questions.
+            exhibitor/leads:read: Allows reading leads.
+            exhibitor/registration-packs:delete: Allows deleting registration pack
+            exhibitor/registration-packs:read: Allows reading registration pack
+            exhibitor/registration-packs:write: Allows creating/updating registration pack
+            exhibitor/sponsorship-levels:read: Allows reading sponsorship level
+            file/file:read: Allows the reading of file
+            file/file:write: Allows the uploading of file
+            onsite/signatures:read: Allows reading signatures.
+            remote-printing/badge-print-jobs:read: Allows reading print jobs.
+            remote-printing/badge-print-jobs:write: Allows creating print jobs.
+            remote-printing/badge-printer-pools:read: Allows reading pools.
+            rfp/rfp-agenda-items:read: Allows the reading of RFP agenda items.
+            rfp/rfp-attachments:read: Allows the reading of RFP attachments.
+            rfp/rfp-custom-fields:read: Allows the reading of RFP custom fields.
+            rfp/rfp-guest-rooms:read: Allows the reading of RFP guest rooms.
+            rfp/rfp-internal-documents:read: Allows the reading of RFP internal documents.
+            rfp/rfp-lead-sources:read: Allows the reading of RFP lead sources.
+            rfp/rfp-past-events:read: Allows the reading of past events similar to rfp event.
+            rfp/rfp-questions:read: Allows the reading of RFP questions.
+            rfp/rfp-recipients-history:read: Allows the reading of RFP recipients history.
+            rfp/rfp-suppliers:read: Allows the reading of RFP suppliers.
+            rfp/rfps:read: Allows the reading of basic details of RFP.
+            seating/assignments:read: Allows to read attendee seat assignment information.
+            seating/event-seatings:read: Allows to read event seating.
+            seating/seats:read: Allows to read seat information.
+            seating/tables:read: Allows to read table information.
+            survey/questions:read: Allows the reading of survey questions
+            survey/respondents:read: Allows reading the survey respondents
+            survey/responses:read: Allows reading the survey responses
+            survey/standard-survey-email-templates:read: Allows reading the standalone survey email templates
+            survey/standard-survey-email:write: Allows writing operations on standalone survey emails
+            survey/standard-survey-questions:read: Allows the reading of standalone surveys questions
+            survey/standard-survey-respondents:read: Allows reading the standalone survey respondents
+            survey/standard-survey-respondents:write: Allows write operations on standalone survey respondents
+            survey/standard-survey-responses:read: Allows reading the standalone survey responses
+            survey/standard-survey-responses:write: Allows write operations on standalone surveys respondent's responses
+            survey/standard-surveys:read: Allows the reading of standalone surveys
+            survey/survey-questions:read: Allows the reading of event survey questions
+            survey/survey-respondents:read: Allows reading the event survey respondents
+            survey/survey-respondents:write: Allows write operations on the event survey respondents
+            survey/survey-responses:read: Allows reading the event survey responses
+            survey/survey-responses:write: Allows write operations on the event surveys respondent's responses
+            survey/surveys:read: Allows the reading of event surveys
+            venue/meeting-room-images:delete: Allows disassociating images from meeting rooms.
+            venue/meeting-room-images:read: Allows retrieving meeting room images.
+            venue/meeting-room-images:write: Allows associating images with meeting rooms.
+            venue/meeting-room-overviews:read: Allows read access for overview of meeting room.
+            venue/meeting-rooms:write: Allows the creation and modification of meeting rooms.
+            venue/venue-details-overview:read: Allows read access for overview of venue details.
+            venue/venue-details:write: Allows the creation and modification of venue details.
+            venue/venue-facility:write: Allows the modification of venue facility information.

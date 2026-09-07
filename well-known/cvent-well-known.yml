@@ -1,0 +1,160 @@
+generated: '2026-09-07'
+method: probed
+source: live GET probes of the named /.well-known/ path list on every host in apis.yml and every OpenAPI servers[]
+  host
+summary:
+  hosts_probed: 5
+  documents_served: 1
+  note: 'No /.well-known/ document is served anywhere on the Cvent estate: security.txt, openid-configuration, oauth-authorization-server,
+    oauth-protected-resource, api-catalog, ai-plugin.json, agent-card.json and agent.json all return 404 on cvent.com,
+    www.cvent.com, developers.cvent.com, api-platform.cvent.com and api-platform-eur.cvent.com. The only discovery
+    document served is /llms.txt on the marketing domain. No WellKnown or SecurityTxt pointer is emitted, because
+    a recorded absence is not a presence.'
+hosts:
+- host: cvent.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    file: null
+  - path: /.well-known/openid-configuration
+    status: 404
+    file: null
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    file: null
+  - path: /.well-known/api-catalog
+    status: 404
+    file: null
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    file: null
+  - path: /.well-known/agent-card.json
+    status: 404
+    file: null
+  - path: /.well-known/agent.json
+    status: 404
+    file: null
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+    file: null
+  - path: /llms.txt
+    status: 200
+    file: ../llms/cvent-llms.txt
+    note: 'Served: a real llms.txt (51,453 bytes, text/plain). Saved verbatim under llms/.'
+- host: www.cvent.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    file: null
+  - path: /.well-known/openid-configuration
+    status: 404
+    file: null
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    file: null
+  - path: /.well-known/api-catalog
+    status: 404
+    file: null
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    file: null
+  - path: /.well-known/agent-card.json
+    status: 404
+    file: null
+  - path: /.well-known/agent.json
+    status: 404
+    file: null
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+    file: null
+  - path: /llms.txt
+    status: 200
+    file: ../llms/cvent-llms.txt
+    note: 'Served: a real llms.txt (51,453 bytes, text/plain). Saved verbatim under llms/.'
+- host: developers.cvent.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    file: null
+  - path: /.well-known/openid-configuration
+    status: 404
+    file: null
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    file: null
+  - path: /.well-known/api-catalog
+    status: 404
+    file: null
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    file: null
+  - path: /.well-known/agent-card.json
+    status: 404
+    file: null
+  - path: /.well-known/agent.json
+    status: 404
+    file: null
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+    file: null
+  - path: /llms.txt
+    status: 404
+    file: null
+- host: api-platform.cvent.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    file: null
+  - path: /.well-known/openid-configuration
+    status: 404
+    file: null
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    file: null
+  - path: /.well-known/api-catalog
+    status: 404
+    file: null
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    file: null
+  - path: /.well-known/agent-card.json
+    status: 404
+    file: null
+  - path: /.well-known/agent.json
+    status: 404
+    file: null
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+    file: null
+  - path: /llms.txt
+    status: 404
+    file: null
+- host: api-platform-eur.cvent.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    file: null
+  - path: /.well-known/openid-configuration
+    status: 404
+    file: null
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    file: null
+  - path: /.well-known/api-catalog
+    status: 404
+    file: null
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    file: null
+  - path: /.well-known/agent-card.json
+    status: 404
+    file: null
+  - path: /.well-known/agent.json
+    status: 404
+    file: null
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+    file: null
+  - path: /llms.txt
+    status: 404
+    file: null

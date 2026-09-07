@@ -1,0 +1,1281 @@
+openapi: 3.0.2
+info:
+  title: Cvent REST APIs — Travel Suppliers
+  version: ea
+  description: The Travel Supplier APIs provide access to Cvent data related to hotels, apartments, and other travel providers.
+    This includes information related to properties, and sleeping rooms.
+  contact:
+    name: Cvent Development Platform
+    url: https://developers.cvent.com/
+externalDocs:
+  description: Cvent REST API documentation
+  url: https://developers.cvent.com/documentation
+servers:
+- url: https://api-platform.cvent.com/ea
+- url: https://api-platform-eur.cvent.com/ea
+tags:
+- name: Travel Suppliers
+  description: The Travel Supplier APIs provide access to Cvent data related to hotels, apartments, and other travel providers.
+    This includes information related to properties, and sleeping rooms.
+paths:
+  /travel-suppliers/brands:
+    parameters: []
+    get:
+      description: Gets a paginated list of supplier brands.
+      tags:
+      - Travel Suppliers
+      operationId: PropertyApiListBrands
+      summary: List Supplier Brands
+      security:
+      - OAuth2.clientCredentials:
+        - business-transient/supplier-brands:read
+      parameters:
+      - $ref: '#/components/parameters/after'
+      - $ref: '#/components/parameters/before'
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      - $ref: '#/components/parameters/brand-filter'
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of supplier brands.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/brand-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+  /travel-suppliers/brands/{brandId}:
+    parameters:
+    - $ref: '#/components/parameters/brandId'
+    get:
+      description: Get a supplier brand by brand code.
+      tags:
+      - Travel Suppliers
+      operationId: PropertyApiGetBrand
+      summary: Get Supplier Brand
+      security:
+      - OAuth2.clientCredentials:
+        - business-transient/supplier-brands:read
+      parameters: []
+      responses:
+        '200':
+          description: Successfully retrieved a brand.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/brand'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+  /travel-suppliers/chains:
+    parameters: []
+    get:
+      description: Gets a paginated list of supplier chains.
+      tags:
+      - Travel Suppliers
+      operationId: PropertyApiListChains
+      summary: List Supplier Chains
+      security:
+      - OAuth2.clientCredentials:
+        - business-transient/supplier-chains:read
+      parameters:
+      - $ref: '#/components/parameters/after'
+      - $ref: '#/components/parameters/before'
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      - $ref: '#/components/parameters/chain-filter'
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of chains.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/chain-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+  /travel-suppliers/chains/{chainId}:
+    parameters:
+    - $ref: '#/components/parameters/chainId'
+    get:
+      description: Get a supplier chain by chain ID.
+      tags:
+      - Travel Suppliers
+      operationId: PropertyApiGetChain
+      summary: Get Supplier Chain
+      security:
+      - OAuth2.clientCredentials:
+        - business-transient/supplier-chains:read
+      parameters: []
+      responses:
+        '200':
+          description: Successfully retrieved a chain.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/chain'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+  /travel-suppliers/properties:
+    parameters: []
+    get:
+      description: Gets a paginated list of supplier properties.
+      tags:
+      - Travel Suppliers
+      operationId: PropertyApiListProperties
+      summary: List Supplier Properties
+      security:
+      - OAuth2.clientCredentials:
+        - business-transient/supplier-properties:read
+      parameters:
+      - $ref: '#/components/parameters/after'
+      - $ref: '#/components/parameters/before'
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      - $ref: '#/components/parameters/property-filter'
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of supplier properties.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/property-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+  /travel-suppliers/properties/{propertyId}:
+    parameters:
+    - $ref: '#/components/parameters/propertyId1'
+    get:
+      description: Get a supplier property by ID.
+      tags:
+      - Travel Suppliers
+      operationId: PropertyApiGetProperty
+      summary: Get Supplier Property
+      security:
+      - OAuth2.clientCredentials:
+        - business-transient/supplier-properties:read
+      parameters: []
+      responses:
+        '200':
+          description: Successfully retrieved a property.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/property'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+  /travel-suppliers/property-rooms:
+    parameters: []
+    get:
+      description: Gets a paginated list of supplier property rooms.
+      tags:
+      - Travel Suppliers
+      operationId: BtApiGetPropertyRooms
+      summary: List Supplier Property Rooms
+      security:
+      - OAuth2.clientCredentials:
+        - business-transient/supplier-property-rooms:read
+      parameters:
+      - $ref: '#/components/parameters/after'
+      - $ref: '#/components/parameters/before'
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      - $ref: '#/components/parameters/property-room-filter'
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of property rooms.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/property-room-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+  /travel-suppliers/property-rooms/{roomId}:
+    parameters:
+    - $ref: '#/components/parameters/roomId'
+    get:
+      description: Read supplier property room data by room ID.
+      tags:
+      - Travel Suppliers
+      operationId: PropertyApiGetPropertyRoom
+      summary: Get Supplier Property Room
+      security:
+      - OAuth2.clientCredentials:
+        - business-transient/supplier-property-rooms:read
+      parameters: []
+      responses:
+        '200':
+          description: Successfully retrieved a property room.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/property-room'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+components:
+  schemas:
+    brand-paginated-response:
+      title: Brand paginated response
+      description: A list of brands.
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/paging.json'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/brand'
+          description: Collection of brands and their related details.
+    external-code-type.json:
+      title: External Code Type
+      enum:
+      - amadeus_gds
+      - worldspan_gds
+      - galileo_gds
+      - sabre_gds
+      - crs
+      type: string
+      description: Type of the external Code.
+      example: amadeus
+    property-external-code.json:
+      title: Property External Codes
+      description: The external chain and property codes for the property
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/external-code-type.json'
+        chainCode:
+          type: string
+          maxLength: 6
+          example: NH
+          description: The code identifying the property's chain in the given external system.
+        propertyCode:
+          type: string
+          maxLength: 15
+          example: GH1
+          description: The code identifying a property in the given external system.
+    property-room-external-code.json:
+      title: Property Room External Code
+      description: The external room codes for the room
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/external-code-type.json'
+        roomCode:
+          type: string
+          maxLength: 10
+          example: std887
+          description: The code identifying the room in the given external system.
+    pagination-links.json:
+      title: PaginationLinks
+      type: object
+      description: Represents pagination links for navigating between pages of data.
+      properties:
+        next:
+          $ref: '#/components/schemas/link.json'
+        self:
+          $ref: '#/components/schemas/link.json'
+        prev:
+          $ref: '#/components/schemas/link.json'
+    property-paginated-response:
+      title: Property paginated response
+      description: A list of properties.
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/paging.json'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/property'
+          description: Collection of properties and their related details.
+    chain:
+      title: Chain
+      description: Chain details.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/property/allOf/0'
+      properties:
+        id:
+          title: Chain ID
+          description: The ID of the chain.
+          type: string
+          format: uuid
+          example: 415079ab-4bee-491e-84ad-c2379f840379
+        name:
+          type: string
+          description: The name of the travel supplier chain.
+          maxLength: 50
+          example: Northern Hotels
+        code:
+          type: string
+          maxLength: 6
+          description: The code identifying the travel supplier chain.
+          example: NH
+        brand:
+          description: The brand that the chain belongs to.
+          type: object
+          properties:
+            id:
+              title: Brand ID
+              description: The ID of the brand that the chain belongs to.
+              type: string
+              example: NorthernHotels
+        address:
+          $ref: '#/components/schemas/address.json'
+        deleted:
+          type: boolean
+          description: True indicates the chain is deleted.
+          default: false
+          example: false
+          readOnly: true
+    room-bed-type.json:
+      title: Room bed type
+      enum:
+      - sofa_bed
+      - double
+      - full
+      - king
+      - murphy
+      - queen
+      - run_of_house
+      - single
+      - twin
+      type: string
+      description: Code representing the bed type.
+      example: queen
+    ErrorResponseBase1:
+      title: ErrorResponseBase
+      type: object
+      description: Represents an error response with no additional details.
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          description: The HTTP status code representing the error.
+          example: 400
+        message:
+          type: string
+          description: A brief description of the error.
+          example: Bad Request
+        target:
+          type: string
+          description: The target resource of the error.
+          example: example target
+    chain-paginated-response:
+      title: Chain paginated response
+      description: A list of chains.
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/paging.json'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/chain'
+          description: Collection of chains and their related details.
+    property:
+      title: property
+      description: Details of the property
+      type: object
+      allOf:
+      - title: Audit
+        description: Audit information
+        type: object
+        properties:
+          created:
+            type: string
+            format: date-time
+            description: The ISO 8601 zoned date time when this record was created.
+            readOnly: true
+            example: '2017-01-02T02:00:00Z'
+          createdBy:
+            type: string
+            description: The identifier of the user that created this record.
+            readOnly: true
+            example: hporter
+          lastModified:
+            type: string
+            format: date-time
+            description: The ISO 8601 zoned date time when this record was updated.
+            readOnly: true
+            example: '2019-02-12T03:00:00Z'
+          lastModifiedBy:
+            type: string
+            description: The identifier of the user that last updated this record.
+            readOnly: true
+            example: hporter
+      properties:
+        id:
+          title: Property ID
+          description: The ID of the property.
+          type: string
+          format: uuid
+          example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+        name:
+          type: string
+          maxLength: 50
+          example: The Grand Property
+          description: The name of the property.
+        chain:
+          description: The chain that the property belongs to.
+          type: object
+          properties:
+            id:
+              title: Chain ID
+              description: The ID of the chain.
+              type: string
+              format: uuid
+              example: 415079ab-4bee-491e-84ad-c2379f840379
+        brand:
+          description: The brand that the property belongs to.
+          type: object
+          properties:
+            id:
+              title: Brand ID
+              description: The ID of the brand.
+              type: string
+              example: NorthernHotels
+        code:
+          type: string
+          maxLength: 15
+          example: GH101
+          description: The property code for the property.
+        deleted:
+          type: boolean
+          description: True indicates that the property is deleted.
+          default: false
+          example: false
+          readOnly: true
+        currencyCode:
+          type: string
+          minLength: 3
+          maxLength: 3
+          default: USD
+          example: USD
+          description: The ISO 4217 standard format currency code specified for the property.
+        address:
+          $ref: '#/components/schemas/address.json'
+        externalCodes:
+          type: array
+          items:
+            $ref: '#/components/schemas/property-external-code.json'
+          description: Collection of external codes for a property. This includes GDS nd other codes used to identify a property
+            in external systems.
+          maxItems: 5
+    property-room-paginated-response:
+      title: Property room paginated response
+      description: A list of property sleeping rooms.
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/paging.json'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/property-room'
+          description: Collection of property rooms and related details.
+    paging.json:
+      title: Paging
+      required:
+      - _links
+      type: object
+      description: Represents pagination information for a collection of resources.
+      properties:
+        previousToken:
+          type: string
+          description: The pagination token for the previous page, if one exists. You can use this token to navigate to the
+            previous page of data.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        nextToken:
+          type: string
+          description: The pagination token for the next page. If this value is present in the response, there is another
+            page of data you can fetch.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        currentToken:
+          type: string
+          description: The pagination token for the current page.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        limit:
+          type: integer
+          description: The number of records to return on the page. Not to exceed 200.
+          example: 100
+        totalCount:
+          type: integer
+          description: The total number of records available. This field may return blank, even if there are more records.
+            To confirm if there are more records, check the `nextToken` field.
+          example: 2
+        _links:
+          $ref: '#/components/schemas/pagination-links.json'
+    brand:
+      title: Brand
+      description: Brand details.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/property/allOf/0'
+      properties:
+        id:
+          type: string
+          maxLength: 16
+          description: The ID of the travel supplier brand.
+          example: NorthernHotels
+        name:
+          type: string
+          description: The name of the travel supplier brand.
+          maxLength: 50
+          example: Northern Hotel Group
+        address:
+          $ref: '#/components/schemas/address.json'
+        deleted:
+          type: boolean
+          description: True indicates the brand is deleted.
+          default: false
+          example: false
+          readOnly: false
+    link.json:
+      title: Link
+      required:
+      - href
+      type: object
+      description: Represents a link to a related resource.
+      properties:
+        href:
+          type: string
+          description: A url provided that can be followed for linking
+          example: ?token=90c5f062-76ad-4ea4-aa53-00eb698d9262
+    address.json:
+      title: Address
+      description: A physical address.
+      type: object
+      properties:
+        address1:
+          description: Address line 1.
+          type: string
+          maxLength: 45
+          example: 717 N Harwood St
+        address2:
+          description: Address line 2.
+          type: string
+          maxLength: 45
+          example: Suite 2800
+        city:
+          description: City name.
+          type: string
+          maxLength: 50
+          example: Dallas
+        region:
+          description: Region name.
+          type: string
+          maxLength: 50
+          example: Texas
+        regionCode:
+          description: Region code.
+          type: string
+          maxLength: 3
+          example: TX
+        postalCode:
+          description: Postal code.
+          type: string
+          maxLength: 16
+          example: '75201'
+        country:
+          description: Country name.
+          type: string
+          maxLength: 50
+          example: United States
+        countryCode:
+          description: ISO 3166 alpha-2 country code.
+          type: string
+          maxLength: 2
+          minLength: 2
+          example: US
+    property-room:
+      title: Property Room
+      description: Property room details.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/property/allOf/0'
+      properties:
+        id:
+          title: Property Room ID
+          description: The ID of the property room.
+          type: string
+          format: uuid
+          example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+        name:
+          type: string
+          description: The name of the property room.
+          maxLength: 30
+          example: Standard
+        code:
+          type: string
+          maxLength: 6
+          description: Room code of the property room.
+          example: std
+        property:
+          description: The property that the room belongs to.
+          type: object
+          properties:
+            id:
+              title: property ID
+              description: The ID of the property.
+              type: string
+              format: uuid
+              example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+        deleted:
+          type: boolean
+          description: True indicates the property room is deleted.
+          default: false
+          example: false
+          readOnly: true
+        bedTypeCode:
+          $ref: '#/components/schemas/room-bed-type.json'
+        numberOfBeds:
+          type: integer
+          description: The number of beds in the room.
+          example: 2
+        capacity:
+          type: integer
+          description: Maximum capacity of people that can sleep in the room.
+          example: 6
+        description:
+          type: string
+          maxLength: 2000
+          description: A description of the room.
+          example: A standard room with two queen beds.
+        externalCodes:
+          type: array
+          items:
+            $ref: '#/components/schemas/property-room-external-code.json'
+          description: Collection of external codes for the room. This includes GDS and other codes used to identify a room
+            in external systems.
+          maxItems: 5
+    ErrorResponse-12:
+      title: ErrorResponse
+      description: Represents an error response with additional details of cascading error messages.
+      allOf:
+      - $ref: '#/components/schemas/ErrorResponseBase1'
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorResponseBase1'
+          description: Additional details of cascading error messages.
+  responses:
+    NotFound1:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 404
+            message: Not found
+    BadRequest1:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 400
+            message: Bad Request
+    TooManyRequests1:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 429
+            message: Limit Exceeded
+    Unauthorized1:
+      description: Bad or expired token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 401
+            message: Unauthorized
+    Forbidden1:
+      description: You do not have access to the resource
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 403
+            message: Access Forbidden
+  parameters:
+    after:
+      name: after
+      required: false
+      description: Used to query records that have been added or updated after this time point. Default to the beginning of
+        time of the data store.
+      in: query
+      schema:
+        type: string
+        format: date-time
+        example: '2017-01-02T02:00:00Z'
+    property-filter:
+      name: filter
+      in: query
+      required: false
+      description: 'A filter query string narrows search results and supports the combination of logical and comparison operators.
+        The filter adheres to the pattern filter=''field'' comparisonType ''value''.
+
+
+        There are eight comparison types that can be used in filter expressions:
+
+        * equal: eq
+
+        * not equal: ne
+
+        * greater than: gt
+
+        * greater or equal: ge
+
+        * less than: lt
+
+        * less than or equal: le
+
+        * starts with: sw
+
+        * contains a value: contains
+
+
+        The following fields are filterable:
+
+        * id (eq|ne)
+
+        * name (eq|ne|sw|contains)
+
+        * code (eq|ne)
+
+        * brand.id (eq|ne|contains)
+
+        * chain.id (eq|ne)
+
+        * created (eq|ne|lt|le|gt|ge)
+
+        * lastModified (eq|ne|lt|le|gt|ge)
+
+        '
+      schema:
+        type: string
+        example: code eq ABC123
+    brand-filter:
+      name: filter
+      in: query
+      required: false
+      description: 'A filter query string narrows search results and supports the combination of logical and comparison operators.
+        The filter adheres to the pattern filter=''field'' comparisonType ''value''.
+
+
+        There are eight comparison types that can be used in filter expressions:
+
+        * equal: eq
+
+        * not equal: ne
+
+        * greater than: gt
+
+        * greater or equal: ge
+
+        * less than: lt
+
+        * less than or equal: le
+
+        * starts with: sw
+
+        * contains a value: contains
+
+
+        The following fields are filterable:
+
+        * id (eq|ne|contains)
+
+        * name (eq|ne|sw|contains)
+
+        '
+      schema:
+        type: string
+        example: name eq AB
+    chainId:
+      description: The ID of the chain.
+      name: chainId
+      required: true
+      in: path
+      schema:
+        title: Chain ID
+        type: string
+        format: uuid
+        example: 0ab9e863-a748-457f-81cd-f294ff66f5e6
+    propertyId1:
+      description: The ID of the property.
+      name: propertyId
+      required: true
+      in: path
+      schema:
+        title: property ID
+        type: string
+        format: uuid
+        example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+    brandId:
+      description: The ID of the brand.
+      name: brandId
+      required: true
+      in: path
+      schema:
+        title: Brand Code
+        type: string
+        example: NorthernHotels
+    before:
+      name: before
+      required: false
+      in: query
+      description: Used to query records that have been added or updated before this time point.
+      schema:
+        type: string
+        format: date-time
+        example: '2017-01-02T02:00:00Z'
+    property-room-filter:
+      name: filter
+      in: query
+      required: false
+      description: 'A filter query string narrows search results and supports the combination of logical and comparison operators.
+        The filter adheres to the pattern filter=''field'' comparisonType ''value''.
+
+
+        There are eight comparison types that can be used in filter expressions:
+
+        * equal: eq
+
+        * not equal: ne
+
+        * greater than: gt
+
+        * greater or equal: ge
+
+        * less than: lt
+
+        * less than or equal: le
+
+        * starts with: sw
+
+        * contains a value: contains
+
+
+        The following fields are filterable:
+
+        * id (eq|ne)
+
+        * name (eq|ne|sw|contains)
+
+        * code (eq|ne)
+
+        * property.id (eq|ne)
+
+        * created (eq|ne|lt|le|gt|ge)
+
+        * lastModified (eq|ne|lt|le|gt|ge)
+
+        '
+      schema:
+        type: string
+        example: code eq dlx
+    token:
+      name: token
+      in: query
+      description: 'The continuation token returned from a previous class. This must be a valid UUID v4 if provided.
+
+        This will override any other pageable parameters provided.
+
+        '
+      style: form
+      explode: true
+      schema:
+        type: string
+        example: 0e28af57-511f-47ab-ae46-46cd1ca51a1a
+    roomId:
+      description: The ID of the property room.
+      name: roomId
+      required: true
+      in: path
+      schema:
+        title: Property Room ID
+        type: string
+        format: uuid
+        example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+    limit:
+      name: limit
+      in: query
+      description: The maximum number of records to return per page.
+      style: form
+      explode: true
+      schema:
+        maximum: 200
+        minimum: 1
+        type: integer
+        default: 100
+        example: 100
+    chain-filter:
+      name: filter
+      in: query
+      required: false
+      description: 'A filter query string narrows search results and supports the combination of logical and comparison operators.
+        The filter adheres to the pattern filter=''field'' comparisonType ''value''.
+
+
+        There are eight comparison types that can be used in filter expressions:
+
+        * equal: eq
+
+        * not equal: ne
+
+        * greater than: gt
+
+        * greater or equal: ge
+
+        * less than: lt
+
+        * less than or equal: le
+
+        * starts with: sw
+
+        * contains a value: contains
+
+
+        The following fields are filterable:
+
+        * id (eq|ne)
+
+        * name (eq|ne|sw|contains)
+
+        * code (eq|ne)
+
+        * brand.id (eq|ne|contains)
+
+        '
+      schema:
+        type: string
+        example: code eq NH
+  securitySchemes:
+    OAuth2.clientCredentials:
+      type: oauth2
+      description: OAuth2 Client Credentials Flow.
+      flows:
+        clientCredentials:
+          tokenUrl: https://api-platform.cvent.com/ea/oauth2/token
+          scopes:
+            account/hooks:delete: Allows the deletion of hooks.
+            account/hooks:read: Allows the reading of hooks.
+            account/hooks:write: Allows the creation/updation of hooks.
+            account/user-groups:delete: Allows deletion for user groups
+            account/user-groups:read: Allows the reading of user groups
+            account/user-groups:write: Allows the writing of user groups
+            account/users:delete: Allows the deletion of User
+            account/users:read: Allows the reading of User, User Group
+            account/users:write: Allows the creation/updating of User
+            appointments/appointment-attendees:read: Allows the reading of appointment attendees and their related entities.
+            appointments/appointment-events:read: Allows the reading of appointment events and their related entities.
+            appointments/appointment-types:read: Allows the reading of appointment types and their related entities.
+            appointments/appointments:read: Allows the reading of appointment and their related entities.
+            appointments/appointments:write: Allows the writing of appointments and their related entities.
+            appointments/available-times:read: Allows the reading of availability times.
+            appointments/locations:read: Allows the reading of appointment locations and their related entities.
+            attendee-insights/attendee-insights:read: Allows the reading of engagement scores (attendee insights).
+            attendee-insights/scores:read: Allows the reading of scores.
+            attendee-insights/stats:read: Allows the reading of engagement score (attendee insight) stats.
+            budget/budget-items:delete: Allows the deletion of budget items
+            budget/budget-items:read: Allows the reading of all budget items
+            budget/budget-items:write: Allows creation/updation of budget item
+            budget/budget-totals:read: Allows the reading of all event budget totals
+            budget/budget-vendors:read: Allows reading of account-level budget vendors.
+            budget/cards:read: Allows the reading of cards
+            budget/currency-conversion-rate:delete: Allows deletion of currency conversion rate for currency.
+            budget/currency-conversion-rate:read: Allows reading of currency conversion rate for currency.
+            budget/currency-conversion-rate:write: Allows creation/update of currency conversion rate for currency.
+            budget/payments:delete: Allows deletion of payments.
+            budget/payments:read: Allows reading of payment for budget item.
+            budget/payments:write: Allows creation of payment in a budget item.
+            budget/transactions:delete: Allows delete card transactions.
+            budget/transactions:read: Allows the reading of all card's transactions
+            budget/transactions:write: Allows creation of card transactions.
+            bulk/bulk-jobs:read: Allows the reading of bulk job related entities
+            bulk/bulk-jobs:write: Allows the creation, update and deletion of bulk job related entities
+            business-transient/bids:read: Allows the reading of Business Transient Bid data
+            business-transient/proposals:read: Allows the reading of Business Transient Proposal data
+            business-transient/supplier-brands:read: Allows the reading of a supplier brand or a list of travel supplier brands.
+            business-transient/supplier-chains:read: Allows the reading of a travel supplier chain or a list of travel supplier
+              chains.
+            business-transient/supplier-properties:read: Allows the reading of a travel supplier property or a list of travel
+              supplier properties.
+            business-transient/supplier-property-rooms:read: Allows the reading of a list of travel supplier property rooms.
+            business-transient/travel-accounts:read: Allows the reading of business transient travel account data.
+            business-transient/travel-program-questions:read: Allows the reading of business transient travel program question
+              data.
+            business-transient/travel-programs:read: Allows the reading of business transient travel program data.
+            business-transient/travel-supplier-accounts:read: Allows the reading of business transient travel supplier account
+              data.
+            business-travel/bids:read: Allows the reading of Business Travel Bid data
+            business-travel/proposals:read: Allows the reading of Business Travel Proposal data
+            business-travel/travel-accounts:read: Allows the reading of business travel account data.
+            business-travel/travel-program-questions:read: Allows the reading of business travel program question data.
+            business-travel/travel-programs:read: Allows the reading of business travel program data.
+            compliance/communications:read: Allows the reading of communication compliance
+            compliance/communications:write: Allows the writing of communication compliance
+            email/bounces:read: Allow the reading of email bounces.
+            email/email-status:read: Allows the reading of email statuses.
+            email/emails:read: Allows the reading of emails.
+            eMarketing/campaigns:read: Allows the reading of campaigns.
+            emarketing/emarketing-email-status:read: Allows the reading of eMarketing email statuses.
+            eMarketing/eMarketing-email-templates:read: Allows the reading of email-templates.
+            eMarketing/eMarketing-send-emails:write: Allows the writing of eMarketing emails.
+            event/admission-items:read: Allows the reading of admission items
+            event/air-request:read: Allow reading the air request or air actual detail for attendees.
+            event/alternate-travel:read: Allow reading the alternate travel answers for attendees.
+            event/attendance-durations:read: Allows the read of Duration records
+            event/attendee-activities-metadata:delete: Allows the deletion of attendees activities metadata.
+            event/attendee-activities-metadata:read: Allows the reading of attendee activities metadata.
+            event/attendee-activities-metadata:write: Allows the creation/updating of attendees activities metadata.
+            event/attendee-activities:read: Allows the reading of attendee activities.
+            event/attendee-activities:write: Allows the writing of external attendee activities.
+            event/attendee-credits:read: Allows the reading of attendee credits.
+            event/attendee-links:delete: Allows the deletion of attendee links
+            event/attendee-links:read: Allows the reading of attendee links
+            event/attendee-links:write: Allows the creation of attendee links
+            event/attendee-messages:read: Allows the reading of attendee messages
+            event/attendees:read: Allows the reading of attendees.
+            event/attendees:write: Allows the creation of an attendee in an event.
+            event/audience-segments:read: Allows the reading of audience segments.
+            event/audience-segments:write: Allows the creation/updating/deletion of audience segments.
+            event/contact-groups:read: Allows the reading of contact groups.
+            event/contact-groups:write: Allows the creation/updating of contact groups.
+            event/contact-types:read: Allows the reading of contact types.
+            event/contacts:delete: Allows the deletion of contacts.
+            event/contacts:read: Allows the reading of contacts.
+            event/contacts:write: Allows the creation/updating of contacts.
+            event/contacts:write-sensitive: Allows the creation/updating of sensitive data related to contacts.
+            event/custom-fields:read: Allows the reading of custom fields
+            event/custom-fields:write: Allows the writing of custom fields
+            event/discounts:write: Allows the writing of discounts
+            event/donation-items:read: Allows the reading of donation items.
+            event/event-discounts:read: Allows the reading of event discounts.
+            event/event-discounts:write: Allows the writing of event discounts.
+            event/event-email-status:read: Allows the reading of event email statuses.
+            event/event-emails:read: Allows the reading of event emails
+            event/event-emails:write: Allows to send event emails.
+            event/event-features:read: Allows the reading of events-features
+            event/event-features:write: Allows updating the event-features
+            event/event-user-groups:read: Allows the reading of user groups
+            event/event-user-groups:write: Allows associating/disassociating user groups to event
+            event/events:read: Allows the reading of events
+            event/events:write: Allows the creation/updating of events
+            event/fee-items:read: Allows the reading of fee items.
+            event/hotel-request:read: Allow reading the hotel request or housing reservation request detail for attendees.
+            event/invitation-lists:read: Allows the reading of the invitation lists for an event
+            event/meeting-request-forms:read: Allows the reading of meeting request forms.
+            event/meeting-requests:read: Allows the reading of meeting requests.
+            event/meeting-requests:write: Allows the creation/updating of meeting requests.
+            event/membership-items:read: Allows reading of membership items.
+            event/orders:read: Allows the reading of orders
+            event/planning-documents:read: Allows the reading of event planning documents
+            event/players:read: Allows the reading of players
+            event/process-form-submissions:read: Allows the reading of process form submissions.
+            event/program-items:delete: Allows deletion of session program items
+            event/program-items:read: Allows reading of session program items
+            event/program-items:write: Allows writing of session program items
+            event/quantity-items:read: Allows the reading of quantity items.
+            event/quantity-items:write: Allows the writing of quantity items
+            event/registration-paths:read: Allows the reading of registration paths
+            event/registration-types:read: Allows the reading of registration types
+            event/registration-types:write: Allows the writing of registration types
+            event/role-assignments:read: Allows the reading of event role assignment.
+            event/session-attendance:read: Allows the reading of sessions attendance
+            event/session-attendance:write: Allows the creation/updating of sessions attendance
+            event/session-categories:read: Allows reading of session categories
+            event/session-categories:write: Allows writing of session categories
+            event/session-enrollment:delete: Allows the deletion of session registrations
+            event/session-enrollment:read: Allows the reading of sessions registrations
+            event/session-enrollment:write: Allows the writing of sessions registrations
+            event/session-segments:read: Allows reading of session segments
+            event/sessions:delete: Allows the deletion of a session in an event
+            event/sessions:read: Allows the reading of sessions
+            event/sessions:write: Allows the creation of a session in an event
+            event/speaker-categories:read: Allows reading of speaker categories
+            event/speaker-categories:write: Allows writing of speaker categories
+            event/speakers:delete: Allows the deletion of a speaker in an event
+            event/speakers:read: Allows the reading of speakers
+            event/speakers:write: Allows the creation of a speaker in an event
+            event/taxes:read: Allows the reading of taxes.
+            event/transactions:read: Allows the reading of transactions
+            event/transactions:write: Allows the writing of transactions
+            event/video-views:read: Allows reading of video views.
+            event/videos:read: Allows the reading of video data.
+            event/videos:write: Allows the creation/updating of video data.
+            event/vouchers:read: Allows reading of event vouchers.
+            event/webcasts:delete: Allows the deletion of webcast
+            event/webcasts:read: Allows the reading of webcasts
+            event/webcasts:write: Allows the creation of webcast
+            event/weblinks:read: Allows the reading of event weblinks
+            events-plus/hubs:read: Allows the reading of Events+ hub data.
+            exhibitor/badges:read: Allows reading badges
+            exhibitor/badges:write: Allows creating/updating badges
+            exhibitor/booth-staff:delete: Allows deleting booth staff
+            exhibitor/booth-staff:read: Allows reading booth staff
+            exhibitor/booth-staff:write: Allows creating booth staff
+            exhibitor/eliterature-requests:read: Allows reading eliterature document request data
+            exhibitor/exhibitor-admins:read: Allows reading exhibitor admins
+            exhibitor/exhibitor-admins:write: Allows creating/updating exhibitor admins
+            exhibitor/exhibitor-answers:read: Allows reading exhibitor answers
+            exhibitor/exhibitor-answers:write: Allows updating exhibitor answers
+            exhibitor/exhibitor-categories:delete: Allows deleting exhibitor categories
+            exhibitor/exhibitor-categories:read: Allows reading exhibitor categories
+            exhibitor/exhibitor-categories:write: Allows creating/updating exhibitor categories
+            exhibitor/exhibitor-contents:delete: Allows deleting exhibitor content
+            exhibitor/exhibitor-contents:read: Allows reading exhibitor content
+            exhibitor/exhibitor-contents:write: Allows creating/updating exhibitor content
+            exhibitor/exhibitor-questions:read: Allows reading exhibitor questions
+            exhibitor/exhibitors:delete: Allows deleting exhibitors
+            exhibitor/exhibitors:read: Allows reading exhibitors
+            exhibitor/exhibitors:write: Allows creating/updating exhibitors
+            exhibitor/lead-qualification-answers:read: Allows reading Lead Qualification Answers
+            exhibitor/lead-qualification-questions:read: Allows reading Lead Qualification Questions.
+            exhibitor/leads:read: Allows reading leads.
+            exhibitor/registration-packs:delete: Allows deleting registration pack
+            exhibitor/registration-packs:read: Allows reading registration pack
+            exhibitor/registration-packs:write: Allows creating/updating registration pack
+            exhibitor/sponsorship-levels:read: Allows reading sponsorship level
+            file/file:read: Allows the reading of file
+            file/file:write: Allows the uploading of file
+            housing/connections:write: Allows the user to connect to the Reglink APIs.
+            housing/hotel-room-rates:write: Allows the user to create/update hotel room rates.
+            housing/housing-event-available-nights:read: Allows the user to read availability information for given event.
+            housing/housing-event-hotels:read: Allows the user to read information about event hotels.
+            housing/housing-event-inventory:read: Allows the user to get information about housing event inventory.
+            housing/housing-event-room-types:read: Allows the user to read information about event room types.
+            housing/housing-events:read: Allows the user to read information about events.
+            housing/reservation-requests:delete: Allows the user to cancel reservation request.
+            housing/reservation-requests:read: Allows the user to read reservation request information.
+            housing/reservation-requests:write: Allows the user to create/update reservation request.
+            housing/reservations-link:delete: Allows the user to remove association from reservation.
+            housing/reservations-link:write: Allows the user to associate reservation to reservation request.
+            housing/reservations:delete: Allows the user to cancel reservation.
+            housing/reservations:read: Allows the user to read reservation details information.
+            housing/reservations:write: Allows the user to create/update reservation.
+            onsite/signatures:read: Allows reading signatures.
+            proposal/proposals:write: Allows the creation/writing of proposal
+            remote-printing/badge-print-jobs:read: Allows reading print jobs.
+            remote-printing/badge-print-jobs:write: Allows creating print jobs.
+            remote-printing/badge-printer-pools:read: Allows reading pools.
+            rfp/rfp-agenda-items:read: Allows the reading of RFP agenda items.
+            rfp/rfp-attachments:read: Allows the reading of RFP attachments.
+            rfp/rfp-custom-fields:read: Allows the reading of RFP custom fields.
+            rfp/rfp-guest-rooms:read: Allows the reading of RFP guest rooms.
+            rfp/rfp-internal-documents:read: Allows the reading of RFP internal documents.
+            rfp/rfp-lead-sources:read: Allows the reading of RFP lead sources.
+            rfp/rfp-past-events:read: Allows the reading of past events similar to rfp event.
+            rfp/rfp-questions:read: Allows the reading of RFP questions.
+            rfp/rfp-recipients-history:read: Allows the reading of RFP recipients history.
+            rfp/rfp-suppliers:read: Allows the reading of RFP suppliers.
+            rfp/rfps:read: Allows the reading of basic details of RFP.
+            seating/assignments:read: Allows to read attendee seat assignment information.
+            seating/event-seatings:read: Allows to read event seating.
+            seating/seats:read: Allows to read seat information.
+            seating/tables:read: Allows to read table information.
+            secure-ecommerce/card-tokens:write: Allows creation of credit card tokens
+            survey/questions:read: Allows the reading of survey questions
+            survey/respondents:read: Allows reading the survey respondents
+            survey/responses:read: Allows reading the survey responses
+            survey/standard-survey-email-templates:read: Allows reading the standalone survey email templates
+            survey/standard-survey-email:write: Allows writing operations on standalone survey emails
+            survey/standard-survey-questions:read: Allows the reading of standalone surveys questions
+            survey/standard-survey-respondents:read: Allows reading the standalone survey respondents
+            survey/standard-survey-respondents:write: Allows write operations on standalone survey respondents
+            survey/standard-survey-responses:read: Allows reading the standalone survey responses
+            survey/standard-survey-responses:write: Allows write operations on standalone surveys respondent's responses
+            survey/standard-surveys:read: Allows the reading of standalone surveys
+            survey/survey-questions:read: Allows the reading of event survey questions
+            survey/survey-respondents:read: Allows reading the event survey respondents
+            survey/survey-respondents:write: Allows write operations on the event survey respondents
+            survey/survey-responses:read: Allows reading the event survey responses
+            survey/survey-responses:write: Allows write operations on the event surveys respondent's responses
+            survey/surveys:read: Allows the reading of event surveys
+            venue/meeting-room-images:delete: Allows disassociating images from meeting rooms.
+            venue/meeting-room-images:read: Allows retrieving meeting room images.
+            venue/meeting-room-images:write: Allows associating images with meeting rooms.
+            venue/meeting-room-overviews:read: Allows read access for overview of meeting room.
+            venue/meeting-rooms:write: Allows the creation and modification of meeting rooms.
+            venue/venue-details-overview:read: Allows read access for overview of venue details.
+            venue/venue-details:write: Allows the creation and modification of venue details.
+            venue/venue-facility:write: Allows the modification of venue facility information.

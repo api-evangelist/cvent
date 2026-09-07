@@ -1,19 +1,13 @@
 aid: cvent
 name: Cvent
 kind: company
-description: >-
-  Cvent is a leading meetings, events, and hospitality technology
-  provider with over 4,800 employees and 22,000+ customers worldwide.
-  The Cvent platform spans Event Cloud (event management, registration,
-  mobile event apps, virtual and hybrid events, Attendee Hub, surveys,
-  Diagramming, and analytics) and Hospitality Cloud (Cvent Supplier
-  Network, Passkey, Venue Sourcing, and Sales & Catering). Programmatic
-  access is delivered through the unified Cvent Platform REST API
-  (api-platform.cvent.com) using OAuth 2.0 client credentials, with
-  legacy SOAP, BadgeKit, Jifflenow, and CSN APIs documented for
-  historical integrations. The developer portal at developers.cvent.com
-  hosts API references, guides, OpenAPI downloads, webhooks, SSO,
-  custom widgets, white-label, and integration documentation.
+description: Cvent is a leading meetings, events, and hospitality technology provider with over 4,800 employees
+  and 22,000+ customers worldwide. The Cvent platform spans Event Cloud (event management, registration, mobile
+  event apps, virtual and hybrid events, Attendee Hub, surveys, Diagramming, and analytics) and Hospitality Cloud
+  (Cvent Supplier Network, Passkey, Venue Sourcing, and Sales & Catering). Programmatic access is delivered through
+  the unified Cvent Platform REST API (api-platform.cvent.com) using OAuth 2.0 client credentials, with legacy SOAP,
+  BadgeKit, Jifflenow, and CSN APIs documented for historical integrations. The developer portal at developers.cvent.com
+  hosts API references, guides, OpenAPI downloads, webhooks, SSO, custom widgets, white-label, and integration documentation.
 url: https://raw.githubusercontent.com/api-evangelist/cvent/refs/heads/main/apis.yml
 deliveryModel:
   model: unknown
@@ -46,70 +40,69 @@ type: Index
 access: 3rd-Party
 position: Consuming
 created: '2025-11-19'
-modified: '2026-04-28'
+modified: '2026-09-07'
 specificationVersion: '0.23'
 tags:
-  - Attendee Hub
-  - Attendee Management
-  - Conferences
-  - Diagramming
-  - Event Management
-  - Event Marketing
-  - Event
-  - Exhibitors
-  - Hospitality
-  - Hospitality Cloud
-  - Hybrid Events
-  - Meetings
-  - Authentication
-  - Passkey
-  - Registration
-  - REST API
-  - SOAP API
-  - SSO
-  - Supplier Network
-  - Surveys
-  - Venue Management
-  - Venue Sourcing
-  - Virtual Events
-  - Webhook
-  - White Label
+- Attendee Hub
+- Attendee Management
+- Conferences
+- Diagramming
+- Event Management
+- Event Marketing
+- Event
+- Exhibitors
+- Hospitality
+- Hospitality Cloud
+- Hybrid Events
+- Meetings
+- Authentication
+- Passkey
+- Registration
+- REST API
+- SOAP API
+- SSO
+- Supplier Network
+- Surveys
+- Venue Management
+- Venue Sourcing
+- Virtual Events
+- Webhook
+- White Label
 tags_raw:
-  - Attendee Hub
-  - Attendee Management
-  - Conferences
-  - Diagramming
-  - Event Management
-  - Event Marketing
-  - Events
-  - Exhibitors
-  - Hospitality
-  - Hospitality Cloud
-  - Hybrid Events
-  - Meetings
-  - OAuth 2.0
-  - Passkey
-  - Registration
-  - REST API
-  - SOAP API
-  - SSO
-  - Supplier Network
-  - Surveys
-  - Venue Management
-  - Venue Sourcing
-  - Virtual Events
-  - Webhooks
-  - White Label
+- Attendee Hub
+- Attendee Management
+- Conferences
+- Diagramming
+- Event Management
+- Event Marketing
+- Events
+- Exhibitors
+- Hospitality
+- Hospitality Cloud
+- Hybrid Events
+- Meetings
+- OAuth 2.0
+- Passkey
+- Registration
+- REST API
+- SOAP API
+- SSO
+- Supplier Network
+- Surveys
+- Venue Management
+- Venue Sourcing
+- Virtual Events
+- Webhooks
+- White Label
 apis:
 - aid: cvent:rest-api
   name: Cvent REST API
-  description: >-
-    The unified Cvent Platform REST API providing programmatic access to events, contacts, registrations,
-    attendees, sessions, speakers, exhibitors, surveys, webhooks, and Attendee Hub resources. OAuth 2.0
-    client credentials with the token endpoint at api-platform.cvent.com/ea/oauth2/token.
+  description: The unified Cvent Platform REST API providing programmatic access to events, contacts, registrations,
+    attendees, sessions, speakers, exhibitors, surveys, webhooks, and Attendee Hub resources. OAuth 2.0 client credentials
+    with the token endpoint at api-platform.cvent.com/ea/oauth2/token.
   image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://developers.cvent.com/docs/rest-api/overview
-  baseURL: https://api-platform.cvent.com
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
   tags:
   - Attendees
   - Contacts
@@ -145,10 +138,9 @@ apis:
     url: https://developers.cvent.com/docs/rest-api/migration-guide/benefits
 - aid: cvent:webhooks
   name: Cvent Webhooks API
-  description: >-
-    Cvent Webhooks notify external applications when actions occur in Cvent and send relevant data to
-    a specified URL, automatically pushing event, attendee, speaker, and meeting request data to subscriber
-    endpoints for real-time integration.
+  description: Cvent Webhooks notify external applications when actions occur in Cvent and send relevant data to
+    a specified URL, automatically pushing event, attendee, speaker, and meeting request data to subscriber endpoints
+    for real-time integration.
   image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
   humanURL: https://developers.cvent.com/docs/webhooks/overview
   tags:
@@ -164,6 +156,8 @@ apis:
   - Sessions
   - Webhooks
   properties:
+  - type: Webhooks
+    url: asyncapi/cvent-webhooks-catalog.yml
   - type: Documentation
     url: https://developers.cvent.com/docs/webhooks/overview
   - type: Guide
@@ -174,10 +168,9 @@ apis:
     url: https://developers.cvent.com/docs/webhooks/technical-requirements
 - aid: cvent:csn-api
   name: Cvent Supplier Network (CSN) API
-  description: >-
-    The Cvent Supplier Network (CSN) API provides integration with a database of 280,000+ hotels, suppliers,
-    and destinations worldwide. Planners search and compare venues and manage RFPs; suppliers create and
-    update proposals via a push-pull workflow.
+  description: The Cvent Supplier Network (CSN) API provides integration with a database of 280,000+ hotels, suppliers,
+    and destinations worldwide. Planners search and compare venues and manage RFPs; suppliers create and update
+    proposals via a push-pull workflow.
   image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
   humanURL: https://developers.cvent.com/docs/legacy-api/csn/overview
   tags:
@@ -195,10 +188,9 @@ apis:
     url: https://developers.cvent.com/docs/legacy-api/csn/supplier-guide/authentication
 - aid: cvent:passkey-reglink
   name: Cvent Passkey RegLink API
-  description: >-
-    Passkey RegLink APIs are RESTful JSON APIs (with legacy URL-based and SOAP options) connecting Cvent
-    registration with Passkey hotel reservations. Send registrant info, fetch event and hotel availability,
-    retrieve reservations, and create / update / cancel hotel bookings.
+  description: Passkey RegLink APIs are RESTful JSON APIs (with legacy URL-based and SOAP options) connecting Cvent
+    registration with Passkey hotel reservations. Send registrant info, fetch event and hotel availability, retrieve
+    reservations, and create / update / cancel hotel bookings.
   image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
   humanURL: https://developers.cvent.com/docs/passkey/REST/overview
   tags:
@@ -217,10 +209,9 @@ apis:
     url: https://developers.cvent.com/docs/passkey/REST/faq
 - aid: cvent:soap-api
   name: Cvent SOAP API (Legacy)
-  description: >-
-    The Cvent SOAP API is the original legacy API for pushing and pulling data between Cvent and internal
-    systems. Supports contact and event management, custom fields, address book, and metadata. Being sunset
-    in favor of the REST API.
+  description: The Cvent SOAP API is the original legacy API for pushing and pulling data between Cvent and internal
+    systems. Supports contact and event management, custom fields, address book, and metadata. Being sunset in favor
+    of the REST API.
   image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
   humanURL: https://developers.cvent.com/docs/legacy-api/soap-api/overview
   tags:
@@ -238,6 +229,8 @@ apis:
   - Registration
   - SOAP
   properties:
+  - type: WSDL
+    url: wsdl/cvent-soap-api-v200611.wsdl
   - type: Documentation
     url: https://developers.cvent.com/docs/legacy-api/soap-api/overview
   - type: APIReference
@@ -246,10 +239,12 @@ apis:
     url: https://developers.cvent.com/docs/legacy-api/soap-api/object-definitions/overview
   - type: MigrationGuide
     url: https://developers.cvent.com/docs/rest-api/migration-guide/benefits
+  - type: ErrorCodes
+    url: errors/cvent-error-codes.yml
+  baseURL: https://api.cvent.com/soap/V200611.ASMX
 - aid: cvent:custom-widgets
   name: Cvent Custom Widgets API
-  description: >-
-    The Cvent Custom Widgets API allows developers to build custom interactive widgets for Cvent Event
+  description: The Cvent Custom Widgets API allows developers to build custom interactive widgets for Cvent Event
     Registration pages. SDK for widget elements, configuration files, and navigation methods.
   image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
   humanURL: https://developers.cvent.com/docs/custom-widgets/overview
@@ -265,8 +260,7 @@ apis:
     url: https://github.com/cvent/custom-widgets-labs
 - aid: cvent:sso
   name: Cvent Single Sign-On (SSO) Integration
-  description: >-
-    Cvent SSO enables identity provider integration via SAML and OpenID Connect for planner login, access
+  description: Cvent SSO enables identity provider integration via SAML and OpenID Connect for planner login, access
     portals, event registrant and Attendee Hub, Events+, and portal applications.
   image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
   humanURL: https://developers.cvent.com/docs/sso/overview
@@ -283,8 +277,7 @@ apis:
     url: https://developers.cvent.com/docs/sso/explanation/concepts
 - aid: cvent:white-label
   name: Cvent White Label API
-  description: >-
-    The Cvent White Label API enables venues and suppliers to embed Cvent RFP functionality into their
+  description: The Cvent White Label API enables venues and suppliers to embed Cvent RFP functionality into their
     own websites with custom branding, theming, and analytics for embedded RFP forms.
   image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
   humanURL: https://developers.cvent.com/docs/white-label/overview
@@ -298,9 +291,8 @@ apis:
     url: https://developers.cvent.com/docs/white-label/overview
 - aid: cvent:salesforce-app
   name: Cvent Salesforce App
-  description: >-
-    The Cvent Salesforce App integrates Cvent event data with Salesforce CRM, enabling users to view events
-    from Salesforce, invite contacts and leads, and sync attendee data bidirectionally.
+  description: The Cvent Salesforce App integrates Cvent event data with Salesforce CRM, enabling users to view
+    events from Salesforce, invite contacts and leads, and sync attendee data bidirectionally.
   image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
   humanURL: https://developers.cvent.com/docs/cvent-salesforce-app/overview
   tags:
@@ -322,29 +314,41 @@ apis:
     url: https://developers.cvent.com/docs/cvent-salesforce-app/salesforce-oauth
 - aid: cvent:cvent-attendees-api
   name: Cvent Attendees API
-  description: Event registrations and attendees
-  humanURL: https://developers.cvent.com/docs/rest-api/overview
-  baseURL: https://api-platform.cvent.com
+  description: The Attendee entity primarily refers to the person throughout the lifecycle of an event including
+    registration, enrollment into sessions, and participation. Once contacts are added to events, an Attendee entity
+    is created. This API allows you to read attendee data and add new attendees to your Cvent events.
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
   tags:
   - Attendees
   properties:
   - type: OpenAPI
     url: openapi/cvent-attendees-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/Attendees
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
 - aid: cvent:cvent-contacts-api
   name: Cvent Contacts API
-  description: Contact/address book
-  humanURL: https://developers.cvent.com/docs/rest-api/overview
-  baseURL: https://api-platform.cvent.com
+  description: A contact is a record in your account’s address book that represents an individual. The data stored
+    within these records includes personal information, group memberships, and historical data on event attendance.  Contact
+    APIs will allow you to get contact information, track updates to contact information, and create contacts.
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
   tags:
   - Contacts
   properties:
   - type: OpenAPI
     url: openapi/cvent-contacts-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/Contacts
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
 - aid: cvent:cvent-events-api
   name: Cvent Events API
-  description: Event lifecycle and configuration
-  humanURL: https://developers.cvent.com/docs/rest-api/overview
-  baseURL: https://api-platform.cvent.com
+  description: Events are used to collect registrations and allow attendees to select their schedule. Use these
+    APIs to get information about your events and use the event ID to get further details about the event, such
+    as Attendees and Sessions.
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
   tags:
   - Event
   tags_raw:
@@ -352,21 +356,28 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/cvent-events-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/Events
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
 - aid: cvent:cvent-exhibitors-api
   name: Cvent Exhibitors API
-  description: Exhibitor management
-  humanURL: https://developers.cvent.com/docs/rest-api/overview
-  baseURL: https://api-platform.cvent.com
+  description: '* **Exhibitor -** An exhibitor is an organization that is sponsoring or exhibiting at your event.
+    This API allows you to get information about your exhibitors.'
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
   tags:
   - Exhibitors
   properties:
   - type: OpenAPI
     url: openapi/cvent-exhibitors-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/Exhibitor
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
 - aid: cvent:cvent-oauth-api
   name: Cvent OAuth API
-  description: OAuth 2.0 token issuance
-  humanURL: https://developers.cvent.com/docs/rest-api/overview
-  baseURL: https://api-platform.cvent.com
+  description: Endpoints for obtaining, refreshing, and validating OAuth2 access tokens.
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
   tags:
   - Authentication
   tags_raw:
@@ -374,21 +385,28 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/cvent-oauth-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/Authentication
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
 - aid: cvent:cvent-sessions-api
   name: Cvent Sessions API
-  description: Agenda sessions
-  humanURL: https://developers.cvent.com/docs/rest-api/overview
-  baseURL: https://api-platform.cvent.com
+  description: A session is a presentation, discussion, or activity. Use these APIs to get information about your
+    sessions and use the session ID to get further data within the event.
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
   tags:
   - Sessions
   properties:
   - type: OpenAPI
     url: openapi/cvent-sessions-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/Sessions
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
 - aid: cvent:cvent-webhooks-api
   name: Cvent Webhooks API
-  description: Webhook subscriptions
-  humanURL: https://developers.cvent.com/docs/rest-api/overview
-  baseURL: https://api-platform.cvent.com
+  description: These APIs allow you to create hooks. When triggered, a hook sends a request to your service to
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
   tags:
   - Webhook
   tags_raw:
@@ -396,65 +414,848 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/cvent-webhooks-api-openapi.yml
-common:
-  - type: CapabilityMap
-    url: capabilities/cvent-capability-edges.yml
-    name: Cvent Business Capability Map
-  - type: IssueTracker
-    url: https://github.com/cvent/custom-widgets-labs/issues
-  - type: AgenticAccess
-    url: agentic-access/cvent-agentic-access.yml
-  - type: TrustCenter
-    url: security/cvent-trust-center.yml
-  - type: DomainSecurity
-    url: security/cvent-domain-security.yml
-  - type: Authentication
-    url: authentication/cvent-authentication.yml
-  - type: OAuthScopes
-    url: scopes/cvent-scopes.yml
-  - type: Website
-    url: https://www.cvent.com/
-  - type: DeveloperPortal
-    url: https://developers.cvent.com/
   - type: APIReference
-    url: https://developers.cvent.com/docs/rest-api/reference/reference
-  - type: Authentication
-    url: https://developers.cvent.com/docs/rest-api/explanation/authentication
-  - type: OAuthTokenEndpoint
-    url: https://api-platform.cvent.com/ea/oauth2/token
-  - type: Signup
-    url: https://developers.cvent.com/register
-  - type: Standards
-    url: https://developers.cvent.com/docs/rest-api/reference/api-standards
-  - type: ChangeLog
-    url: https://developers.cvent.com/docs/rest-api/changelog
-  - type: StatusPage
-    url: https://status.cvent.com
-  - type: Support
-    url: https://support.cvent.com/
-  - type: Pricing
-    url: https://www.cvent.com/en/event-management-software/cvent-pricing
-  - type: TermsOfService
-    url: https://www.cvent.com/en/terms-of-use
-  - type: PrivacyPolicy
-    url: https://www.cvent.com/en/privacy-policy
-  - type: Security
-    url: https://www.cvent.com/en/security
-  - type: Training
-    url: https://www.cvent.com/en/academy
-  - type: Community
-    url: https://community.cvent.com/home
-  - type: Blog
-    url: https://www.cvent.com/en/blog
-  - type: GitHub
-    url: https://github.com/cvent
-  - type: Twitter
-    url: https://twitter.com/cvent
-  - type: LinkedIn
-    url: https://www.linkedin.com/company/cvent
+    url: https://developers.cvent.com/documentation#tag/Hooks
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+- aid: cvent:cvent-appointments-api
+  name: Cvent Appointments API
+  description: An appointment is a meeting scheduled between two or more parties. These APIs allow you to get
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
+  tags:
+  - Appointments
+  properties:
+  - type: OpenAPI
+    url: openapi/cvent-appointments-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/Appointments
+- aid: cvent:cvent-attendee-activities-api
+  name: Cvent Attendee Activities API
+  description: The Attendee Activities API gives valuable insight into your customer's experience at your Cvent
+    event.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
+  tags:
+  - Attendee Activities
+  properties:
+  - type: OpenAPI
+    url: openapi/cvent-attendee-activities-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/Attendee-Activities
+- aid: cvent:cvent-attendee-insights-api
+  name: Cvent Attendee Insights API
+  description: The Attendee Insights feature provides valuable information about your event attendees. It assists
+    planners, marketers, and exhibitors in targeting customers effectively, thereby enhancing engagement and conversion
+    rates for marketing campaigns. Utilize these APIs to fetch engagement score data from your event and integrate
+    it into your marketing systems.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
+  tags:
+  - Attendee Insights
+  properties:
+  - type: OpenAPI
+    url: openapi/cvent-attendee-insights-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/Attendee-Insights
+- aid: cvent:cvent-attendee-messages-api
+  name: Cvent Attendee Messages API
+  description: These APIs retrieve and manage attendee messages—communications exchanged between attendees within
+    channels. Channels are virtual spaces created for one-on-one or group conversations, allowing attendees to communicate
+    directly or in groups during an event.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
+  tags:
+  - Attendee Messages
+  properties:
+  - type: OpenAPI
+    url: openapi/cvent-attendee-messages-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/Attendee-Messages
+- aid: cvent:cvent-audience-segments-api
+  name: Cvent Audience Segments API
+  description: Audience Segments allow planners to segment their attendees into groups and
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
+  tags:
+  - Audience Segments
+  properties:
+  - type: OpenAPI
+    url: openapi/cvent-audience-segments-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/Audience-Segments
+- aid: cvent:cvent-badge-print-job-api
+  name: Cvent Badge Print Job API
+  description: Badge print jobs can be scheduled to a printer pool, so a printer in the printer pool can consume
+    the job and print the badge.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
+  tags:
+  - Badge Print Job
+  properties:
+  - type: OpenAPI
+    url: openapi/cvent-badge-print-job-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/Badge-Print-Job
+- aid: cvent:cvent-badge-printer-pools-api
+  name: Cvent Badge Printer Pools API
+  description: Badge printer pools are set up from Cvent UI. You can use this API to retrieve badge printer pools.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
+  tags:
+  - Badge Printer Pools
+  properties:
+  - type: OpenAPI
+    url: openapi/cvent-badge-printer-pools-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/Badge-Printer-Pools
+- aid: cvent:cvent-budget-api
+  name: Cvent Budget API
+  description: Budget is an event feature used to organize spending and track [allocations](https://support.cvent.com/s/communityarticle/Setting-Up-Budget-Allocations).
+    Use this API to view budget items, cards and card transactions related to the budget module.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
+  tags:
+  - Budget
+  properties:
+  - type: OpenAPI
+    url: openapi/cvent-budget-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/Budget
+- aid: cvent:cvent-bulk-api
+  name: Cvent Bulk API
+  description: The Bulk API provides a simple interface to upload large amounts of data into Cvent.  The API processes
+    the uploaded data asynchronously making API calls on behalf of the caller.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
+  tags:
+  - Bulk
+  properties:
+  - type: OpenAPI
+    url: openapi/cvent-bulk-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/Bulk
+- aid: cvent:cvent-campaigns-api
+  name: Cvent Campaigns API
+  description: Planners use eMarketing campaigns to contact an audience, such as newsletters, press releases, or
+    product updates. Campaign emails are used as newsletters, promotions, advertisements, or marketing messages.
+    Use these APIs to send an email and get historical data about your campaigns.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
+  tags:
+  - Campaigns
+  properties:
+  - type: OpenAPI
+    url: openapi/cvent-campaigns-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/Campaigns
+- aid: cvent:cvent-card-tokens-api
+  name: Cvent Card Tokens API
+  description: '**Card Tokenization**: Tokenization is the process Cvent uses to collect sensitive card details
+    and'
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
+  tags:
+  - Card Tokens
+  properties:
+  - type: OpenAPI
+    url: openapi/cvent-card-tokens-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/Card-Tokens
+- aid: cvent:cvent-compliance-api
+  name: Cvent Compliance API
+  description: These API's provide compliance support for regulated industries.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
+  tags:
+  - Compliance
+  properties:
+  - type: OpenAPI
+    url: openapi/cvent-compliance-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/Compliance
+- aid: cvent:cvent-custom-fields-api
+  name: Cvent Custom Fields API
+  description: Custom Fields are created by event planners to track important information about specific objects
+    like events, contacts, or sessions. Use these APIs to view, create, and update custom fields in your account
+    and their related details.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
+  tags:
+  - Custom Fields
+  properties:
+  - type: OpenAPI
+    url: openapi/cvent-custom-fields-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/Custom-Fields
+- aid: cvent:cvent-discounts-api
+  name: Cvent Discounts API
+  description: Discounts provide a way to reduce the cost of event registration items. Use these APIs to manage
+    event discounts, including creating, updating, and linking discounts to agenda items.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
+  tags:
+  - Discounts
+  properties:
+  - type: OpenAPI
+    url: openapi/cvent-discounts-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/Discounts
+- aid: cvent:cvent-emails-api
+  name: Cvent Emails API
+  description: Event planners use emails to invite registrants, market their events and request feedback from attendees.
+    Use these APIs to get historical data about your emails and see relevant details like the types of emails sent,
+    the recipient, and delivery status.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
+  tags:
+  - Emails
+  properties:
+  - type: OpenAPI
+    url: openapi/cvent-emails-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/Emails
+- aid: cvent:cvent-event-credits-api
+  name: Cvent Event Credits API
+  description: Event Credits reward attendees for participating in your events. Planners can award credits for the
+    entire event, specific sessions, or both. You can also award credits after attendees complete surveys. Use these
+    APIs to retrieve credit details for your attendees.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
+  tags:
+  - Event Credits
+  properties:
+  - type: OpenAPI
+    url: openapi/cvent-event-credits-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/Event-Credits
+- aid: cvent:cvent-event-features-api
+  name: Cvent Event Features API
+  description: EventFeatures related APIs
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
+  tags:
+  - Event Features
+  properties:
+  - type: OpenAPI
+    url: openapi/cvent-event-features-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/Event-Features
+- aid: cvent:cvent-event-role-api
+  name: Cvent Event Role API
+  description: Event roles are event specific permission sets for your organization's users. Use these APIs to retrieve,
+    create, update, and delete event role assignments to your organization's users.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
+  tags:
+  - Event Role
+  properties:
+  - type: OpenAPI
+    url: openapi/cvent-event-role-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/Event-Role
+- aid: cvent:cvent-event-travel-api
+  name: Cvent Event Travel API
+  description: Event travel lets planners capture air & hotel requests from attendees and track air actuals, hotel
+    reservations and alternate travel answers at your event. Use these endpoints to retrieve your air, hotel, housing
+    reservation request and alternate travel answers data from your events. **Housing Reservation Request** - An
+    association between an attendee's information in a registration event and a C
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
+  tags:
+  - Event Travel
+  properties:
+  - type: OpenAPI
+    url: openapi/cvent-event-travel-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/Event-Travel
+- aid: cvent:cvent-events-plus-hub-api
+  name: Cvent Events+ Hub API
+  description: An Events+ Hub persists basic information needed to assign an owner and optionally customize the
+    public presentation.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
+  tags:
+  - Events+ Hub
+  properties:
+  - type: OpenAPI
+    url: openapi/cvent-events-plus-hub-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/Events-Hub
+- aid: cvent:cvent-exhibitor-content-api
+  name: Cvent Exhibitor Content API
+  description: Exhibitor Content operations for an exhibitor. This API allows you to upload & get exhibitor content
+    data such as files, weblinks.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
+  tags:
+  - Exhibitor Content
+  properties:
+  - type: OpenAPI
+    url: openapi/cvent-exhibitor-content-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/Exhibitor-Content
+- aid: cvent:cvent-exhibitor-team-api
+  name: Cvent Exhibitor Team API
+  description: '* **Exhibitor Admin -** Exhibitor Admins are administrators that have access to the exhibitor portal.
+    In the portal, they are able to complete pre-event tasks, manage their team, purchase LeadCapture (if applicable),
+    and download leads. Use this API to get details for existing admins, create new admins, and update admin details.'
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
+  tags:
+  - Exhibitor Team
+  properties:
+  - type: OpenAPI
+    url: openapi/cvent-exhibitor-team-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/Exhibitor-Team
+- aid: cvent:cvent-file-api
+  name: Cvent File API
+  description: 'Allows you to upload files and get file location using the file ID. File ID can be used with other
+    APIs to associate the file to an entity. For example:'
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
+  tags:
+  - File
+  properties:
+  - type: OpenAPI
+    url: openapi/cvent-file-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/File
+- aid: cvent:cvent-housing-api
+  name: Cvent Housing API
+  description: RegLink APIs allow you to exchange data with Cvent Passkey events and hotel reservation-booking engines.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
+  tags:
+  - Housing
+  properties:
+  - type: OpenAPI
+    url: openapi/cvent-housing-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/Housing
+- aid: cvent:cvent-housing-hotels-api
+  name: Cvent Housing Hotels API
+  description: APIs for managing hotel-related operations.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
+  tags:
+  - Housing Hotels
+  properties:
+  - type: OpenAPI
+    url: openapi/cvent-housing-hotels-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/Housing-Hotels
+- aid: cvent:cvent-leads-api
+  name: Cvent Leads API
+  description: '* **Leads -** Leads include leads gathered by LeadCapture, Appointments, and Inbound Leads. Use
+    this API to get information for the lead and how it was captured.'
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
+  tags:
+  - Leads
+  properties:
+  - type: OpenAPI
+    url: openapi/cvent-leads-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/Leads
+- aid: cvent:cvent-meeting-request-api
+  name: Cvent Meeting Request API
+  description: When planning an event, meeting request forms are customizable online questionnaires to capture information
+    about the event and facilitate the approval of events. When a meeting request form is submitted it becomes a
+    meeting request. Use this API to view forms, create meeting requests and track the status of meeting requests.
+    **Legacy meeting request forms are not supported by this API.**
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
+  tags:
+  - Meeting Request
+  properties:
+  - type: OpenAPI
+    url: openapi/cvent-meeting-request-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/Meeting-Request
+- aid: cvent:cvent-orders-api
+  name: Cvent Orders API
+  description: Orders represent a collection of order items purchased by an attendee. Use these APIs to get information
+    about orders and order items.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
+  tags:
+  - Orders
+  properties:
+  - type: OpenAPI
+    url: openapi/cvent-orders-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/Orders
+- aid: cvent:cvent-process-form-api
+  name: Cvent Process Form API
+  description: Process forms automate data collection and notifications related to planning and executing events.
+    Process form submissions are responses to a specific process form, providing data the form requests. Use these
+    APIs to manage process form submissions in your account.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
+  tags:
+  - Process Form
+  properties:
+  - type: OpenAPI
+    url: openapi/cvent-process-form-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/Process-Form
+- aid: cvent:cvent-proposal-draft-api
+  name: Cvent Proposal Draft API
+  description: Beta - All APIs are in Beta. Proposal Drafts are editable copies of proposals. This API allows you
+    to edit proposal data privately before publishing.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
+  tags:
+  - Proposal Draft
+  properties:
+  - type: OpenAPI
+    url: openapi/cvent-proposal-draft-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/Proposal-Draft
+- aid: cvent:cvent-rfp-additional-details-api
+  name: Cvent RFP Additional Details API
+  description: RFP additional details APIs for managing past event references and other miscellaneous RFP operations.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
+  tags:
+  - RFP Additional Details
+  properties:
+  - type: OpenAPI
+    url: openapi/cvent-rfp-additional-details-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/RFP-Additional-Details
+- aid: cvent:cvent-rfp-management-api
+  name: Cvent RFP Management API
+  description: RFP (Request for Proposal) management APIs for core RFP operations including CRUD operations for
+    base RFPs.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
+  tags:
+  - RFP Management
+  properties:
+  - type: OpenAPI
+    url: openapi/cvent-rfp-management-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/RFP-Management
+- aid: cvent:cvent-rfp-requirements-api
+  name: Cvent RFP Requirements API
+  description: RFP requirements APIs for managing RFP-specific requirements including guest rooms, meeting rooms,
+    custom questions, custom fields, and attachments (CRUD operations).
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
+  tags:
+  - RFP Requirements
+  properties:
+  - type: OpenAPI
+    url: openapi/cvent-rfp-requirements-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/RFP-Requirements
+- aid: cvent:cvent-rfp-suppliers-api
+  name: Cvent RFP Suppliers API
+  description: Suppliers are the venues and service providers that receive and respond to RFPs. Use these APIs to
+    manage supplier associations, view recipient history, and create award details.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
+  tags:
+  - RFP Suppliers
+  properties:
+  - type: OpenAPI
+    url: openapi/cvent-rfp-suppliers-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/RFP-Suppliers
+- aid: cvent:cvent-seating-api
+  name: Cvent Seating API
+  description: Seating lets you plan seating at your events by configuring tables and assigning seats to your attendees.
+    The seating APIs allow you to create, update, and delete seating, tables, seats, and seating assignments.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
+  tags:
+  - Seating
+  properties:
+  - type: OpenAPI
+    url: openapi/cvent-seating-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/Seating
+- aid: cvent:cvent-signatures-api
+  name: Cvent Signatures API
+  description: Retrieves Check-In & Check-Out Signatures Of Attendees
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
+  tags:
+  - Signatures
+  properties:
+  - type: OpenAPI
+    url: openapi/cvent-signatures-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/Signatures
+- aid: cvent:cvent-speakers-api
+  name: Cvent Speakers API
+  description: Speakers are individuals presenting at your event's session(s). Use Speaker APIs to read existing
+    speaker data, create new speakers or update existing speakers in your events.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
+  tags:
+  - Speakers
+  properties:
+  - type: OpenAPI
+    url: openapi/cvent-speakers-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/Speakers
+- aid: cvent:cvent-surveys-api
+  name: Cvent Surveys API
+  description: Surveys are lists of questions deployed to your contacts. Surveys can be standalone or can be associated
+    to a Cvent event. Use these APIs to search for surveys and retrieve the associated questions and responses.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
+  tags:
+  - Surveys
+  properties:
+  - type: OpenAPI
+    url: openapi/cvent-surveys-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/Surveys
+- aid: cvent:cvent-transactions-api
+  name: Cvent Transactions API
+  description: Transactions represent the financial exchanges that occur within your account. Use these APIs to
+    retrieve and manage transaction data, including charges, refunds, and adjustments associated with your events
+    and attendees.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
+  tags:
+  - Transactions
+  properties:
+  - type: OpenAPI
+    url: openapi/cvent-transactions-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/Transactions
+- aid: cvent:cvent-travel-accounts-api
+  name: Cvent Travel Accounts API
+  description: The travel account, or corporation that represents the demand-side of travel RFPs.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
+  tags:
+  - Travel Accounts
+  properties:
+  - type: OpenAPI
+    url: openapi/cvent-travel-accounts-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/Travel-Accounts
+- aid: cvent:cvent-travel-rfps-api
+  name: Cvent Travel RFPs API
+  description: The Travel RFP APIs provide access to travel programs and proposals. A travel program
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
+  tags:
+  - Travel RFPs
+  properties:
+  - type: OpenAPI
+    url: openapi/cvent-travel-rfps-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/Travel-RFPs
+- aid: cvent:cvent-travel-suppliers-api
+  name: Cvent Travel Suppliers API
+  description: The Travel Supplier APIs provide access to Cvent data related to hotels, apartments, and other travel
+    providers. This includes information related to properties, and sleeping rooms.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
+  tags:
+  - Travel Suppliers
+  properties:
+  - type: OpenAPI
+    url: openapi/cvent-travel-suppliers-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/Travel-Suppliers
+- aid: cvent:cvent-usage-api
+  name: Cvent Usage API
+  description: Use these APIs view your REST API usage and limits metrics. For more details on limits - [Rate Limits](#section/Getting-Started/Rate-Limits)
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
+  tags:
+  - Usage
+  properties:
+  - type: OpenAPI
+    url: openapi/cvent-usage-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/Usage
+- aid: cvent:cvent-user-scim-api
+  name: Cvent User SCIM API
+  description: The [SCIM](https://www.simplecloud.info/) standard allows for easier cross-domain identity management.
+    This API allows you to manage your account users and SCIM groups (representing Cvent user roles).
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
+  tags:
+  - User SCIM
+  properties:
+  - type: OpenAPI
+    url: openapi/cvent-user-scim-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/User-SCIM
+- aid: cvent:cvent-users-api
+  name: Cvent Users API
+  description: Operations for managing account users and user groups, including creation, retrieval, update, and
+    deletion. Use these endpoints to administer user access and roles within your account.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
+  tags:
+  - Users
+  properties:
+  - type: OpenAPI
+    url: openapi/cvent-users-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/Users
+- aid: cvent:cvent-venue-meeting-rooms-api
+  name: Cvent Venue Meeting Rooms API
+  description: Manage meeting rooms for a venue, including creating and updating room details, configuring capacities
+    and amenities, and associating images.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
+  tags:
+  - Venue Meeting Rooms
+  properties:
+  - type: OpenAPI
+    url: openapi/cvent-venue-meeting-rooms-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/Venue-Meeting-Rooms
+- aid: cvent:cvent-venue-profiles-api
+  name: Cvent Venue Profiles API
+  description: Manage venue profile details including type, contact information, address, and other venue properties.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
+  tags:
+  - Venue Profiles
+  properties:
+  - type: OpenAPI
+    url: openapi/cvent-venue-profiles-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/Venue-Profiles
+- aid: cvent:cvent-video-api
+  name: Cvent Video API
+  description: Videos can be added to Cvent events with renditions at various resolutions, audio files, reactions
+    tracks, and text tracks. Attendee viewership is tracked to get insight into durations, devices used and venue
+    where the video is watched. Use these APIs to view and manage videos, related text tracks, and audio files.
+    Use these APIs also to get insight into video viewership.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
+  tags:
+  - Video
+  properties:
+  - type: OpenAPI
+    url: openapi/cvent-video-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/Video
+- aid: cvent:cvent-webcasts-api
+  name: Cvent Webcasts API
+  description: Webcasts are virtual or livestreaming components of your Cvent events. Use these APIs to integrate
+    your virtual events from outside sources into your Cvent workflows, create and delete webcasts from within Cvent,
+    and retrieve and update webcast details.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.cvent.com/documentation
+  baseURL: https://api-platform.cvent.com/ea
+  tags:
+  - Webcasts
+  properties:
+  - type: OpenAPI
+    url: openapi/cvent-webcasts-api-openapi.yml
+  - type: APIReference
+    url: https://developers.cvent.com/documentation#tag/Webcasts
+common:
+- type: IssueTracker
+  url: https://github.com/cvent/custom-widgets-labs/issues
+- type: AgenticAccess
+  url: agentic-access/cvent-agentic-access.yml
+- type: TrustCenter
+  url: security/cvent-trust-center.yml
+- type: DomainSecurity
+  url: security/cvent-domain-security.yml
+- type: Authentication
+  url: authentication/cvent-authentication.yml
+- type: OAuthScopes
+  url: scopes/cvent-scopes.yml
+- type: Website
+  url: https://www.cvent.com/
+- type: DeveloperPortal
+  url: https://developers.cvent.com/
+- type: APIReference
+  url: https://developers.cvent.com/docs/rest-api/reference/reference
+- type: OAuthTokenEndpoint
+  url: https://api-platform.cvent.com/ea/oauth2/token
+- type: Standards
+  url: https://developers.cvent.com/docs/rest-api/reference/api-standards
+- type: ChangeLog
+  url: https://developers.cvent.com/docs/rest-api/changelog
+- type: StatusPage
+  url: https://status.cvent.com
+- type: Support
+  url: https://support.cvent.com/
+- type: Pricing
+  url: https://www.cvent.com/en/event-management-software/cvent-pricing
+- type: PrivacyPolicy
+  url: https://www.cvent.com/en/privacy-policy
+- type: Security
+  url: https://www.cvent.com/en/security
+- type: Training
+  url: https://www.cvent.com/en/academy
+- type: Community
+  url: https://community.cvent.com/home
+- type: Blog
+  url: https://www.cvent.com/en/blog
+- type: GitHubOrganization
+  url: https://github.com/cvent
+- type: Twitter
+  url: https://twitter.com/cvent
+- type: LinkedIn
+  url: https://www.linkedin.com/company/cvent
+- type: Documentation
+  url: https://developers.cvent.com/docs/rest-api/overview
+- type: GettingStarted
+  url: https://developers.cvent.com/docs/rest-api/tutorials/developer-quickstart
+- type: Authentication
+  url: https://developers.cvent.com/docs/rest-api/tutorials/developer-quickstart
+- type: SignUp
+  url: https://developers.cvent.com/signup
+- type: Login
+  url: https://developers.cvent.com/login
+- type: Console
+  url: https://developers.cvent.com/applications
+- type: TermsOfService
+  url: https://www.cvent.com/en/product-terms-of-use
+- type: SDKDocumentation
+  url: https://developers.cvent.com/docs/rest-api/sdks
+- type: Packages
+  url: packages/cvent-packages.yml
+- type: SDKs
+  url: packages/cvent-packages.yml
+- type: LLMsTxt
+  url: llms/cvent-llms.txt
+- type: Overlay
+  url: overlays/cvent-public-overlay.yaml
+- type: Conformance
+  url: conformance/cvent-conformance.yml
+- type: Compliance
+  url: security/cvent-trust-center.yml
+- type: ErrorCatalog
+  url: errors/cvent-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/cvent-lifecycle.yml
+- type: Deprecation
+  url: lifecycle/cvent-lifecycle.yml
+- type: Conventions
+  url: conventions/cvent-conventions.yml
+- type: ChangeLog
+  url: changelog/cvent-changelog.yml
+- type: Components
+  url: components/cvent-components.yml
+- type: DataModel
+  url: data-model/cvent-data-model.yml
+- type: Webhooks
+  url: asyncapi/cvent-webhooks-catalog.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: Security
+  url: security/cvent-vulnerability-disclosure.yml
+- type: VulnerabilityDisclosure
+  url: security/cvent-vulnerability-disclosure.yml
+- type: RateLimits
+  url: rate-limits/cvent-rate-limits.yml
+- type: Plans
+  url: plans/cvent-plans-pricing.yml
+- type: WSDL
+  url: wsdl/cvent-soap-api-v200611.wsdl
+- type: SDKSourceCode
+  url: https://github.com/cvent/rest-sdks
 maintainers:
-  - FN: Kin Lane
-    email: kin@apievangelist.com
-  - FN: Cvent Developer Relations
-    email: developersupport@cvent.com
-    url: https://developers.cvent.com
+- FN: Kin Lane
+  email: kin@apievangelist.com
+- FN: Cvent Developer Relations
+  email: developersupport@cvent.com
+  url: https://developers.cvent.com
+x-contract-sources:
+- file: openapi/_original/cvent-public-spec-openapi.yaml
+  url: https://raw.githubusercontent.com/cvent/rest-sdks/main/cvent-public-spec/openapi.yaml
+  method: harvested
+  http_status: 200
+  bytes: 2051366
+  note: Byte-identical copy of the OpenAPI Cvent publishes in its own SDK repository. This is the pre-overlay source
+    spec its Speakeasy pipeline builds the TypeScript, Java and C# SDKs from.
+- file: openapi/_original/cvent-openapi.json
+  url: https://developers.cvent.com/api/graphql (POST getPublicSpec)
+  method: harvested
+  http_status: 200
+  note: The spec object exactly as the developer portal serves it to its Redoc reference at /documentation — the
+    source spec with Cvent’s five published overlays applied (1,309 schemas vs 1,290). Content is verbatim; only
+    JSON indentation is ours. The portal renders client-side, so /openapi.json and every conventional spec path
+    on both the docs host and api-platform.cvent.com return 404 or an HTML shell; the machine-readable contract
+    is reachable only through this GraphQL query, which answers unauthenticated.
+- file: wsdl/cvent-soap-api-v200611.wsdl
+  url: https://api.cvent.com/soap/V200611.ASMX?WSDL
+  method: harvested
+  http_status: 200
+  bytes: 330911
+  note: 'The live legacy SOAP contract: 51 operations, 288 complex types, SOAP 1.1 + 1.2 bindings. The EU mirror
+    at https://api-eur.cvent.com/SOAP/V200611.ASMX?wsdl also answers 200.'
+- file: overlays/
+  url: https://github.com/cvent/rest-sdks/tree/main/overlays
+  method: harvested
+  note: Five OpenAPI Overlay 1.0.0 documents authored by Cvent itself (public, description, pagination, retries,
+    segments error response), saved verbatim.
+- file: llms/cvent-llms.txt
+  url: https://www.cvent.com/llms.txt
+  method: harvested
+  http_status: 200
+  bytes: 51453
+  note: Provider-published llms.txt on the marketing domain. It is a product/marketing map — it names no API, no
+    developer portal and no contract.
+x-enrichment:
+  date: '2026-09-07'
+  status: enriched
+  artifacts_added: 79
+  pass: local-v3

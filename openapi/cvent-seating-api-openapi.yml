@@ -1,0 +1,1352 @@
+openapi: 3.0.2
+info:
+  title: Cvent REST APIs — Seating
+  version: ea
+  description: 'Seating lets you plan seating at your events by configuring tables and assigning seats to your attendees.
+    The seating APIs allow you to create, update, and delete seating, tables, seats, and seating assignments.
+
+    * **Seating** - A diagram of tables and seats. Your event can have many seatings.
+
+    * **Table** - A communal location where chairs are assigned. Each table is assigned to a seating.
+
+    * **Seat** - Individual seat at a table. Each seat can be assigned to an attendee.
+
+    * **Assignments** - Seat that is assigned to an attendee.'
+  contact:
+    name: Cvent Development Platform
+    url: https://developers.cvent.com/
+externalDocs:
+  description: Cvent REST API documentation
+  url: https://developers.cvent.com/documentation
+servers:
+- url: https://api-platform.cvent.com/ea
+- url: https://api-platform-eur.cvent.com/ea
+tags:
+- name: Seating
+  description: 'Seating lets you plan seating at your events by configuring tables and assigning seats to your attendees.
+    The seating APIs allow you to create, update, and delete seating, tables, seats, and seating assignments.
+
+    * **Seating** - A diagram of tables and seats. Your event can have many seatings.
+
+    * **Table** - A communal location where chairs are assigned. Each table is assigned to a seating.
+
+    * **Seat** - Individual seat at a table. Each seat can be assigned to an attendee.
+
+    * **Assignments** - Seat that is assigned to an attendee.'
+paths:
+  /events/{id}/seatings:
+    parameters:
+    - $ref: '#/components/parameters/eventId4'
+    get:
+      parameters:
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      - name: filter
+        in: query
+        required: false
+        description: "A filter string passed in the body of the request, narrows search results and supports the combination\
+          \ of logical and comparison operators.\nThe filter adheres to the pattern filter='field' comparisonType 'value'.\n\
+          \nThere are eight comparison types that can be used in filter expressions:\n  * equal: eq\n  * not equal: ne\n \
+          \ * greater than: gt\n  * greater or equal: ge\n  * less than: lt\n  * less than or equal: le\n  * starts with:\
+          \ sw\n  * contains a value: contains\n  * includes value(s): in\n\nThe following fields are filterable:\n  * id\
+          \ (eq)\n\nThe following operators are available:\n  * and\n  * or\n"
+        schema:
+          type: string
+          example: id eq 'ad6df5aa-f21f-47e6-9c48-8d3a7831ad5f'
+      security:
+      - OAuth2.clientCredentials:
+        - seating/event-seatings:read
+      - OAuth2.authorizationCode:
+        - seating/event-seatings:read
+      summary: List Seating
+      description: Get seating details for the given event.
+      operationId: listSeating
+      tags:
+      - Seating
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of seatings for the event.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/seating-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+  /events/{id}/seatings/assignments:
+    parameters:
+    - $ref: '#/components/parameters/eventId4'
+    get:
+      summary: List All Seating Assignments
+      description: Gets all the table assignments across all the seatings in an event.
+      operationId: getEventTableAssignments
+      tags:
+      - Seating
+      security:
+      - OAuth2.clientCredentials:
+        - seating/assignments:read
+      - OAuth2.authorizationCode:
+        - seating/assignments:read
+      parameters:
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      - $ref: '#/components/parameters/seatingAssignmentsFilter'
+      - $ref: '#/components/parameters/seatingAssignmentExpand'
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of table assignments for the given event.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/table-assignment-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+  /events/{id}/seatings/{seatingId}:
+    parameters:
+    - $ref: '#/components/parameters/eventId4'
+    - $ref: '#/components/parameters/seatingId'
+    get:
+      security:
+      - OAuth2.clientCredentials:
+        - seating/event-seatings:read
+      - OAuth2.authorizationCode:
+        - seating/event-seatings:read
+      summary: Get Seating
+      description: Get seating details for the given event by seating ID.
+      operationId: getSeating
+      tags:
+      - Seating
+      responses:
+        '200':
+          description: Successfully retrieved seating info for given seating ID.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/existing-seating'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+  /events/{id}/seatings/{seatingId}/assignments:
+    parameters:
+    - $ref: '#/components/parameters/eventId4'
+    - $ref: '#/components/parameters/seatingId'
+    get:
+      parameters:
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      - $ref: '#/components/parameters/seatingAssignmentsFilter'
+      - $ref: '#/components/parameters/seatingAssignmentExpand'
+      security:
+      - OAuth2.clientCredentials:
+        - seating/assignments:read
+      - OAuth2.authorizationCode:
+        - seating/assignments:read
+      summary: List Seating Assignments
+      description: Gets the table assignments for a given seating ID in an event.
+      operationId: getTableAssignment
+      tags:
+      - Seating
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of seat information for the given seating ID in an event.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/table-assignment-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+  /events/{id}/seatings/{seatingId}/tables:
+    parameters:
+    - $ref: '#/components/parameters/eventId4'
+    - $ref: '#/components/parameters/seatingId'
+    get:
+      parameters:
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      - name: filter
+        in: query
+        required: false
+        description: "A filter string passed in the body of the request, narrows search results and supports the combination\
+          \ of logical and comparison operators.\nThe filter adheres to the pattern filter='field' comparisonType 'value'.\n\
+          \nThere are eight comparison types that can be used in filter expressions:\n  * equal: eq\n  * not equal: ne\n \
+          \ * greater than: gt\n  * greater or equal: ge\n  * less than: lt\n  * less than or equal: le\n  * starts with:\
+          \ sw\n  * contains a value: contains\n  * includes value(s): in\n\nThe following fields are filterable:\n  * id\
+          \ (eq)\n\nThe following operators are available:\n  * and\n  * or\n"
+        schema:
+          type: string
+          example: id eq 'ad6df5aa-f21f-47e6-9c48-8d3a7831ad5f'
+      - $ref: '#/components/parameters/tableExpand'
+      security:
+      - OAuth2.clientCredentials:
+        - seating/tables:read
+      - OAuth2.authorizationCode:
+        - seating/tables:read
+      summary: List Tables
+      description: Get table details for a given seating.
+      operationId: listTables
+      tags:
+      - Seating
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of tables.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tables-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+  /events/{id}/seatings/{seatingId}/tables/{tableId}:
+    parameters:
+    - $ref: '#/components/parameters/eventId4'
+    - $ref: '#/components/parameters/seatingId'
+    - $ref: '#/components/parameters/tableId'
+    get:
+      parameters:
+      - $ref: '#/components/parameters/tableExpand'
+      security:
+      - OAuth2.clientCredentials:
+        - seating/tables:read
+      - OAuth2.authorizationCode:
+        - seating/tables:read
+      summary: Get Table
+      description: Get table info for given event by seating ID and table ID.
+      operationId: getTable
+      tags:
+      - Seating
+      responses:
+        '200':
+          description: Successfully retrieved table info for the given seating ID and table ID.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/existing-table-with-seats'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+  /events/{id}/seatings/{seatingId}/tables/{tableId}/seats:
+    parameters:
+    - $ref: '#/components/parameters/eventId4'
+    - $ref: '#/components/parameters/seatingId'
+    - $ref: '#/components/parameters/tableId'
+    get:
+      parameters:
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      - name: filter
+        in: query
+        required: false
+        description: "A filter string passed in the body of the request, narrows search results and supports the combination\
+          \ of logical and comparison operators.\nThe filter adheres to the pattern filter='field' comparisonType 'value'.\n\
+          \nThere are eight comparison types that can be used in filter expressions:\n  * equal: eq\n  * not equal: ne\n \
+          \ * greater than: gt\n  * greater or equal: ge\n  * less than: lt\n  * less than or equal: le\n  * starts with:\
+          \ sw\n  * contains a value: contains\n  * includes value(s): in\n\nThe following fields are filterable:\n  * id\
+          \ (eq)\n\nThe following operators are available:\n  * and\n  * or\n"
+        schema:
+          type: string
+          example: id eq 'ad6df5aa-f21f-47e6-9c48-8d3a7831ad5f'
+      security:
+      - OAuth2.clientCredentials:
+        - seating/seats:read
+      - OAuth2.authorizationCode:
+        - seating/seats:read
+      summary: List Seats
+      description: Get seat details for given table ID.
+      operationId: listSeats
+      tags:
+      - Seating
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of seats.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/seats-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+  /events/{id}/seatings/{seatingId}/tables/{tableId}/seats/{seatId}:
+    parameters:
+    - $ref: '#/components/parameters/eventId4'
+    - $ref: '#/components/parameters/seatingId'
+    - $ref: '#/components/parameters/tableId'
+    - $ref: '#/components/parameters/seatId'
+    get:
+      security:
+      - OAuth2.clientCredentials:
+        - seating/seats:read
+      - OAuth2.authorizationCode:
+        - seating/seats:read
+      summary: Get Seat
+      description: Get seat info for given event by seating ID, table ID, and seat ID.
+      operationId: getSeat
+      tags:
+      - Seating
+      responses:
+        '200':
+          description: Successfully retrieved seat info for the given seat ID.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/existing-seat'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+components:
+  schemas:
+    existing-table-with-seats:
+      title: ExistingTable
+      description: The response from a request to get the event table for the event.
+      type: object
+      allOf:
+      - title: ExistingTable
+        description: The response from a request to get the event table for the event.
+        type: object
+        allOf:
+        - $ref: '#/components/schemas/existing-table/allOf/0'
+        properties:
+          id:
+            type: string
+            format: uuid
+            readOnly: true
+            description: The unique ID of the table.
+            example: c9763ce5-b965-44ed-9c2b-b5657dfab012
+      properties:
+        seats:
+          type: array
+          description: 'The seat IDs at the table.
+
+
+            This is an **expandable** object and if requested will contain all the properties of a seat object.'
+          items:
+            $ref: '#/components/schemas/expandable-seat.json'
+          readOnly: true
+    pagination-links.json:
+      title: PaginationLinks
+      type: object
+      description: Represents pagination links for navigating between pages of data.
+      properties:
+        next:
+          $ref: '#/components/schemas/link.json'
+        self:
+          $ref: '#/components/schemas/link.json'
+        prev:
+          $ref: '#/components/schemas/link.json'
+    uuid-property:
+      title: UUID Property
+      description: A string that has to be a format matching the industry standard uuid
+      type: string
+      format: uuid
+      example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+    existing-seat:
+      title: ExistingSeat
+      description: The response from a request to get the event seat for the event.
+      type: object
+      allOf:
+      - title: EventSeat
+        description: Seat creation for the table.
+        type: object
+        required:
+        - name
+        properties:
+          name:
+            type: string
+            description: Seat's plain name.
+            example: Management seat
+          sourceId:
+            description: This is a ID for the seat in an external system. Use this field to supply your own ID for tracking
+              purposes.
+            type: string
+            maxLength: 50
+            example: Id5874
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+          description: The unique ID of the seat.
+          example: 37ace026-f4ac-40e3-9144-e2c8399844be
+    expandable-seating.json:
+      title: ExpandableSeating
+      description: 'An object that contains the associated seating ID.
+
+
+        This is an **expandable** object and if requested will contain all the properties of a seating object.'
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The unique ID of the seating.
+          example: ad6df5aa-f21f-47e6-9c48-8d3a7831ad5f
+    ErrorResponseBase1:
+      title: ErrorResponseBase
+      type: object
+      description: Represents an error response with no additional details.
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          description: The HTTP status code representing the error.
+          example: 400
+        message:
+          type: string
+          description: A brief description of the error.
+          example: Bad Request
+        target:
+          type: string
+          description: The target resource of the error.
+          example: example target
+    table-assignment-paginated-response:
+      title: TableAssignmentPaginatedResponse
+      description: The response from a request to get the table assignment.
+      required:
+      - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/paging.json'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/table-assignment.json'
+          description: A list of table assignments
+    expandable-seat.json:
+      title: ExpandableSeat
+      description: 'An object that contains the associated seat ID.
+
+
+        This is an **expandable** object and if requested will contain all the properties of a seat object.'
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+          description: The unique ID of the seat.
+          example: 37ace026-f4ac-40e3-9144-e2c8399844be
+    paging.json:
+      title: Paging
+      required:
+      - _links
+      type: object
+      description: Represents pagination information for a collection of resources.
+      properties:
+        previousToken:
+          type: string
+          description: The pagination token for the previous page, if one exists. You can use this token to navigate to the
+            previous page of data.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        nextToken:
+          type: string
+          description: The pagination token for the next page. If this value is present in the response, there is another
+            page of data you can fetch.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        currentToken:
+          type: string
+          description: The pagination token for the current page.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        limit:
+          type: integer
+          description: The number of records to return on the page. Not to exceed 200.
+          example: 100
+        totalCount:
+          type: integer
+          description: The total number of records available. This field may return blank, even if there are more records.
+            To confirm if there are more records, check the `nextToken` field.
+          example: 2
+        _links:
+          $ref: '#/components/schemas/pagination-links.json'
+    expandable-table.json:
+      title: ExpandableTable
+      description: 'An object that contains the associated table ID.
+
+
+        This is an **expandable** object and if requested will contain all the properties of a table object.'
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The unique ID of the table.
+          example: c9763ce5-b965-44ed-9c2b-b5657dfab012
+    existing-seating:
+      title: ExistingSeating
+      description: The response from a request to get the event seating for the event.
+      type: object
+      allOf:
+      - title: EventSeating
+        description: Create, update and delete seating for the specific event.
+        type: object
+        required:
+        - name
+        properties:
+          name:
+            type: string
+            description: Seating's plain name.
+            example: Awards Dinner
+          code:
+            type: string
+            description: Seating's code set by the planner. Must be unique in the event.
+            example: 1VCAPITRAN18012023
+          readOnly:
+            type: boolean
+            description: True indicates the seating data is coming from outside Cvent and should not be editable in the event.
+            example: false
+          sourceId:
+            description: This is a ID for the seating in an external system. Use this field to supply your own ID for tracking
+              purposes.
+            type: string
+            maxLength: 50
+            example: Id2854
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+          description: The unique ID of the seating.
+          example: ad6df5aa-f21f-47e6-9c48-8d3a7831ad5f
+    table-assignment.json:
+      title: TableAssignment
+      description: The assignment of an attendee to a seat on a table for a given event seating
+      type: object
+      properties:
+        seating:
+          $ref: '#/components/schemas/expandable-seating.json'
+        table:
+          $ref: '#/components/schemas/expandable-table.json'
+        seat:
+          $ref: '#/components/schemas/expandable-seat.json'
+        attendee:
+          description: The attendee object.
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+              description: The unique ID of the attendee assigned.
+              example: bdcb1fba-0fb3-46d2-b4e7-47ace9bc7907
+    seating-paginated-response:
+      title: SeatingPaginatedResponse
+      description: The response from a request to get the event seating for the event.
+      required:
+      - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/paging.json'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/existing-seating'
+          description: A list of event seating
+    seats-paginated-response:
+      title: SeatsPaginatedResponse
+      description: The response from a request to get the event seat for the event.
+      required:
+      - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/paging.json'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/existing-seat'
+          description: A list of event seats
+    link.json:
+      title: Link
+      required:
+      - href
+      type: object
+      description: Represents a link to a related resource.
+      properties:
+        href:
+          type: string
+          description: A url provided that can be followed for linking
+          example: ?token=90c5f062-76ad-4ea4-aa53-00eb698d9262
+    tables-paginated-response:
+      title: TablesPaginatedResponse
+      description: The response from a request to get the event table for the event.
+      required:
+      - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/paging.json'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/existing-table-with-seats'
+          description: A list of event tables
+    existing-table:
+      title: ExistingTable
+      description: The response from a request to get the event table for the event.
+      type: object
+      allOf:
+      - title: EventTable
+        description: Create, update and delete table for the specific event.
+        type: object
+        required:
+        - capacity
+        properties:
+          name:
+            type: string
+            description: Table's plain name.
+            example: CVENT table
+          code:
+            type: string
+            description: Table's code set by the planner.
+            example: CAETABLE1
+          capacity:
+            type: integer
+            description: Table's seat capacity.
+            example: 10
+          description:
+            type: string
+            description: Description assigned to table.
+            example: This table is for VIP attendees.
+          sourceId:
+            description: This is a ID for the table in an external system. Use this field to supply your own ID for tracking
+              purposes.
+            type: string
+            maxLength: 50
+            example: Id1255
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+          description: The unique ID of the table.
+          example: c9763ce5-b965-44ed-9c2b-b5657dfab012
+    ErrorResponse-12:
+      title: ErrorResponse
+      description: Represents an error response with additional details of cascading error messages.
+      allOf:
+      - $ref: '#/components/schemas/ErrorResponseBase1'
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorResponseBase1'
+          description: Additional details of cascading error messages.
+  responses:
+    NotFound1:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 404
+            message: Not found
+    BadRequest1:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 400
+            message: Bad Request
+    TooManyRequests1:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 429
+            message: Limit Exceeded
+    Unauthorized1:
+      description: Bad or expired token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 401
+            message: Unauthorized
+    Forbidden1:
+      description: You do not have access to the resource
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 403
+            message: Access Forbidden
+  parameters:
+    tableId:
+      in: path
+      name: tableId
+      description: ID of a table.
+      required: true
+      schema:
+        allOf:
+        - $ref: '#/components/schemas/uuid-property'
+        - example: ff4fb435-4340-44bc-9c86-c1a9c050710f
+    seatingAssignmentExpand:
+      name: expand
+      in: query
+      explode: false
+      required: false
+      description: "This endpoint allows you to request additional information as an expanded response using the expand query\
+        \ parameter. The expanded entity is retrieved and displayed inline for each specified expand value.\n\nAn object contains\
+        \ the ID of a related object in its response properties. For example, a seating assignment will have the table or\
+        \ seat ID associated with the assignment. You can expand these objects, along with others, in line using the expand\
+        \ query parameter.\n\nYou can expand multiple objects at the same time by identifying multiple items in the expand\
+        \ array.\n\nThe respective scopes for each expansion are required.\n\nThe following fields are expandable:\n  * seating\n\
+        \    * **Scope**: seating/event-seatings:read\n    * **Reference**: <a href=\"#operation/getSeating\">Get Seating</a>\n\
+        \  * table\n    * **Scope**: seating/tables:read\n    * **Reference**: <a href=\"#operation/getTable\">Get Table</a>\n\
+        \  * seat\n    * **Scope**: seating/seats:read\n    * **Reference**: <a href=\"#operation/getSeat\">Get Seat</a>\n"
+      example:
+      - seating
+      - table
+      schema:
+        type: array
+        items:
+          type: string
+          enum:
+          - seating
+          - table
+          - seat
+    eventId4:
+      in: path
+      name: id
+      description: ID of an event.
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid-property'
+    seatingAssignmentsFilter:
+      name: filter
+      in: query
+      required: false
+      description: "A filter string passed in the query parameter of the request, narrows search results and supports the\
+        \ combination of logical and comparison operators.\nThe filter adheres to the pattern filter='field' comparisonType\
+        \ 'value'.\n\nThere is only one comparison type that can be used in filter expressions:\n  * equal: eq\n\nThe following\
+        \ fields are filterable:\n  * seating.id (eq)\n  * attendee.id (eq)\n  * table.id (eq)\n  * seat.id (eq)\n\nThe following\
+        \ operators are available:\n  * and\n  * or\n"
+      schema:
+        type: string
+        example: seating.id eq 'ad6df5aa-f21f-47e6-9c48-8d3a7831ad5f' and attendee.id eq 'bdcb1fba-0fb3-46d2-b4e7-47ace9bc7907'
+    tableExpand:
+      name: expand
+      in: query
+      explode: false
+      required: false
+      description: "This endpoint allows you to request additional information as an expanded response using the expand query\
+        \ parameter. The expanded entity is retrieved and displayed inline for each specified expand value.\n\nAn object contains\
+        \ the ID of a related object in its response properties. For example, a table will have the list of seats IDs associated\
+        \ with the table. You can expand these objects in-line using the expand query parameter.\n\nThe respective scopes\
+        \ for each expansion are required.\n\nThe following fields are expandable:\n  * seats\n    * **Scope**: seating/seats:read\n\
+        \    * **Reference**: <a href=\"#operation/getSeat\">Get Seat</a>\n"
+      example:
+      - seats
+      schema:
+        type: array
+        items:
+          type: string
+          enum:
+          - seats
+    token:
+      name: token
+      in: query
+      description: 'The continuation token returned from a previous class. This must be a valid UUID v4 if provided.
+
+        This will override any other pageable parameters provided.
+
+        '
+      style: form
+      explode: true
+      schema:
+        type: string
+        example: 0e28af57-511f-47ab-ae46-46cd1ca51a1a
+    seatingId:
+      in: path
+      name: seatingId
+      description: ID of a seating.
+      required: true
+      schema:
+        allOf:
+        - $ref: '#/components/schemas/uuid-property'
+        - example: b054dd32-efb6-444a-b4a6-a797a18315ef
+    seatId:
+      in: path
+      name: seatId
+      description: ID of a seat.
+      required: true
+      schema:
+        allOf:
+        - $ref: '#/components/schemas/uuid-property'
+        - example: e5019035-815e-4b46-9b4f-772a7b48f336
+    limit:
+      name: limit
+      in: query
+      description: The maximum number of records to return per page.
+      style: form
+      explode: true
+      schema:
+        maximum: 200
+        minimum: 1
+        type: integer
+        default: 100
+        example: 100
+  securitySchemes:
+    OAuth2.clientCredentials:
+      type: oauth2
+      description: OAuth2 Client Credentials Flow.
+      flows:
+        clientCredentials:
+          tokenUrl: https://api-platform.cvent.com/ea/oauth2/token
+          scopes:
+            account/hooks:delete: Allows the deletion of hooks.
+            account/hooks:read: Allows the reading of hooks.
+            account/hooks:write: Allows the creation/updation of hooks.
+            account/user-groups:delete: Allows deletion for user groups
+            account/user-groups:read: Allows the reading of user groups
+            account/user-groups:write: Allows the writing of user groups
+            account/users:delete: Allows the deletion of User
+            account/users:read: Allows the reading of User, User Group
+            account/users:write: Allows the creation/updating of User
+            appointments/appointment-attendees:read: Allows the reading of appointment attendees and their related entities.
+            appointments/appointment-events:read: Allows the reading of appointment events and their related entities.
+            appointments/appointment-types:read: Allows the reading of appointment types and their related entities.
+            appointments/appointments:read: Allows the reading of appointment and their related entities.
+            appointments/appointments:write: Allows the writing of appointments and their related entities.
+            appointments/available-times:read: Allows the reading of availability times.
+            appointments/locations:read: Allows the reading of appointment locations and their related entities.
+            attendee-insights/attendee-insights:read: Allows the reading of engagement scores (attendee insights).
+            attendee-insights/scores:read: Allows the reading of scores.
+            attendee-insights/stats:read: Allows the reading of engagement score (attendee insight) stats.
+            budget/budget-items:delete: Allows the deletion of budget items
+            budget/budget-items:read: Allows the reading of all budget items
+            budget/budget-items:write: Allows creation/updation of budget item
+            budget/budget-totals:read: Allows the reading of all event budget totals
+            budget/budget-vendors:read: Allows reading of account-level budget vendors.
+            budget/cards:read: Allows the reading of cards
+            budget/currency-conversion-rate:delete: Allows deletion of currency conversion rate for currency.
+            budget/currency-conversion-rate:read: Allows reading of currency conversion rate for currency.
+            budget/currency-conversion-rate:write: Allows creation/update of currency conversion rate for currency.
+            budget/payments:delete: Allows deletion of payments.
+            budget/payments:read: Allows reading of payment for budget item.
+            budget/payments:write: Allows creation of payment in a budget item.
+            budget/transactions:delete: Allows delete card transactions.
+            budget/transactions:read: Allows the reading of all card's transactions
+            budget/transactions:write: Allows creation of card transactions.
+            bulk/bulk-jobs:read: Allows the reading of bulk job related entities
+            bulk/bulk-jobs:write: Allows the creation, update and deletion of bulk job related entities
+            business-transient/bids:read: Allows the reading of Business Transient Bid data
+            business-transient/proposals:read: Allows the reading of Business Transient Proposal data
+            business-transient/supplier-brands:read: Allows the reading of a supplier brand or a list of travel supplier brands.
+            business-transient/supplier-chains:read: Allows the reading of a travel supplier chain or a list of travel supplier
+              chains.
+            business-transient/supplier-properties:read: Allows the reading of a travel supplier property or a list of travel
+              supplier properties.
+            business-transient/supplier-property-rooms:read: Allows the reading of a list of travel supplier property rooms.
+            business-transient/travel-accounts:read: Allows the reading of business transient travel account data.
+            business-transient/travel-program-questions:read: Allows the reading of business transient travel program question
+              data.
+            business-transient/travel-programs:read: Allows the reading of business transient travel program data.
+            business-transient/travel-supplier-accounts:read: Allows the reading of business transient travel supplier account
+              data.
+            business-travel/bids:read: Allows the reading of Business Travel Bid data
+            business-travel/proposals:read: Allows the reading of Business Travel Proposal data
+            business-travel/travel-accounts:read: Allows the reading of business travel account data.
+            business-travel/travel-program-questions:read: Allows the reading of business travel program question data.
+            business-travel/travel-programs:read: Allows the reading of business travel program data.
+            compliance/communications:read: Allows the reading of communication compliance
+            compliance/communications:write: Allows the writing of communication compliance
+            email/bounces:read: Allow the reading of email bounces.
+            email/email-status:read: Allows the reading of email statuses.
+            email/emails:read: Allows the reading of emails.
+            eMarketing/campaigns:read: Allows the reading of campaigns.
+            emarketing/emarketing-email-status:read: Allows the reading of eMarketing email statuses.
+            eMarketing/eMarketing-email-templates:read: Allows the reading of email-templates.
+            eMarketing/eMarketing-send-emails:write: Allows the writing of eMarketing emails.
+            event/admission-items:read: Allows the reading of admission items
+            event/air-request:read: Allow reading the air request or air actual detail for attendees.
+            event/alternate-travel:read: Allow reading the alternate travel answers for attendees.
+            event/attendance-durations:read: Allows the read of Duration records
+            event/attendee-activities-metadata:delete: Allows the deletion of attendees activities metadata.
+            event/attendee-activities-metadata:read: Allows the reading of attendee activities metadata.
+            event/attendee-activities-metadata:write: Allows the creation/updating of attendees activities metadata.
+            event/attendee-activities:read: Allows the reading of attendee activities.
+            event/attendee-activities:write: Allows the writing of external attendee activities.
+            event/attendee-credits:read: Allows the reading of attendee credits.
+            event/attendee-links:delete: Allows the deletion of attendee links
+            event/attendee-links:read: Allows the reading of attendee links
+            event/attendee-links:write: Allows the creation of attendee links
+            event/attendee-messages:read: Allows the reading of attendee messages
+            event/attendees:read: Allows the reading of attendees.
+            event/attendees:write: Allows the creation of an attendee in an event.
+            event/audience-segments:read: Allows the reading of audience segments.
+            event/audience-segments:write: Allows the creation/updating/deletion of audience segments.
+            event/contact-groups:read: Allows the reading of contact groups.
+            event/contact-groups:write: Allows the creation/updating of contact groups.
+            event/contact-types:read: Allows the reading of contact types.
+            event/contacts:delete: Allows the deletion of contacts.
+            event/contacts:read: Allows the reading of contacts.
+            event/contacts:write: Allows the creation/updating of contacts.
+            event/contacts:write-sensitive: Allows the creation/updating of sensitive data related to contacts.
+            event/custom-fields:read: Allows the reading of custom fields
+            event/custom-fields:write: Allows the writing of custom fields
+            event/discounts:write: Allows the writing of discounts
+            event/donation-items:read: Allows the reading of donation items.
+            event/event-discounts:read: Allows the reading of event discounts.
+            event/event-discounts:write: Allows the writing of event discounts.
+            event/event-email-status:read: Allows the reading of event email statuses.
+            event/event-emails:read: Allows the reading of event emails
+            event/event-emails:write: Allows to send event emails.
+            event/event-features:read: Allows the reading of events-features
+            event/event-features:write: Allows updating the event-features
+            event/event-user-groups:read: Allows the reading of user groups
+            event/event-user-groups:write: Allows associating/disassociating user groups to event
+            event/events:read: Allows the reading of events
+            event/events:write: Allows the creation/updating of events
+            event/fee-items:read: Allows the reading of fee items.
+            event/hotel-request:read: Allow reading the hotel request or housing reservation request detail for attendees.
+            event/invitation-lists:read: Allows the reading of the invitation lists for an event
+            event/meeting-request-forms:read: Allows the reading of meeting request forms.
+            event/meeting-requests:read: Allows the reading of meeting requests.
+            event/meeting-requests:write: Allows the creation/updating of meeting requests.
+            event/membership-items:read: Allows reading of membership items.
+            event/orders:read: Allows the reading of orders
+            event/planning-documents:read: Allows the reading of event planning documents
+            event/players:read: Allows the reading of players
+            event/process-form-submissions:read: Allows the reading of process form submissions.
+            event/program-items:delete: Allows deletion of session program items
+            event/program-items:read: Allows reading of session program items
+            event/program-items:write: Allows writing of session program items
+            event/quantity-items:read: Allows the reading of quantity items.
+            event/quantity-items:write: Allows the writing of quantity items
+            event/registration-paths:read: Allows the reading of registration paths
+            event/registration-types:read: Allows the reading of registration types
+            event/registration-types:write: Allows the writing of registration types
+            event/role-assignments:read: Allows the reading of event role assignment.
+            event/session-attendance:read: Allows the reading of sessions attendance
+            event/session-attendance:write: Allows the creation/updating of sessions attendance
+            event/session-categories:read: Allows reading of session categories
+            event/session-categories:write: Allows writing of session categories
+            event/session-enrollment:delete: Allows the deletion of session registrations
+            event/session-enrollment:read: Allows the reading of sessions registrations
+            event/session-enrollment:write: Allows the writing of sessions registrations
+            event/session-segments:read: Allows reading of session segments
+            event/sessions:delete: Allows the deletion of a session in an event
+            event/sessions:read: Allows the reading of sessions
+            event/sessions:write: Allows the creation of a session in an event
+            event/speaker-categories:read: Allows reading of speaker categories
+            event/speaker-categories:write: Allows writing of speaker categories
+            event/speakers:delete: Allows the deletion of a speaker in an event
+            event/speakers:read: Allows the reading of speakers
+            event/speakers:write: Allows the creation of a speaker in an event
+            event/taxes:read: Allows the reading of taxes.
+            event/transactions:read: Allows the reading of transactions
+            event/transactions:write: Allows the writing of transactions
+            event/video-views:read: Allows reading of video views.
+            event/videos:read: Allows the reading of video data.
+            event/videos:write: Allows the creation/updating of video data.
+            event/vouchers:read: Allows reading of event vouchers.
+            event/webcasts:delete: Allows the deletion of webcast
+            event/webcasts:read: Allows the reading of webcasts
+            event/webcasts:write: Allows the creation of webcast
+            event/weblinks:read: Allows the reading of event weblinks
+            events-plus/hubs:read: Allows the reading of Events+ hub data.
+            exhibitor/badges:read: Allows reading badges
+            exhibitor/badges:write: Allows creating/updating badges
+            exhibitor/booth-staff:delete: Allows deleting booth staff
+            exhibitor/booth-staff:read: Allows reading booth staff
+            exhibitor/booth-staff:write: Allows creating booth staff
+            exhibitor/eliterature-requests:read: Allows reading eliterature document request data
+            exhibitor/exhibitor-admins:read: Allows reading exhibitor admins
+            exhibitor/exhibitor-admins:write: Allows creating/updating exhibitor admins
+            exhibitor/exhibitor-answers:read: Allows reading exhibitor answers
+            exhibitor/exhibitor-answers:write: Allows updating exhibitor answers
+            exhibitor/exhibitor-categories:delete: Allows deleting exhibitor categories
+            exhibitor/exhibitor-categories:read: Allows reading exhibitor categories
+            exhibitor/exhibitor-categories:write: Allows creating/updating exhibitor categories
+            exhibitor/exhibitor-contents:delete: Allows deleting exhibitor content
+            exhibitor/exhibitor-contents:read: Allows reading exhibitor content
+            exhibitor/exhibitor-contents:write: Allows creating/updating exhibitor content
+            exhibitor/exhibitor-questions:read: Allows reading exhibitor questions
+            exhibitor/exhibitors:delete: Allows deleting exhibitors
+            exhibitor/exhibitors:read: Allows reading exhibitors
+            exhibitor/exhibitors:write: Allows creating/updating exhibitors
+            exhibitor/lead-qualification-answers:read: Allows reading Lead Qualification Answers
+            exhibitor/lead-qualification-questions:read: Allows reading Lead Qualification Questions.
+            exhibitor/leads:read: Allows reading leads.
+            exhibitor/registration-packs:delete: Allows deleting registration pack
+            exhibitor/registration-packs:read: Allows reading registration pack
+            exhibitor/registration-packs:write: Allows creating/updating registration pack
+            exhibitor/sponsorship-levels:read: Allows reading sponsorship level
+            file/file:read: Allows the reading of file
+            file/file:write: Allows the uploading of file
+            housing/connections:write: Allows the user to connect to the Reglink APIs.
+            housing/hotel-room-rates:write: Allows the user to create/update hotel room rates.
+            housing/housing-event-available-nights:read: Allows the user to read availability information for given event.
+            housing/housing-event-hotels:read: Allows the user to read information about event hotels.
+            housing/housing-event-inventory:read: Allows the user to get information about housing event inventory.
+            housing/housing-event-room-types:read: Allows the user to read information about event room types.
+            housing/housing-events:read: Allows the user to read information about events.
+            housing/reservation-requests:delete: Allows the user to cancel reservation request.
+            housing/reservation-requests:read: Allows the user to read reservation request information.
+            housing/reservation-requests:write: Allows the user to create/update reservation request.
+            housing/reservations-link:delete: Allows the user to remove association from reservation.
+            housing/reservations-link:write: Allows the user to associate reservation to reservation request.
+            housing/reservations:delete: Allows the user to cancel reservation.
+            housing/reservations:read: Allows the user to read reservation details information.
+            housing/reservations:write: Allows the user to create/update reservation.
+            onsite/signatures:read: Allows reading signatures.
+            proposal/proposals:write: Allows the creation/writing of proposal
+            remote-printing/badge-print-jobs:read: Allows reading print jobs.
+            remote-printing/badge-print-jobs:write: Allows creating print jobs.
+            remote-printing/badge-printer-pools:read: Allows reading pools.
+            rfp/rfp-agenda-items:read: Allows the reading of RFP agenda items.
+            rfp/rfp-attachments:read: Allows the reading of RFP attachments.
+            rfp/rfp-custom-fields:read: Allows the reading of RFP custom fields.
+            rfp/rfp-guest-rooms:read: Allows the reading of RFP guest rooms.
+            rfp/rfp-internal-documents:read: Allows the reading of RFP internal documents.
+            rfp/rfp-lead-sources:read: Allows the reading of RFP lead sources.
+            rfp/rfp-past-events:read: Allows the reading of past events similar to rfp event.
+            rfp/rfp-questions:read: Allows the reading of RFP questions.
+            rfp/rfp-recipients-history:read: Allows the reading of RFP recipients history.
+            rfp/rfp-suppliers:read: Allows the reading of RFP suppliers.
+            rfp/rfps:read: Allows the reading of basic details of RFP.
+            seating/assignments:read: Allows to read attendee seat assignment information.
+            seating/event-seatings:read: Allows to read event seating.
+            seating/seats:read: Allows to read seat information.
+            seating/tables:read: Allows to read table information.
+            secure-ecommerce/card-tokens:write: Allows creation of credit card tokens
+            survey/questions:read: Allows the reading of survey questions
+            survey/respondents:read: Allows reading the survey respondents
+            survey/responses:read: Allows reading the survey responses
+            survey/standard-survey-email-templates:read: Allows reading the standalone survey email templates
+            survey/standard-survey-email:write: Allows writing operations on standalone survey emails
+            survey/standard-survey-questions:read: Allows the reading of standalone surveys questions
+            survey/standard-survey-respondents:read: Allows reading the standalone survey respondents
+            survey/standard-survey-respondents:write: Allows write operations on standalone survey respondents
+            survey/standard-survey-responses:read: Allows reading the standalone survey responses
+            survey/standard-survey-responses:write: Allows write operations on standalone surveys respondent's responses
+            survey/standard-surveys:read: Allows the reading of standalone surveys
+            survey/survey-questions:read: Allows the reading of event survey questions
+            survey/survey-respondents:read: Allows reading the event survey respondents
+            survey/survey-respondents:write: Allows write operations on the event survey respondents
+            survey/survey-responses:read: Allows reading the event survey responses
+            survey/survey-responses:write: Allows write operations on the event surveys respondent's responses
+            survey/surveys:read: Allows the reading of event surveys
+            venue/meeting-room-images:delete: Allows disassociating images from meeting rooms.
+            venue/meeting-room-images:read: Allows retrieving meeting room images.
+            venue/meeting-room-images:write: Allows associating images with meeting rooms.
+            venue/meeting-room-overviews:read: Allows read access for overview of meeting room.
+            venue/meeting-rooms:write: Allows the creation and modification of meeting rooms.
+            venue/venue-details-overview:read: Allows read access for overview of venue details.
+            venue/venue-details:write: Allows the creation and modification of venue details.
+            venue/venue-facility:write: Allows the modification of venue facility information.
+    OAuth2.authorizationCode:
+      type: oauth2
+      description: OAuth2 Authorization Code Flow.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api-platform.cvent.com/ea/oauth2/authorize
+          tokenUrl: https://api-platform.cvent.com/ea/oauth2/token
+          scopes:
+            account/hooks:delete: Allows the deletion of hooks.
+            account/hooks:read: Allows the reading of hooks.
+            account/hooks:write: Allows the creation/updation of hooks.
+            account/user-groups:delete: Allows deletion for user groups
+            account/user-groups:read: Allows the reading of user groups
+            account/user-groups:write: Allows the writing of user groups
+            account/users:delete: Allows the deletion of User
+            account/users:read: Allows the reading of User, User Group
+            account/users:write: Allows the creation/updating of User
+            appointments/appointment-attendees:read: Allows the reading of appointment attendees and their related entities.
+            appointments/appointment-events:read: Allows the reading of appointment events and their related entities.
+            appointments/appointment-types:read: Allows the reading of appointment types and their related entities.
+            appointments/appointments:read: Allows the reading of appointment and their related entities.
+            appointments/appointments:write: Allows the writing of appointments and their related entities.
+            appointments/available-times:read: Allows the reading of available times.
+            appointments/locations:read: Allows the reading of appointment locations and their related entities.
+            attendee-insights/attendee-insights:read: Allows the reading of engagement scores (attendee insights).
+            attendee-insights/scores:read: Allows the reading of scores.
+            attendee-insights/stats:read: Allows the reading of engagement score (attendee insight) stats.
+            budget/budget-items:delete: Allows the deletion of budget items
+            budget/budget-items:read: Allows the reading of all budget items
+            budget/budget-items:write: Allows creation/updation of budget item
+            budget/budget-totals:read: Allows the reading of all event budget totals
+            budget/budget-vendors:read: Allows reading of account-level budget vendors.
+            budget/cards:read: Allows the reading of cards
+            budget/currency-conversion-rate:delete: Allows deletion of currency conversion rate for currency.
+            budget/currency-conversion-rate:read: Allows reading of currency conversion rate for currency.
+            budget/currency-conversion-rate:write: Allows creation/update of currency conversion rate for currency.
+            budget/payments:delete: Allows deletion of payments.
+            budget/payments:read: Allows reading of payment for budget item.
+            budget/payments:write: Allows creation of payment in a budget item.
+            budget/transactions:delete: Allows delete card transactions.
+            budget/transactions:read: Allows the reading of all card's transactions
+            budget/transactions:write: Allows creation of card transactions.
+            business-transient/bids:read: Allows the reading of BT Bid data
+            business-transient/proposals:read: Allows the reading of BT Proposal data
+            business-travel/bids:read: Allows the reading of BT Bid data
+            business-travel/proposals:read: Allows the reading of BT Proposal data
+            compliance/communications:read: Allows the reading of communication compliance
+            compliance/communications:write: Allows the writing of communication compliance
+            email/bounces:read: Allow the reading of email bounces.
+            email/email-status:read: Allows the reading of email statuses.
+            email/emails:read: Allows the reading of emails.
+            eMarketing/campaigns:read: Allows the reading of campaigns.
+            emarketing/emarketing-email-status:read: Allows the reading of eMarketing email statuses.
+            eMarketing/eMarketing-email-templates:read: Allows the reading of email-templates.
+            eMarketing/eMarketing-send-emails:write: Allows the writing of eMarketing emails.
+            event/admission-items:read: Allows the reading of admission items
+            event/air-request:read: Allow reading the air request or air actual detail for attendees.
+            event/alternate-travel:read: Allow reading the alternate travel answers for attendees.
+            event/attendance-durations:read: Allows the read of Duration records
+            event/attendee-activities-metadata:delete: Allows the deletion of attendees activities metadata.
+            event/attendee-activities-metadata:read: Allows the reading of attendee activities metadata.
+            event/attendee-activities-metadata:write: Allows the creation/updating of attendees activities metadata.
+            event/attendee-activities:read: Allows the reading of attendee activities.
+            event/attendee-activities:write: Allows the writing of attendee activities.
+            event/attendee-credits:read: Allows the reading of attendee credits.
+            event/attendee-links:delete: Allows the deletion of attendee links
+            event/attendee-links:read: Allows the reading of attendee links
+            event/attendee-links:write: Allows the creation of attendee links
+            event/attendee-messages:read: Allows the reading of attendee messages
+            event/attendees:read: Allows the reading of attendees.
+            event/attendees:write: Allows the creation of an attendee in an event.
+            event/audience-segments:read: Allows the reading of audience segments.
+            event/audience-segments:write: Allows the creation/updating/deletion of audience segments.
+            event/contact-groups:read: Allows the reading of contact groups.
+            event/contact-groups:write: Allows the creation/updating of contact groups.
+            event/contact-types:read: Allows the reading of contact types.
+            event/contacts:delete: Allows the deletion of contacts.
+            event/contacts:read: Allows the reading of contacts.
+            event/contacts:write: Allows the creation/updating of contacts.
+            event/contacts:write-sensitive: Allows the creation/updating of sensitive data related to contacts.
+            event/custom-fields:read: Allows the reading of custom fields
+            event/custom-fields:write: Allows the writing of custom fields
+            event/discounts:write: Allows the writing of discounts
+            event/donation-items:read: Allows the reading of donation items.
+            event/event-discounts:read: Allows the reading of event discounts.
+            event/event-discounts:write: Allows the writing of event discounts.
+            event/event-email-status:read: Allows the reading of event email statuses.
+            event/event-emails:read: Allows the reading of event emails
+            event/event-emails:write: Allows to send event emails.
+            event/event-features:read: Allows the reading of events-features
+            event/event-features:write: Allows updating the event-features
+            event/event-user-groups:read: Allows the reading of user groups
+            event/event-user-groups:write: Allows associating/disassociating user groups to event
+            event/events:read: Allows the reading of events
+            event/events:write: Allows the creation/updating of events
+            event/fee-items:read: Allows the reading of fee items.
+            event/hotel-request:read: Allow reading the hotel request or housing reservation request detail for attendees.
+            event/invitation-lists:read: Allows the reading of the invitation lists for an event
+            event/meeting-request-forms:read: Allows the reading of meeting request forms.
+            event/meeting-requests:read: Allows the reading of meeting requests.
+            event/meeting-requests:write: Allows the creation/updating of meeting requests.
+            event/membership-items:read: Allows reading of membership items.
+            event/orders:read: Allows the reading of orders
+            event/planning-documents:read: Allows the reading of event planning documents
+            event/players:read: Allows the reading of players
+            event/process-form-submissions:read: Allows the reading of process form submissions.
+            event/program-items:delete: Allows deletion of session program items
+            event/program-items:read: Allows reading of session program items
+            event/program-items:write: Allows writing of session program items
+            event/quantity-items:read: Allows the reading of quantity items.
+            event/quantity-items:write: Allows the writing of quantity items
+            event/registration-paths:read: Allows the reading of registration paths
+            event/registration-types:read: Allows the reading of registration types
+            event/registration-types:write: Allows the writing of registration types
+            event/role-assignments:read: Allows the reading of event role assignment.
+            event/session-attendance:read: Allows the reading of sessions attendance
+            event/session-attendance:write: Allows the creation/updating of sessions attendance
+            event/session-categories:read: Allows reading of session categories
+            event/session-categories:write: Allows writing of session categories
+            event/session-enrollment:delete: Allows the deletion of session registrations
+            event/session-enrollment:read: Allows the reading of sessions registrations
+            event/session-enrollment:write: Allows the writing of sessions registrations
+            event/session-segments:read: Allows reading of session segments
+            event/sessions:delete: Allows the deletion of a session in an event
+            event/sessions:read: Allows the reading of sessions
+            event/sessions:write: Allows the creation of a session in an event
+            event/speaker-categories:read: Allows reading of speaker categories
+            event/speaker-categories:write: Allows writing of speaker categories
+            event/speakers:delete: Allows the deletion of a speaker in an event
+            event/speakers:read: Allows the reading of speakers
+            event/speakers:write: Allows the creation of a speaker in an event
+            event/taxes:read: Allows the reading of taxes.
+            event/transactions:read: Allows the reading of transactions
+            event/transactions:write: Allows the writing of transactions
+            event/video-views:read: Allows reading of video views.
+            event/videos:read: Allows the reading of video data.
+            event/videos:write: Allows the creation/updating of video data.
+            event/vouchers:read: Allows reading of event vouchers and their associated attendees.
+            event/webcasts:delete: Allows the deletion of webcast
+            event/webcasts:read: Allows the reading of webcasts
+            event/webcasts:write: Allows the creation of webcast
+            event/weblinks:read: Allows the reading of event weblinks
+            events-plus/hubs:read: Allows the reading of Events+ hub data.
+            exhibitor/badges:read: Allows reading badges
+            exhibitor/badges:write: Allows creating/updating badges
+            exhibitor/booth-staff:delete: Allows deleting booth staff
+            exhibitor/booth-staff:read: Allows reading booth staff
+            exhibitor/booth-staff:write: Allows creating booth staff
+            exhibitor/eliterature-requests:read: Allows reading eliterature document request data
+            exhibitor/exhibitor-admins:read: Allows reading exhibitor admins
+            exhibitor/exhibitor-admins:write: Allows creating/updating exhibitor admins
+            exhibitor/exhibitor-answers:read: Allows reading exhibitor answers
+            exhibitor/exhibitor-answers:write: Allows updating exhibitor answers
+            exhibitor/exhibitor-categories:delete: Allows deleting exhibitor categories
+            exhibitor/exhibitor-categories:read: Allows reading exhibitor categories
+            exhibitor/exhibitor-categories:write: Allows creating/updating exhibitor categories
+            exhibitor/exhibitor-contents:delete: Allows deleting exhibitor content
+            exhibitor/exhibitor-contents:read: Allows reading exhibitor content
+            exhibitor/exhibitor-contents:write: Allows creating/updating exhibitor content
+            exhibitor/exhibitor-questions:read: Allows reading exhibitor questions
+            exhibitor/exhibitors:delete: Allows deleting exhibitors
+            exhibitor/exhibitors:read: Allows reading exhibitors
+            exhibitor/exhibitors:write: Allows creating/updating exhibitors
+            exhibitor/lead-qualification-answers:read: Allows reading Lead Qualification Answers
+            exhibitor/lead-qualification-questions:read: Allows reading Lead Qualification Questions.
+            exhibitor/leads:read: Allows reading leads.
+            exhibitor/registration-packs:delete: Allows deleting registration pack
+            exhibitor/registration-packs:read: Allows reading registration pack
+            exhibitor/registration-packs:write: Allows creating/updating registration pack
+            exhibitor/sponsorship-levels:read: Allows reading sponsorship level
+            file/file:read: Allows the reading of file
+            file/file:write: Allows the uploading of file
+            onsite/signatures:read: Allows reading signatures.
+            remote-printing/badge-print-jobs:read: Allows reading print jobs.
+            remote-printing/badge-print-jobs:write: Allows creating print jobs.
+            remote-printing/badge-printer-pools:read: Allows reading pools.
+            rfp/rfp-agenda-items:read: Allows the reading of RFP agenda items.
+            rfp/rfp-attachments:read: Allows the reading of RFP attachments.
+            rfp/rfp-custom-fields:read: Allows the reading of RFP custom fields.
+            rfp/rfp-guest-rooms:read: Allows the reading of RFP guest rooms.
+            rfp/rfp-internal-documents:read: Allows the reading of RFP internal documents.
+            rfp/rfp-lead-sources:read: Allows the reading of RFP lead sources.
+            rfp/rfp-past-events:read: Allows the reading of past events similar to rfp event.
+            rfp/rfp-questions:read: Allows the reading of RFP questions.
+            rfp/rfp-recipients-history:read: Allows the reading of RFP recipients history.
+            rfp/rfp-suppliers:read: Allows the reading of RFP suppliers.
+            rfp/rfps:read: Allows the reading of basic details of RFP.
+            seating/assignments:read: Allows to read attendee seat assignment information.
+            seating/event-seatings:read: Allows to read event seating.
+            seating/seats:read: Allows to read seat information.
+            seating/tables:read: Allows to read table information.
+            survey/questions:read: Allows the reading of survey questions
+            survey/respondents:read: Allows reading the survey respondents
+            survey/responses:read: Allows reading the survey responses
+            survey/standard-survey-email-templates:read: Allows reading the standalone survey email templates
+            survey/standard-survey-email:write: Allows writing operations on standalone survey emails
+            survey/standard-survey-questions:read: Allows the reading of standalone surveys questions
+            survey/standard-survey-respondents:read: Allows reading the standalone survey respondents
+            survey/standard-survey-respondents:write: Allows write operations on standalone survey respondents
+            survey/standard-survey-responses:read: Allows reading the standalone survey responses
+            survey/standard-survey-responses:write: Allows write operations on standalone surveys respondent's responses
+            survey/standard-surveys:read: Allows the reading of standalone surveys
+            survey/survey-questions:read: Allows the reading of event survey questions
+            survey/survey-respondents:read: Allows reading the event survey respondents
+            survey/survey-respondents:write: Allows write operations on the event survey respondents
+            survey/survey-responses:read: Allows reading the event survey responses
+            survey/survey-responses:write: Allows write operations on the event surveys respondent's responses
+            survey/surveys:read: Allows the reading of event surveys
+            venue/meeting-room-images:delete: Allows disassociating images from meeting rooms.
+            venue/meeting-room-images:read: Allows retrieving meeting room images.
+            venue/meeting-room-images:write: Allows associating images with meeting rooms.
+            venue/meeting-room-overviews:read: Allows read access for overview of meeting room.
+            venue/meeting-rooms:write: Allows the creation and modification of meeting rooms.
+            venue/venue-details-overview:read: Allows read access for overview of venue details.
+            venue/venue-details:write: Allows the creation and modification of venue details.
+            venue/venue-facility:write: Allows the modification of venue facility information.

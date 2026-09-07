@@ -1,0 +1,1549 @@
+generated: '2026-09-07'
+method: derived
+source: openapi/_original/cvent-openapi.json (356 paths / 469 operations / 1,309 component schemas); entity docs
+  at https://developers.cvent.com/docs/platform/data-models/data-models
+summary:
+  component_schemas: 1309
+  response_entities: 247
+  entities_recorded: 80
+  note: Entities are the schemas returned by GET operations; relationships are read from $ref links (has_one / has_many)
+    and from *Id reference fields (belongs_to). Cvent also publishes a human ERD at https://developers.cvent.com/docs/platform/reference/ERD
+    and a detailed ERD at https://developers.cvent.com/docs/platform/reference/ERD-detailed, plus a per-entity data-model
+    reference covering 50 domains.
+core_domains:
+- Events
+- Attendees
+- Contacts
+- Sessions
+- Speakers
+- Exhibitor
+- Surveys
+- Budget
+- Housing
+- RFP Management
+- Travel RFPs
+- Users
+- User SCIM
+entities:
+- entity: Rfp
+  tags:
+  - RFP Management
+  fields: 54
+  paths:
+  - /rfps/{rfpId}
+  relationships:
+  - type: has_one
+    target: DateRequirements-1
+    via: dateRequirements
+  - type: has_one
+    target: RfpEvent
+    via: rfpEvent
+  - type: has_one
+    target: Contact-1
+    via: contact
+  - type: has_one
+    target: EventOrganization-1
+    via: rfpEventOrganization
+  - type: has_one
+    target: BillingDetails-1
+    via: billingDetails
+  - type: has_one
+    target: MeasurementUnit
+    via: measurementUnit
+  - type: has_many
+    target: OfferingCostType-1
+    via: requiredCostItems
+  - type: has_many
+    target: OfferingCostType-1
+    via: hiddenCostItems
+  - type: has_many
+    target: RecipientInfo
+    via: notificationRecipients
+  - type: has_one
+    target: LeadSource
+    via: leadSource
+  - type: belongs_to
+    target: source
+    via: sourceId
+  - type: has_one
+    target: WeddingDetails-1
+    via: weddingDetails
+- entity: attendee
+  tags:
+  - Attendees
+  fields: 45
+  paths:
+  - /attendees/{id}
+  relationships:
+  - type: has_one
+    target: AttendeeContactInfo
+    via: contact
+  - type: has_one
+    target: Lookup
+    via: registrationPath
+  - type: has_one
+    target: NamedObject
+    via: invitationList
+  - type: has_one
+    target: AttendeeWebLinks
+    via: webLinks
+  - type: has_one
+    target: Lookup
+    via: registrationType
+  - type: belongs_to
+    target: reference
+    via: referenceId
+  - type: has_many
+    target: ExternalReference
+    via: externalReferences
+  - type: belongs_to
+    target: primary
+    via: primaryId
+  - type: has_one
+    target: AttendeeGroup
+    via: group
+  - type: has_one
+    target: UUID
+    via: administrator
+  - type: has_one
+    target: AttendeeStatus
+    via: status
+  - type: has_one
+    target: AttendeeInvitedBy-1
+    via: invitedBy
+- entity: contact
+  tags:
+  - Contacts
+  fields: 46
+  paths:
+  - /contacts/{id}
+  relationships:
+  - type: has_one
+    target: Gender
+    via: gender
+  - type: has_one
+    target: AttendeeContactType
+    via: type
+  - type: has_one
+    target: ContactMembership
+    via: membership
+  - type: has_one
+    target: AddressType
+    via: primaryAddressType
+  - type: has_one
+    target: Address
+    via: homeAddress
+  - type: has_one
+    target: Address
+    via: workAddress
+  - type: has_many
+    target: custom-field
+    via: customFields
+  - type: belongs_to
+    target: source
+    via: sourceId
+  - type: has_many
+    target: Compliance
+    via: compliance
+  - type: has_one
+    target: ContactOptOut
+    via: optOut
+  - type: has_one
+    target: ContactLinks
+    via: _links
+  - type: has_one
+    target: Passport
+    via: passport
+- entity: existing-reservation
+  tags:
+  - Housing
+  fields: 39
+  paths:
+  - /reservations/{reservationId}
+  relationships:
+  - type: has_one
+    target: AttendeeTypeId
+    via: attendeeType
+  - type: has_one
+    target: RoomInfo
+    via: roomType
+  - type: has_many
+    target: ReservationNight
+    via: nights
+  - type: has_many
+    target: ReservationGuest
+    via: guests
+  - type: has_one
+    target: CustomFields
+    via: customFields
+  - type: has_one
+    target: RewardProgram
+    via: rewardProgram
+  - type: belongs_to
+    target: membership
+    via: membershipId
+  - type: has_one
+    target: TravelDetails
+    via: travelDetails
+  - type: has_one
+    target: HotelInfo
+    via: hotel
+  - type: has_one
+    target: BookingWebsiteLink
+    via: bookingSite
+  - type: has_one
+    target: CallCenterLink
+    via: callCenter
+  - type: has_many
+    target: AddOn
+    via: addOns
+- entity: existing-reservation-request
+  tags:
+  - Housing
+  fields: 23
+  paths:
+  - /reservation-requests/{reservationRequestsId}
+  relationships:
+  - type: belongs_to
+    target: source
+    via: sourceId
+  - type: has_one
+    target: Locale-11
+    via: locale
+  - type: has_one
+    target: HousingEventId
+    via: housingEvent
+  - type: has_one
+    target: AttendeeTypeId
+    via: attendeeType
+  - type: has_one
+    target: RoomTypeId
+    via: roomType
+  - type: has_one
+    target: HotelId
+    via: hotel
+  - type: has_many
+    target: Guest1
+    via: guests
+  - type: has_one
+    target: CustomFields
+    via: customFields
+  - type: has_one
+    target: RewardProgram
+    via: rewardProgram
+  - type: belongs_to
+    target: membership
+    via: membershipId
+  - type: has_one
+    target: TravelDetails
+    via: travelDetails
+  - type: has_one
+    target: ReservationRequestStatus
+    via: status
+- entity: existing-webcast
+  tags:
+  - Webcasts
+  fields: 25
+  paths:
+  - /webcasts/{id}
+  relationships:
+  - type: has_one
+    target: UUID
+    via: event
+  - type: has_one
+    target: UUID
+    via: session
+  - type: has_one
+    target: UUID
+    via: appointment
+  - type: has_one
+    target: SolutionType
+    via: solutionType
+  - type: has_one
+    target: UUID
+    via: exhibitor
+  - type: has_one
+    target: Format
+    via: format
+  - type: has_one
+    target: WebcastType
+    via: type
+  - type: has_one
+    target: WebcastProvider
+    via: provider
+  - type: has_one
+    target: WebcastStatus
+    via: status
+  - type: has_one
+    target: PlayerType
+    via: playerType
+  - type: belongs_to
+    target: source
+    via: sourceId
+  - type: belongs_to
+    target: meeting
+    via: meetingId
+- entity: travel-proposal-bid
+  tags:
+  - Travel RFPs
+  fields: 22
+  paths:
+  - /travel-proposals/bids/{travelProposalBidId}
+  relationships:
+  - type: has_one
+    target: BidStayType
+    via: stayType
+  - type: has_one
+    target: BidStatusType
+    via: status
+  - type: has_one
+    target: TravelProposalBidRate
+    via: rate
+  - type: has_many
+    target: TravelBidWeekendDays
+    via: weekendDays
+  - type: has_many
+    target: TravelBidComment
+    via: comments
+  - type: has_many
+    target: TravelBidRoom
+    via: roomTypes
+  - type: has_many
+    target: TravelBidSeason
+    via: seasons
+  - type: has_many
+    target: TravelBidDiscount
+    via: discounts
+  - type: has_many
+    target: TravelBidFairSeason
+    via: fairSeasons
+  - type: has_many
+    target: TravelBidAmenity
+    via: amenities
+  - type: has_many
+    target: TravelBidPolicy
+    via: policies
+  - type: has_many
+    target: TravelBidTaxAndFee
+    via: taxesAndFees
+- entity: event
+  tags:
+  - Events
+  fields: 37
+  paths:
+  - /events/{id}
+  relationships:
+  - type: has_one
+    target: EventFormat
+    via: format
+  - type: has_many
+    target: Venue1
+    via: venues
+  - type: has_one
+    target: EventSecurityLevel
+    via: registrationSecurityLevel
+  - type: has_one
+    target: RegistrationStatus
+    via: status
+  - type: has_one
+    target: EventStatus
+    via: eventStatus
+  - type: has_many
+    target: Planner1
+    via: planners
+  - type: has_many
+    target: Stakeholder
+    via: stakeholders
+  - type: has_many
+    target: custom-field
+    via: customFields
+  - type: has_one
+    target: EventType1
+    via: type
+  - type: has_one
+    target: EventLinks
+    via: _links
+  - type: belongs_to
+    target: meetingRequest
+    via: meetingRequestId
+- entity: housing-event
+  tags:
+  - Housing
+  fields: 20
+  paths:
+  - /housing-events/{housingEventId}
+  relationships:
+  - type: has_one
+    target: Venue
+    via: venue
+  - type: has_one
+    target: HousingEventStatus
+    via: status
+  - type: has_one
+    target: Locale-11
+    via: defaultLocale
+  - type: has_many
+    target: Locale-11
+    via: locales
+  - type: has_one
+    target: ReservationContact
+    via: reservationContact
+  - type: has_many
+    target: AttendeeType
+    via: attendeeTypes
+  - type: has_many
+    target: Planner
+    via: planners
+  - type: has_one
+    target: Currency1
+    via: currency
+  - type: has_one
+    target: rooms-sort-type
+    via: roomsSortType
+- entity: order-item-response
+  tags:
+  - Orders
+  fields: 24
+  paths:
+  - /orders/{orderId}/items/{orderItemId}
+  relationships:
+  - type: has_one
+    target: uuid-property
+    via: id
+  - type: has_one
+    target: OrderRef
+    via: order
+  - type: has_one
+    target: Event
+    via: event
+  - type: has_one
+    target: Attendee
+    via: attendee
+  - type: has_one
+    target: Guest
+    via: guestDetail
+  - type: has_one
+    target: ProductOrderItem
+    via: product
+  - type: has_one
+    target: Fee
+    via: fee
+  - type: has_many
+    target: GeneralLedger
+    via: generalLedgerItems
+  - type: has_many
+    target: DiscountDetail
+    via: discounts
+- entity: session
+  tags:
+  - Sessions
+  fields: 41
+  paths:
+  - /sessions/{id}
+  relationships:
+  - type: has_one
+    target: UUID
+    via: event
+  - type: has_one
+    target: NamedObject
+    via: category
+  - type: has_one
+    target: Location1
+    via: location
+  - type: has_one
+    target: SessionStatus
+    via: status
+  - type: has_many
+    target: uuid-property
+    via: admissionItems
+  - type: has_many
+    target: uuid-property
+    via: registrationTypes
+  - type: has_many
+    target: custom-field
+    via: customFields
+  - type: has_many
+    target: segment-id
+    via: segments
+  - type: has_one
+    target: Relevance
+    via: relevance
+- entity: User
+  tags:
+  - User SCIM
+  fields: 15
+  paths:
+  - /scim/v2/Users/{id}
+  relationships:
+  - type: has_one
+    target: Name
+    via: name
+  - type: has_many
+    target: Email1
+    via: emails
+  - type: has_many
+    target: PhoneNumber1
+    via: phoneNumbers
+  - type: has_many
+    target: Address6
+    via: addresses
+  - type: has_one
+    target: UserType
+    via: userType
+  - type: has_many
+    target: Group
+    via: groups
+  - type: has_one
+    target: UserEnterpriseExtension
+    via: urn:ietf:params:scim:schemas:extension:enterprise:2.0:User
+  - type: has_one
+    target: Meta
+    via: meta
+- entity: travel-proposal
+  tags:
+  - Travel RFPs
+  fields: 25
+  paths:
+  - /travel-proposals/{travelProposalId}
+  relationships:
+  - type: has_one
+    target: proposal-status-type
+    via: status
+  - type: has_one
+    target: RateReviewStatusType
+    via: rateReviewStatus
+  - type: has_one
+    target: business-type
+    via: businessType
+  - type: has_one
+    target: format-type
+    via: format
+  - type: has_many
+    target: TravelProposalBid
+    via: bids
+  - type: has_many
+    target: TravelProposalCustomQuestion
+    via: customQuestionAnswers
+  - type: has_one
+    target: TravelProposalGroupAndMeeting
+    via: groupAndMeeting
+  - type: has_one
+    target: TravelProposalDisposition
+    via: proposalDisposition
+- entity: exhibitor-response
+  tags:
+  - Exhibitor
+  fields: 28
+  paths:
+  - /events/{id}/exhibitors/{exhibitorId}
+  relationships:
+  - type: has_one
+    target: Event4
+    via: event
+  - type: belongs_to
+    target: source
+    via: sourceId
+  - type: has_one
+    target: Address5
+    via: address
+  - type: has_one
+    target: ContactLinks1
+    via: contactLinks
+  - type: has_one
+    target: SponsorshipLevel
+    via: sponsorshipLevel
+  - type: belongs_to
+    target: profileLogo
+    via: profileLogoId
+  - type: belongs_to
+    target: banner
+    via: bannerId
+- entity: transaction-detail-response
+  tags:
+  - Transactions
+  fields: 22
+  paths:
+  - /transactions/{transactionId}
+  relationships:
+  - type: belongs_to
+    target: processorTransaction
+    via: processorTransactionId
+  - type: has_one
+    target: Event
+    via: event
+  - type: has_one
+    target: Attendee
+    via: attendee
+  - type: has_many
+    target: Order
+    via: orders
+  - type: has_one
+    target: PaymentType-1
+    via: paymentType
+  - type: has_one
+    target: PaymentMethod
+    via: paymentMethod
+  - type: has_one
+    target: BillingAddress
+    via: billingAddress
+- entity: housing-event-hotel
+  tags:
+  - Housing
+  fields: 14
+  paths:
+  - /housing-events/{housingEventId}/hotels/{hotelId}
+  relationships:
+  - type: has_one
+    target: HousingEventId
+    via: housingEvent
+  - type: has_many
+    target: ImageLink
+    via: images
+  - type: has_one
+    target: Proximity
+    via: proximity
+  - type: has_one
+    target: HotelRating
+    via: rating
+  - type: has_one
+    target: Address3
+    via: address
+  - type: has_many
+    target: RewardProgram
+    via: rewardPrograms
+- entity: appointment-event
+  tags:
+  - Appointments
+  fields: 20
+  paths:
+  - /appointment-events/{id}
+  relationships:
+  - type: has_one
+    target: uuid.json
+    via: event
+  - type: has_one
+    target: appointment-event-type.json
+    via: apptEventType
+  - type: has_one
+    target: appointment-event-status.json
+    via: status
+  - type: has_many
+    target: venue.json
+    via: venues
+  - type: has_many
+    target: planner.json
+    via: planners
+- entity: order-detail
+  tags:
+  - Orders
+  fields: 18
+  paths:
+  - /orders/{orderId}
+  relationships:
+  - type: has_one
+    target: uuid-property
+    via: id
+  - type: has_one
+    target: Event
+    via: event
+  - type: has_one
+    target: Attendee
+    via: attendee
+  - type: has_one
+    target: OrderType
+    via: type
+  - type: has_many
+    target: DiscountDetail
+    via: discounts
+- entity: room-type-details
+  tags:
+  - Housing
+  fields: 9
+  paths:
+  - /housing-events/{housingEventId}/hotels/{hotelId}/room-types/{roomTypeId}
+  relationships:
+  - type: has_one
+    target: HousingEventId
+    via: housingEvent
+  - type: has_one
+    target: HotelId
+    via: hotel
+  - type: has_many
+    target: RoomAttendeeType
+    via: attendeeTypes
+  - type: has_many
+    target: ImageLink
+    via: images
+  - type: has_one
+    target: RoomCategory
+    via: roomCategory
+- entity: send-email-event-response
+  tags:
+  - Events
+  fields: 7
+  paths:
+  - /events/emails/{emailRequestId}/status
+  relationships:
+  - type: belongs_to
+    target: request
+    via: requestId
+  - type: has_one
+    target: send-email-request-status.json
+    via: status
+  - type: has_one
+    target: event.json3
+    via: event
+  - type: has_one
+    target: email.json
+    via: email
+  - type: has_many
+    target: attendee-response.json
+    via: attendeeResponses
+- entity: transaction-item-account-response
+  tags:
+  - Transactions
+  fields: 13
+  paths:
+  - /transactions/{transactionId}/items/{transactionItemId}
+  relationships:
+  - type: has_one
+    target: TransactionId
+    via: transaction
+  - type: has_one
+    target: Event
+    via: event
+  - type: has_one
+    target: Attendee
+    via: attendee
+  - type: has_one
+    target: ProductOrderItem
+    via: product
+  - type: has_one
+    target: OrderItemRef
+    via: orderItem
+- entity: travel-program
+  tags:
+  - Travel RFPs
+  fields: 17
+  paths:
+  - /travel-programs/{programId}
+  relationships:
+  - type: has_one
+    target: TravelProgramType
+    via: type
+  - type: has_one
+    target: TravelProgramFormatType
+    via: format
+  - type: has_one
+    target: TravelProgramStatus
+    via: status
+  - type: has_one
+    target: TravelProgramStayType
+    via: stayType
+  - type: has_many
+    target: TravelProgramQuestion-1
+    via: questions
+- entity: existing-badge-print-job
+  tags:
+  - Badge Print Job
+  fields: 9
+  paths:
+  - /events/{eventId}/badge-print-jobs/{jobId}
+  relationships:
+  - type: has_one
+    target: uuid-property
+    via: id
+  - type: has_one
+    target: BadgePrintJobStatus
+    via: status
+  - type: belongs_to
+    target: badge
+    via: badgeId
+  - type: has_one
+    target: BadgePrintJobErrorCode
+    via: code
+- entity: existing-custom-field
+  tags:
+  - Custom Fields
+  fields: 19
+  paths:
+  - /custom-fields/{customFieldId}
+  relationships:
+  - type: has_one
+    target: CustomFieldCategory
+    via: category
+  - type: has_one
+    target: CustomFieldType2
+    via: type
+  - type: has_one
+    target: DisplayInDataTag
+    via: displayInDataTag
+  - type: has_one
+    target: PageVisibility
+    via: pageVisibility
+- entity: program-item-session-document
+  tags:
+  - Sessions
+  fields: 9
+  paths:
+  - /program-items/{programItemId}/docs/{fileId}
+  relationships:
+  - type: has_one
+    target: event-id
+    via: event
+  - type: has_one
+    target: Session-1
+    via: session
+  - type: has_one
+    target: SessionDocumentLite
+    via: document
+  - type: has_one
+    target: ProgramItem
+    via: programItem
+- entity: speaker-program-item
+  tags:
+  - Speakers
+  fields: 9
+  paths:
+  - /program-items/{programItemId}/speakers/{id}
+  relationships:
+  - type: has_one
+    target: EventLite
+    via: event
+  - type: has_one
+    target: SessionLite
+    via: session
+  - type: has_one
+    target: SpeakerLite
+    via: speaker
+  - type: has_one
+    target: ProgramItemLite
+    via: programItem
+- entity: appointment-attendee
+  tags:
+  - Appointments
+  fields: 8
+  paths:
+  - /appointment-attendees/{id}
+  relationships:
+  - type: has_one
+    target: uuid.json
+    via: appointmentEvent
+  - type: has_one
+    target: uuid.json
+    via: contact
+  - type: has_one
+    target: uuid.json
+    via: registration
+- entity: appointment-with-questions
+  tags:
+  - Appointments
+  fields: 7
+  paths:
+  - /appointments/{id}
+  relationships:
+  - type: has_one
+    target: uuid.json
+    via: appointmentEvent
+  - type: has_many
+    target: appointment-participant.json
+    via: participants
+  - type: has_many
+    target: custom-field.json
+    via: questions
+- entity: booth-staff-response
+  tags:
+  - Exhibitor Team
+  fields: 8
+  paths:
+  - /events/{id}/exhibitors/{exhibitorId}/booth-staff/{boothstaffId}
+  relationships:
+  - type: has_one
+    target: Attendee1
+    via: attendee
+  - type: has_one
+    target: Event4
+    via: event
+  - type: has_one
+    target: Exhibitor
+    via: exhibitor
+- entity: contact-obfuscation-status
+  tags:
+  - Contacts
+  fields: 3
+  paths:
+  - /contacts/obfuscate/{obfuscateId}/status
+  relationships:
+  - type: has_one
+    target: ContactObfuscationStatusType
+    via: status
+  - type: belongs_to
+    target: obfuscate
+    via: obfuscateId
+  - type: has_one
+    target: ContactId
+    via: contact
+- entity: meeting-request
+  tags:
+  - Meeting Request
+  fields: 14
+  paths:
+  - /events/{id}/meeting-requests
+  - /meeting-request-forms/{id}/requests/{requestId}
+  relationships:
+  - type: has_one
+    target: MeetingRequestStatus
+    via: status
+  - type: has_many
+    target: MeetingRequestQuestion
+    via: questions
+  - type: belongs_to
+    target: source
+    via: sourceId
+- entity: question
+  tags:
+  - Travel RFPs
+  fields: 11
+  paths:
+  - /travel-programs/{programId}/questions/{questionId}
+  relationships:
+  - type: has_one
+    target: QuestionResponseType
+    via: responseType
+  - type: has_one
+    target: QuestionResponseDataType
+    via: responseDataType
+  - type: has_one
+    target: QuestionResponseFormat
+    via: responseFormat
+- entity: registration-pack-response
+  tags:
+  - Exhibitor
+  fields: 4
+  paths:
+  - /events/{id}/exhibitors/{exhibitorId}/registration-packs/{registrationPackId}
+  relationships:
+  - type: has_one
+    target: Event4
+    via: event
+  - type: has_one
+    target: Exhibitor
+    via: exhibitor
+  - type: has_many
+    target: ExistingCapacity
+    via: capacities
+- entity: travel-account-supplier-account
+  tags:
+  - Travel Accounts
+  fields: 7
+  paths:
+  - /travel-accounts/{travelAccountId}/supplier-accounts
+  relationships:
+  - type: has_one
+    target: ManagementLevelType1
+    via: managementLevel
+  - type: belongs_to
+    target: crm
+    via: crmId
+  - type: belongs_to
+    target: chainDefined
+    via: chainDefinedId
+- entity: CommunicationLogMessagePaginatedResponse
+  tags:
+  - Compliance
+  fields: 2
+  paths:
+  - /logs/communications/messages
+  relationships:
+  - type: has_one
+    target: paging.json
+    via: paging
+  - type: has_many
+    target: communication-log-message.json
+    via: data
+- entity: PaginatedInternalDocuments
+  tags:
+  - RFP Requirements
+  fields: 2
+  paths:
+  - /rfps/{rfpId}/internal-documents
+  relationships:
+  - type: has_one
+    target: Paging
+    via: paging
+  - type: has_many
+    target: RfpInternalDocument
+    via: data
+- entity: PaginatedRfpAgendaItems
+  tags:
+  - RFP Requirements
+  fields: 2
+  paths:
+  - /rfps/{rfpId}/agenda-items
+  relationships:
+  - type: has_one
+    target: Paging
+    via: paging
+  - type: has_many
+    target: RfpAgendaItem
+    via: data
+- entity: PaginatedRfpAgendaItemsSchedule
+  tags:
+  - RFP Requirements
+  fields: 2
+  paths:
+  - /rfps/{rfpId}/agenda-items/schedules
+  relationships:
+  - type: has_one
+    target: Paging
+    via: paging
+  - type: has_many
+    target: RfpAgendaItemScheduleWithId
+    via: data
+- entity: PaginatedRfpAttachments
+  tags:
+  - RFP Requirements
+  fields: 2
+  paths:
+  - /rfps/{rfpId}/attachments
+  relationships:
+  - type: has_one
+    target: Paging
+    via: paging
+  - type: has_many
+    target: RfpAttachment
+    via: data
+- entity: PaginatedRfpCustomField
+  tags:
+  - RFP Requirements
+  fields: 2
+  paths:
+  - /rfps/{rfpId}/custom-fields/answers
+  relationships:
+  - type: has_one
+    target: Paging
+    via: paging
+  - type: has_many
+    target: CustomFieldAnswers
+    via: data
+- entity: PaginatedRfpQuestions
+  tags:
+  - RFP Requirements
+  fields: 2
+  paths:
+  - /rfps/{rfpId}/questions
+  relationships:
+  - type: has_one
+    target: Paging
+    via: paging
+  - type: has_many
+    target: RfpQuestion
+    via: data
+- entity: PaginatedRfpRecipientsHistory
+  tags:
+  - RFP Suppliers
+  fields: 2
+  paths:
+  - /rfps/{rfpId}/recipients/history
+  relationships:
+  - type: has_one
+    target: Paging
+    via: paging
+  - type: has_many
+    target: RfpRecipientLogEntry
+    via: data
+- entity: PaginatedRfpSuppliers
+  tags:
+  - RFP Suppliers
+  fields: 2
+  paths:
+  - /rfps/{rfpId}/suppliers
+  relationships:
+  - type: has_one
+    target: Paging
+    via: paging
+  - type: has_many
+    target: RfpSupplier
+    via: data
+- entity: RfpGuestRooms
+  tags:
+  - RFP Requirements
+  fields: 6
+  paths:
+  - /rfps/{rfpId}/guest-rooms
+  relationships:
+  - type: has_many
+    target: GuestRoomOccupancyPerRoomType
+    via: occupancies
+  - type: has_many
+    target: RoomBlock
+    via: roomBlocks
+- entity: ServiceProviderConfig
+  tags:
+  - User SCIM
+  fields: 10
+  paths:
+  - /scim/v2/ServiceProviderConfig
+  relationships:
+  - type: has_many
+    target: AuthenticationSchema
+    via: authenticationSchemes
+  - type: has_one
+    target: Meta
+    via: meta
+- entity: UserGroups
+  tags:
+  - Users
+  fields: 2
+  paths:
+  - /account-user-groups
+  relationships:
+  - type: has_one
+    target: Paging
+    via: paging
+  - type: has_many
+    target: AccountUserGroup
+    via: data
+- entity: UsersSchema
+  tags:
+  - User SCIM
+  fields: 5
+  paths:
+  - /scim/v2/Schemas/{id}
+  relationships:
+  - type: has_many
+    target: Attribute
+    via: attributes
+  - type: has_one
+    target: Meta
+    via: meta
+- entity: account-budget-items-paginated-response
+  tags:
+  - Budget
+  fields: 2
+  paths:
+  - /budget-items
+  relationships:
+  - type: has_one
+    target: Paging
+    via: paging
+  - type: has_many
+    target: AccountBudgetItemListResponse
+    via: data
+- entity: admission-items-paginated-response
+  tags:
+  - Events
+  fields: 2
+  paths:
+  - /admission-items
+  relationships:
+  - type: has_one
+    target: Paging
+    via: paging
+  - type: has_many
+    target: existing-admission-item
+    via: data
+- entity: air-actual-detail
+  tags:
+  - Event Travel
+  fields: 2
+  paths:
+  - /events/{id}/event-travel/air-actuals
+  relationships:
+  - type: has_one
+    target: Paging
+    via: paging
+  - type: has_many
+    target: AirActualDetail
+    via: data
+- entity: air-reservation-detail
+  tags:
+  - Event Travel
+  fields: 2
+  paths:
+  - /events/{id}/event-travel/air-requests
+  relationships:
+  - type: has_one
+    target: Paging
+    via: paging
+  - type: has_many
+    target: AirReservationDetail
+    via: data
+- entity: appointment-attendee-paginated-response
+  tags:
+  - Appointments
+  fields: 2
+  paths:
+  - /appointment-attendees
+  relationships:
+  - type: has_one
+    target: paging.json
+    via: paging
+  - type: has_many
+    target: appointment-attendee
+    via: data
+- entity: appointment-availability
+  tags:
+  - Appointments
+  fields: 7
+  paths:
+  - /appointment-availability-times/{id}
+  relationships:
+  - type: has_one
+    target: appointment-event-id.json
+    via: appointmentEvent
+  - type: has_many
+    target: appointment-availability-time-range.json
+    via: timeRanges
+- entity: appointment-availability-paginated-response
+  tags:
+  - Appointments
+  fields: 2
+  paths:
+  - /appointment-availability-times
+  relationships:
+  - type: has_one
+    target: paging.json
+    via: paging
+  - type: has_many
+    target: appointment-availability
+    via: data
+- entity: appointment-event-paginated-response
+  tags:
+  - Appointments
+  fields: 2
+  paths:
+  - /appointment-events
+  relationships:
+  - type: has_one
+    target: paging.json
+    via: paging
+  - type: has_many
+    target: appointment-event
+    via: data
+- entity: appointment-types-paginated-response
+  tags:
+  - Appointments
+  fields: 2
+  paths:
+  - /appointment-events/{id}/appointment-types
+  relationships:
+  - type: has_one
+    target: paging.json
+    via: paging
+  - type: has_many
+    target: appointment-type.json
+    via: data
+- entity: attendee-activities-paginated-response
+  tags:
+  - Attendee Activities
+  fields: 2
+  paths:
+  - /attendees/activities
+  relationships:
+  - type: has_one
+    target: Paging
+    via: paging
+  - type: has_many
+    target: AttendeeActivity
+    via: data
+- entity: attendee-appointment-meeting-interest
+  tags:
+  - Appointments
+  fields: 7
+  paths:
+  - /appointment-meeting-interests/{id}
+  relationships:
+  - type: has_one
+    target: uuid.json
+    via: appointmentEvent
+  - type: has_many
+    target: appointment-meeting-interest.json
+    via: interests
+- entity: attendee-appointment-meeting-interests-paginated-response
+  tags:
+  - Appointments
+  fields: 2
+  paths:
+  - /appointment-meeting-interests
+  relationships:
+  - type: has_one
+    target: paging.json
+    via: paging
+  - type: has_many
+    target: attendee-appointment-meeting-interest
+    via: data
+- entity: attendee-audience-segment-associations-paginated-response
+  tags:
+  - Audience Segments
+  fields: 2
+  paths:
+  - /attendees/{attendeeId}/audience-segments
+  relationships:
+  - type: has_one
+    target: Paging
+    via: paging
+  - type: has_many
+    target: attendee-audience-segment-association
+    via: data
+- entity: attendee-insights-paginated-response
+  tags:
+  - Attendee Insights
+  fields: 2
+  paths:
+  - /attendee-insights
+  relationships:
+  - type: has_one
+    target: paging.json
+    via: paging
+  - type: has_many
+    target: attendee-insights
+    via: data
+- entity: attendee-link-paginated-response
+  tags:
+  - Webcasts
+  fields: 2
+  paths:
+  - /webcasts/attendee-links
+  - /webcasts/{id}/attendee-links
+  relationships:
+  - type: has_one
+    target: Paging
+    via: paging
+  - type: has_many
+    target: existing-attendee-link
+    via: data
+- entity: attendee-paginated-response
+  tags:
+  - Attendees
+  fields: 2
+  paths:
+  - /attendees
+  relationships:
+  - type: has_one
+    target: Paging
+    via: paging
+  - type: has_many
+    target: attendee
+    via: data
+- entity: attendeeCreditsPaginatedResponse
+  tags:
+  - Event Credits
+  fields: 2
+  paths:
+  - /attendee-credits
+  relationships:
+  - type: has_one
+    target: paging.json
+    via: paging
+  - type: has_many
+    target: attendee-credit.json
+    via: data
+- entity: attendees-paginated-response
+  tags:
+  - Events
+  fields: 2
+  paths:
+  - /events/{id}/vouchers/{voucherId}/attendees
+  relationships:
+  - type: has_one
+    target: Paging
+    via: paging
+  - type: has_many
+    target: Attendee2
+    via: data
+- entity: audience-segment-response
+  tags:
+  - Audience Segments
+  fields: 10
+  paths:
+  - /audience-segments/{audienceSegmentId}
+  relationships:
+  - type: has_one
+    target: Event3
+    via: event
+  - type: has_one
+    target: ExistingAudienceSegmentCreationType
+    via: creationType
+- entity: audience-segments-paginated-response
+  tags:
+  - Audience Segments
+  fields: 2
+  paths:
+  - /audience-segments
+  relationships:
+  - type: has_one
+    target: Paging
+    via: paging
+  - type: has_many
+    target: audience-segment-response
+    via: data
+- entity: available-nights
+  tags:
+  - Housing
+  fields: 2
+  paths:
+  - /housing-events/{housingEventId}/hotels/{hotelId}/available-nights
+  relationships:
+  - type: has_one
+    target: Paging
+    via: paging
+  - type: has_many
+    target: AvailableNight
+    via: data
+- entity: available-times-paginated-response
+  tags:
+  - Appointments
+  fields: 2
+  paths:
+  - /appointment-events/{id}/appointment-available-times
+  relationships:
+  - type: has_one
+    target: paging.json
+    via: paging
+  - type: has_many
+    target: available-time.json
+    via: data
+- entity: badge-paginated-response
+  tags:
+  - Attendees
+  fields: 2
+  paths:
+  - /events/{id}/badges
+  relationships:
+  - type: has_one
+    target: Paging
+    via: paging
+  - type: has_many
+    target: badge
+    via: data
+- entity: badge-print-jobs-paginated-response
+  tags:
+  - Badge Print Job
+  fields: 2
+  paths:
+  - /events/{eventId}/badge-print-jobs
+  relationships:
+  - type: has_one
+    target: Paging
+    via: paging
+  - type: has_many
+    target: existing-badge-print-job
+    via: data
+- entity: badge-printer-pools-paginated-response
+  tags:
+  - Badge Printer Pools
+  fields: 2
+  paths:
+  - /events/{eventId}/badge-printer-pools
+  relationships:
+  - type: has_one
+    target: Paging
+    via: paging
+  - type: has_many
+    target: existing-badge-printer-pool
+    via: data
+- entity: booth-staff-list-response
+  tags:
+  - Exhibitor Team
+  fields: 2
+  paths:
+  - /events/{id}/exhibitors/{exhibitorId}/booth-staff
+  relationships:
+  - type: has_one
+    target: Paging
+    via: paging
+  - type: has_many
+    target: booth-staff-response
+    via: data
+- entity: bounce-details-response
+  tags:
+  - Emails
+  fields: 2
+  paths:
+  - /bounces
+  relationships:
+  - type: has_one
+    target: paging-no-total-count.json
+    via: paging
+  - type: has_many
+    target: bounce-details.json
+    via: data
+- entity: brand-paginated-response
+  tags:
+  - Travel Suppliers
+  fields: 2
+  paths:
+  - /travel-suppliers/brands
+  relationships:
+  - type: has_one
+    target: paging.json
+    via: paging
+  - type: has_many
+    target: brand
+    via: data
+- entity: budget-allocations-paginated-list-response
+  tags:
+  - Budget
+  fields: 2
+  paths:
+  - /events/{id}/budget-items/allocations
+  relationships:
+  - type: has_one
+    target: Paging
+    via: paging
+  - type: has_many
+    target: BudgetAllocationsPaginatedResponse
+    via: data
+- entity: budget-items-paginated-response
+  tags:
+  - Budget
+  fields: 2
+  paths:
+  - /events/{id}/budget-items
+  relationships:
+  - type: has_one
+    target: Paging
+    via: paging
+  - type: has_many
+    target: BudgetItemListResponse
+    via: data
+- entity: budget-vendors-paginated-response
+  tags:
+  - Budget
+  fields: 2
+  paths:
+  - /budget-vendors
+  relationships:
+  - type: has_one
+    target: Paging
+    via: paging
+  - type: has_many
+    target: BudgetVendorResponse
+    via: data
+- entity: bulk-results-paginated-response
+  tags:
+  - Bulk
+  fields: 2
+  paths:
+  - /bulk-jobs/{id}/results
+  relationships:
+  - type: has_one
+    target: Paging
+    via: paging
+  - type: has_many
+    target: BulkResult
+    via: data
+- entity: campaign-list-paginated-response
+  tags:
+  - Campaigns
+  fields: 2
+  paths:
+  - /campaigns
+  relationships:
+  - type: has_one
+    target: paging.json
+    via: paging
+  - type: has_many
+    target: campaign-data.json
+    via: data

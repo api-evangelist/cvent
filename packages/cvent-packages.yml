@@ -1,0 +1,54 @@
+generated: '2026-09-07'
+method: searched
+source: https://developers.cvent.com/docs/rest-api/sdks; https://github.com/cvent/rest-sdks; registry.npmjs.org;
+  api.nuget.org; repo1.maven.org
+summary:
+  official: 3
+  community: 0
+  registries:
+  - npm
+  - nuget
+  - maven-central
+  note: Three first-party SDKs, all generated with Speakeasy from the Cvent public OpenAPI (cvent/rest-sdks .speakeasy/workflow.yaml)
+    and released in lockstep at 1.6.1 on 2026-08-21. Cvent labels them "early adopter release". No first-party Python,
+    Go, Ruby or PHP SDK is published.
+packages:
+- name: '@cvent/sdk'
+  registry: npm
+  language: TypeScript/JavaScript
+  official: true
+  version: 1.6.1
+  published: '2026-08-21'
+  license: MIT
+  url: https://www.npmjs.com/package/@cvent/sdk
+  repository: https://github.com/cvent/rest-sdks/tree/main/packages/typescript
+  source: https://registry.npmjs.org/@cvent/sdk
+  note: 'Latest of 25 published versions; first release 2025-12-15. Features documented by Cvent: type safety, automatic
+    authentication, built-in pagination, retry handling, file-upload streaming, structured error classes.'
+- name: Cvent.SDK
+  registry: nuget
+  language: C#/.NET
+  official: true
+  version: 1.6.1
+  published: '2026-08-21'
+  license: see package license
+  url: https://www.nuget.org/packages/Cvent.SDK
+  repository: https://github.com/cvent/rest-sdks/tree/main/packages/csharp
+  source: https://api.nuget.org/v3/registration5-gz-semver2/cvent.sdk/index.json
+  note: 23 published versions; project URL https://developers.cvent.com/docs.
+- name: com.cvent:sdk
+  registry: maven-central
+  language: Java
+  official: true
+  version: 1.6.1
+  published: '2026-08-21'
+  url: https://central.sonatype.com/artifact/com.cvent/sdk/overview
+  repository: https://github.com/cvent/rest-sdks/tree/main/packages/java
+  source: https://repo1.maven.org/maven2/com/cvent/sdk/maven-metadata.xml
+  note: maven-metadata lastUpdated 20260821155532; groupId/artifactId read from packages/java/gradle.properties.
+not_published:
+- language: Python
+  checked:
+  - https://pypi.org/pypi/cvent/json
+  - https://pypi.org/pypi/cvent-sdk/json
+  status: 404

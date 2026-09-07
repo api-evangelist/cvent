@@ -1,0 +1,16 @@
+overlay: 1.0.0
+x-speakeasy-jsonpath: rfc9535
+info:
+  title: Pagination overlay
+  version: 0.0.0
+actions:
+  - target: $.paths..[?(@.parameters && @.parameters[?(@['$ref'] == '#/components/parameters/token' || @['$ref'] == '#/components/parameters/token1')])]
+    update:
+      x-speakeasy-pagination:
+        type: cursor
+        inputs:
+          - name: token
+            in: parameters
+            type: cursor
+        outputs:
+          nextCursor: $.paging.nextToken

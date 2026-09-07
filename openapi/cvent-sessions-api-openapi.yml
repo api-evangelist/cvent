@@ -1,105 +1,2894 @@
-openapi: 3.1.0
+openapi: 3.0.2
 info:
-  title: Cvent REST Attendees Sessions API
-  version: v2
-  description: 'Cvent Platform REST API — the unified Cvent developer surface spanning
-
-    Event Cloud and Hospitality Cloud product lines. Provides programmatic access to events, contacts,
-
-    registrations, attendees, sessions, exhibitors, surveys, webhooks, and
-
-    related Event Cloud resources, authenticated via OAuth 2.0 client
-
-    credentials. Endpoint host varies by region — US accounts use
-
-    api-platform.cvent.com and EMEA accounts use api-platform-eur.cvent.com.
-
-
-    Best-effort spec derived from Cvent developer portal documentation
-
-    (overview, quickstart, Registration Guide, Managing Events Guide).
-
-    Refer to https://developers.cvent.com/docs/rest-api/overview for the
-
-    authoritative reference and downloadable OpenAPI.
-
-    '
+  title: Cvent REST APIs — Sessions
+  version: ea
+  description: A session is a presentation, discussion, or activity. Use these APIs to get information about your sessions
+    and use the session ID to get further data within the event.
   contact:
-    name: Cvent Developer Portal
-    url: https://developers.cvent.com
-  license:
-    name: Proprietary
+    name: Cvent Development Platform
+    url: https://developers.cvent.com/
+externalDocs:
+  description: Cvent REST API documentation
+  url: https://developers.cvent.com/documentation
 servers:
-- url: https://api-platform.cvent.com
-  description: Cvent Platform REST API (US/global)
-- url: https://api-platform-eur.cvent.com
-  description: Cvent Platform REST API (EMEA)
-security:
-- OAuth2ClientCredentials: []
+- url: https://api-platform.cvent.com/ea
+- url: https://api-platform-eur.cvent.com/ea
 tags:
 - name: Sessions
-  description: Agenda sessions
+  description: A session is a presentation, discussion, or activity. Use these APIs to get information about your sessions
+    and use the session ID to get further data within the event.
 paths:
-  /ea/events/{eventId}/sessions:
+  /events/{id}/session-locations:
     parameters:
-    - $ref: '#/components/parameters/EventId'
+    - $ref: '#/components/parameters/eventId1'
     get:
+      security:
+      - OAuth2.clientCredentials:
+        - event/sessions:read
+      - OAuth2.authorizationCode:
+        - event/sessions:read
+      summary: List Session Locations
+      description: Gets a paginated list of session locations.
+      operationId: getSessionLocation
       tags:
       - Sessions
-      summary: List sessions
+      parameters:
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
       responses:
         '200':
-          description: Sessions
+          description: Successfully retrieved paginated list of session locations.
+          headers: {}
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Session'
+                $ref: '#/components/schemas/session-locations-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+    post:
+      security:
+      - OAuth2.clientCredentials:
+        - event/sessions:write
+      - OAuth2.authorizationCode:
+        - event/sessions:write
+      summary: Add Session Location
+      description: Add a session location to the specified event.
+      operationId: addSessionLocation
+      tags:
+      - Sessions
+      requestBody:
+        description: Details of the session location you're creating.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/session-location'
+      responses:
+        '201':
+          description: Successfully created a session location
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/session-location'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+  /program-items:
+    post:
+      security:
+      - OAuth2.clientCredentials:
+        - event/program-items:write
+      - OAuth2.authorizationCode:
+        - event/program-items:write
+      summary: Create Program Item
+      description: Create a session program item based on the details provided in the body of the request. A session program
+        item is a specific part of a session's schedule, like a talk, workshop, or panel discussion. Max 25 program items
+        per session.
+      operationId: createProgramItem
+      tags:
+      - Sessions
+      requestBody:
+        description: Session program item to be created.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/program-item'
+      responses:
+        '201':
+          description: Successfully created the session program item.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/program-item'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+    get:
+      security:
+      - OAuth2.clientCredentials:
+        - event/program-items:read
+      - OAuth2.authorizationCode:
+        - event/program-items:read
+      summary: List Program Items
+      description: Gets a paginated list of session program items.
+      operationId: listProgramItems
+      tags:
+      - Sessions
+      parameters:
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      - name: filter
+        in: query
+        required: false
+        description: 'Use filter query parameters to limit results
+
+          to data that matches your criteria. See
+
+          [Filters](/docs/rest-api/reference/filters) for details.
+
+
+          Supported fields and operators are listed below:
+
+
+          | Field      | Operators  |
+
+          |------------|------------|
+
+          | id         | `eq`, `in` |
+
+          | session.id | `eq`, `in` |
+
+          | event.id   | `eq`       |
+
+
+          The following logical operators are supported for combining filters:
+
+          * and
+
+          * or
+
+          '
+        schema:
+          type: string
+          example: session.id in ('04ca6ae2-0dc3-487b-953e-86d6abbdf7d3', '34ca65e2-1dc3-487b-589e-839d8bbdf7d3')
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of session program items.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/program-item-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+  /program-items/docs/filter:
+    post:
+      security:
+      - OAuth2.clientCredentials:
+        - event/program-items:read
+      - OAuth2.authorizationCode:
+        - event/program-items:read
+      summary: Filter Program Item Documents
+      description: Gets a paginated list of session program item documents using a filter in the body of the request.
+      operationId: filterProgramItemDocuments
+      tags:
+      - Sessions
+      requestBody:
+        description: "A filter query string narrows search results and supports the combination of logical and comparison\
+          \ operators.\nThe filter adheres to the pattern filter='field' comparisonType 'value'.\n\nThese are the comparison\
+          \ types that can be used in filter expressions:\n  * equal: eq\n  * includes value(s): in\n\nThe following fields\
+          \ are filterable:\n  * document.id (eq|in)\n  * programItem.id (eq|in)\n  * session.id (eq|in)\n  * event.id (eq)\n\
+          \nThe following operators are available:\n  * and\n  * or\n"
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/filter'
+      parameters:
+      - $ref: '#/components/parameters/after'
+      - $ref: '#/components/parameters/before'
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of session program item documents.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/program-item-document-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+  /program-items/filter:
+    post:
+      security:
+      - OAuth2.clientCredentials:
+        - event/program-items:read
+      - OAuth2.authorizationCode:
+        - event/program-items:read
+      summary: List Program Items
+      description: Gets a paginated list of session program items by sending a filter in the body of the request. This method
+        will return the same data as <a href="#operation/listProgramItems">GET List Program Items</a> but allows for longer
+        filters.
+      operationId: listProgramItemsPostFilters
+      tags:
+      - Sessions
+      requestBody:
+        description: See the filter description of <a href="#operation/listProgramItems">GET List Program Items</a> for full
+          filtering information.
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/filter'
+      parameters:
+      - $ref: '#/components/parameters/after'
+      - $ref: '#/components/parameters/before'
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      - $ref: '#/components/parameters/locale2'
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of session program items.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/program-item-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+  /program-items/{programItemId}:
+    parameters:
+    - $ref: '#/components/parameters/programItemId1'
+    put:
+      security:
+      - OAuth2.clientCredentials:
+        - event/program-items:write
+      - OAuth2.authorizationCode:
+        - event/program-items:write
+      summary: Update Program Item
+      description: Updates the given session program item based on the details provided in the body of the request.
+      operationId: updateProgramItem
+      tags:
+      - Sessions
+      requestBody:
+        description: Session program item to be updated.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/program-item-update-request'
+      responses:
+        '200':
+          description: Successfully updated the session program item.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/program-item'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+    delete:
+      security:
+      - OAuth2.clientCredentials:
+        - event/program-items:delete
+      - OAuth2.authorizationCode:
+        - event/program-items:delete
+      summary: Delete Session Program Item
+      description: Delete the given session program item.
+      operationId: deleteProgramItem
+      tags:
+      - Sessions
+      responses:
+        '204':
+          description: Successfully deleted the given session program item.
+          headers: {}
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+  /program-items/{programItemId}/docs:
+    parameters:
+    - $ref: '#/components/parameters/programItemId1'
+    get:
+      security:
+      - OAuth2.clientCredentials:
+        - event/program-items:read
+      - OAuth2.authorizationCode:
+        - event/program-items:read
+      summary: Get Program Item Documents
+      description: 'Returns a list of session documents for the specified program item ID.
+
+        **Note:** This endpoint is deprecated. use <a href="#operation/filterProgramItemDocuments">Filter Program Item Documents</a>'
+      operationId: getProgramItemDocuments
+      tags:
+      - Sessions
+      responses:
+        '200':
+          description: Successfully retrieved a list of program item to session document relationships for the specified program
+            item ID.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/program-item-session-documents'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: true
+  /program-items/{programItemId}/docs/{fileId}:
+    parameters:
+    - $ref: '#/components/parameters/programItemId1'
+    - $ref: '#/components/parameters/fileId'
+    put:
+      security:
+      - OAuth2.clientCredentials:
+        - event/program-items:write
+      - OAuth2.authorizationCode:
+        - event/program-items:write
+      summary: Add Program Item Document
+      description: Creates a relationship between a session program item and a session document. Limit 10 session documents
+        per session program item.
+      operationId: relateProgramItemToSessionDocument
+      tags:
+      - Sessions
+      responses:
+        '200':
+          description: Successfully created the relationship between the session program item and the session document.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/program-item-session-document'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '409':
+          description: Program item session document limit reached.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/baseErrorResponse'
+              example:
+                code: 409
+                message: Conflict
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+    get:
+      security:
+      - OAuth2.clientCredentials:
+        - event/program-items:read
+      - OAuth2.authorizationCode:
+        - event/program-items:read
+      summary: Get Program Item Document
+      description: Returns a single program item to session document relationship for the provided IDs.
+      operationId: getProgramItemSessionDocument
+      tags:
+      - Sessions
+      responses:
+        '200':
+          description: Successfully retrieved a program item to session document relationship for the provided IDs.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/program-item-session-document'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+    delete:
+      security:
+      - OAuth2.clientCredentials:
+        - event/program-items:delete
+      - OAuth2.authorizationCode:
+        - event/program-items:delete
+      summary: Delete Program Item Document
+      description: Deletes session program item to session document relationship based on the provided IDs.
+      operationId: deleteProgramItemSessionDocument
+      tags:
+      - Sessions
+      responses:
+        '204':
+          description: Successfully deleted session program item to session document relationship.
+          headers: {}
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+  /session-categories:
+    get:
+      security:
+      - OAuth2.clientCredentials:
+        - event/session-categories:read
+      - OAuth2.authorizationCode:
+        - event/session-categories:read
+      summary: List Session Categories
+      description: Gets a paginated list of session categories.
+      operationId: listSessionsCategories
+      parameters:
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      - name: sort
+        in: query
+        required: false
+        style: form
+        explode: false
+        description: "The sort order passed as a parameter, used to control the order of the\nsearch results as a priority\
+          \ ordered list of sorts\n\nThere are two orders:\n  * ascending: ASC\n  * descending: DESC\n\nThe following fields\
+          \ are sortable:\n  * name\n"
+        schema:
+          type: string
+          example: name:ASC
+      - name: filter
+        in: query
+        required: false
+        description: "Use filter query parameters to limit results\nto data that matches your criteria. See\n[Filters](/docs/rest-api/reference/filters)\
+          \ for details.\n\nSupported fields and operators are listed below:\n\n| Field            | Operators           \
+          \                |\n|------------------|-------------------------------------|\n| id               | `eq`, `ne`,\
+          \ `in`                    |\n| name             | `eq`, `ne`, `contains`              |\n\nThe following operators\
+          \ are available:\n  * and\n  * or\n"
+        schema:
+          type: string
+          example: name contains 'general'
+      tags:
+      - Sessions
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of sessions categories.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/session-category-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+    post:
+      security:
+      - OAuth2.clientCredentials:
+        - event/session-categories:write
+      - OAuth2.authorizationCode:
+        - event/session-categories:write
+      summary: Create Session Categories
+      description: Create a session category.
+      operationId: createSessionCategory
+      tags:
+      - Sessions
+      requestBody:
+        description: Contains the details of the session category you're creating.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/session-category'
+      responses:
+        '201':
+          description: Successfully created a session category.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/session-category'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+  /session-segments:
+    get:
+      security:
+      - OAuth2.clientCredentials:
+        - event/session-segments:read
+      - OAuth2.authorizationCode:
+        - event/session-segments:read
+      summary: Get Session Segments
+      description: Return a list of session and audience segment associations.
+      operationId: GetSessionSegments
+      tags:
+      - Sessions
+      parameters:
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      - name: filter
+        in: query
+        required: false
+        description: "A filter query string narrows search results and supports the combination of logical and comparison\
+          \ operators.\nThe filter adheres to the pattern filter='field' comparisonType 'value'.\n\nThere are two comparison\
+          \ types that can be used in filter expressions:\n  * equal: eq\n  * includes value(s): in\n\nThe following field\
+          \ is filterable:\n  * segment.id (eq|in)\n  * session.id (eq|in)\n\nThe following operators are available:\n  *\
+          \ and\n  * or\n"
+        schema:
+          type: string
+          example: segment.id in ('04ca6ae2-0dc3-487b-953e-86d6abbdf7d3', '34ca65e2-1dc3-487b-589e-839d8bbdf7d3')
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of session and audience segment associations.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/session-segment-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+  /sessions:
+    get:
+      security:
+      - OAuth2.clientCredentials:
+        - event/sessions:read
+      - OAuth2.authorizationCode:
+        - event/sessions:read
+      summary: List Sessions
+      description: Gets a paginated list of sessions.
+      operationId: listSessions
+      parameters:
+      - $ref: '#/components/parameters/after'
+      - $ref: '#/components/parameters/before'
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      - $ref: '#/components/parameters/sort6'
+      - $ref: '#/components/parameters/locale2'
+      - name: filter
+        in: query
+        required: false
+        description: 'Use filter query parameters to limit results
+
+          to data that matches your criteria. See
+
+          [Filters](/docs/rest-api/reference/filters) for details.
+
+
+          Supported fields and operators are listed below:
+
+
+          | Field                              | Operators                                    |
+
+          |------------------------------------|----------------------------------------------|
+
+          | id                                 | `eq`, `ne`, `in`                             |
+
+          | status                             | `eq`, `ne`                                   |
+
+          | event.id                           | `eq`, `ne`                                   |
+
+          | title                              | `eq`, `ne`, `contains`, `match`              |
+
+          | code                               | `eq`, `ne`                                   |
+
+          | category.id                        | `eq`, `ne`                                   |
+
+          | category.name                      | `eq`, `ne`, `contains`                       |
+
+          | start                              | `eq`, `ne`, `lt`, `le`, `gt`, `ge`           |
+
+          | end                                | `eq`, `ne`, `lt`, `le`, `gt`, `ge`           |
+
+          | description                        | `eq`, `ne`, `contains`                       |
+
+          | capacity                           | `eq`, `ne`, `lt`, `le`, `gt`, `ge`           |
+
+          | location.id                        | `eq`, `ne`                                   |
+
+          | location.name                      | `eq`, `ne`, `contains`                       |
+
+          | location.code                      | `eq`, `ne`                                   |
+
+          | includedSession                    | `eq`, `ne`                                   |
+
+          | enableWaitlist                     | `eq`, `ne`                                   |
+
+          | featured                           | `eq`, `ne`                                   |
+
+          | openForRegistration                | `eq`, `ne`                                   |
+
+          | openForAttendeeHub                 | `eq`, `ne`                                   |
+
+          | virtual                            | `eq`, `ne`                                   |
+
+          | created                            | `eq`, `ne`, `lt`, `le`, `gt`, `ge`           |
+
+          | lastModified                       | `eq`, `ne`, `lt`, `le`, `gt`, `ge`           |
+
+          | registrationTypes                  | `contains`, `in`, `is empty`, `is not empty` |
+
+          | customField.{uuid of custom field} | `eq`, `ne`, `lt`, `le`, `gt`, `ge`, `sw`, `contains`, `in` |
+
+          | group.id                           | `eq`, `ne`                                   |
+
+          | admissionItems                     | `contains`, `is empty`, `is not empty`       |
+
+          | segments                           | `contains`, `in`, `is empty`, `is not empty` |
+
+
+          **Note:** If the "match" filter is passed, the endpoint will return a relevance score for each session in the list
+          and, by default, sort results by relevance. Higher scores represent a higher relevance to the filter string.
+
+
+          The following logical operators are supported for combining filters:
+
+          * and
+
+          * or
+
+          '
+        schema:
+          type: string
+          example: status eq 'active' or status eq 'closed' or event.id eq 'abc' or customField.{uuid of custom field} in
+            ('abc','def')
+      tags:
+      - Sessions
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of sessions.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/sessions-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+    post:
+      security:
+      - OAuth2.clientCredentials:
+        - event/sessions:write
+      - OAuth2.authorizationCode:
+        - event/sessions:write
+      summary: Create Session
+      description: Creates a single session based on the values provided in the request body.
+      operationId: createSession
+      tags:
+      - Sessions
+      requestBody:
+        description: Details of the session you're creating.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/session'
+      responses:
+        '201':
+          description: Successfully created a session with the provided details.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/session'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+  /sessions/filter:
+    post:
+      security:
+      - OAuth2.clientCredentials:
+        - event/sessions:read
+      - OAuth2.authorizationCode:
+        - event/sessions:read
+      summary: List Sessions
+      description: 'Gets a paginated list of sessions by sending a filter in the request''s body. This method returns the
+        same data as <a href="#operation/listSessions">GET List Sessions</a> but allows longer filters.
+
+        '
+      operationId: listSessionsPostFilters
+      requestBody:
+        description: 'Contains filters for the request. See the filter description of
+
+          <a href="#operation/listSessions">GET List Sessions</a> for complete
+
+          filtering information.
+
+          '
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/filter'
+      parameters:
+      - $ref: '#/components/parameters/after'
+      - $ref: '#/components/parameters/before'
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      - $ref: '#/components/parameters/locale2'
+      tags:
+      - Sessions
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of sessions.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/sessions-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+  /sessions/{id}:
+    parameters:
+    - $ref: '#/components/parameters/sessionId2'
+    get:
+      summary: Get Session
+      description: Gets a single session based on the provided session ID.
+      operationId: getSessionById
+      security:
+      - OAuth2.clientCredentials:
+        - event/sessions:read
+      - OAuth2.authorizationCode:
+        - event/sessions:read
+      tags:
+      - Sessions
+      responses:
+        '200':
+          description: Successfully retrieved a session.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/session'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+    put:
+      security:
+      - OAuth2.clientCredentials:
+        - event/sessions:write
+      - OAuth2.authorizationCode:
+        - event/sessions:write
+      summary: Update Session
+      description: Updates the given session with the values provided in the request body.
+      operationId: updateSession
+      tags:
+      - Sessions
+      requestBody:
+        description: 'Contains values that you''ll update the session with.
+
+          Passing a null value in a field renders the field blank.
+
+          Omitting a field from the request body renders the field blank
+
+          on the session record.
+
+          '
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/session-update'
+      responses:
+        '200':
+          description: Successfully updated the session.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/session'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+    delete:
+      security:
+      - OAuth2.clientCredentials:
+        - event/sessions:delete
+      - OAuth2.authorizationCode:
+        - event/sessions:delete
+      summary: Delete Session
+      description: Deletes a session based on the given session ID.
+      operationId: deleteSession
+      tags:
+      - Sessions
+      responses:
+        '204':
+          description: Successfully deleted a session.
+          headers: {}
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+  /sessions/{id}/custom-fields/{customFieldId}/answers:
+    parameters:
+    - $ref: '#/components/parameters/sessionId2'
+    - $ref: '#/components/parameters/customFieldId2'
+    put:
+      summary: Update Custom Field Answers
+      description: Updates custom field answers for a single custom field and single session.
+      operationId: updateSessionCustomFieldAnswers
+      security:
+      - OAuth2.clientCredentials:
+        - event/sessions:write
+      - OAuth2.authorizationCode:
+        - event/sessions:write
+      tags:
+      - Sessions
+      requestBody:
+        description: Contains the custom field you're updating, and the new answer.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/custom-field'
+      responses:
+        '200':
+          description: Successfully updated custom field answers for a session.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/custom-field'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+  /sessions/{id}/docs:
+    parameters:
+    - $ref: '#/components/parameters/sessionId2'
+    get:
+      security:
+      - OAuth2.clientCredentials:
+        - event/sessions:read
+      - OAuth2.authorizationCode:
+        - event/sessions:read
+      summary: List Session Documents
+      description: Gets a paginated list of document URLs for a single session.
+      operationId: listSessionDocs
+      parameters:
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      - name: filter
+        in: query
+        required: false
+        description: 'Use filter query parameters to limit results
+
+          to data that matches your criteria. See
+
+          [Filters](/docs/rest-api/reference/filters) for details.
+
+
+          Supported fields and operators are listed below:
+
+
+          | Field            | Operators                          |
+
+          |------------------|-------------------------------------|
+
+          | file.id          | `eq`, `ne`                          |
+
+
+          The following logical operators are supported for combining filters:
+
+          * and
+
+          * or
+
+          '
+        schema:
+          type: string
+          example: file.id eq '04ca6ae2-0dc3-487b-953e-86d6abbdf7d3'
+      tags:
+      - Sessions
+      responses:
+        '200':
+          description: Successfully retrieved a list of documents.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/session-document-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+  /sessions/{id}/docs/{fileId}:
+    parameters:
+    - $ref: '#/components/parameters/sessionId2'
+    - $ref: '#/components/parameters/fileId'
+    get:
+      security:
+      - OAuth2.clientCredentials:
+        - event/sessions:read
+      - OAuth2.authorizationCode:
+        - event/sessions:read
+      summary: Get Session Document
+      description: Get a specific document that is assigned to a specific session.
+      operationId: getSessionDoc
+      tags:
+      - Sessions
+      responses:
+        '200':
+          description: Successfully retrieved a document.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/session-file'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+    put:
+      security:
+      - OAuth2.clientCredentials:
+        - event/sessions:write
+      - OAuth2.authorizationCode:
+        - event/sessions:write
+      summary: Add Document To Session
+      description: 'Associates a given document to a session. Documents must be
+
+        <a href="#operation/uploadFile">uploaded</a> before you can associate
+
+        them.
+
+        '
+      operationId: addSessionDoc
+      tags:
+      - Sessions
+      responses:
+        '200':
+          description: Successfully added document to a session.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/session-file'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+    delete:
+      security:
+      - OAuth2.clientCredentials:
+        - event/sessions:write
+      - OAuth2.authorizationCode:
+        - event/sessions:write
+      summary: Delete Document from Session
+      description: Disassociates a given document from a session. Document IDs are provided after <a href="#operation/uploadFile">file
+        upload</a>.
+      operationId: deleteSessionDocument
+      tags:
+      - Sessions
+      responses:
+        '204':
+          description: Successfully deleted a session's document.
+          headers: {}
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+  /sessions/{id}/speakers:
+    parameters:
+    - $ref: '#/components/parameters/sessionId1'
+    get:
+      security:
+      - OAuth2.clientCredentials:
+        - event/speakers:read
+      - OAuth2.authorizationCode:
+        - event/speakers:read
+      summary: List Session's Speakers
+      description: Get a paginated list of speakers and categories assigned to the provided session ID.
+      operationId: listSessionSpeakers
+      parameters:
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      tags:
+      - Sessions
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of speakers assigned to the session.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/session-speaker-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+  /sessions/{id}/speakers/{speakerId}:
+    parameters:
+    - $ref: '#/components/parameters/sessionId2'
+    - $ref: '#/components/parameters/speakerId1'
+    put:
+      security:
+      - OAuth2.clientCredentials:
+        - event/sessions:write
+      - OAuth2.authorizationCode:
+        - event/sessions:write
+      summary: Assign Speaker to Session
+      description: 'Assign a given speaker to a given session based on their IDs.
+
+        '
+      operationId: addSpeakerToSession
+      tags:
+      - Sessions
+      requestBody:
+        description: Assign a category and order to the session's speaker. If no category is included in the body or the body
+          isn't provided, the speaker's default category will be used. Similarly if no order is provided or no body is provided
+          the speaker will be placed last in the ordered list of speakers for the session.
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/session-speaker-assignment'
+      responses:
+        '204':
+          description: Successfully added the speaker to the session.
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+    delete:
+      security:
+      - OAuth2.clientCredentials:
+        - event/sessions:delete
+      - OAuth2.authorizationCode:
+        - event/sessions:delete
+      summary: Delete Speaker From Session
+      description: 'Deletes a speaker from a session.
+
+        '
+      operationId: removeSpeakerFromSession
+      tags:
+      - Sessions
+      responses:
+        '204':
+          description: Successfully removed the speaker from the session.
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
 components:
   schemas:
-    Session:
+    Link:
+      title: Link
+      required:
+      - href
+      type: object
+      description: Represents a link to a related resource.
+      properties:
+        href:
+          type: string
+          description: A url provided that can be followed for linking
+          example: ?token=90c5f062-76ad-4ea4-aa53-00eb698d9262
+    program-item-session-document:
+      title: ProgramItemSessionDocument
+      type: object
+      description: Represents a program item object that will be added to a session document.
+      required:
+      - event
+      - session
+      - document
+      - programItem
+      allOf:
+      - $ref: '#/components/schemas/Audit'
+      properties:
+        id:
+          description: ID of the session document to program item relationship.
+          type: string
+          format: uuid
+          example: 38db6ae2-0dc3-487b-953e-86d6abbdf7d3
+          readOnly: true
+        event:
+          $ref: '#/components/schemas/event-id'
+        session:
+          $ref: '#/components/schemas/Session-1'
+        document:
+          $ref: '#/components/schemas/SessionDocumentLite'
+        programItem:
+          $ref: '#/components/schemas/ProgramItem'
+    SessionSpeaker:
+      title: SessionSpeaker
+      description: A session speaker
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid-property'
+        session:
+          $ref: '#/components/schemas/SessionLite'
+        category:
+          $ref: '#/components/schemas/SpeakerCategory'
+        order:
+          type: integer
+          description: The order of the speaker in a session.
+          example: 1
+    session-speaker-paginated-response:
+      title: SessionSpeakerPaginatedResponse
+      description: The response from a request to get the list of session speakers.  This includes the paging object as well
+        as the collection of session speakers.
+      required:
+      - paging
+      - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/SessionSpeaker'
+          description: Collection of a session's speakers.
+    CustomFieldBase:
+      title: CustomFieldBase
+      description: Base schema for Custom Field - allows type to be customized by extending schemas
+      required:
+      - id
+      - value
       type: object
       properties:
         id:
           type: string
+          description: The unique ID representing this custom field.
+          format: uuid
+        name:
+          type: string
+          description: The actual text of the custom field.
+          example: What is your favorite color?
+          readOnly: true
+        value:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            description: A question answer value
+            maxLength: 16000
+          description: The set of answers or possible answers to a question.
+          example:
+          - Choice C
+          - Choice A
+        order:
+          type: integer
+          description: The order of this question in the bigger list of questions.
+          example: 1
+          readOnly: true
+    DocumentId:
+      title: DocumentId
+      description: The unique identifier for a document.
+      type: string
+      format: uuid
+    program-item-session-documents:
+      title: ProgramItemSessionDocuments
+      description: Represents an array of session document IDs associated with the given program item ID.
+      type: object
+      properties:
+        data:
+          type: array
+          description: List of program item session documents.
+          items:
+            $ref: '#/components/schemas/program-item-session-document'
+          maxItems: 10
+    session-category:
+      title: SessionCategory
+      description: This is used to denote the category of a session.
+      required:
+      - name
+      type: object
+      properties:
+        id:
+          title: Session Category Id
+          description: A string that represents a specified session category.
+          type: string
+          format: uuid
+          example: 38db6ae2-0dc3-487b-953e-86d6abbdf7d3
+          readOnly: true
+        name:
+          type: string
+          description: The name of the session category.
+          maxLength: 100
+          example: Networking
+        description:
+          type: string
+          description: A description for the session category.
+          maxLength: 2500
+          example: During networking sessions, come meet fellow workers in your field.
+    session-speaker-assignment:
+      title: SessionSpeakerAssignment
+      type: object
+      description: Holds fields that can be applied to a session speaker assignment.
+      properties:
+        speakerCategory:
+          $ref: '#/components/schemas/CategoryId'
+        order:
+          description: Preferred position where the speaker will appear in an ordered list for a session. Smaller values indicate
+            a higher position in the list with the value 1 being the first item in the list.
+          example: 1
+          minimum: 1
+          type: integer
+    custom-field:
+      title: CustomField
+      description: A Custom Field
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/CustomFieldBase'
+      properties:
+        type:
+          description: The type of data collected by a custom field.
+          type: string
+          allOf:
+          - $ref: '#/components/schemas/CustomFieldType'
+          - readOnly: true
+            example: MultiSelect
+    session-locations-paginated-response:
+      title: SessionLocationPaginatedResponse
+      required:
+      - data
+      - paging
+      type: object
+      description: A paginated response of session locations.
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/session-location'
+          description: Collection of session locations.
+    session-segment:
+      title: SessionSegment
+      type: object
+      description: Represents a mapping between a session and an audience segment, which is used to enforce session visibility
+        to only those in certain audience segments.
+      required:
+      - event
+      - session
+      - segment
+      allOf:
+      - $ref: '#/components/schemas/Audit'
+      properties:
+        id:
+          description: ID of the session segment.
+          type: string
+          format: uuid
+          example: 38db6ae2-0dc3-487b-953e-86d6abbdf7d3
+          readOnly: true
+        event:
+          $ref: '#/components/schemas/event-id'
+        session:
+          $ref: '#/components/schemas/Session-1'
+        segment:
+          $ref: '#/components/schemas/Segment1'
+        active:
+          description: True indicates the session segment is active.
+          type: boolean
+          example: true
+          default: true
+    ProgramItem:
+      required:
+      - id
+      type: object
+      title: ProgramItem
+      description: The program item associated with the session.
+      properties:
+        id:
+          $ref: '#/components/schemas/ProgramItemId1'
+    CustomFieldType:
+      title: CustomFieldType
+      enum:
+      - AutoIncrement
+      - ConsentQuestion
+      - Currency
+      - Decimal
+      - Date
+      - DateTime
+      - Email
+      - FileUpload
+      - FreeText
+      - General
+      - MultiChoice
+      - MultiSelect
+      - Number
+      - OpenEndedDateTime
+      - OpenEndedText
+      - SingleChoice
+      - SingleSelect
+      - USPhoneNumber
+      - Unknown
+      type: string
+      description: The type of data collected by a custom field.
+      example: General
+    uuid-property:
+      title: UUID Property
+      description: A string that has to be a format matching the industry standard uuid
+      type: string
+      format: uuid
+      example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+    Lookup:
+      title: Lookup
+      description: Lookup response object
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid-property'
+        code:
+          type: string
+          description: Code / Abbreviation of the lookup item.
+          maxLength: 30
+          example: MU
+        name:
+          type: string
+          description: Name of the lookup item.
+          maxLength: 30
+          example: Meet up
+    session-update:
+      title: SessionUpdate
+      type: object
+      description: Used to update a session.
+      allOf:
+      - $ref: '#/components/schemas/SessionBase'
+    SessionId:
+      title: SessionId
+      description: The unique identifier for a session.
+      type: string
+      format: uuid
+      example: 832cb481-74c5-4859-ba21-bbb5be8b86e0
+    SessionLite:
+      required:
+      - id
+      type: object
+      title: SessionLite
+      description: The unique identifier of a session.
+      properties:
+        id:
+          $ref: '#/components/schemas/SessionId'
+    sessions-paginated-response:
+      title: SessionPaginatedResponse
+      required:
+      - data
+      - paging
+      type: object
+      description: A paginated response of session objects.
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/session'
+          description: Collection of sessions.
+    segment-id:
+      title: SegmentId
+      description: The unique identifier for an audience segment
+      type: string
+      format: uuid
+      example: 788426ac-5d83-11ee-8c99-0242ac120002
+    filter:
+      title: A filter sent in the body of a request
+      description: A filter which is sent through the body of the request.
+      type: object
+      properties:
+        filter:
+          type: string
+          example: property eq 'value'
+          description: Filter included in the request.
+    Location1:
+      title: Location
+      type: object
+      description: Used to denote a locations name and abbreviation.
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid-property'
+        code:
+          type: string
+          description: Code / Abbreviation of the location.
+          maxLength: 30
+          example: ConfA
+          readOnly: true
+        name:
+          type: string
+          description: Name of the location.
+          maxLength: 100
+          example: Conference Room A
+          readOnly: true
+    program-item-document-paginated-response:
+      title: ProgramItemDocumentPaginatedResponse
+      description: The response from a request to get the list of session program item documents.
+      required:
+      - paging
+      - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/program-item-session-document'
+          description: Collection of Session Program Item Documents.
+          maxItems: 200
+    ErrorResponseBase1:
+      title: ErrorResponseBase
+      type: object
+      description: Represents an error response with no additional details.
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          description: The HTTP status code representing the error.
+          example: 400
+        message:
+          type: string
+          description: A brief description of the error.
+          example: Bad Request
+        target:
+          type: string
+          description: The target resource of the error.
+          example: example target
+    SessionBase:
+      title: SessionBase
+      type: object
+      description: Used to denote a session and all of its attributes.
+      required:
+      - title
+      - start
+      - end
+      - event
+      - status
+      allOf:
+      - $ref: '#/components/schemas/Audit'
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+          description: A unique identifier of the session
+          readOnly: true
+        virtual:
+          type: boolean
+          description: Indicates whether the session is virtual or not.
+          example: true
+          readOnly: true
+        event:
+          $ref: '#/components/schemas/UUID'
         title:
           type: string
+          description: Title of the session. For example, Keynote Session.
+          maxLength: 500
+          example: Day 1 Keynote Session
+        code:
+          type: string
+          description: A unique code for this session.
+          maxLength: 30
+          example: R5NP4NJYB3D
+        category:
+          $ref: '#/components/schemas/NamedObject'
+        type:
+          type: object
+          allOf:
+          - deprecated: true
+            description: Whether a session is in-person, virtual or hybrid. Use virtual field instead.
+          - $ref: '#/components/schemas/Lookup'
+        location:
+          $ref: '#/components/schemas/Location1'
+        description:
+          type: string
+          description: 'Detailed description of the session. HTML is supported, but only a limited set of elements and attributes
+            are allowed. Use of HTML will count towards the character limit. Planners are responsible for confirming the visual
+            output of HTML content.
+
+
+            Allowed elements: b, strong, i, em, u, a, strike, del, s, sup, sub, ul, ol, li, p, font, mark, span
+
+
+            Allowed attributes:
+
+            - color on font
+
+            - style on p, font, li, ul, ol, span
+
+            - href, target, rel on a'
+          maxLength: 5000
+          example: Keynote session to kick off the event. The dynamic and energetic Dr. Smith will be speaking about the industry.
         start:
           type: string
           format: date-time
+          description: The ISO 8601 formatted date and time when the session starts.
+          example: '2020-02-03T13:00:00.000Z'
         end:
           type: string
           format: date-time
+          description: The ISO 8601 formatted date and time when the session ends.
+          example: '2020-02-07T17:00:00.000Z'
+        status:
+          $ref: '#/components/schemas/SessionStatus'
+        automaticallyOpensOn:
+          type: string
+          format: date
+          description: The ISO 8601 formatted date when the session registration automatically opens.
+          example: '2022-08-01'
+        automaticallyClosesOn:
+          type: string
+          format: date
+          description: The ISO 8601 formatted date when the session registration automatically closes.
+          example: '2022-08-12'
+        enableWaitlist:
+          type: boolean
+          description: Indicates if the waitlist is supported for the session.
+          example: false
+        waitlistCapacity:
+          type: integer
+          description: The maximum number of attendees who can waitlist for the in-person portion of the session.
+          example: 100
+        enableWaitlistVirtual:
+          type: boolean
+          description: Indicates if the virtual waitlist for the session is open.
+          example: true
         capacity:
           type: integer
+          description: The maximum number of attendees who can enroll in the in-person portion of the session.
+          example: 150
+        capacityUnlimited:
+          type: boolean
+          description: Indicates whether a given session has unlimited in-person capacity.
+          example: false
+        capacityVirtual:
+          type: integer
+          description: The maximum number of attendees who can enroll in the virtual portion of the session.
+          example: 150
+        virtualCapacityUnlimited:
+          type: boolean
+          description: Indicates whether a given session has unlimited virtual capacity.
+          example: false
+        waitlistCapacityVirtual:
+          type: integer
+          description: The maximum number of attendees who can waitlist the virtual portion of the session.
+          example: 150
+        timezone:
+          type: string
+          deprecated: true
+          description: The timezone of the event that the session is associated with
+          maxLength: 29
+          example: America/New_York
+          readOnly: true
+        displayOnAgenda:
+          type: boolean
+          description: Indicates whether to display the session on Agenda.
+          example: true
+          default: true
+        featured:
+          type: boolean
+          description: Indicates if the session is featured
+          example: true
+        group:
+          type: object
+          example:
+            id: b0cd3bac-0565-4593-be6e-5333753a6c25
+          properties:
+            id:
+              type: string
+              format: uuid
+              example: b0cd3bac-0565-4593-be6e-5333753a6c25
+              description: The ID of the session group, if the session belongs to one.
+          description: The session group, if the session belongs to one.
+        admissionItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/uuid-property'
+          description: The ids of the admission items, if the session is included with any.
+        openForRegistration:
+          type: boolean
+          description: Indicates if the session is open for registration.
+          example: false
+        openForAttendeeHub:
+          type: boolean
+          description: Indicates if the session is open for AttendeeHub.
+          example: true
+        registrationTypes:
+          type: array
+          items:
+            $ref: '#/components/schemas/uuid-property'
+          description: Contains unique identifiers for registration types associated with this session
+        presentationType:
+          type: string
+          description: The presentation type of the session.
+          maxLength: 100
+          example: Power Point
+        dataTagCode:
+          type: string
+          description: A tag associated with the session.
+          maxLength: 30
+          example: Optional Session
+        customFields:
+          type: array
+          items:
+            $ref: '#/components/schemas/custom-field'
+          description: Collection of custom fields.
+          readOnly: true
+        segments:
+          type: array
+          maxItems: 25
+          items:
+            $ref: '#/components/schemas/segment-id'
+          description: Contains unique identifiers for segments associated with this session.
+          readOnly: true
+        order:
+          type: integer
+          description: The display order of session, set by planner for concurrent sessions
+          example: 1
+    SessionId1:
+      title: SessionId
+      description: The unique identifier for a session
+      type: string
+      format: uuid
+      example: 78842aee-5d83-11ee-8c99-0242ac120002
+    session-document-paginated-response:
+      title: SessionDocumentPaginatedResponse
+      description: The response from a request to get the list of documents for a single session.  This includes the paging
+        object as well as the collection of documents.
+      required:
+      - paging
+      - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/session-file'
+          description: Collection of a session's documents.
+    EventId1:
+      title: EventId
+      description: The unique identifier for an event
+      type: string
+      format: uuid
+      example: 78842378-5d83-11ee-8c99-0242ac120002
+    ProgramItemId1:
+      title: ProgramItemId
+      description: The unique identifier for a program item
+      type: string
+      format: uuid
+      example: 788426ac-5d83-11ee-8c99-0242ac120002
+    UUIDProperty:
+      title: UUID Property
+      description: A string that has to be a format matching the industry standard uuid
+      type: string
+      format: uuid
+      example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+    program-item-update-request:
+      title: ProgramItemUpdateRequest
+      type: object
+      description: Represents a program item object that will be updated.
+      required:
+      - id
+      - event
+      - session
+      - name
+      allOf:
+      - $ref: '#/components/schemas/Audit'
+      properties:
+        id:
+          description: ID of the program item.
+          type: string
+          format: uuid
+          example: 38db6ae2-0dc3-487b-953e-86d6abbdf7d3
+        event:
+          $ref: '#/components/schemas/event-id'
+        session:
+          $ref: '#/components/schemas/Session-1'
+        name:
+          type: string
+          description: Name of the program item.
+          maxLength: 500
+          example: Day 1 Program Item.
+        duration:
+          type: integer
+          description: The duration of the program item in minutes.
+          example: 30
+        description:
+          type: string
+          description: Description of the program item.
+          maxLength: 2500
+          example: This is a sample description of the day 1 program item.
+        rteDescription:
+          type: string
+          description: Rich-text-editor description in json formatting.
+          example: '{"format":"draftjs-nucleus","version":1,"content":{"blocks":[{"key":"cubve","text":"Program Item Description","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}}'
+    session-file:
+      title: SessionFile
+      required:
+      - file
+      - href
+      description: Used to denote a session files attributes.
+      properties:
+        file:
+          properties:
+            id:
+              $ref: '#/components/schemas/uuid-property'
+        href:
+          format: uri
+          type: string
+          description: URL of a session's document
+          readOnly: true
+          example: https://custom.cvent.com/a5154f85f71a4cf2464e037feb75b308/00000000000000000000000000000000/files/e209d73d845746b7a6deda4da9d91b2c.png
+        friendlyName:
+          type: string
+          description: Friendly name of the file
+          example: Important Document
+          readOnly: true
+        type:
+          type: string
+          description: Mime type of the file
+          example: image/png
+          readOnly: true
+        size:
+          type: integer
+          description: Size of the file in bytes
+          example: 150
+          readOnly: true
+        displayEnabled:
+          type: boolean
+          description: Display this file to the public
+          example: true
+          readOnly: true
+    program-item:
+      title: ProgramItem
+      type: object
+      description: Represents a program item object that will be added to a session.
+      required:
+      - event
+      - session
+      - name
+      allOf:
+      - $ref: '#/components/schemas/Audit'
+      properties:
+        id:
+          description: ID of the program item.
+          type: string
+          format: uuid
+          example: 38db6ae2-0dc3-487b-953e-86d6abbdf7d3
+          readOnly: true
+        event:
+          $ref: '#/components/schemas/event-id'
+        session:
+          $ref: '#/components/schemas/Session-1'
+        name:
+          type: string
+          description: Name of the program item.
+          maxLength: 500
+          example: Day 1 Program Item.
+        duration:
+          type: integer
+          description: The duration of the program item in minutes.
+          default: 0
+          example: 30
+        description:
+          type: string
+          description: Description of the program item.
+          maxLength: 2500
+          example: This is a sample description of the day 1 program item.
+        rteDescription:
+          type: string
+          description: Rich-text-editor description in json formatting.
+          example: '{"format":"draftjs-nucleus","version":1,"content":{"blocks":[{"key":"cubve","text":"Program Item Description","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}}'
+    event-id:
+      type: object
+      title: Event
+      description: The related event object.
+      properties:
+        id:
+          $ref: '#/components/schemas/EventId1'
+    session-location:
+      title: SessionLocation
+      type: object
+      required:
+      - code
+      - name
+      description: Used to denote a sessions location.
+      properties:
+        id:
+          title: UUID Property
+          description: A string that represents a specified location.
+          type: string
+          format: uuid
+          example: 38db6ae2-0dc3-487b-953e-86d6abbdf7d3
+          readOnly: true
+        code:
+          type: string
+          description: Code / Abbreviation of the location.
+          maxLength: 30
+          example: ConfA
+        name:
+          type: string
+          description: Name of the location.
+          maxLength: 100
+          example: Conference Room A
+    UUID:
+      title: UUID
+      description: The reference to the related entity. Contains only the ID of the related entity.
+      required:
+      - id
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/UUIDProperty'
+    CategoryId:
+      title: CategoryId
+      type: object
+      description: An object that holds the id for a category
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid-property'
+    NamedObject:
+      title: NamedObject
+      description: A Named object
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid-property'
+        name:
+          type: string
+          description: Name of the object
+          example: Sample Object name
+    session:
+      title: Session
+      type: object
+      description: Used to denote a session and its attributes.
+      required:
+      - title
+      - start
+      - end
+      - event
+      - status
+      allOf:
+      - $ref: '#/components/schemas/SessionBase'
+      properties:
+        includedSession:
+          type: boolean
+          description: Indicator to specify if this session was automatically included with the event.
+          example: true
+          default: false
+        relevance:
+          $ref: '#/components/schemas/Relevance'
+    SessionStatus:
+      title: SessionStatus
+      enum:
+      - Active
+      - Cancelled
+      - Closed
+      type: string
+      description: This is used to denote the status of a session.
+      example: Active
+    SpeakerCategory:
+      title: SpeakerCategory
+      description: A defined speaker category.
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid-property'
+        name:
+          type: string
+          description: The name of the speaker category
+          maxLength: 50
+          example: Presenters
+    session-segment-paginated-response:
+      title: SessionSegmentPaginatedResponse
+      description: The response from a request to get the list of SessionSegment associations.
+      required:
+      - paging
+      - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/session-segment'
+          description: Collection of SessionSegment associations.
+    Relevance:
+      title: Relevance
+      description: Returned when the `match` filter is applied. Indicates how relevant the `match` filter term is to the search
+        result. Larger numbers represent higher relevance with respect to other search results in the request. Null if no
+        `match` filter is provided.
+      type: number
+      exclusiveMinimum: true
+      example: 2.3
+      minimum: 0
+    session-category-paginated-response:
+      title: SessionCategoryPaginatedResponse
+      description: The response from a request to get the list of session categories.  This includes the paging object as
+        well as the collection of session categories.
+      required:
+      - paging
+      - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/session-category'
+          description: Collection of session categories.
+    Segment1:
+      required:
+      - id
+      type: object
+      title: Segment
+      description: The audience segment associated with the session.
+      properties:
+        id:
+          $ref: '#/components/schemas/segment-id'
+    SessionDocumentLite:
+      type: object
+      title: SessionDocumentLite
+      description: The related document object.
+      properties:
+        id:
+          $ref: '#/components/schemas/DocumentId'
+    PaginationLinks:
+      title: PaginationLinks
+      type: object
+      description: Represents pagination links for navigating between pages of data.
+      properties:
+        next:
+          $ref: '#/components/schemas/Link'
+        self:
+          $ref: '#/components/schemas/Link'
+        prev:
+          $ref: '#/components/schemas/Link'
+    program-item-paginated-response:
+      title: ProgramItemPaginatedResponse
+      description: The response from a request to get the list of session program items.
+      required:
+      - paging
+      - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/program-item'
+          description: Collection of Session Program Items.
+          maxItems: 200
+    Paging:
+      title: Paging
+      required:
+      - _links
+      type: object
+      description: Represents pagination information for a collection of resources.
+      properties:
+        previousToken:
+          type: string
+          description: The pagination token for the previous page, if one exists. You can use this token to navigate to the
+            previous page of data.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        nextToken:
+          type: string
+          description: The pagination token for the next page. If this value is present in the response, there is another
+            page of data you can fetch.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        currentToken:
+          type: string
+          description: The pagination token for the current page.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        limit:
+          type: integer
+          description: The number of records to return on the page. Not to exceed 200.
+          example: 100
+        totalCount:
+          type: integer
+          description: The total number of records available. This field may return blank, even if there are more records.
+            To confirm if there are more records, check the `nextToken` field.
+          example: 2
+        _links:
+          $ref: '#/components/schemas/PaginationLinks'
+    baseErrorResponse:
+      title: ErrorResponse
+      description: Represents an error response with additional details of cascading error messages.
+      allOf:
+      - $ref: '#/components/schemas/ErrorResponseBase1'
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorResponseBase1'
+          description: Additional details of cascading error messages.
+    Locale:
+      title: Locale
+      description: Locale code
+      type: string
+      example: en-US
+      minLength: 1
+      maxLength: 200
+    Session-1:
+      required:
+      - id
+      type: object
+      title: Session
+      description: The related session object.
+      properties:
+        id:
+          $ref: '#/components/schemas/SessionId1'
+    Audit:
+      title: Audit
+      description: Audit information
+      type: object
+      properties:
+        created:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date time when this record was created.
+          readOnly: true
+          example: '2017-01-02T02:00:00Z'
+        createdBy:
+          type: string
+          description: The identifier of the user that created this record.
+          readOnly: true
+          example: hporter
+        lastModified:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date time when this record was updated.
+          readOnly: true
+          example: '2019-02-12T03:00:00Z'
+        lastModifiedBy:
+          type: string
+          description: The identifier of the user that last updated this record.
+          readOnly: true
+          example: hporter
+    ErrorResponse-12:
+      title: ErrorResponse
+      description: Represents an error response with additional details of cascading error messages.
+      allOf:
+      - $ref: '#/components/schemas/ErrorResponseBase1'
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorResponseBase1'
+          description: Additional details of cascading error messages.
+  responses:
+    NotFound1:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 404
+            message: Not found
+    BadRequest1:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 400
+            message: Bad Request
+    TooManyRequests1:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 429
+            message: Limit Exceeded
+    Unauthorized1:
+      description: Bad or expired token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 401
+            message: Unauthorized
+    Forbidden1:
+      description: You do not have access to the resource
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 403
+            message: Access Forbidden
   parameters:
-    EventId:
+    fileId:
       in: path
-      name: eventId
+      name: fileId
+      description: The unique identifier of a file from <a href="#operation/uploadFile">file upload</a> service.
       required: true
       schema:
+        $ref: '#/components/schemas/uuid-property'
+    after:
+      name: after
+      required: false
+      description: Used to query records that have been added or updated after this time point. Default to the beginning of
+        time of the data store.
+      in: query
+      schema:
         type: string
+        format: date-time
+        example: '2017-01-02T02:00:00Z'
+    locale2:
+      name: locale
+      required: false
+      description: Locale code in IETF Language tag format. Indicates desired locale of return values.
+      in: query
+      schema:
+        $ref: '#/components/schemas/Locale'
+    speakerId1:
+      in: path
+      name: speakerId
+      description: Unique Id of a speaker
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid-property'
+    sessionId1:
+      in: path
+      name: id
+      description: The unique identifier of a session.
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid-property'
+    before:
+      name: before
+      required: false
+      in: query
+      description: Used to query records that have been added or updated before this time point.
+      schema:
+        type: string
+        format: date-time
+        example: '2017-01-02T02:00:00Z'
+    sort6:
+      name: sort
+      required: false
+      in: query
+      style: form
+      explode: false
+      description: "The sort order passed as a parameter, used to control the order of the\nsearch results as a priority ordered\
+        \ list of sorts\n\nThere are two orders:\n  * ascending: ASC\n  * descending: DESC\n\nThe following fields are sortable:\n\
+        \  * start\n  * end\n  * title\n  * includedSession\n  * category.name\n  * code\n  * relevance\n  * order\n"
+      schema:
+        type: string
+        example: start:DESC,order:ASC,title:ASC
+    token:
+      name: token
+      in: query
+      description: 'The continuation token returned from a previous class. This must be a valid UUID v4 if provided.
+
+        This will override any other pageable parameters provided.
+
+        '
+      style: form
+      explode: true
+      schema:
+        type: string
+        example: 0e28af57-511f-47ab-ae46-46cd1ca51a1a
+    programItemId1:
+      in: path
+      name: programItemId
+      description: Unique ID of a session program item.
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid-property'
+    sessionId2:
+      in: path
+      name: id
+      description: Unique Id of a session
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid-property'
+    eventId1:
+      in: path
+      name: id
+      description: Unique Id of Event
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid-property'
+    customFieldId2:
+      in: path
+      name: customFieldId
+      description: Unique Id of a custom field
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid-property'
+    limit:
+      name: limit
+      in: query
+      description: The maximum number of records to return per page.
+      style: form
+      explode: true
+      schema:
+        maximum: 200
+        minimum: 1
+        type: integer
+        default: 100
+        example: 100
   securitySchemes:
-    OAuth2ClientCredentials:
+    OAuth2.clientCredentials:
       type: oauth2
+      description: OAuth2 Client Credentials Flow.
       flows:
         clientCredentials:
           tokenUrl: https://api-platform.cvent.com/ea/oauth2/token
           scopes:
-            event/events:read: Read events
-            event/events:write: Write events
-            event/contacts:read: Read contacts
-            event/contacts:write: Write contacts
-            event/attendees:read: Read attendees
-            event/attendees:write: Write attendees
-            event/sessions:read: Read sessions
-            event/registration-types:read: Read registration types
-            event/custom-fields:read: Read custom fields
-    BasicAuth:
-      type: http
-      scheme: basic
-      description: Client ID / client secret Basic auth used only for the /ea/oauth2/token call.
-externalDocs:
-  description: Cvent Platform REST API documentation
-  url: https://developers.cvent.com/docs/rest-api/overview
+            account/hooks:delete: Allows the deletion of hooks.
+            account/hooks:read: Allows the reading of hooks.
+            account/hooks:write: Allows the creation/updation of hooks.
+            account/user-groups:delete: Allows deletion for user groups
+            account/user-groups:read: Allows the reading of user groups
+            account/user-groups:write: Allows the writing of user groups
+            account/users:delete: Allows the deletion of User
+            account/users:read: Allows the reading of User, User Group
+            account/users:write: Allows the creation/updating of User
+            appointments/appointment-attendees:read: Allows the reading of appointment attendees and their related entities.
+            appointments/appointment-events:read: Allows the reading of appointment events and their related entities.
+            appointments/appointment-types:read: Allows the reading of appointment types and their related entities.
+            appointments/appointments:read: Allows the reading of appointment and their related entities.
+            appointments/appointments:write: Allows the writing of appointments and their related entities.
+            appointments/available-times:read: Allows the reading of availability times.
+            appointments/locations:read: Allows the reading of appointment locations and their related entities.
+            attendee-insights/attendee-insights:read: Allows the reading of engagement scores (attendee insights).
+            attendee-insights/scores:read: Allows the reading of scores.
+            attendee-insights/stats:read: Allows the reading of engagement score (attendee insight) stats.
+            budget/budget-items:delete: Allows the deletion of budget items
+            budget/budget-items:read: Allows the reading of all budget items
+            budget/budget-items:write: Allows creation/updation of budget item
+            budget/budget-totals:read: Allows the reading of all event budget totals
+            budget/budget-vendors:read: Allows reading of account-level budget vendors.
+            budget/cards:read: Allows the reading of cards
+            budget/currency-conversion-rate:delete: Allows deletion of currency conversion rate for currency.
+            budget/currency-conversion-rate:read: Allows reading of currency conversion rate for currency.
+            budget/currency-conversion-rate:write: Allows creation/update of currency conversion rate for currency.
+            budget/payments:delete: Allows deletion of payments.
+            budget/payments:read: Allows reading of payment for budget item.
+            budget/payments:write: Allows creation of payment in a budget item.
+            budget/transactions:delete: Allows delete card transactions.
+            budget/transactions:read: Allows the reading of all card's transactions
+            budget/transactions:write: Allows creation of card transactions.
+            bulk/bulk-jobs:read: Allows the reading of bulk job related entities
+            bulk/bulk-jobs:write: Allows the creation, update and deletion of bulk job related entities
+            business-transient/bids:read: Allows the reading of Business Transient Bid data
+            business-transient/proposals:read: Allows the reading of Business Transient Proposal data
+            business-transient/supplier-brands:read: Allows the reading of a supplier brand or a list of travel supplier brands.
+            business-transient/supplier-chains:read: Allows the reading of a travel supplier chain or a list of travel supplier
+              chains.
+            business-transient/supplier-properties:read: Allows the reading of a travel supplier property or a list of travel
+              supplier properties.
+            business-transient/supplier-property-rooms:read: Allows the reading of a list of travel supplier property rooms.
+            business-transient/travel-accounts:read: Allows the reading of business transient travel account data.
+            business-transient/travel-program-questions:read: Allows the reading of business transient travel program question
+              data.
+            business-transient/travel-programs:read: Allows the reading of business transient travel program data.
+            business-transient/travel-supplier-accounts:read: Allows the reading of business transient travel supplier account
+              data.
+            business-travel/bids:read: Allows the reading of Business Travel Bid data
+            business-travel/proposals:read: Allows the reading of Business Travel Proposal data
+            business-travel/travel-accounts:read: Allows the reading of business travel account data.
+            business-travel/travel-program-questions:read: Allows the reading of business travel program question data.
+            business-travel/travel-programs:read: Allows the reading of business travel program data.
+            compliance/communications:read: Allows the reading of communication compliance
+            compliance/communications:write: Allows the writing of communication compliance
+            email/bounces:read: Allow the reading of email bounces.
+            email/email-status:read: Allows the reading of email statuses.
+            email/emails:read: Allows the reading of emails.
+            eMarketing/campaigns:read: Allows the reading of campaigns.
+            emarketing/emarketing-email-status:read: Allows the reading of eMarketing email statuses.
+            eMarketing/eMarketing-email-templates:read: Allows the reading of email-templates.
+            eMarketing/eMarketing-send-emails:write: Allows the writing of eMarketing emails.
+            event/admission-items:read: Allows the reading of admission items
+            event/air-request:read: Allow reading the air request or air actual detail for attendees.
+            event/alternate-travel:read: Allow reading the alternate travel answers for attendees.
+            event/attendance-durations:read: Allows the read of Duration records
+            event/attendee-activities-metadata:delete: Allows the deletion of attendees activities metadata.
+            event/attendee-activities-metadata:read: Allows the reading of attendee activities metadata.
+            event/attendee-activities-metadata:write: Allows the creation/updating of attendees activities metadata.
+            event/attendee-activities:read: Allows the reading of attendee activities.
+            event/attendee-activities:write: Allows the writing of external attendee activities.
+            event/attendee-credits:read: Allows the reading of attendee credits.
+            event/attendee-links:delete: Allows the deletion of attendee links
+            event/attendee-links:read: Allows the reading of attendee links
+            event/attendee-links:write: Allows the creation of attendee links
+            event/attendee-messages:read: Allows the reading of attendee messages
+            event/attendees:read: Allows the reading of attendees.
+            event/attendees:write: Allows the creation of an attendee in an event.
+            event/audience-segments:read: Allows the reading of audience segments.
+            event/audience-segments:write: Allows the creation/updating/deletion of audience segments.
+            event/contact-groups:read: Allows the reading of contact groups.
+            event/contact-groups:write: Allows the creation/updating of contact groups.
+            event/contact-types:read: Allows the reading of contact types.
+            event/contacts:delete: Allows the deletion of contacts.
+            event/contacts:read: Allows the reading of contacts.
+            event/contacts:write: Allows the creation/updating of contacts.
+            event/contacts:write-sensitive: Allows the creation/updating of sensitive data related to contacts.
+            event/custom-fields:read: Allows the reading of custom fields
+            event/custom-fields:write: Allows the writing of custom fields
+            event/discounts:write: Allows the writing of discounts
+            event/donation-items:read: Allows the reading of donation items.
+            event/event-discounts:read: Allows the reading of event discounts.
+            event/event-discounts:write: Allows the writing of event discounts.
+            event/event-email-status:read: Allows the reading of event email statuses.
+            event/event-emails:read: Allows the reading of event emails
+            event/event-emails:write: Allows to send event emails.
+            event/event-features:read: Allows the reading of events-features
+            event/event-features:write: Allows updating the event-features
+            event/event-user-groups:read: Allows the reading of user groups
+            event/event-user-groups:write: Allows associating/disassociating user groups to event
+            event/events:read: Allows the reading of events
+            event/events:write: Allows the creation/updating of events
+            event/fee-items:read: Allows the reading of fee items.
+            event/hotel-request:read: Allow reading the hotel request or housing reservation request detail for attendees.
+            event/invitation-lists:read: Allows the reading of the invitation lists for an event
+            event/meeting-request-forms:read: Allows the reading of meeting request forms.
+            event/meeting-requests:read: Allows the reading of meeting requests.
+            event/meeting-requests:write: Allows the creation/updating of meeting requests.
+            event/membership-items:read: Allows reading of membership items.
+            event/orders:read: Allows the reading of orders
+            event/planning-documents:read: Allows the reading of event planning documents
+            event/players:read: Allows the reading of players
+            event/process-form-submissions:read: Allows the reading of process form submissions.
+            event/program-items:delete: Allows deletion of session program items
+            event/program-items:read: Allows reading of session program items
+            event/program-items:write: Allows writing of session program items
+            event/quantity-items:read: Allows the reading of quantity items.
+            event/quantity-items:write: Allows the writing of quantity items
+            event/registration-paths:read: Allows the reading of registration paths
+            event/registration-types:read: Allows the reading of registration types
+            event/registration-types:write: Allows the writing of registration types
+            event/role-assignments:read: Allows the reading of event role assignment.
+            event/session-attendance:read: Allows the reading of sessions attendance
+            event/session-attendance:write: Allows the creation/updating of sessions attendance
+            event/session-categories:read: Allows reading of session categories
+            event/session-categories:write: Allows writing of session categories
+            event/session-enrollment:delete: Allows the deletion of session registrations
+            event/session-enrollment:read: Allows the reading of sessions registrations
+            event/session-enrollment:write: Allows the writing of sessions registrations
+            event/session-segments:read: Allows reading of session segments
+            event/sessions:delete: Allows the deletion of a session in an event
+            event/sessions:read: Allows the reading of sessions
+            event/sessions:write: Allows the creation of a session in an event
+            event/speaker-categories:read: Allows reading of speaker categories
+            event/speaker-categories:write: Allows writing of speaker categories
+            event/speakers:delete: Allows the deletion of a speaker in an event
+            event/speakers:read: Allows the reading of speakers
+            event/speakers:write: Allows the creation of a speaker in an event
+            event/taxes:read: Allows the reading of taxes.
+            event/transactions:read: Allows the reading of transactions
+            event/transactions:write: Allows the writing of transactions
+            event/video-views:read: Allows reading of video views.
+            event/videos:read: Allows the reading of video data.
+            event/videos:write: Allows the creation/updating of video data.
+            event/vouchers:read: Allows reading of event vouchers.
+            event/webcasts:delete: Allows the deletion of webcast
+            event/webcasts:read: Allows the reading of webcasts
+            event/webcasts:write: Allows the creation of webcast
+            event/weblinks:read: Allows the reading of event weblinks
+            events-plus/hubs:read: Allows the reading of Events+ hub data.
+            exhibitor/badges:read: Allows reading badges
+            exhibitor/badges:write: Allows creating/updating badges
+            exhibitor/booth-staff:delete: Allows deleting booth staff
+            exhibitor/booth-staff:read: Allows reading booth staff
+            exhibitor/booth-staff:write: Allows creating booth staff
+            exhibitor/eliterature-requests:read: Allows reading eliterature document request data
+            exhibitor/exhibitor-admins:read: Allows reading exhibitor admins
+            exhibitor/exhibitor-admins:write: Allows creating/updating exhibitor admins
+            exhibitor/exhibitor-answers:read: Allows reading exhibitor answers
+            exhibitor/exhibitor-answers:write: Allows updating exhibitor answers
+            exhibitor/exhibitor-categories:delete: Allows deleting exhibitor categories
+            exhibitor/exhibitor-categories:read: Allows reading exhibitor categories
+            exhibitor/exhibitor-categories:write: Allows creating/updating exhibitor categories
+            exhibitor/exhibitor-contents:delete: Allows deleting exhibitor content
+            exhibitor/exhibitor-contents:read: Allows reading exhibitor content
+            exhibitor/exhibitor-contents:write: Allows creating/updating exhibitor content
+            exhibitor/exhibitor-questions:read: Allows reading exhibitor questions
+            exhibitor/exhibitors:delete: Allows deleting exhibitors
+            exhibitor/exhibitors:read: Allows reading exhibitors
+            exhibitor/exhibitors:write: Allows creating/updating exhibitors
+            exhibitor/lead-qualification-answers:read: Allows reading Lead Qualification Answers
+            exhibitor/lead-qualification-questions:read: Allows reading Lead Qualification Questions.
+            exhibitor/leads:read: Allows reading leads.
+            exhibitor/registration-packs:delete: Allows deleting registration pack
+            exhibitor/registration-packs:read: Allows reading registration pack
+            exhibitor/registration-packs:write: Allows creating/updating registration pack
+            exhibitor/sponsorship-levels:read: Allows reading sponsorship level
+            file/file:read: Allows the reading of file
+            file/file:write: Allows the uploading of file
+            housing/connections:write: Allows the user to connect to the Reglink APIs.
+            housing/hotel-room-rates:write: Allows the user to create/update hotel room rates.
+            housing/housing-event-available-nights:read: Allows the user to read availability information for given event.
+            housing/housing-event-hotels:read: Allows the user to read information about event hotels.
+            housing/housing-event-inventory:read: Allows the user to get information about housing event inventory.
+            housing/housing-event-room-types:read: Allows the user to read information about event room types.
+            housing/housing-events:read: Allows the user to read information about events.
+            housing/reservation-requests:delete: Allows the user to cancel reservation request.
+            housing/reservation-requests:read: Allows the user to read reservation request information.
+            housing/reservation-requests:write: Allows the user to create/update reservation request.
+            housing/reservations-link:delete: Allows the user to remove association from reservation.
+            housing/reservations-link:write: Allows the user to associate reservation to reservation request.
+            housing/reservations:delete: Allows the user to cancel reservation.
+            housing/reservations:read: Allows the user to read reservation details information.
+            housing/reservations:write: Allows the user to create/update reservation.
+            onsite/signatures:read: Allows reading signatures.
+            proposal/proposals:write: Allows the creation/writing of proposal
+            remote-printing/badge-print-jobs:read: Allows reading print jobs.
+            remote-printing/badge-print-jobs:write: Allows creating print jobs.
+            remote-printing/badge-printer-pools:read: Allows reading pools.
+            rfp/rfp-agenda-items:read: Allows the reading of RFP agenda items.
+            rfp/rfp-attachments:read: Allows the reading of RFP attachments.
+            rfp/rfp-custom-fields:read: Allows the reading of RFP custom fields.
+            rfp/rfp-guest-rooms:read: Allows the reading of RFP guest rooms.
+            rfp/rfp-internal-documents:read: Allows the reading of RFP internal documents.
+            rfp/rfp-lead-sources:read: Allows the reading of RFP lead sources.
+            rfp/rfp-past-events:read: Allows the reading of past events similar to rfp event.
+            rfp/rfp-questions:read: Allows the reading of RFP questions.
+            rfp/rfp-recipients-history:read: Allows the reading of RFP recipients history.
+            rfp/rfp-suppliers:read: Allows the reading of RFP suppliers.
+            rfp/rfps:read: Allows the reading of basic details of RFP.
+            seating/assignments:read: Allows to read attendee seat assignment information.
+            seating/event-seatings:read: Allows to read event seating.
+            seating/seats:read: Allows to read seat information.
+            seating/tables:read: Allows to read table information.
+            secure-ecommerce/card-tokens:write: Allows creation of credit card tokens
+            survey/questions:read: Allows the reading of survey questions
+            survey/respondents:read: Allows reading the survey respondents
+            survey/responses:read: Allows reading the survey responses
+            survey/standard-survey-email-templates:read: Allows reading the standalone survey email templates
+            survey/standard-survey-email:write: Allows writing operations on standalone survey emails
+            survey/standard-survey-questions:read: Allows the reading of standalone surveys questions
+            survey/standard-survey-respondents:read: Allows reading the standalone survey respondents
+            survey/standard-survey-respondents:write: Allows write operations on standalone survey respondents
+            survey/standard-survey-responses:read: Allows reading the standalone survey responses
+            survey/standard-survey-responses:write: Allows write operations on standalone surveys respondent's responses
+            survey/standard-surveys:read: Allows the reading of standalone surveys
+            survey/survey-questions:read: Allows the reading of event survey questions
+            survey/survey-respondents:read: Allows reading the event survey respondents
+            survey/survey-respondents:write: Allows write operations on the event survey respondents
+            survey/survey-responses:read: Allows reading the event survey responses
+            survey/survey-responses:write: Allows write operations on the event surveys respondent's responses
+            survey/surveys:read: Allows the reading of event surveys
+            venue/meeting-room-images:delete: Allows disassociating images from meeting rooms.
+            venue/meeting-room-images:read: Allows retrieving meeting room images.
+            venue/meeting-room-images:write: Allows associating images with meeting rooms.
+            venue/meeting-room-overviews:read: Allows read access for overview of meeting room.
+            venue/meeting-rooms:write: Allows the creation and modification of meeting rooms.
+            venue/venue-details-overview:read: Allows read access for overview of venue details.
+            venue/venue-details:write: Allows the creation and modification of venue details.
+            venue/venue-facility:write: Allows the modification of venue facility information.
+    OAuth2.authorizationCode:
+      type: oauth2
+      description: OAuth2 Authorization Code Flow.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api-platform.cvent.com/ea/oauth2/authorize
+          tokenUrl: https://api-platform.cvent.com/ea/oauth2/token
+          scopes:
+            account/hooks:delete: Allows the deletion of hooks.
+            account/hooks:read: Allows the reading of hooks.
+            account/hooks:write: Allows the creation/updation of hooks.
+            account/user-groups:delete: Allows deletion for user groups
+            account/user-groups:read: Allows the reading of user groups
+            account/user-groups:write: Allows the writing of user groups
+            account/users:delete: Allows the deletion of User
+            account/users:read: Allows the reading of User, User Group
+            account/users:write: Allows the creation/updating of User
+            appointments/appointment-attendees:read: Allows the reading of appointment attendees and their related entities.
+            appointments/appointment-events:read: Allows the reading of appointment events and their related entities.
+            appointments/appointment-types:read: Allows the reading of appointment types and their related entities.
+            appointments/appointments:read: Allows the reading of appointment and their related entities.
+            appointments/appointments:write: Allows the writing of appointments and their related entities.
+            appointments/available-times:read: Allows the reading of available times.
+            appointments/locations:read: Allows the reading of appointment locations and their related entities.
+            attendee-insights/attendee-insights:read: Allows the reading of engagement scores (attendee insights).
+            attendee-insights/scores:read: Allows the reading of scores.
+            attendee-insights/stats:read: Allows the reading of engagement score (attendee insight) stats.
+            budget/budget-items:delete: Allows the deletion of budget items
+            budget/budget-items:read: Allows the reading of all budget items
+            budget/budget-items:write: Allows creation/updation of budget item
+            budget/budget-totals:read: Allows the reading of all event budget totals
+            budget/budget-vendors:read: Allows reading of account-level budget vendors.
+            budget/cards:read: Allows the reading of cards
+            budget/currency-conversion-rate:delete: Allows deletion of currency conversion rate for currency.
+            budget/currency-conversion-rate:read: Allows reading of currency conversion rate for currency.
+            budget/currency-conversion-rate:write: Allows creation/update of currency conversion rate for currency.
+            budget/payments:delete: Allows deletion of payments.
+            budget/payments:read: Allows reading of payment for budget item.
+            budget/payments:write: Allows creation of payment in a budget item.
+            budget/transactions:delete: Allows delete card transactions.
+            budget/transactions:read: Allows the reading of all card's transactions
+            budget/transactions:write: Allows creation of card transactions.
+            business-transient/bids:read: Allows the reading of BT Bid data
+            business-transient/proposals:read: Allows the reading of BT Proposal data
+            business-travel/bids:read: Allows the reading of BT Bid data
+            business-travel/proposals:read: Allows the reading of BT Proposal data
+            compliance/communications:read: Allows the reading of communication compliance
+            compliance/communications:write: Allows the writing of communication compliance
+            email/bounces:read: Allow the reading of email bounces.
+            email/email-status:read: Allows the reading of email statuses.
+            email/emails:read: Allows the reading of emails.
+            eMarketing/campaigns:read: Allows the reading of campaigns.
+            emarketing/emarketing-email-status:read: Allows the reading of eMarketing email statuses.
+            eMarketing/eMarketing-email-templates:read: Allows the reading of email-templates.
+            eMarketing/eMarketing-send-emails:write: Allows the writing of eMarketing emails.
+            event/admission-items:read: Allows the reading of admission items
+            event/air-request:read: Allow reading the air request or air actual detail for attendees.
+            event/alternate-travel:read: Allow reading the alternate travel answers for attendees.
+            event/attendance-durations:read: Allows the read of Duration records
+            event/attendee-activities-metadata:delete: Allows the deletion of attendees activities metadata.
+            event/attendee-activities-metadata:read: Allows the reading of attendee activities metadata.
+            event/attendee-activities-metadata:write: Allows the creation/updating of attendees activities metadata.
+            event/attendee-activities:read: Allows the reading of attendee activities.
+            event/attendee-activities:write: Allows the writing of attendee activities.
+            event/attendee-credits:read: Allows the reading of attendee credits.
+            event/attendee-links:delete: Allows the deletion of attendee links
+            event/attendee-links:read: Allows the reading of attendee links
+            event/attendee-links:write: Allows the creation of attendee links
+            event/attendee-messages:read: Allows the reading of attendee messages
+            event/attendees:read: Allows the reading of attendees.
+            event/attendees:write: Allows the creation of an attendee in an event.
+            event/audience-segments:read: Allows the reading of audience segments.
+            event/audience-segments:write: Allows the creation/updating/deletion of audience segments.
+            event/contact-groups:read: Allows the reading of contact groups.
+            event/contact-groups:write: Allows the creation/updating of contact groups.
+            event/contact-types:read: Allows the reading of contact types.
+            event/contacts:delete: Allows the deletion of contacts.
+            event/contacts:read: Allows the reading of contacts.
+            event/contacts:write: Allows the creation/updating of contacts.
+            event/contacts:write-sensitive: Allows the creation/updating of sensitive data related to contacts.
+            event/custom-fields:read: Allows the reading of custom fields
+            event/custom-fields:write: Allows the writing of custom fields
+            event/discounts:write: Allows the writing of discounts
+            event/donation-items:read: Allows the reading of donation items.
+            event/event-discounts:read: Allows the reading of event discounts.
+            event/event-discounts:write: Allows the writing of event discounts.
+            event/event-email-status:read: Allows the reading of event email statuses.
+            event/event-emails:read: Allows the reading of event emails
+            event/event-emails:write: Allows to send event emails.
+            event/event-features:read: Allows the reading of events-features
+            event/event-features:write: Allows updating the event-features
+            event/event-user-groups:read: Allows the reading of user groups
+            event/event-user-groups:write: Allows associating/disassociating user groups to event
+            event/events:read: Allows the reading of events
+            event/events:write: Allows the creation/updating of events
+            event/fee-items:read: Allows the reading of fee items.
+            event/hotel-request:read: Allow reading the hotel request or housing reservation request detail for attendees.
+            event/invitation-lists:read: Allows the reading of the invitation lists for an event
+            event/meeting-request-forms:read: Allows the reading of meeting request forms.
+            event/meeting-requests:read: Allows the reading of meeting requests.
+            event/meeting-requests:write: Allows the creation/updating of meeting requests.
+            event/membership-items:read: Allows reading of membership items.
+            event/orders:read: Allows the reading of orders
+            event/planning-documents:read: Allows the reading of event planning documents
+            event/players:read: Allows the reading of players
+            event/process-form-submissions:read: Allows the reading of process form submissions.
+            event/program-items:delete: Allows deletion of session program items
+            event/program-items:read: Allows reading of session program items
+            event/program-items:write: Allows writing of session program items
+            event/quantity-items:read: Allows the reading of quantity items.
+            event/quantity-items:write: Allows the writing of quantity items
+            event/registration-paths:read: Allows the reading of registration paths
+            event/registration-types:read: Allows the reading of registration types
+            event/registration-types:write: Allows the writing of registration types
+            event/role-assignments:read: Allows the reading of event role assignment.
+            event/session-attendance:read: Allows the reading of sessions attendance
+            event/session-attendance:write: Allows the creation/updating of sessions attendance
+            event/session-categories:read: Allows reading of session categories
+            event/session-categories:write: Allows writing of session categories
+            event/session-enrollment:delete: Allows the deletion of session registrations
+            event/session-enrollment:read: Allows the reading of sessions registrations
+            event/session-enrollment:write: Allows the writing of sessions registrations
+            event/session-segments:read: Allows reading of session segments
+            event/sessions:delete: Allows the deletion of a session in an event
+            event/sessions:read: Allows the reading of sessions
+            event/sessions:write: Allows the creation of a session in an event
+            event/speaker-categories:read: Allows reading of speaker categories
+            event/speaker-categories:write: Allows writing of speaker categories
+            event/speakers:delete: Allows the deletion of a speaker in an event
+            event/speakers:read: Allows the reading of speakers
+            event/speakers:write: Allows the creation of a speaker in an event
+            event/taxes:read: Allows the reading of taxes.
+            event/transactions:read: Allows the reading of transactions
+            event/transactions:write: Allows the writing of transactions
+            event/video-views:read: Allows reading of video views.
+            event/videos:read: Allows the reading of video data.
+            event/videos:write: Allows the creation/updating of video data.
+            event/vouchers:read: Allows reading of event vouchers and their associated attendees.
+            event/webcasts:delete: Allows the deletion of webcast
+            event/webcasts:read: Allows the reading of webcasts
+            event/webcasts:write: Allows the creation of webcast
+            event/weblinks:read: Allows the reading of event weblinks
+            events-plus/hubs:read: Allows the reading of Events+ hub data.
+            exhibitor/badges:read: Allows reading badges
+            exhibitor/badges:write: Allows creating/updating badges
+            exhibitor/booth-staff:delete: Allows deleting booth staff
+            exhibitor/booth-staff:read: Allows reading booth staff
+            exhibitor/booth-staff:write: Allows creating booth staff
+            exhibitor/eliterature-requests:read: Allows reading eliterature document request data
+            exhibitor/exhibitor-admins:read: Allows reading exhibitor admins
+            exhibitor/exhibitor-admins:write: Allows creating/updating exhibitor admins
+            exhibitor/exhibitor-answers:read: Allows reading exhibitor answers
+            exhibitor/exhibitor-answers:write: Allows updating exhibitor answers
+            exhibitor/exhibitor-categories:delete: Allows deleting exhibitor categories
+            exhibitor/exhibitor-categories:read: Allows reading exhibitor categories
+            exhibitor/exhibitor-categories:write: Allows creating/updating exhibitor categories
+            exhibitor/exhibitor-contents:delete: Allows deleting exhibitor content
+            exhibitor/exhibitor-contents:read: Allows reading exhibitor content
+            exhibitor/exhibitor-contents:write: Allows creating/updating exhibitor content
+            exhibitor/exhibitor-questions:read: Allows reading exhibitor questions
+            exhibitor/exhibitors:delete: Allows deleting exhibitors
+            exhibitor/exhibitors:read: Allows reading exhibitors
+            exhibitor/exhibitors:write: Allows creating/updating exhibitors
+            exhibitor/lead-qualification-answers:read: Allows reading Lead Qualification Answers
+            exhibitor/lead-qualification-questions:read: Allows reading Lead Qualification Questions.
+            exhibitor/leads:read: Allows reading leads.
+            exhibitor/registration-packs:delete: Allows deleting registration pack
+            exhibitor/registration-packs:read: Allows reading registration pack
+            exhibitor/registration-packs:write: Allows creating/updating registration pack
+            exhibitor/sponsorship-levels:read: Allows reading sponsorship level
+            file/file:read: Allows the reading of file
+            file/file:write: Allows the uploading of file
+            onsite/signatures:read: Allows reading signatures.
+            remote-printing/badge-print-jobs:read: Allows reading print jobs.
+            remote-printing/badge-print-jobs:write: Allows creating print jobs.
+            remote-printing/badge-printer-pools:read: Allows reading pools.
+            rfp/rfp-agenda-items:read: Allows the reading of RFP agenda items.
+            rfp/rfp-attachments:read: Allows the reading of RFP attachments.
+            rfp/rfp-custom-fields:read: Allows the reading of RFP custom fields.
+            rfp/rfp-guest-rooms:read: Allows the reading of RFP guest rooms.
+            rfp/rfp-internal-documents:read: Allows the reading of RFP internal documents.
+            rfp/rfp-lead-sources:read: Allows the reading of RFP lead sources.
+            rfp/rfp-past-events:read: Allows the reading of past events similar to rfp event.
+            rfp/rfp-questions:read: Allows the reading of RFP questions.
+            rfp/rfp-recipients-history:read: Allows the reading of RFP recipients history.
+            rfp/rfp-suppliers:read: Allows the reading of RFP suppliers.
+            rfp/rfps:read: Allows the reading of basic details of RFP.
+            seating/assignments:read: Allows to read attendee seat assignment information.
+            seating/event-seatings:read: Allows to read event seating.
+            seating/seats:read: Allows to read seat information.
+            seating/tables:read: Allows to read table information.
+            survey/questions:read: Allows the reading of survey questions
+            survey/respondents:read: Allows reading the survey respondents
+            survey/responses:read: Allows reading the survey responses
+            survey/standard-survey-email-templates:read: Allows reading the standalone survey email templates
+            survey/standard-survey-email:write: Allows writing operations on standalone survey emails
+            survey/standard-survey-questions:read: Allows the reading of standalone surveys questions
+            survey/standard-survey-respondents:read: Allows reading the standalone survey respondents
+            survey/standard-survey-respondents:write: Allows write operations on standalone survey respondents
+            survey/standard-survey-responses:read: Allows reading the standalone survey responses
+            survey/standard-survey-responses:write: Allows write operations on standalone surveys respondent's responses
+            survey/standard-surveys:read: Allows the reading of standalone surveys
+            survey/survey-questions:read: Allows the reading of event survey questions
+            survey/survey-respondents:read: Allows reading the event survey respondents
+            survey/survey-respondents:write: Allows write operations on the event survey respondents
+            survey/survey-responses:read: Allows reading the event survey responses
+            survey/survey-responses:write: Allows write operations on the event surveys respondent's responses
+            survey/surveys:read: Allows the reading of event surveys
+            venue/meeting-room-images:delete: Allows disassociating images from meeting rooms.
+            venue/meeting-room-images:read: Allows retrieving meeting room images.
+            venue/meeting-room-images:write: Allows associating images with meeting rooms.
+            venue/meeting-room-overviews:read: Allows read access for overview of meeting room.
+            venue/meeting-rooms:write: Allows the creation and modification of meeting rooms.
+            venue/venue-details-overview:read: Allows read access for overview of venue details.
+            venue/venue-details:write: Allows the creation and modification of venue details.
+            venue/venue-facility:write: Allows the modification of venue facility information.

@@ -1,0 +1,2600 @@
+openapi: 3.0.2
+info:
+  title: Cvent REST APIs — Appointments
+  version: ea
+  description: "An appointment is a meeting scheduled between two or more parties. These APIs allow you to get\n information\
+    \ about your Cvent Appointments: appointment attendees, their interests, and availabilities.\n\n\n* **Appointment Events**\
+    \ - Appointment events help planners facilitate meetings between attendees. Attendees express their interest and availability\
+    \ to schedule appointments. Use this API to get information about appointments and appointment attendees.\n\n* **Appointment\
+    \ Attendees** - Appointment attendees are meeting participants. They can be attendees of either events or appointment\
+    \ events. Get information about these participants or use their appointment attendee ID to get their availabilities and\
+    \ interests.\n\n* **Availability** - Appointment availabilities describe an appointment attendees' preference in meeting\
+    \ dates and times. Availability information is only available for *Planner Coordinated Appointments*.\n\n* **Interests**\
+    \ - Appointment interests describe appointment attendees' preferences in meeting with another organization or individual.\
+    \ Interest information is only available for *Planner Coordinated Appointments*.\n* **Available Times** - Available times\
+    \ lists time ranges available  for appointments scheduling.\n* **Locations** - Locations lists details of all locations\
+    \ created for  scheduling appointments.\n* **Appointment Types** - Appointment Types lists details of different  appointment\
+    \ types created.\n"
+  contact:
+    name: Cvent Development Platform
+    url: https://developers.cvent.com/
+externalDocs:
+  description: Cvent REST API documentation
+  url: https://developers.cvent.com/documentation
+servers:
+- url: https://api-platform.cvent.com/ea
+- url: https://api-platform-eur.cvent.com/ea
+tags:
+- name: Appointments
+  description: "An appointment is a meeting scheduled between two or more parties. These APIs allow you to get\n information\
+    \ about your Cvent Appointments: appointment attendees, their interests, and availabilities.\n\n\n* **Appointment Events**\
+    \ - Appointment events help planners facilitate meetings between attendees. Attendees express their interest and availability\
+    \ to schedule appointments. Use this API to get information about appointments and appointment attendees.\n\n* **Appointment\
+    \ Attendees** - Appointment attendees are meeting participants. They can be attendees of either events or appointment\
+    \ events. Get information about these participants or use their appointment attendee ID to get their availabilities and\
+    \ interests.\n\n* **Availability** - Appointment availabilities describe an appointment attendees' preference in meeting\
+    \ dates and times. Availability information is only available for *Planner Coordinated Appointments*.\n\n* **Interests**\
+    \ - Appointment interests describe appointment attendees' preferences in meeting with another organization or individual.\
+    \ Interest information is only available for *Planner Coordinated Appointments*.\n* **Available Times** - Available times\
+    \ lists time ranges available  for appointments scheduling.\n* **Locations** - Locations lists details of all locations\
+    \ created for  scheduling appointments.\n* **Appointment Types** - Appointment Types lists details of different  appointment\
+    \ types created.\n"
+paths:
+  /appointment-attendees:
+    get:
+      tags:
+      - Appointments
+      security:
+      - OAuth2.clientCredentials:
+        - appointments/appointment-attendees:read
+      - OAuth2.authorizationCode:
+        - appointments/appointment-attendees:read
+      parameters:
+      - $ref: '#/components/parameters/after'
+      - $ref: '#/components/parameters/before'
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      - name: filter
+        in: query
+        required: false
+        description: 'A filter query string narrows search results and supports the combination of logical and comparison
+          operators. The filter adheres to the pattern filter=''field'' comparisonType ''value''.
+
+
+          There are six comparison types that can be used in filter expressions:
+
+          * equal: eq
+
+          * not equal: ne
+
+          * greater than: gt
+
+          * greater or equal: ge
+
+          * less than: lt
+
+          * less than or equal: le
+
+
+          The following fields are filterable:
+
+          * appointmentEvent.id (eq)
+
+          * contact.id (eq)
+
+          * deleted (eq)
+
+
+          The following operators are available:
+
+          * and'
+        schema:
+          type: string
+          example: appointmentEvent.id eq 'd165ad63-4bec-449d-aa9e-054fc7fcbb71' and contact.id eq 'da561161-8e80-4c70-9663-750cbc2045f6'
+            and deleted eq 'false'
+      summary: List Appt Attendees
+      description: Gets a paginated list of appointment attendees.
+      operationId: listAppointmentAttendees
+      responses:
+        '200':
+          description: Successfully retrieved a paginated response of appointment attendees.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/appointment-attendee-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+  /appointment-attendees/{id}:
+    parameters:
+    - $ref: '#/components/parameters/appointmentAttendeeId'
+    get:
+      tags:
+      - Appointments
+      security:
+      - OAuth2.clientCredentials:
+        - appointments/appointment-attendees:read
+      - OAuth2.authorizationCode:
+        - appointments/appointment-attendees:read
+      summary: Get Appt Attendee
+      description: Gets a single appointment attendee by their ID.
+      operationId: getAppointmentAttendeeById
+      responses:
+        '200':
+          description: Successfully retrieved an appointment attendee.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/appointment-attendee'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+  /appointment-availability-times:
+    get:
+      tags:
+      - Appointments
+      security:
+      - OAuth2.clientCredentials:
+        - appointments/appointment-attendees:read
+      - OAuth2.authorizationCode:
+        - appointments/appointment-attendees:read
+      parameters:
+      - $ref: '#/components/parameters/after'
+      - $ref: '#/components/parameters/before'
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      - name: filter
+        in: query
+        required: false
+        description: 'A filter query string narrows search results and supports the combination of logical and comparison
+          operators. The filter adheres to the pattern filter=''field'' comparisonType ''value''.
+
+
+          There are six comparison types that can be used in filter expressions:
+
+          * equal: eq
+
+          * not equal: ne
+
+          * greater than: gt
+
+          * greater or equal: ge
+
+          * less than: lt
+
+          * less than or equal: le
+
+
+          The following fields are filterable:
+
+          * appointmentEvent.id (eq)
+
+          * attendee.id (eq)
+
+
+          No operators are available'
+        schema:
+          type: string
+          example: appointmentEvent.id eq 'd165ad63-4bec-449d-aa9e-054fc7fcbb71'
+      summary: List Availability
+      description: Gets a paginated list of appointment availability times.
+      operationId: listAvailability
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of appointment availability times.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/appointment-availability-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+  /appointment-availability-times/{id}:
+    parameters:
+    - $ref: '#/components/parameters/appointmentAvailabilityTimeId'
+    get:
+      tags:
+      - Appointments
+      security:
+      - OAuth2.clientCredentials:
+        - appointments/appointment-attendees:read
+      - OAuth2.authorizationCode:
+        - appointments/appointment-attendees:read
+      summary: Get Availability
+      description: Get a single appointment availability time by its ID.
+      operationId: getAvailabilityById
+      responses:
+        '200':
+          description: Successfully retrieved an appointment availability time.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/appointment-availability'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          description: Response 429 is required for public operations with rate limiting
+      deprecated: false
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+  /appointment-events:
+    get:
+      tags:
+      - Appointments
+      security:
+      - OAuth2.clientCredentials:
+        - appointments/appointment-events:read
+      - OAuth2.authorizationCode:
+        - appointments/appointment-events:read
+      parameters:
+      - $ref: '#/components/parameters/after'
+      - $ref: '#/components/parameters/before'
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      - name: filter
+        in: query
+        required: false
+        description: 'A filter query string narrows search results and supports the combination of logical and comparison
+          operators. The filter adheres to the pattern filter=''field'' comparisonType ''value''.
+
+
+          There are six comparison types that can be used in filter expressions:
+
+          * equal: eq
+
+          * not equal: ne
+
+          * greater than: gt
+
+          * greater or equal: ge
+
+          * less than: lt
+
+          * less than or equal: le
+
+
+          The following fields are filterable:
+
+          * event.id (eq)
+
+
+          No operators are available'
+        schema:
+          type: string
+          example: event.id eq 'd165ad63-4bec-449d-aa9e-054fc7fcbb71'
+      summary: List Appt Events
+      description: Gets a paginated list of appointment events.
+      operationId: listAppointmentEvents
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of appointment events.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/appointment-event-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+  /appointment-events/{id}:
+    parameters:
+    - $ref: '#/components/parameters/appointmentEventId'
+    get:
+      tags:
+      - Appointments
+      security:
+      - OAuth2.clientCredentials:
+        - appointments/appointment-events:read
+      - OAuth2.authorizationCode:
+        - appointments/appointment-events:read
+      summary: Get Appt Event
+      description: Gets a single appointment event by its ID.
+      operationId: getAppointmentEventById
+      responses:
+        '200':
+          description: Successfully retrieved an appointment event.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/appointment-event'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+  /appointment-events/{id}/appointment-available-times:
+    get:
+      parameters:
+      - $ref: '#/components/parameters/appointmentEventId'
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      - name: filter
+        in: query
+        required: false
+        description: 'A filter query string narrows search results and supports the combination of logical and comparison
+          operators. The filter adheres to the pattern filter=''field'' comparisonType ''value''.
+
+
+          There are six comparison types that can be used in filter expressions:
+
+          * equal: eq
+
+          * not equal: ne
+
+          * greater than: gt
+
+          * greater or equal: ge
+
+          * less than: lt
+
+          * less than or equal: le
+
+
+          The following fields are filterable:
+
+          * appointmentType.id (eq)
+
+          * location.id (eq)
+
+
+          No operators are available'
+        schema:
+          type: string
+          example: appointmentType.id eq '2925dd1c-7b02-4e34-8881-18f2360b50a7'
+      tags:
+      - Appointments
+      security:
+      - OAuth2.clientCredentials:
+        - appointments/available-times:read
+      - OAuth2.authorizationCode:
+        - appointments/available-times:read
+      summary: List Available Times
+      description: Gets a paginated list of times and locations available for scheduling appointments in a particular appointment
+        event.
+      operationId: listAvailableTimes
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of times and locations available to schedule appointments in
+            a particular appointment event.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/available-times-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+  /appointment-events/{id}/appointment-types:
+    get:
+      parameters:
+      - $ref: '#/components/parameters/appointmentEventId'
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      tags:
+      - Appointments
+      security:
+      - OAuth2.clientCredentials:
+        - appointments/appointment-types:read
+      - OAuth2.authorizationCode:
+        - appointments/appointment-types:read
+      summary: List Appointment Types
+      description: Gets a paginated list of appointment types for an appointment event.
+      operationId: listAppointmentTypes
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of appointment types.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/appointment-types-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+  /appointment-events/{id}/appointments:
+    post:
+      parameters:
+      - $ref: '#/components/parameters/appointmentEventId'
+      - $ref: '#/components/parameters/suppressNotifications'
+      tags:
+      - Appointments
+      security:
+      - OAuth2.clientCredentials:
+        - appointments/appointments:write
+      - OAuth2.authorizationCode:
+        - appointments/appointments:write
+      summary: Create Appointment
+      description: Creates an appointment in a given appointment event.
+      operationId: createAppointment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/create-appointment-request'
+      responses:
+        '201':
+          description: Successfully created an appointment.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/appointment-with-questions'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity13'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+  /appointment-events/{id}/appointments/{apptId}:
+    put:
+      parameters:
+      - $ref: '#/components/parameters/appointmentEventId'
+      - $ref: '#/components/parameters/apptId'
+      - $ref: '#/components/parameters/suppressNotifications'
+      tags:
+      - Appointments
+      security:
+      - OAuth2.clientCredentials:
+        - appointments/appointments:write
+      - OAuth2.authorizationCode:
+        - appointments/appointments:write
+      summary: Update Appointments
+      description: Updates an appointment based on the given ID.
+      operationId: updateAppointment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/update-appointment-request'
+      responses:
+        '200':
+          description: Successfully updated an appointment.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/appointment-with-questions'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity13'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+    delete:
+      parameters:
+      - $ref: '#/components/parameters/appointmentEventId'
+      - $ref: '#/components/parameters/apptId'
+      - $ref: '#/components/parameters/suppressNotifications'
+      tags:
+      - Appointments
+      security:
+      - OAuth2.clientCredentials:
+        - appointments/appointments:write
+      - OAuth2.authorizationCode:
+        - appointments/appointments:write
+      summary: Cancel Appointment
+      description: Cancels an appointment with the given appointment ID.
+      operationId: cancelAppointment
+      responses:
+        '204':
+          description: Successfully cancelled an appointment.
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+  /appointment-events/{id}/locations:
+    get:
+      parameters:
+      - $ref: '#/components/parameters/appointmentEventId'
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      tags:
+      - Appointments
+      security:
+      - OAuth2.clientCredentials:
+        - appointments/locations:read
+      - OAuth2.authorizationCode:
+        - appointments/locations:read
+      summary: List Locations
+      description: Gets a paginated list of appointment locations in a particular appointment event.
+      operationId: listLocations
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of appointment locations for a particular appointment event.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/locations-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+  /appointment-meeting-interests:
+    get:
+      tags:
+      - Appointments
+      security:
+      - OAuth2.clientCredentials:
+        - appointments/appointment-attendees:read
+      - OAuth2.authorizationCode:
+        - appointments/appointment-attendees:read
+      parameters:
+      - $ref: '#/components/parameters/after'
+      - $ref: '#/components/parameters/before'
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      - name: filter
+        in: query
+        required: false
+        description: 'A filter query string narrows search results and supports the combination of logical and comparison
+          operators. The filter adheres to the pattern filter=''field'' comparisonType ''value''.
+
+
+          There are six comparison types that can be used in filter expressions:
+
+          * equal: eq
+
+          * not equal: ne
+
+          * greater than: gt
+
+          * greater or equal: ge
+
+          * less than: lt
+
+          * less than or equal: le
+
+
+          The following fields are filterable:
+
+          * appointmentEvent.id (eq)
+
+          * attendee.id (eq)
+
+
+          No operators are available'
+        schema:
+          type: string
+          example: appointmentEvent.id eq 'd165ad63-4bec-449d-aa9e-054fc7fcbb71'
+      summary: List Interests
+      description: Gets a paginated list of appointment meeting interests.
+      operationId: listMeetingInterests
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of appointment meeting interests.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/attendee-appointment-meeting-interests-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '429':
+          description: Response 429 is required for public operations with rate limiting
+      deprecated: false
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+  /appointment-meeting-interests/{id}:
+    parameters:
+    - $ref: '#/components/parameters/appointmentMeetingInterestId'
+    get:
+      tags:
+      - Appointments
+      security:
+      - OAuth2.clientCredentials:
+        - appointments/appointment-attendees:read
+      - OAuth2.authorizationCode:
+        - appointments/appointment-attendees:read
+      summary: Get Interest
+      description: Gets a single attendee's meeting interests in a particular appointment event by their interest ID.
+      operationId: getMeetingInterestById
+      responses:
+        '200':
+          description: Successfully retrieved an attendees appointment meeting interests in the given event.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/attendee-appointment-meeting-interest'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          description: Response 429 is required for public operations with rate limiting
+      deprecated: false
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+  /appointments:
+    get:
+      tags:
+      - Appointments
+      security:
+      - OAuth2.clientCredentials:
+        - appointments/appointments:read
+      - OAuth2.authorizationCode:
+        - appointments/appointments:read
+      parameters:
+      - $ref: '#/components/parameters/after'
+      - $ref: '#/components/parameters/before'
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      - name: filter
+        in: query
+        required: false
+        description: 'A filter query string narrows search results and supports the combination of logical and comparison
+          operators. The filter adheres to the pattern filter=''field'' comparisonType ''value''.
+
+
+          There are six comparison types that can be used in filter expressions:
+
+          * equal: eq
+
+          * not equal: ne
+
+          * greater than: gt
+
+          * greater or equal: ge
+
+          * less than: lt
+
+          * less than or equal: le
+
+
+          The following fields are filterable:
+
+          * appointmentEvent.id (eq)
+
+          * participants.attendee.contact.id (eq)
+
+          * code (eq)
+
+
+          No operators are available'
+        schema:
+          type: string
+          example: appointmentEvent.id eq 'ad0ea301-1203-4fee-a7d2-54165ba14e2d'
+      summary: List Appointments
+      description: Gets a paginated list of appointments.
+      operationId: listAppointments
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of appointments.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/appointment-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '429':
+          description: Response 429 is required for public operations with rate limiting
+      deprecated: false
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+  /appointments/{id}:
+    parameters:
+    - $ref: '#/components/parameters/appointmentId'
+    get:
+      tags:
+      - Appointments
+      security:
+      - OAuth2.clientCredentials:
+        - appointments/appointments:read
+      - OAuth2.authorizationCode:
+        - appointments/appointments:read
+      summary: Get Appointment
+      description: Gets a single appointment by its ID.
+      operationId: getAppointmentById
+      responses:
+        '200':
+          description: Successfully retrieved an appointment.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/appointment-with-questions'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          description: Response 429 is required for public operations with rate limiting
+      deprecated: false
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+components:
+  schemas:
+    appointment-availability-time-range.json:
+      title: AppointmentAvailabilityTimeRange
+      description: Time range for an appointment availability.
+      type: object
+      properties:
+        start:
+          type: string
+          description: The ISO 8601 formatted start datetime of the time range, in the event's timezone.
+          example: '2020-04-01T19:00:00.000'
+        end:
+          type: string
+          description: The ISO 8601 formatted end datetime of the time range, in the event's timezone.
+          example: '2020-04-01T20:00:00.000'
+        type:
+          $ref: '#/components/schemas/appointment-availability-type.json'
+    uuid.json:
+      title: UUID
+      description: The reference to the related entity. Contains only the ID of the related entity.
+      required:
+      - id
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid-property'
+    appointment-event-id.json:
+      type: object
+      description: Represents an appointment event ID.
+      required:
+      - id
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The unique ID of an appointment event.
+          readOnly: true
+          example: 2d8234f1-55df-483c-abe3-7e2cb98f8275
+    appointment-meeting-interest.json:
+      title: AppointmentMeetingInterest
+      type: object
+      description: An individual meeting interest.
+      properties:
+        name:
+          type: string
+          description: The name of the exhibitor in which interest is expressed.
+          example: Cvent
+        exhibitor:
+          $ref: '#/components/schemas/uuid.json'
+        ranking:
+          type: string
+          description: The strength of the interest.
+          example: '5'
+        meetingType:
+          type: string
+          description: The meeting type of interest.
+          example: Group Meeting
+        comment:
+          type: string
+          description: A comment about this interest.
+          example: A 1:1 or group meeting works.
+    custom-field.json:
+      title: CustomField
+      description: A Custom Field
+      required:
+      - id
+      - value
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique ID representing this custom field.
+          format: uuid
+        name:
+          type: string
+          description: The actual text of the custom field.
+          example: What is a your favorite color?
+          readOnly: true
+        type:
+          description: The type of data collected by a custom field.
+          type: string
+          allOf:
+          - title: CustomFieldType
+            enum:
+            - AutoIncrement
+            - ConsentQuestion
+            - Currency
+            - Decimal
+            - Date
+            - DateTime
+            - Email
+            - FileUpload
+            - FreeText
+            - General
+            - MultiChoice
+            - MultiSelect
+            - Number
+            - OpenEndedDateTime
+            - OpenEndedText
+            - SingleChoice
+            - SingleSelect
+            - USPhoneNumber
+            - Unknown
+            type: string
+            description: The type of data collected by a custom field.
+            example: General
+          - readOnly: true
+            example: MultiSelect
+        value:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            description: A question answer value
+          description: The set of answers or possible answers to a question.
+          example:
+          - Choice C
+          - Choice A
+        order:
+          type: integer
+          description: The order of this question in the bigger list of questions.
+          example: 1
+          readOnly: true
+    pagination-links.json:
+      title: PaginationLinks
+      type: object
+      description: Represents pagination links for navigating between pages of data.
+      properties:
+        next:
+          $ref: '#/components/schemas/link.json'
+        self:
+          $ref: '#/components/schemas/link.json'
+        prev:
+          $ref: '#/components/schemas/link.json'
+    available-time.json:
+      title: Available Times
+      description: Time availability for an event appointment,
+      type: object
+      required:
+      - id
+      - startTime
+      - endTime
+      - type
+      - appointmentType
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The unique ID representing the time range.
+          example: 0046e875-79a5-4851-8332-da105d58088a
+        startTime:
+          type: string
+          format: date-time
+          description: The ISO 8601 formatted start date/time of the time slot in UTC.
+          example: '2019-04-12T15:15:00.000Z'
+        endTime:
+          type: string
+          format: date-time
+          description: The ISO 8601 formatted end date/time of the time slot in UTC.
+          example: '2019-04-12T15:30:00.000Z'
+        type:
+          $ref: '#/components/schemas/time-range-type.json'
+        appointmentType:
+          $ref: '#/components/schemas/uuid.json'
+        location:
+          $ref: '#/components/schemas/uuid.json'
+        availableAppointments:
+          type: integer
+          description: The number of appointments that can be created in this time range. -1 indicates unlimited appointments.
+          example: 2
+    uuid-property:
+      title: UUID Property
+      description: A string that has to be a format matching the industry standard uuid
+      type: string
+      format: uuid
+      example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+    appointment-event-type.json:
+      title: AppointmentEventType
+      enum:
+      - STANDARD
+      - UNIVERSAL
+      - PLANNER_COORDINATED
+      - SIMPLE
+      type: string
+      description: 'Denotes the type of appointment event.<br/>STANDARD: You or attendees can manage schedules based on the
+        permissions and settings you choose.<br/>UNIVERSAL: Your staff manages their schedules with attendees, at an event
+        your staff is attending.<br/>PLANNER_COORDINATED: You manage attendee schedules for your event based on their preferences.<br/>SIMPLE:
+        Import appointments or let attendees schedule them without any restrictions or prior setup.'
+      example: STANDARD
+    appointment-status.json:
+      title: AppointmentStatus
+      enum:
+      - ACTIVE
+      - CONFIRMED
+      - CANCELLED
+      - PENDING_APPROVAL
+      - DENIED
+      - PENDING
+      - PENDING_ASSIGNMENT
+      - PENDING_HOST_ASSIGNMENT
+      - PENDING_APPROVAL_AND_ASSIGNMENT
+      - TENTATIVE
+      type: string
+      description: Denotes the status of an appointment.
+      example: CONFIRMED
+    participant-type.json:
+      title: ParticipantType
+      enum:
+      - Host
+      - Attendee
+      type: string
+      description: Denotes if a participant is a host or attendee of an appointment.
+      example: Attendee
+    attendee-appointment-meeting-interests-paginated-response:
+      title: AttendeeAppointmentMeetingInterestsPaginatedResponse
+      type: object
+      description: The response for a request of appointment meeting interests, including paging information.
+      properties:
+        paging:
+          $ref: '#/components/schemas/paging.json'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/attendee-appointment-meeting-interest'
+          description: Collection of appointment meeting interests.
+    appointment-availability-type.json:
+      title: AppointmentAvailabilityType
+      type: string
+      enum:
+      - AVAILABLE
+      - UNAVAILABLE
+      description: Denotes whether an availability time range represents when an attendee is available or unavailable.
+      example: AVAILABLE
+    update-appointment-request:
+      title: Update Appointment Request
+      description: A request to update an appointment.
+      type: object
+      required:
+      - id
+      - subject
+      - startTime
+      - endTime
+      - hosts
+      allOf:
+      - $ref: '#/components/schemas/create-appointment-request/allOf/0'
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the appointment to be updated.
+          example: a3d77c44-bb4b-41dd-9c37-18230cc66ce4
+    ErrorResponseBase1:
+      title: ErrorResponseBase
+      type: object
+      description: Represents an error response with no additional details.
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          description: The HTTP status code representing the error.
+          example: 400
+        message:
+          type: string
+          description: A brief description of the error.
+          example: Bad Request
+        target:
+          type: string
+          description: The target resource of the error.
+          example: example target
+    attendee-appointment-meeting-interest:
+      title: AttendeeAppointmentMeetingInterest
+      type: object
+      description: An attendee's meeting interests for an event.
+      properties:
+        id:
+          type: string
+          description: The unique ID of this meeting interest.
+          example: 0cdfa3f7-05da-4121-857b-d7732891e01a::52a68001-70ce-4ec4-a6fe-d0888123c715
+        attendee:
+          title: attendee
+          type: object
+          description: The appointment attendee the meeting interest is associated to.
+          properties:
+            id:
+              type: string
+              description: The unique ID representing the appointment attendee.
+              example: 0cdfa3f7-05da-4121-857b-d7732891e01a::52a68001-70ce-4ec4-a6fe-d0888123c715
+        appointmentEvent:
+          $ref: '#/components/schemas/uuid.json'
+        interests:
+          type: array
+          items:
+            $ref: '#/components/schemas/appointment-meeting-interest.json'
+          description: An array describing each of the attendee's meeting interests for the given appointment event.
+        created:
+          type: string
+          format: date-time
+          description: The ISO 8601 formatted date/time when the meeting interest was created.
+          example: '2019-04-01T17:00:00.000Z'
+        lastModified:
+          type: string
+          format: date-time
+          description: The ISO 8601 formatted date/time when the object was last modified.
+          example: '2019-04-01T17:00:00.000Z'
+        deleted:
+          type: boolean
+          description: True indicates the record is deleted.
+          example: true
+    planner.json:
+      title: Planner
+      description: Represents a planner for an appointment event and the planner's related details.
+      type: object
+      properties:
+        firstName:
+          type: string
+          description: The first name of the planner.
+          maxLength: 30
+          example: Henry
+        lastName:
+          type: string
+          description: The last name of the planner.
+          maxLength: 50
+          example: Potterfield
+        email:
+          type: string
+          format: email
+          description: The email address of the planner.
+          minLength: 6
+          maxLength: 80
+          example: h.potterfield@test.com
+        company:
+          type: string
+          description: The company/organization the planner belongs to.
+          minLength: 1
+          example: Cvent Inc.
+        title:
+          type: string
+          description: The job title of the planner.
+          maxLength: 100
+          example: Event Planner
+        prefix:
+          type: string
+          description: Denotes what is traditionally a title of an individual.
+          maxLength: 30
+          example: Mr.
+    appointment-type.json:
+      title: Appointment Type
+      type: object
+      required:
+      - id
+      - name
+      - category
+      - timeRangeType
+      description: This is used for storing details of an appointment type.
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The unique ID representing the appointment type.
+          example: 0046e875-79a5-4851-8332-da105d58088a
+        name:
+          type: string
+          description: The name of the appointment type.
+          example: Event Appointment
+        category:
+          $ref: '#/components/schemas/appointment-type-category.json'
+        timeRangeType:
+          $ref: '#/components/schemas/time-range-type.json'
+    participant-response.json:
+      title: ParticipantResponse
+      enum:
+      - CONFIRMED
+      - TENTATIVE
+      - PENDING
+      - DECLINED
+      type: string
+      description: Denotes a participant response to an appointment.
+      example: CONFIRMED
+    appointment-types-paginated-response:
+      title: Appointment Types Paginated Response
+      type: object
+      description: The response for a request of appointment types configured for scheduling appointments.
+      properties:
+        paging:
+          $ref: '#/components/schemas/paging.json'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/appointment-type.json'
+          description: The collection of appointment types object.
+    time-range-type.json:
+      title: Time Range Type
+      enum:
+      - DEFINED
+      - FLEXIBLE
+      type: string
+      description: 'DEFINED: Appointments of this type can be created at time intervals and locations created by the planner.
+        FLEXIBLE: Appointments of this type can be created any time on the schedule in a custom location of the host''s choosing
+        or within time intervals and locations created by the planner.'
+      example: DEFINED
+    appointment-attendee-paginated-response:
+      title: AppointmentAttendeePaginatedResponse
+      description: The response from a request to get the list of appointment attendees, including paging information.
+      required:
+      - paging
+      - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/paging.json'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/appointment-attendee'
+          description: Collection of appointment attendees and their related details.
+    appointment-event-paginated-response:
+      title: AppointmentEventPaginatedResponse
+      description: The response from a request to get the list of appointment events, includes the paging object.
+      required:
+      - paging
+      - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/paging.json'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/appointment-event'
+          description: Collection of appointment events and their related details.
+    audit.json:
+      title: Audit
+      description: Audit information
+      type: object
+      properties:
+        created:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date time when this record was created.
+          readOnly: true
+          example: '2017-01-02T02:00:00Z'
+        createdBy:
+          type: string
+          description: The identifier of the user that created this record.
+          readOnly: true
+          example: hporter
+        lastModified:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date time when this record was updated.
+          readOnly: true
+          example: '2019-02-12T03:00:00Z'
+        lastModifiedBy:
+          type: string
+          description: The identifier of the user that last updated this record.
+          readOnly: true
+          example: hporter
+    paging.json:
+      title: Paging
+      required:
+      - _links
+      type: object
+      description: Represents pagination information for a collection of resources.
+      properties:
+        previousToken:
+          type: string
+          description: The pagination token for the previous page, if one exists. You can use this token to navigate to the
+            previous page of data.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        nextToken:
+          type: string
+          description: The pagination token for the next page. If this value is present in the response, there is another
+            page of data you can fetch.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        currentToken:
+          type: string
+          description: The pagination token for the current page.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        limit:
+          type: integer
+          description: The number of records to return on the page. Not to exceed 200.
+          example: 100
+        totalCount:
+          type: integer
+          description: The total number of records available. This field may return blank, even if there are more records.
+            To confirm if there are more records, check the `nextToken` field.
+          example: 2
+        _links:
+          $ref: '#/components/schemas/pagination-links.json'
+    appointment-type-category.json:
+      title: Appointment Type Category
+      enum:
+      - CUSTOM_APPOINTMENT
+      - EXHIBITOR_NETWORKING
+      - SELF_SIGN_UP
+      type: string
+      description: The category of the appointment type.
+      example: CUSTOM_APPOINTMENT
+    participant-status.json:
+      title: ParticipantStatus
+      enum:
+      - pending
+      - pending_proposed
+      - confirmed
+      - declined
+      - cancelled
+      - tentative
+      type: string
+      description: Denotes the status of a participant in an appointment.
+      example: confirmed
+    appointment-with-questions:
+      title: Appointment With Questions
+      description: Details of an event appointment including questions.
+      type: object
+      required:
+      - id
+      - name
+      - start
+      - end
+      - type
+      - participant
+      allOf:
+      - title: Appointment
+        description: Details of an event appointment.
+        type: object
+        required:
+        - id
+        - name
+        - start
+        - end
+        - type
+        - participant
+        allOf:
+        - title: Appointment Base
+          description: Base entity for an appointment
+          type: object
+          required:
+          - id
+          - name
+          - start
+          - end
+          - type
+          - participant
+          properties:
+            id:
+              type: string
+              format: uuid
+              description: The unique ID representing the appointment.
+              readOnly: true
+              example: 0046e875-79a5-4851-8332-da105d58088a
+            code:
+              type: string
+              description: The unique appointment code in Cvent or unique reference id of an appointment in the external systems.
+              minLength: 1
+              maxLength: 36
+              example: APPT-0001
+              pattern: ^[a-zA-Z0-9-.%]+$
+            name:
+              type: string
+              description: The name of the appointment.
+              example: Meeting with Cvent
+            description:
+              type: string
+              description: The description of the appointment.
+              example: Discuss about marketing.
+            start:
+              type: string
+              format: date-time
+              description: The ISO 8601 formatted start date/time of the appointment.
+              example: '2019-04-12T15:20:00.000Z'
+            end:
+              type: string
+              format: date-time
+              description: The ISO 8601 formatted end date/time of the appointment.
+              example: '2019-04-12T15:30:00.000Z'
+            status:
+              $ref: '#/components/schemas/appointment-status.json'
+            location:
+              type: object
+              description: The location of the appointment.
+              properties:
+                name:
+                  type: string
+                  description: The name of the location.
+                  example: Hynes Convention Center
+            type:
+              type: object
+              description: The type of the appointment.
+              properties:
+                name:
+                  type: string
+                  description: The name of the appointment type.
+                  example: Customer Meeting
+        - $ref: '#/components/schemas/audit.json'
+        properties:
+          appointmentEvent:
+            $ref: '#/components/schemas/uuid.json'
+          participants:
+            type: array
+            items:
+              $ref: '#/components/schemas/appointment-participant.json'
+            description: Collection of attendees participating in this appointment, and their related details.
+          autoAcceptAttendees:
+            type: boolean
+            description: True indicates participants will be automatically marked as accepted for the appointment.
+            example: false
+          enforceScheduleRules:
+            type: boolean
+            description: True indicates that existing schedule rules were enforced when the appointment was created.
+            example: false
+          modified:
+            type: string
+            format: date-time
+            description: This field is deprecated please use - lastModified
+            deprecated: true
+            example: '2019-04-12T15:30:00.000Z'
+          deleted:
+            type: boolean
+            description: True indicates the appointment has been logically deleted.
+            example: false
+      properties:
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/custom-field.json'
+          description: Collection of custom questions asked to participants of the appointment.
+    locations-paginated-response:
+      title: Locations Paginated Response
+      type: object
+      description: The response for a request of locations for scheduling appointments.
+      properties:
+        paging:
+          $ref: '#/components/schemas/paging.json'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/location.json'
+          description: Collection of appointment locations and their associated details.
+    location.json:
+      title: Location
+      type: object
+      description: Details of a location.
+      allOf:
+      - title: Location
+        type: object
+        required:
+        - id
+        - name
+        description: Details of a location.
+        properties:
+          id:
+            type: string
+            format: uuid
+            description: The unique ID representing the location.
+            example: 0046e875-79a5-4851-8332-da105d58088a
+          name:
+            type: string
+            description: The name of the location.
+            example: Conference Room B
+      properties:
+        parentLocation:
+          $ref: '#/components/schemas/location.json/allOf/0'
+        capacity:
+          type: integer
+          description: The number of attendees that can be accommodated in this location. -1 indicates unlimited capacity.
+          example: 5
+    appointment-attendee:
+      title: AppointmentAttendee
+      description: Attendee for an event appointment.
+      type: object
+      required:
+      - id
+      - contact
+      - appointmentEvent
+      properties:
+        id:
+          type: string
+          description: The unique ID representing the attendee.
+          readOnly: true
+          example: 0cdfa3f7-05da-4121-857b-d7732891e01a::52a68001-70ce-4ec4-a6fe-d0888123c715
+        code:
+          type: string
+          description: System generated code for this attendee appointment.
+          maxLength: 11
+          readOnly: true
+          example: GKNNHYW9GFV
+        appointmentEvent:
+          $ref: '#/components/schemas/uuid.json'
+        contact:
+          $ref: '#/components/schemas/uuid.json'
+        registration:
+          $ref: '#/components/schemas/uuid.json'
+        created:
+          type: string
+          format: date-time
+          description: The ISO 8601 formatted date/time when the appointment attendee was created.
+          example: '2019-04-01T17:00:00.000Z'
+        modified:
+          type: string
+          format: date-time
+          description: The ISO 8601 formatted date/time when the appointment attendee was last modified.
+          example: '2019-04-01T17:00:00.000Z'
+        deleted:
+          type: boolean
+          description: True indicates the appointment attendee has been logically deleted.
+          example: false
+    appointment-paginated-response:
+      title: AppointmentPaginatedResponse
+      description: The response for a request of appointments, including the paging object.
+      required:
+      - paging
+      - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/paging.json'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/appointment-with-questions/allOf/0'
+          description: Collection of appointments and their related details.
+    appointment-participant.json:
+      title: AppointmentParticipant
+      description: An appointment participant.
+      type: object
+      required:
+      - attendee
+      - type
+      x-extends:
+        $ref: '#/components/schemas/audit.json'
+      allOf:
+      - $ref: '#/components/schemas/audit.json'
+      properties:
+        attendee:
+          type: object
+          description: Reference information for the attendee.
+          properties:
+            id:
+              type: string
+              description: The unique ID representing the attendee.
+              readOnly: true
+              example: 0cdfa3f7-05da-4121-857b-d7732891e01a::52a68001-70ce-4ec4-a6fe-d0888123c715
+            contact:
+              $ref: '#/components/schemas/uuid.json'
+          example:
+            id: dd1057b9-a957-4c22-be88-741a29d01471/97f2ca58-0f9e-401f-a6b5-a6f20d3a9568
+            contact:
+              id: 97f2ca58-0f9e-401f-a6b5-a6f20d3a9568
+        type:
+          $ref: '#/components/schemas/participant-type.json'
+        response:
+          $ref: '#/components/schemas/participant-response.json'
+        participation:
+          type: object
+          description: The attendee's participation status.
+          properties:
+            participated:
+              type: boolean
+              description: True indicates the attendee was marked as a participant in the appointment.
+              example: true
+          example:
+            participated: true
+        questionViewer:
+          type: boolean
+          description: True indicates custom questions are visible to appointment participant.
+          example: false
+        privateNoteViewer:
+          type: boolean
+          description: True indicates private notes are visible to the appointment participant.
+          example: false
+        deleted:
+          type: boolean
+          description: True indicates the participant was removed from the appointment.
+          example: false
+        status:
+          $ref: '#/components/schemas/participant-status.json'
+    venue-address.json:
+      title: Venue Address
+      description: Venue Address details
+      type: object
+      allOf:
+      - title: Base Address
+        description: Base Address Model
+        type: object
+        properties:
+          address1:
+            type: string
+            maxLength: 40
+            description: The first line of an address.
+            example: Cvent Inc.
+          address2:
+            type: string
+            maxLength: 40
+            description: The second line of an address.
+            example: 4001 West Parmer Lane
+          address3:
+            type: string
+            maxLength: 40
+            description: The third line of an address.
+            example: PO Box 123
+          city:
+            type: string
+            maxLength: 40
+            description: The name of the city.
+            example: Austin
+          countryCode:
+            type: string
+            maxLength: 3
+            minLength: 2
+            description: ISO 3166 two-letter (alpha-2) country code.
+            example: US
+          postalCode:
+            type: string
+            maxLength: 25
+            description: Postal code (also known as zipcode) of the address.
+            example: '78727'
+      properties:
+        region:
+          type: string
+          description: The name of the state/province/region of the address.
+          readOnly: true
+          example: Texas
+        regionCode:
+          type: string
+          description: The abbreviation of the state/province/region of the address.
+          minLength: 2
+          maxLength: 10
+          example: TX
+        country:
+          type: string
+          description: Name of the country for example, 'United States'
+          readOnly: true
+          example: United States of America
+        latitude:
+          type: number
+          description: The geo latitude of the address.
+          minimum: -90
+          maximum: 90
+          example: 30.42501
+          readOnly: true
+        longitude:
+          type: number
+          description: The geo longitude of the address.
+          minimum: -180
+          maximum: 180
+          example: -97.71518
+          readOnly: true
+    error-response:
+      title: ErrorResponse
+      description: Represents an error response with additional details of cascading error messages.
+      allOf:
+      - $ref: '#/components/schemas/ErrorResponseBase1'
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorResponseBase1'
+          description: Additional details of cascading error messages.
+    link.json:
+      title: Link
+      required:
+      - href
+      type: object
+      description: Represents a link to a related resource.
+      properties:
+        href:
+          type: string
+          description: A url provided that can be followed for linking
+          example: ?token=90c5f062-76ad-4ea4-aa53-00eb698d9262
+    appointment-event-status.json:
+      title: AppointmentEventStatus
+      enum:
+      - ACTIVE
+      - CLOSED
+      - COMPLETED
+      - PENDING
+      type: string
+      description: Denotes the status of appointment event.
+      example: ACTIVE
+    available-times-paginated-response:
+      title: Available Times Paginated Response
+      type: object
+      description: The response for a request of available time ranges for scheduling appointments.
+      properties:
+        paging:
+          $ref: '#/components/schemas/paging.json'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/available-time.json'
+          description: Collection of available time ranges and their associated details.
+    appointment-event:
+      title: AppointmentEvent
+      description: An event appointment.
+      type: object
+      required:
+      - id
+      - code
+      - apptEventType
+      - status
+      - title
+      - start
+      - end
+      x-extends:
+        $ref: '#/components/schemas/audit.json'
+      allOf:
+      - $ref: '#/components/schemas/audit.json'
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The unique ID representing the appointment event.
+          readOnly: true
+          example: 2d8234f1-55df-483c-abe3-7e2cb98f8275
+        code:
+          type: string
+          description: The system generated code for this appointment event.
+          maxLength: 11
+          readOnly: true
+          example: GKNNHYW9GFV
+        event:
+          $ref: '#/components/schemas/uuid.json'
+        apptEventType:
+          $ref: '#/components/schemas/appointment-event-type.json'
+        status:
+          $ref: '#/components/schemas/appointment-event-status.json'
+        deleted:
+          type: boolean
+          description: True indicates the appointment event has been logically deleted.
+          example: false
+        archived:
+          type: boolean
+          description: True indicates the appointment event has been archived.
+          example: true
+        defaultLocale:
+          type: string
+          description: The appointment event default local using the IETF Language Tag format.
+          maxLength: 35
+          example: en-US
+        title:
+          type: string
+          description: The title of the appointment event.
+          maxLength: 300
+          example: Cvent Connect 2020
+        description:
+          type: string
+          description: The description of the appointment event.
+          maxLength: 300
+          example: The Cvent yearly user conference.
+        start:
+          type: string
+          format: date-time
+          description: The ISO 8601 formatted start date/time of the appointment.
+          example: '2019-06-29T17:00:00.000Z'
+        end:
+          type: string
+          format: date-time
+          description: The ISO 8601 formatted end date/time of the appointment.
+          example: '2019-06-29T21:00:00.000Z'
+        timezone:
+          type: string
+          description: The event timezone from the IANA specification.
+          maxLength: 29
+          example: America/New_York
+        venues:
+          type: array
+          items:
+            $ref: '#/components/schemas/venue.json'
+          description: Collection of venues and their associated details.
+        phone:
+          type: string
+          description: The phone number for the event.
+          maxLength: 13
+          example: 555-555-5555
+        planners:
+          type: array
+          items:
+            $ref: '#/components/schemas/planner.json'
+          description: Collection of information about planners.
+    appointment-availability-paginated-response:
+      title: AppointmentAvailabilityPaginatedResponse
+      type: object
+      description: The response for a request for appointment availability times, including paging information.
+      properties:
+        paging:
+          $ref: '#/components/schemas/paging.json'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/appointment-availability'
+          description: The collection of appointment availability times and their related details.
+    appointment-availability:
+      title: AppointmentAvailability
+      description: Appointment availability details.
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique ID representing the attendee's availability in an appointment event.
+          example: da8b035b-428b-4069-b25b-92afbcf514b3::2d8234f1-55df-483c-abe3-7e2cb98f8275
+        attendee:
+          title: attendee
+          type: object
+          description: The appointment attendee the availability is associated with.
+          properties:
+            id:
+              type: string
+              description: The unique ID representing the appointment attendee.
+              example: 0cdfa3f7-05da-4121-857b-d7732891e01a::52a68001-70ce-4ec4-a6fe-d0888123c715
+        appointmentEvent:
+          $ref: '#/components/schemas/appointment-event-id.json'
+        timeRanges:
+          type: array
+          items:
+            $ref: '#/components/schemas/appointment-availability-time-range.json'
+          description: A list of time ranges when the attendee is available for appointments. Times are in the appointment
+            event's time zone.
+        created:
+          type: string
+          format: date-time
+          description: The ISO 8601 formatted datetime when the attendee availability was created.
+          example: '2019-04-01T17:00:00.000Z'
+        lastModified:
+          type: string
+          format: date-time
+          description: The ISO 8601 formatted date/time when the attendee availability was last modified.
+          example: '2019-04-01T17:00:00.000Z'
+        deleted:
+          type: boolean
+          description: True indicates the record is deleted.
+          example: false
+    venue.json:
+      title: Venue
+      description: An Event Venue
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the venue.
+          maxLength: 300
+          example: Capital Convention Center
+        address:
+          $ref: '#/components/schemas/venue-address.json'
+    create-appointment-request:
+      title: Create Appointment Request
+      description: A request to create an appointment
+      type: object
+      required:
+      - subject
+      - startTime
+      - endTime
+      - hosts
+      - appointmentTypeId
+      allOf:
+      - title: Base Appointment Request
+        description: A base request to create/update appointment.
+        type: object
+        properties:
+          subject:
+            type: string
+            description: Name of the appointment.
+            example: Meeting with Cvent
+          description:
+            type: string
+            description: Description for the appointment.
+            example: A private meeting to discuss sales opportunities.
+          startTime:
+            type: string
+            format: date-time
+            description: The ISO 8601 formatted start date/time of the appointment in UTC.
+            example: '2017-01-01T15:20:00Z'
+          endTime:
+            type: string
+            format: date-time
+            description: The ISO 8601 formatted end date/time of the appointment in UTC.
+            example: '2030-01-01T15:30:00Z'
+          location:
+            type: string
+            format: uuid
+            description: Unique identifier of the location to be used for the appointment. Not supported for "SIMPLE" event
+              types.
+            example: fa896667-5998-46dc-ac06-6be8e053ef4e
+          customLocationName:
+            type: string
+            description: Name of the location created by the meeting host. Created ad-hoc for a FLEXIBLE type meeting.
+            example: Coffee Shop
+          hosts:
+            type: array
+            items:
+              $ref: '#/components/schemas/uuid.json'
+            description: Contact ids of the appointment hosts.
+          attendees:
+            type: array
+            items:
+              $ref: '#/components/schemas/uuid.json'
+            description: Contact ids of the appointment attendees.
+          enforceScheduleRule:
+            type: boolean
+            example: true
+            default: true
+            description: Flag to indicate if schedule rule needs to be enforced.
+      properties:
+        code:
+          type: string
+          description: The unique appointment code in Cvent or unique reference id of an appointment in the external systems.
+          minLength: 1
+          maxLength: 36
+          example: APPT-0001
+          pattern: ^[a-zA-Z0-9-.%]+$
+        appointmentTypeId:
+          type: string
+          format: uuid
+          description: Unique identifier of the Appointment type.
+          example: b53dc938-8121-4af1-a5e2-d9f3f4fcd574
+        autoAccept:
+          type: boolean
+          example: true
+          description: Flag to indicate if the attendees should be auto accepted.
+    ErrorResponse-12:
+      title: ErrorResponse
+      description: Represents an error response with additional details of cascading error messages.
+      allOf:
+      - $ref: '#/components/schemas/ErrorResponseBase1'
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorResponseBase1'
+          description: Additional details of cascading error messages.
+  parameters:
+    suppressNotifications:
+      name: suppressNotifications
+      required: false
+      in: query
+      description: "Flag to choose whether to suppress notifications on successful completion of operation.\n* If flag = false\
+        \ (default), send all notifications as configured.\n * If flag = true, do not send any notification."
+      schema:
+        type: boolean
+        default: false
+    after:
+      name: after
+      required: false
+      description: Used to query records that have been added or updated after this time point. Default to the beginning of
+        time of the data store.
+      in: query
+      schema:
+        type: string
+        format: date-time
+        example: '2017-01-02T02:00:00Z'
+    appointmentEventId:
+      in: path
+      name: id
+      description: The unique identifier of an appointment event.
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid-property'
+    apptId:
+      in: path
+      name: apptId
+      description: The unique identifier of an appointment.
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid-property'
+    appointmentAvailabilityTimeId:
+      in: path
+      name: id
+      description: The unique identifier of an attendee's availability times in a particular event. The attendee's availability
+        times ID is a combination of the associated appointment event ID and the attendee's contact ID, concatenated with
+        "::" symbols.
+      required: true
+      schema:
+        type: string
+        example: da8b035b-428b-4069-b25b-92afbcf514b3::2d8234f1-55df-483c-abe3-7e2cb98f8275
+    appointmentId:
+      in: path
+      name: id
+      description: The unique identifier of an appointment.
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid-property'
+    before:
+      name: before
+      required: false
+      in: query
+      description: Used to query records that have been added or updated before this time point.
+      schema:
+        type: string
+        format: date-time
+        example: '2017-01-02T02:00:00Z'
+    appointmentMeetingInterestId:
+      in: path
+      name: id
+      description: The unique identifier of an attendee's meeting interests in a particular event. The attendee's meeting
+        interests ID is a combination of the associated appointment event ID and the attendee's contact ID, concatenated with
+        "::" symbols.
+      required: true
+      schema:
+        type: string
+        example: 0cdfa3f7-05da-4121-857b-d7732891e01a::52a68001-70ce-4ec4-a6fe-d0888123c715
+    token:
+      name: token
+      in: query
+      description: 'The continuation token returned from a previous class. This must be a valid UUID v4 if provided.
+
+        This will override any other pageable parameters provided.
+
+        '
+      style: form
+      explode: true
+      schema:
+        type: string
+        example: 0e28af57-511f-47ab-ae46-46cd1ca51a1a
+    limit:
+      name: limit
+      in: query
+      description: The maximum number of records to return per page.
+      style: form
+      explode: true
+      schema:
+        maximum: 200
+        minimum: 1
+        type: integer
+        default: 100
+        example: 100
+    appointmentAttendeeId:
+      in: path
+      name: id
+      description: The unique identifier of an appointment attendee. The appointment attendee's ID is a combination of the
+        associated appointment event ID and the attendee's contact ID, concatenated with "::" symbols.
+      required: true
+      schema:
+        type: string
+        example: 0cdfa3f7-05da-4121-857b-d7732891e01a::52a68001-70ce-4ec4-a6fe-d0888123c715
+  responses:
+    NotFound1:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 404
+            message: Not found
+    UnprocessableEntity13:
+      description: Was not able to process the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error-response'
+          example:
+            code: 422
+            message: Unprocessable Entity
+    BadRequest1:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 400
+            message: Bad Request
+    TooManyRequests1:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 429
+            message: Limit Exceeded
+    Unauthorized1:
+      description: Bad or expired token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 401
+            message: Unauthorized
+    Forbidden1:
+      description: You do not have access to the resource
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 403
+            message: Access Forbidden
+  securitySchemes:
+    OAuth2.clientCredentials:
+      type: oauth2
+      description: OAuth2 Client Credentials Flow.
+      flows:
+        clientCredentials:
+          tokenUrl: https://api-platform.cvent.com/ea/oauth2/token
+          scopes:
+            account/hooks:delete: Allows the deletion of hooks.
+            account/hooks:read: Allows the reading of hooks.
+            account/hooks:write: Allows the creation/updation of hooks.
+            account/user-groups:delete: Allows deletion for user groups
+            account/user-groups:read: Allows the reading of user groups
+            account/user-groups:write: Allows the writing of user groups
+            account/users:delete: Allows the deletion of User
+            account/users:read: Allows the reading of User, User Group
+            account/users:write: Allows the creation/updating of User
+            appointments/appointment-attendees:read: Allows the reading of appointment attendees and their related entities.
+            appointments/appointment-events:read: Allows the reading of appointment events and their related entities.
+            appointments/appointment-types:read: Allows the reading of appointment types and their related entities.
+            appointments/appointments:read: Allows the reading of appointment and their related entities.
+            appointments/appointments:write: Allows the writing of appointments and their related entities.
+            appointments/available-times:read: Allows the reading of availability times.
+            appointments/locations:read: Allows the reading of appointment locations and their related entities.
+            attendee-insights/attendee-insights:read: Allows the reading of engagement scores (attendee insights).
+            attendee-insights/scores:read: Allows the reading of scores.
+            attendee-insights/stats:read: Allows the reading of engagement score (attendee insight) stats.
+            budget/budget-items:delete: Allows the deletion of budget items
+            budget/budget-items:read: Allows the reading of all budget items
+            budget/budget-items:write: Allows creation/updation of budget item
+            budget/budget-totals:read: Allows the reading of all event budget totals
+            budget/budget-vendors:read: Allows reading of account-level budget vendors.
+            budget/cards:read: Allows the reading of cards
+            budget/currency-conversion-rate:delete: Allows deletion of currency conversion rate for currency.
+            budget/currency-conversion-rate:read: Allows reading of currency conversion rate for currency.
+            budget/currency-conversion-rate:write: Allows creation/update of currency conversion rate for currency.
+            budget/payments:delete: Allows deletion of payments.
+            budget/payments:read: Allows reading of payment for budget item.
+            budget/payments:write: Allows creation of payment in a budget item.
+            budget/transactions:delete: Allows delete card transactions.
+            budget/transactions:read: Allows the reading of all card's transactions
+            budget/transactions:write: Allows creation of card transactions.
+            bulk/bulk-jobs:read: Allows the reading of bulk job related entities
+            bulk/bulk-jobs:write: Allows the creation, update and deletion of bulk job related entities
+            business-transient/bids:read: Allows the reading of Business Transient Bid data
+            business-transient/proposals:read: Allows the reading of Business Transient Proposal data
+            business-transient/supplier-brands:read: Allows the reading of a supplier brand or a list of travel supplier brands.
+            business-transient/supplier-chains:read: Allows the reading of a travel supplier chain or a list of travel supplier
+              chains.
+            business-transient/supplier-properties:read: Allows the reading of a travel supplier property or a list of travel
+              supplier properties.
+            business-transient/supplier-property-rooms:read: Allows the reading of a list of travel supplier property rooms.
+            business-transient/travel-accounts:read: Allows the reading of business transient travel account data.
+            business-transient/travel-program-questions:read: Allows the reading of business transient travel program question
+              data.
+            business-transient/travel-programs:read: Allows the reading of business transient travel program data.
+            business-transient/travel-supplier-accounts:read: Allows the reading of business transient travel supplier account
+              data.
+            business-travel/bids:read: Allows the reading of Business Travel Bid data
+            business-travel/proposals:read: Allows the reading of Business Travel Proposal data
+            business-travel/travel-accounts:read: Allows the reading of business travel account data.
+            business-travel/travel-program-questions:read: Allows the reading of business travel program question data.
+            business-travel/travel-programs:read: Allows the reading of business travel program data.
+            compliance/communications:read: Allows the reading of communication compliance
+            compliance/communications:write: Allows the writing of communication compliance
+            email/bounces:read: Allow the reading of email bounces.
+            email/email-status:read: Allows the reading of email statuses.
+            email/emails:read: Allows the reading of emails.
+            eMarketing/campaigns:read: Allows the reading of campaigns.
+            emarketing/emarketing-email-status:read: Allows the reading of eMarketing email statuses.
+            eMarketing/eMarketing-email-templates:read: Allows the reading of email-templates.
+            eMarketing/eMarketing-send-emails:write: Allows the writing of eMarketing emails.
+            event/admission-items:read: Allows the reading of admission items
+            event/air-request:read: Allow reading the air request or air actual detail for attendees.
+            event/alternate-travel:read: Allow reading the alternate travel answers for attendees.
+            event/attendance-durations:read: Allows the read of Duration records
+            event/attendee-activities-metadata:delete: Allows the deletion of attendees activities metadata.
+            event/attendee-activities-metadata:read: Allows the reading of attendee activities metadata.
+            event/attendee-activities-metadata:write: Allows the creation/updating of attendees activities metadata.
+            event/attendee-activities:read: Allows the reading of attendee activities.
+            event/attendee-activities:write: Allows the writing of external attendee activities.
+            event/attendee-credits:read: Allows the reading of attendee credits.
+            event/attendee-links:delete: Allows the deletion of attendee links
+            event/attendee-links:read: Allows the reading of attendee links
+            event/attendee-links:write: Allows the creation of attendee links
+            event/attendee-messages:read: Allows the reading of attendee messages
+            event/attendees:read: Allows the reading of attendees.
+            event/attendees:write: Allows the creation of an attendee in an event.
+            event/audience-segments:read: Allows the reading of audience segments.
+            event/audience-segments:write: Allows the creation/updating/deletion of audience segments.
+            event/contact-groups:read: Allows the reading of contact groups.
+            event/contact-groups:write: Allows the creation/updating of contact groups.
+            event/contact-types:read: Allows the reading of contact types.
+            event/contacts:delete: Allows the deletion of contacts.
+            event/contacts:read: Allows the reading of contacts.
+            event/contacts:write: Allows the creation/updating of contacts.
+            event/contacts:write-sensitive: Allows the creation/updating of sensitive data related to contacts.
+            event/custom-fields:read: Allows the reading of custom fields
+            event/custom-fields:write: Allows the writing of custom fields
+            event/discounts:write: Allows the writing of discounts
+            event/donation-items:read: Allows the reading of donation items.
+            event/event-discounts:read: Allows the reading of event discounts.
+            event/event-discounts:write: Allows the writing of event discounts.
+            event/event-email-status:read: Allows the reading of event email statuses.
+            event/event-emails:read: Allows the reading of event emails
+            event/event-emails:write: Allows to send event emails.
+            event/event-features:read: Allows the reading of events-features
+            event/event-features:write: Allows updating the event-features
+            event/event-user-groups:read: Allows the reading of user groups
+            event/event-user-groups:write: Allows associating/disassociating user groups to event
+            event/events:read: Allows the reading of events
+            event/events:write: Allows the creation/updating of events
+            event/fee-items:read: Allows the reading of fee items.
+            event/hotel-request:read: Allow reading the hotel request or housing reservation request detail for attendees.
+            event/invitation-lists:read: Allows the reading of the invitation lists for an event
+            event/meeting-request-forms:read: Allows the reading of meeting request forms.
+            event/meeting-requests:read: Allows the reading of meeting requests.
+            event/meeting-requests:write: Allows the creation/updating of meeting requests.
+            event/membership-items:read: Allows reading of membership items.
+            event/orders:read: Allows the reading of orders
+            event/planning-documents:read: Allows the reading of event planning documents
+            event/players:read: Allows the reading of players
+            event/process-form-submissions:read: Allows the reading of process form submissions.
+            event/program-items:delete: Allows deletion of session program items
+            event/program-items:read: Allows reading of session program items
+            event/program-items:write: Allows writing of session program items
+            event/quantity-items:read: Allows the reading of quantity items.
+            event/quantity-items:write: Allows the writing of quantity items
+            event/registration-paths:read: Allows the reading of registration paths
+            event/registration-types:read: Allows the reading of registration types
+            event/registration-types:write: Allows the writing of registration types
+            event/role-assignments:read: Allows the reading of event role assignment.
+            event/session-attendance:read: Allows the reading of sessions attendance
+            event/session-attendance:write: Allows the creation/updating of sessions attendance
+            event/session-categories:read: Allows reading of session categories
+            event/session-categories:write: Allows writing of session categories
+            event/session-enrollment:delete: Allows the deletion of session registrations
+            event/session-enrollment:read: Allows the reading of sessions registrations
+            event/session-enrollment:write: Allows the writing of sessions registrations
+            event/session-segments:read: Allows reading of session segments
+            event/sessions:delete: Allows the deletion of a session in an event
+            event/sessions:read: Allows the reading of sessions
+            event/sessions:write: Allows the creation of a session in an event
+            event/speaker-categories:read: Allows reading of speaker categories
+            event/speaker-categories:write: Allows writing of speaker categories
+            event/speakers:delete: Allows the deletion of a speaker in an event
+            event/speakers:read: Allows the reading of speakers
+            event/speakers:write: Allows the creation of a speaker in an event
+            event/taxes:read: Allows the reading of taxes.
+            event/transactions:read: Allows the reading of transactions
+            event/transactions:write: Allows the writing of transactions
+            event/video-views:read: Allows reading of video views.
+            event/videos:read: Allows the reading of video data.
+            event/videos:write: Allows the creation/updating of video data.
+            event/vouchers:read: Allows reading of event vouchers.
+            event/webcasts:delete: Allows the deletion of webcast
+            event/webcasts:read: Allows the reading of webcasts
+            event/webcasts:write: Allows the creation of webcast
+            event/weblinks:read: Allows the reading of event weblinks
+            events-plus/hubs:read: Allows the reading of Events+ hub data.
+            exhibitor/badges:read: Allows reading badges
+            exhibitor/badges:write: Allows creating/updating badges
+            exhibitor/booth-staff:delete: Allows deleting booth staff
+            exhibitor/booth-staff:read: Allows reading booth staff
+            exhibitor/booth-staff:write: Allows creating booth staff
+            exhibitor/eliterature-requests:read: Allows reading eliterature document request data
+            exhibitor/exhibitor-admins:read: Allows reading exhibitor admins
+            exhibitor/exhibitor-admins:write: Allows creating/updating exhibitor admins
+            exhibitor/exhibitor-answers:read: Allows reading exhibitor answers
+            exhibitor/exhibitor-answers:write: Allows updating exhibitor answers
+            exhibitor/exhibitor-categories:delete: Allows deleting exhibitor categories
+            exhibitor/exhibitor-categories:read: Allows reading exhibitor categories
+            exhibitor/exhibitor-categories:write: Allows creating/updating exhibitor categories
+            exhibitor/exhibitor-contents:delete: Allows deleting exhibitor content
+            exhibitor/exhibitor-contents:read: Allows reading exhibitor content
+            exhibitor/exhibitor-contents:write: Allows creating/updating exhibitor content
+            exhibitor/exhibitor-questions:read: Allows reading exhibitor questions
+            exhibitor/exhibitors:delete: Allows deleting exhibitors
+            exhibitor/exhibitors:read: Allows reading exhibitors
+            exhibitor/exhibitors:write: Allows creating/updating exhibitors
+            exhibitor/lead-qualification-answers:read: Allows reading Lead Qualification Answers
+            exhibitor/lead-qualification-questions:read: Allows reading Lead Qualification Questions.
+            exhibitor/leads:read: Allows reading leads.
+            exhibitor/registration-packs:delete: Allows deleting registration pack
+            exhibitor/registration-packs:read: Allows reading registration pack
+            exhibitor/registration-packs:write: Allows creating/updating registration pack
+            exhibitor/sponsorship-levels:read: Allows reading sponsorship level
+            file/file:read: Allows the reading of file
+            file/file:write: Allows the uploading of file
+            housing/connections:write: Allows the user to connect to the Reglink APIs.
+            housing/hotel-room-rates:write: Allows the user to create/update hotel room rates.
+            housing/housing-event-available-nights:read: Allows the user to read availability information for given event.
+            housing/housing-event-hotels:read: Allows the user to read information about event hotels.
+            housing/housing-event-inventory:read: Allows the user to get information about housing event inventory.
+            housing/housing-event-room-types:read: Allows the user to read information about event room types.
+            housing/housing-events:read: Allows the user to read information about events.
+            housing/reservation-requests:delete: Allows the user to cancel reservation request.
+            housing/reservation-requests:read: Allows the user to read reservation request information.
+            housing/reservation-requests:write: Allows the user to create/update reservation request.
+            housing/reservations-link:delete: Allows the user to remove association from reservation.
+            housing/reservations-link:write: Allows the user to associate reservation to reservation request.
+            housing/reservations:delete: Allows the user to cancel reservation.
+            housing/reservations:read: Allows the user to read reservation details information.
+            housing/reservations:write: Allows the user to create/update reservation.
+            onsite/signatures:read: Allows reading signatures.
+            proposal/proposals:write: Allows the creation/writing of proposal
+            remote-printing/badge-print-jobs:read: Allows reading print jobs.
+            remote-printing/badge-print-jobs:write: Allows creating print jobs.
+            remote-printing/badge-printer-pools:read: Allows reading pools.
+            rfp/rfp-agenda-items:read: Allows the reading of RFP agenda items.
+            rfp/rfp-attachments:read: Allows the reading of RFP attachments.
+            rfp/rfp-custom-fields:read: Allows the reading of RFP custom fields.
+            rfp/rfp-guest-rooms:read: Allows the reading of RFP guest rooms.
+            rfp/rfp-internal-documents:read: Allows the reading of RFP internal documents.
+            rfp/rfp-lead-sources:read: Allows the reading of RFP lead sources.
+            rfp/rfp-past-events:read: Allows the reading of past events similar to rfp event.
+            rfp/rfp-questions:read: Allows the reading of RFP questions.
+            rfp/rfp-recipients-history:read: Allows the reading of RFP recipients history.
+            rfp/rfp-suppliers:read: Allows the reading of RFP suppliers.
+            rfp/rfps:read: Allows the reading of basic details of RFP.
+            seating/assignments:read: Allows to read attendee seat assignment information.
+            seating/event-seatings:read: Allows to read event seating.
+            seating/seats:read: Allows to read seat information.
+            seating/tables:read: Allows to read table information.
+            secure-ecommerce/card-tokens:write: Allows creation of credit card tokens
+            survey/questions:read: Allows the reading of survey questions
+            survey/respondents:read: Allows reading the survey respondents
+            survey/responses:read: Allows reading the survey responses
+            survey/standard-survey-email-templates:read: Allows reading the standalone survey email templates
+            survey/standard-survey-email:write: Allows writing operations on standalone survey emails
+            survey/standard-survey-questions:read: Allows the reading of standalone surveys questions
+            survey/standard-survey-respondents:read: Allows reading the standalone survey respondents
+            survey/standard-survey-respondents:write: Allows write operations on standalone survey respondents
+            survey/standard-survey-responses:read: Allows reading the standalone survey responses
+            survey/standard-survey-responses:write: Allows write operations on standalone surveys respondent's responses
+            survey/standard-surveys:read: Allows the reading of standalone surveys
+            survey/survey-questions:read: Allows the reading of event survey questions
+            survey/survey-respondents:read: Allows reading the event survey respondents
+            survey/survey-respondents:write: Allows write operations on the event survey respondents
+            survey/survey-responses:read: Allows reading the event survey responses
+            survey/survey-responses:write: Allows write operations on the event surveys respondent's responses
+            survey/surveys:read: Allows the reading of event surveys
+            venue/meeting-room-images:delete: Allows disassociating images from meeting rooms.
+            venue/meeting-room-images:read: Allows retrieving meeting room images.
+            venue/meeting-room-images:write: Allows associating images with meeting rooms.
+            venue/meeting-room-overviews:read: Allows read access for overview of meeting room.
+            venue/meeting-rooms:write: Allows the creation and modification of meeting rooms.
+            venue/venue-details-overview:read: Allows read access for overview of venue details.
+            venue/venue-details:write: Allows the creation and modification of venue details.
+            venue/venue-facility:write: Allows the modification of venue facility information.
+    OAuth2.authorizationCode:
+      type: oauth2
+      description: OAuth2 Authorization Code Flow.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api-platform.cvent.com/ea/oauth2/authorize
+          tokenUrl: https://api-platform.cvent.com/ea/oauth2/token
+          scopes:
+            account/hooks:delete: Allows the deletion of hooks.
+            account/hooks:read: Allows the reading of hooks.
+            account/hooks:write: Allows the creation/updation of hooks.
+            account/user-groups:delete: Allows deletion for user groups
+            account/user-groups:read: Allows the reading of user groups
+            account/user-groups:write: Allows the writing of user groups
+            account/users:delete: Allows the deletion of User
+            account/users:read: Allows the reading of User, User Group
+            account/users:write: Allows the creation/updating of User
+            appointments/appointment-attendees:read: Allows the reading of appointment attendees and their related entities.
+            appointments/appointment-events:read: Allows the reading of appointment events and their related entities.
+            appointments/appointment-types:read: Allows the reading of appointment types and their related entities.
+            appointments/appointments:read: Allows the reading of appointment and their related entities.
+            appointments/appointments:write: Allows the writing of appointments and their related entities.
+            appointments/available-times:read: Allows the reading of available times.
+            appointments/locations:read: Allows the reading of appointment locations and their related entities.
+            attendee-insights/attendee-insights:read: Allows the reading of engagement scores (attendee insights).
+            attendee-insights/scores:read: Allows the reading of scores.
+            attendee-insights/stats:read: Allows the reading of engagement score (attendee insight) stats.
+            budget/budget-items:delete: Allows the deletion of budget items
+            budget/budget-items:read: Allows the reading of all budget items
+            budget/budget-items:write: Allows creation/updation of budget item
+            budget/budget-totals:read: Allows the reading of all event budget totals
+            budget/budget-vendors:read: Allows reading of account-level budget vendors.
+            budget/cards:read: Allows the reading of cards
+            budget/currency-conversion-rate:delete: Allows deletion of currency conversion rate for currency.
+            budget/currency-conversion-rate:read: Allows reading of currency conversion rate for currency.
+            budget/currency-conversion-rate:write: Allows creation/update of currency conversion rate for currency.
+            budget/payments:delete: Allows deletion of payments.
+            budget/payments:read: Allows reading of payment for budget item.
+            budget/payments:write: Allows creation of payment in a budget item.
+            budget/transactions:delete: Allows delete card transactions.
+            budget/transactions:read: Allows the reading of all card's transactions
+            budget/transactions:write: Allows creation of card transactions.
+            business-transient/bids:read: Allows the reading of BT Bid data
+            business-transient/proposals:read: Allows the reading of BT Proposal data
+            business-travel/bids:read: Allows the reading of BT Bid data
+            business-travel/proposals:read: Allows the reading of BT Proposal data
+            compliance/communications:read: Allows the reading of communication compliance
+            compliance/communications:write: Allows the writing of communication compliance
+            email/bounces:read: Allow the reading of email bounces.
+            email/email-status:read: Allows the reading of email statuses.
+            email/emails:read: Allows the reading of emails.
+            eMarketing/campaigns:read: Allows the reading of campaigns.
+            emarketing/emarketing-email-status:read: Allows the reading of eMarketing email statuses.
+            eMarketing/eMarketing-email-templates:read: Allows the reading of email-templates.
+            eMarketing/eMarketing-send-emails:write: Allows the writing of eMarketing emails.
+            event/admission-items:read: Allows the reading of admission items
+            event/air-request:read: Allow reading the air request or air actual detail for attendees.
+            event/alternate-travel:read: Allow reading the alternate travel answers for attendees.
+            event/attendance-durations:read: Allows the read of Duration records
+            event/attendee-activities-metadata:delete: Allows the deletion of attendees activities metadata.
+            event/attendee-activities-metadata:read: Allows the reading of attendee activities metadata.
+            event/attendee-activities-metadata:write: Allows the creation/updating of attendees activities metadata.
+            event/attendee-activities:read: Allows the reading of attendee activities.
+            event/attendee-activities:write: Allows the writing of attendee activities.
+            event/attendee-credits:read: Allows the reading of attendee credits.
+            event/attendee-links:delete: Allows the deletion of attendee links
+            event/attendee-links:read: Allows the reading of attendee links
+            event/attendee-links:write: Allows the creation of attendee links
+            event/attendee-messages:read: Allows the reading of attendee messages
+            event/attendees:read: Allows the reading of attendees.
+            event/attendees:write: Allows the creation of an attendee in an event.
+            event/audience-segments:read: Allows the reading of audience segments.
+            event/audience-segments:write: Allows the creation/updating/deletion of audience segments.
+            event/contact-groups:read: Allows the reading of contact groups.
+            event/contact-groups:write: Allows the creation/updating of contact groups.
+            event/contact-types:read: Allows the reading of contact types.
+            event/contacts:delete: Allows the deletion of contacts.
+            event/contacts:read: Allows the reading of contacts.
+            event/contacts:write: Allows the creation/updating of contacts.
+            event/contacts:write-sensitive: Allows the creation/updating of sensitive data related to contacts.
+            event/custom-fields:read: Allows the reading of custom fields
+            event/custom-fields:write: Allows the writing of custom fields
+            event/discounts:write: Allows the writing of discounts
+            event/donation-items:read: Allows the reading of donation items.
+            event/event-discounts:read: Allows the reading of event discounts.
+            event/event-discounts:write: Allows the writing of event discounts.
+            event/event-email-status:read: Allows the reading of event email statuses.
+            event/event-emails:read: Allows the reading of event emails
+            event/event-emails:write: Allows to send event emails.
+            event/event-features:read: Allows the reading of events-features
+            event/event-features:write: Allows updating the event-features
+            event/event-user-groups:read: Allows the reading of user groups
+            event/event-user-groups:write: Allows associating/disassociating user groups to event
+            event/events:read: Allows the reading of events
+            event/events:write: Allows the creation/updating of events
+            event/fee-items:read: Allows the reading of fee items.
+            event/hotel-request:read: Allow reading the hotel request or housing reservation request detail for attendees.
+            event/invitation-lists:read: Allows the reading of the invitation lists for an event
+            event/meeting-request-forms:read: Allows the reading of meeting request forms.
+            event/meeting-requests:read: Allows the reading of meeting requests.
+            event/meeting-requests:write: Allows the creation/updating of meeting requests.
+            event/membership-items:read: Allows reading of membership items.
+            event/orders:read: Allows the reading of orders
+            event/planning-documents:read: Allows the reading of event planning documents
+            event/players:read: Allows the reading of players
+            event/process-form-submissions:read: Allows the reading of process form submissions.
+            event/program-items:delete: Allows deletion of session program items
+            event/program-items:read: Allows reading of session program items
+            event/program-items:write: Allows writing of session program items
+            event/quantity-items:read: Allows the reading of quantity items.
+            event/quantity-items:write: Allows the writing of quantity items
+            event/registration-paths:read: Allows the reading of registration paths
+            event/registration-types:read: Allows the reading of registration types
+            event/registration-types:write: Allows the writing of registration types
+            event/role-assignments:read: Allows the reading of event role assignment.
+            event/session-attendance:read: Allows the reading of sessions attendance
+            event/session-attendance:write: Allows the creation/updating of sessions attendance
+            event/session-categories:read: Allows reading of session categories
+            event/session-categories:write: Allows writing of session categories
+            event/session-enrollment:delete: Allows the deletion of session registrations
+            event/session-enrollment:read: Allows the reading of sessions registrations
+            event/session-enrollment:write: Allows the writing of sessions registrations
+            event/session-segments:read: Allows reading of session segments
+            event/sessions:delete: Allows the deletion of a session in an event
+            event/sessions:read: Allows the reading of sessions
+            event/sessions:write: Allows the creation of a session in an event
+            event/speaker-categories:read: Allows reading of speaker categories
+            event/speaker-categories:write: Allows writing of speaker categories
+            event/speakers:delete: Allows the deletion of a speaker in an event
+            event/speakers:read: Allows the reading of speakers
+            event/speakers:write: Allows the creation of a speaker in an event
+            event/taxes:read: Allows the reading of taxes.
+            event/transactions:read: Allows the reading of transactions
+            event/transactions:write: Allows the writing of transactions
+            event/video-views:read: Allows reading of video views.
+            event/videos:read: Allows the reading of video data.
+            event/videos:write: Allows the creation/updating of video data.
+            event/vouchers:read: Allows reading of event vouchers and their associated attendees.
+            event/webcasts:delete: Allows the deletion of webcast
+            event/webcasts:read: Allows the reading of webcasts
+            event/webcasts:write: Allows the creation of webcast
+            event/weblinks:read: Allows the reading of event weblinks
+            events-plus/hubs:read: Allows the reading of Events+ hub data.
+            exhibitor/badges:read: Allows reading badges
+            exhibitor/badges:write: Allows creating/updating badges
+            exhibitor/booth-staff:delete: Allows deleting booth staff
+            exhibitor/booth-staff:read: Allows reading booth staff
+            exhibitor/booth-staff:write: Allows creating booth staff
+            exhibitor/eliterature-requests:read: Allows reading eliterature document request data
+            exhibitor/exhibitor-admins:read: Allows reading exhibitor admins
+            exhibitor/exhibitor-admins:write: Allows creating/updating exhibitor admins
+            exhibitor/exhibitor-answers:read: Allows reading exhibitor answers
+            exhibitor/exhibitor-answers:write: Allows updating exhibitor answers
+            exhibitor/exhibitor-categories:delete: Allows deleting exhibitor categories
+            exhibitor/exhibitor-categories:read: Allows reading exhibitor categories
+            exhibitor/exhibitor-categories:write: Allows creating/updating exhibitor categories
+            exhibitor/exhibitor-contents:delete: Allows deleting exhibitor content
+            exhibitor/exhibitor-contents:read: Allows reading exhibitor content
+            exhibitor/exhibitor-contents:write: Allows creating/updating exhibitor content
+            exhibitor/exhibitor-questions:read: Allows reading exhibitor questions
+            exhibitor/exhibitors:delete: Allows deleting exhibitors
+            exhibitor/exhibitors:read: Allows reading exhibitors
+            exhibitor/exhibitors:write: Allows creating/updating exhibitors
+            exhibitor/lead-qualification-answers:read: Allows reading Lead Qualification Answers
+            exhibitor/lead-qualification-questions:read: Allows reading Lead Qualification Questions.
+            exhibitor/leads:read: Allows reading leads.
+            exhibitor/registration-packs:delete: Allows deleting registration pack
+            exhibitor/registration-packs:read: Allows reading registration pack
+            exhibitor/registration-packs:write: Allows creating/updating registration pack
+            exhibitor/sponsorship-levels:read: Allows reading sponsorship level
+            file/file:read: Allows the reading of file
+            file/file:write: Allows the uploading of file
+            onsite/signatures:read: Allows reading signatures.
+            remote-printing/badge-print-jobs:read: Allows reading print jobs.
+            remote-printing/badge-print-jobs:write: Allows creating print jobs.
+            remote-printing/badge-printer-pools:read: Allows reading pools.
+            rfp/rfp-agenda-items:read: Allows the reading of RFP agenda items.
+            rfp/rfp-attachments:read: Allows the reading of RFP attachments.
+            rfp/rfp-custom-fields:read: Allows the reading of RFP custom fields.
+            rfp/rfp-guest-rooms:read: Allows the reading of RFP guest rooms.
+            rfp/rfp-internal-documents:read: Allows the reading of RFP internal documents.
+            rfp/rfp-lead-sources:read: Allows the reading of RFP lead sources.
+            rfp/rfp-past-events:read: Allows the reading of past events similar to rfp event.
+            rfp/rfp-questions:read: Allows the reading of RFP questions.
+            rfp/rfp-recipients-history:read: Allows the reading of RFP recipients history.
+            rfp/rfp-suppliers:read: Allows the reading of RFP suppliers.
+            rfp/rfps:read: Allows the reading of basic details of RFP.
+            seating/assignments:read: Allows to read attendee seat assignment information.
+            seating/event-seatings:read: Allows to read event seating.
+            seating/seats:read: Allows to read seat information.
+            seating/tables:read: Allows to read table information.
+            survey/questions:read: Allows the reading of survey questions
+            survey/respondents:read: Allows reading the survey respondents
+            survey/responses:read: Allows reading the survey responses
+            survey/standard-survey-email-templates:read: Allows reading the standalone survey email templates
+            survey/standard-survey-email:write: Allows writing operations on standalone survey emails
+            survey/standard-survey-questions:read: Allows the reading of standalone surveys questions
+            survey/standard-survey-respondents:read: Allows reading the standalone survey respondents
+            survey/standard-survey-respondents:write: Allows write operations on standalone survey respondents
+            survey/standard-survey-responses:read: Allows reading the standalone survey responses
+            survey/standard-survey-responses:write: Allows write operations on standalone surveys respondent's responses
+            survey/standard-surveys:read: Allows the reading of standalone surveys
+            survey/survey-questions:read: Allows the reading of event survey questions
+            survey/survey-respondents:read: Allows reading the event survey respondents
+            survey/survey-respondents:write: Allows write operations on the event survey respondents
+            survey/survey-responses:read: Allows reading the event survey responses
+            survey/survey-responses:write: Allows write operations on the event surveys respondent's responses
+            survey/surveys:read: Allows the reading of event surveys
+            venue/meeting-room-images:delete: Allows disassociating images from meeting rooms.
+            venue/meeting-room-images:read: Allows retrieving meeting room images.
+            venue/meeting-room-images:write: Allows associating images with meeting rooms.
+            venue/meeting-room-overviews:read: Allows read access for overview of meeting room.
+            venue/meeting-rooms:write: Allows the creation and modification of meeting rooms.
+            venue/venue-details-overview:read: Allows read access for overview of venue details.
+            venue/venue-details:write: Allows the creation and modification of venue details.
+            venue/venue-facility:write: Allows the modification of venue facility information.

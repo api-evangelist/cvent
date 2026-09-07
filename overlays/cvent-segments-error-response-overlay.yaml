@@ -1,0 +1,28 @@
+overlay: 1.0.0
+x-speakeasy-jsonpath: rfc9535
+info:
+  title: Fix segments-error-response schema refs used as response refs
+  version: 0.0.1
+actions:
+  # Remove the bad $ref on /audience-segments POST 400 (schema ref used as response)
+  - target: $["paths"]["/audience-segments"]["post"]["responses"]["400"]
+    remove: true
+  - target: $["paths"]["/audience-segments"]["post"]["responses"]
+    update:
+      '400':
+        description: Bad Request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/segments-error-response'
+  # Remove the bad $ref on /audience-segments/{audienceSegmentId}/attendees/{attendeeId} PUT 400
+  - target: $["paths"]["/audience-segments/{audienceSegmentId}/attendees/{attendeeId}"]["put"]["responses"]["400"]
+    remove: true
+  - target: $["paths"]["/audience-segments/{audienceSegmentId}/attendees/{attendeeId}"]["put"]["responses"]
+    update:
+      '400':
+        description: Bad Request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/segments-error-response'

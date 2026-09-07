@@ -1,0 +1,94 @@
+generated: '2026-09-07'
+method: derived
+source: openapi/_original/cvent-openapi.json (469 operations); enriched from https://developers.cvent.com/docs/rest-api/reference/reference
+  and https://developers.cvent.com/docs/rest-api/guides/handling-rate-limits
+format: vendor-json
+rfc9457: false
+envelope:
+  media_type: application/json
+  note: Cvent does NOT use RFC 9457 application/problem+json. Every 4xx/5xx in the spec returns application/json
+    shaped by the ErrorResponse schema.
+  schema: ErrorResponse (allOf ErrorResponseBase + details[])
+  fields:
+  - name: code
+    type: integer
+    required: true
+    description: The HTTP status code representing the error.
+    example: 400
+  - name: message
+    type: string
+    required: true
+    description: A brief description of the error.
+    example: Bad Request
+  - name: target
+    type: string
+    required: false
+    description: The target resource of the error.
+  - name: details
+    type: array<ErrorResponseBase>
+    required: false
+    description: Additional details of cascading error messages.
+summary:
+  operations: 469
+  error_responses: 2157
+  status_codes:
+    '400': 375
+    '401': 468
+    '403': 467
+    '429': 467
+    '404': 355
+    '422': 9
+    '409': 16
+  media_types:
+    application/json: 2149
+  note: 401/403/429 are declared on effectively every operation; 400 on 375, 404 on 355, 409 on 16, 422 on 9. No
+    5xx is declared anywhere in the contract.
+problem_types:
+- status: 400
+  title: Bad Request
+  operations: 375
+  meaning: The request body or parameters are invalid or malformed.
+  remediation: Validate input before sending; check the filter grammar at /docs/rest-api/reference/filters.
+- status: 401
+  title: Unauthorized
+  operations: 468
+  meaning: The Bearer token is missing, expired, or invalid. Tokens are valid 3600 seconds.
+  remediation: Re-run the client-credentials token exchange at POST /ea/oauth2/token.
+- status: 403
+  title: Forbidden
+  operations: 467
+  meaning: The token does not carry the scope required for this operation.
+  remediation: Add the operation’s scope to the application in the developer console and re-issue the token.
+- status: 404
+  title: Not Found
+  operations: 355
+  meaning: The resource does not exist, or the host/region is wrong.
+  remediation: 'Confirm the region host: api-platform.cvent.com (NA) vs api-platform-eur.cvent.com (EMEA).'
+- status: 409
+  title: Conflict
+  operations: 16
+  meaning: The request conflicts with the current state of the resource.
+- status: 422
+  title: Unprocessable Entity
+  operations: 9
+  meaning: The payload is syntactically valid but semantically rejected.
+- status: 429
+  title: Too Many Requests
+  operations: 467
+  meaning: 'Rate limit or daily quota exhausted. Cvent overloads 429 for TWO conditions and they are only distinguishable
+    from the message body: "Too Many Requests" = per-second throttling (retry with backoff); "Limit Exceeded" =
+    daily quota exhausted (retrying wastes quota).'
+  example:
+    code: 429
+    message: Limit Exceeded
+  remediation: Exponential backoff from 2s (plus 1–1000ms jitter), doubling to a 16s ceiling, up to 5 attempts;
+    on daily quota exhaustion stop until after midnight UTC.
+  evidence:
+  - https://developers.cvent.com/docs/rest-api/guides/handling-rate-limits
+  - https://github.com/cvent/rest-sdks/blob/main/overlays/retries_overlay.yaml
+- status: 431
+  title: Request Header Fields Too Large
+  operations: 0
+  meaning: 'Documented, not declared in the contract: granting an application too many scopes produces an access
+    token large enough to blow the header limit.'
+  evidence: https://developers.cvent.com/docs/rest-api/explanation/concepts

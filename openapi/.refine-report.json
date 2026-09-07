@@ -21,6 +21,15 @@
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
+  "notes": [
+    "cvent-attendees-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "cvent-contacts-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "cvent-events-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "cvent-exhibitors-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "cvent-oauth-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "cvent-sessions-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "cvent-webhooks-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
   "skipped": []
 }

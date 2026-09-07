@@ -1,0 +1,40 @@
+generated: '2026-09-07'
+method: generated
+source: openapi/_original/cvent-openapi.json (469 operations); every operationId referenced below is verified present
+  in that contract
+api: Cvent Platform REST API (version ea)
+note: 'Cvent publishes no AGENTS.md and no skills of its own; these are packaged operating instructions written
+  by API Evangelist from the provider’s published contract and documentation. Each one carries the two facts an
+  agent most needs here and cannot infer from the spec: there is no idempotency key on any write, and 429 means
+  two different things.'
+skills:
+- file: cvent-authenticate-and-check-quota.md
+  name: cvent-authenticate-and-check-quota
+  description: Exchange Cvent client credentials for a bearer token, validate it, and read your live API quota and
+    usage tier before spending calls.
+  operations: 4
+- file: cvent-build-event-agenda.md
+  name: cvent-build-event-agenda
+  description: Build a Cvent event agenda — create sessions and categories, add speakers, attach documents, and
+    record session attendance.
+  operations: 14
+- file: cvent-bulk-load-data.md
+  name: cvent-bulk-load-data
+  description: Load large data sets into Cvent through the Bulk API — create a job, upload data, run it, read per-row
+    results, and cancel a job that is going wrong.
+  operations: 6
+- file: cvent-manage-event-registration.md
+  name: cvent-manage-event-registration
+  description: Find a Cvent event, register attendees, update their status and email subscriptions, and check them
+    in or reverse a check-in.
+  operations: 11
+- file: cvent-provision-users-scim.md
+  name: cvent-provision-users-scim
+  description: Provision and de-provision Cvent users over SCIM 2.0 — discover the service provider config and schemas,
+    then create, update and delete users and read groups.
+  operations: 11
+- file: cvent-sync-contacts.md
+  name: cvent-sync-contacts
+  description: Read, create and update Cvent address-book contacts with cursor pagination and filters, and register
+    a contact hook so Cvent asks your system for the record of truth.
+  operations: 12

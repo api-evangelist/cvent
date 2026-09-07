@@ -1,0 +1,2018 @@
+openapi: 3.0.2
+info:
+  title: Cvent REST APIs — RFP Requirements
+  version: ea
+  description: RFP requirements APIs for managing RFP-specific requirements including guest rooms, meeting rooms, custom questions,
+    custom fields, and attachments (CRUD operations).
+  contact:
+    name: Cvent Development Platform
+    url: https://developers.cvent.com/
+externalDocs:
+  description: Cvent REST API documentation
+  url: https://developers.cvent.com/documentation
+servers:
+- url: https://api-platform.cvent.com/ea
+- url: https://api-platform-eur.cvent.com/ea
+tags:
+- name: RFP Requirements
+  description: RFP requirements APIs for managing RFP-specific requirements including guest rooms, meeting rooms, custom questions,
+    custom fields, and attachments (CRUD operations).
+paths:
+  /rfps/{rfpId}/agenda-items:
+    get:
+      tags:
+      - RFP Requirements
+      summary: List RFP Agenda Items
+      description: Returns a paginated list of agenda items associated with an RFP.
+      operationId: listRfpAgendaItems
+      security:
+      - OAuth2.clientCredentials:
+        - rfp/rfp-agenda-items:read
+      - OAuth2.authorizationCode:
+        - rfp/rfp-agenda-items:read
+      parameters:
+      - $ref: '#/components/parameters/rfpId'
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      - name: filter
+        in: query
+        description: 'A filter query string narrows search results and supports the combination of logical and comparison
+          operators.
+
+          The filter adheres to the pattern filter=''field'' comparisonType ''value''.
+
+
+          The following fields are filterable:
+
+          * id (in)
+
+          '
+        schema:
+          type: string
+          example: id in ('209a11d-5bf6-47d2-b81f-89360d7229b6')
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of agenda items associated with an RFP.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedRfpAgendaItems'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+  /rfps/{rfpId}/agenda-items/schedules:
+    get:
+      tags:
+      - RFP Requirements
+      summary: List RFP Agenda Item Schedules
+      description: Returns paginated list of schedules for agenda items added on an RFP.
+      operationId: listRfpAgendaItemSchedules
+      security:
+      - OAuth2.clientCredentials:
+        - rfp/rfp-agenda-items:read
+      - OAuth2.authorizationCode:
+        - rfp/rfp-agenda-items:read
+      parameters:
+      - $ref: '#/components/parameters/rfpId'
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of RFP agenda item schedules.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedRfpAgendaItemsSchedule'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+  /rfps/{rfpId}/attachments:
+    get:
+      tags:
+      - RFP Requirements
+      summary: List RFP Attachments
+      description: Returns paginated list of [attachments](#tag/RFP-Requirements) added on an RFP.
+      operationId: listRfpAttachments
+      security:
+      - OAuth2.clientCredentials:
+        - rfp/rfp-attachments:read
+      - OAuth2.authorizationCode:
+        - rfp/rfp-attachments:read
+      parameters:
+      - $ref: '#/components/parameters/rfpId'
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      - name: filter
+        in: query
+        description: 'A filter query string narrows search results and supports the combination of logical and comparison
+          operators.
+
+          The filter adheres to the pattern filter=''field'' comparisonType ''value''.
+
+
+          These are the comparison types that can be used in filter expressions:
+
+          * equal: eq
+
+          * includes value(s): in
+
+
+          The following fields are filterable:
+
+          * sendInEmail (eq)
+
+          * supplier.id (in)
+
+          * supplierSpecific (eq)
+
+
+          The following operators are available:
+
+          * and
+
+          * or
+
+          '
+        schema:
+          type: string
+          example: supplierSpecific eq 'false' or supplier.id in ('37f2de41-6f50-484a-a55d-3cf0ede2ebac','f56a51a4-84b0-46c9-a612-716dc95a1c96')
+            AND sendInEmail eq 'false'
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of RFP Attachments.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedRfpAttachments'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+  /rfps/{rfpId}/custom-fields/answers:
+    get:
+      tags:
+      - RFP Requirements
+      summary: List RFP Custom Fields Answers
+      description: Returns a paginated list of answers for each custom field associated with a given RFP.
+      operationId: listRfpCustomFields
+      security:
+      - OAuth2.clientCredentials:
+        - rfp/rfp-custom-fields:read
+      - OAuth2.authorizationCode:
+        - rfp/rfp-custom-fields:read
+      parameters:
+      - $ref: '#/components/parameters/rfpId'
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      - $ref: '#/components/parameters/customFieldExpand'
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of RFP custom field answers.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedRfpCustomField'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+  /rfps/{rfpId}/guest-rooms:
+    get:
+      tags:
+      - RFP Requirements
+      summary: Get RFP Guest Rooms
+      description: Returns guest room requirements associated with an RFP.
+      operationId: getRfpGuestRooms
+      security:
+      - OAuth2.clientCredentials:
+        - rfp/rfp-guest-rooms:read
+      - OAuth2.authorizationCode:
+        - rfp/rfp-guest-rooms:read
+      parameters:
+      - $ref: '#/components/parameters/rfpId'
+      responses:
+        '200':
+          description: Successfully returns the guest room requirements associated with an RFP.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RfpGuestRooms'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+  /rfps/{rfpId}/internal-documents:
+    get:
+      tags:
+      - RFP Requirements
+      summary: List RFP Internal Documents
+      description: Returns paginated list of [internal documents](#tag/RFP-Requirements) added on an RFP.
+      operationId: listRfpInternalDocuments
+      security:
+      - OAuth2.clientCredentials:
+        - rfp/rfp-internal-documents:read
+      - OAuth2.authorizationCode:
+        - rfp/rfp-internal-documents:read
+      parameters:
+      - $ref: '#/components/parameters/rfpId'
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      - name: filter
+        in: query
+        description: 'A filter query string narrows search results and supports the combination of logical and comparison
+          operators.
+
+          The filter adheres to the pattern filter=''field'' comparisonType ''value''.
+
+
+          The following fields are filterable:
+
+          * id (in)
+
+          '
+        schema:
+          type: string
+          example: id in ('209a11d-5bf6-47d2-b81f-89360d7229b6')
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of RFP internal documents.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedInternalDocuments'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+  /rfps/{rfpId}/questions:
+    parameters:
+    - $ref: '#/components/parameters/rfpId'
+    get:
+      tags:
+      - RFP Requirements
+      summary: List RFP Questions
+      description: Returns a paginated list of standard and custom questions associated with the given RFP. Does not include
+        answer details.
+      operationId: listRfpQuestions
+      security:
+      - OAuth2.clientCredentials:
+        - rfp/rfp-questions:read
+      - OAuth2.authorizationCode:
+        - rfp/rfp-questions:read
+      parameters:
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of RFP questions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedRfpQuestions'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+components:
+  schemas:
+    Link:
+      title: Link
+      required:
+      - href
+      type: object
+      description: Represents a link to a related resource.
+      properties:
+        href:
+          type: string
+          description: A url provided that can be followed for linking
+          example: ?token=90c5f062-76ad-4ea4-aa53-00eb698d9262
+    RfpAgendaItem:
+      type: object
+      title: RfpAgendaItem
+      description: Agenda item associated with an RFP.
+      required:
+      - id
+      allOf:
+      - $ref: '#/components/schemas/RfpAgendaItemRequest'
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique ID of the agenda item.
+          example: 9290ddfb-cc91-4cc3-9b3f-5ee5caba486b
+        agendaBuilderAttachment:
+          type: object
+          description: Attachment whose data was used to create the agenda item.
+          readOnly: true
+          required:
+          - id
+          properties:
+            id:
+              type: string
+              format: uuid
+              description: Unique identifier for the attachment.
+              example: 50dc08af-24a9-4d01-84be-3d43133dc945
+    RfpAgendaItemScheduleWithId:
+      type: object
+      title: RfpAgendaItemScheduleWithId
+      description: Contains RFP specific agenda items schedule information with agenda item id.
+      allOf:
+      - $ref: '#/components/schemas/RfpAgendaItemSchedule'
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+          description: Unique ID of the agenda item.
+          example: 50dc08af-24a9-4d01-84be-3d43133dc945
+    RfpMeal:
+      type: string
+      title: RfpMeal
+      description: Meal type offered during the agenda.
+      enum:
+      - BREAKFAST_BUFFET
+      - BREAKFAST_CONTINENTAL
+      - BREAKFAST_PLATED
+      - BREAK_DRINKS_ONLY
+      - BREAK_SNACKS_AND_DRINKS
+      - CONTACT_ME_ABOUT_F_B_REQUIREMENTS
+      - DINNER_BUFFET
+      - DINNER_PLATED
+      - LUNCH_BOXED
+      - LUNCH_BUFFET
+      - LUNCH_PLATED
+      - RECEPTION_HEAVY_HORS_D_OEUVRES
+      - RECEPTION_LIGHT_APPETIZERS
+    PaginatedRfpQuestions:
+      title: PaginatedRfpQuestions
+      description: Paginated response containing questions associated to an RFP.
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          description: List of questions associated to an RFP.
+          type: array
+          items:
+            $ref: '#/components/schemas/RfpQuestion'
+    PaginatedRfpCustomField:
+      title: PaginatedRfpCustomField
+      description: Paginated list of RFP custom fields associated to a RFP.
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          description: List of RFP custom fields linked to an RFP.
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomFieldAnswers'
+    unit-position:
+      type: string
+      description: Unit position used for text box question type.
+      enum:
+      - Left
+      - Right
+    Choice:
+      title: Choice
+      description: A question choice.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/TextField'
+      properties:
+        label:
+          type: string
+          description: Label of choice.
+          example: Choice A
+    RoomBlock:
+      title: RoomBlock
+      description: Contains details related to room allotment for a day.
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the room block.
+          readOnly: true
+          example: 1f6193da-e12b-4638-b1e2-13dd60d0adeb
+        date:
+          type: string
+          format: date
+          description: The ISO 8601 date when the rooms are required.
+          readOnly: true
+          example: '2025-10-13'
+        dayNumber:
+          type: integer
+          description: Counter for day number.
+          example: 3
+        totalRooms:
+          type: integer
+          description: Total number of rooms required for the day.
+          readOnly: true
+          example: 24
+          minimum: 0
+          maximum: 49995
+        details:
+          type: array
+          description: Contains detail of quantity required for each room type.
+          items:
+            $ref: '#/components/schemas/RoomBlockDetails'
+          minItems: 0
+          maxItems: 5
+    RoomBlockDetails:
+      title: RoomBlockDetails
+      description: Contains details related to room allotment for a room type.
+      type: object
+      properties:
+        quantity:
+          type: integer
+          description: Quantity of rooms required.
+          minimum: 0
+          maximum: 9999
+          example: 24
+        type:
+          $ref: '#/components/schemas/GuestRoomType'
+    RfpAttachment:
+      type: object
+      title: RfpAttachment
+      description: Attachment attributes and their supplier-level association.
+      allOf:
+      - $ref: '#/components/schemas/RfpAttachmentBase'
+      properties:
+        sendInEmail:
+          type: boolean
+          description: True indicates the attachment should be sent in emails that notify suppliers about RFPs.
+          example: false
+          readOnly: true
+        supplier:
+          type: object
+          description: Supplier associated with the attachment.
+          properties:
+            id:
+              type: string
+              format: uuid
+              description: ID of the supplier.
+              example: C20A0114-2635-48C3-9F59-9386361B517B
+          readOnly: true
+        selectedForSupplier:
+          type: boolean
+          description: True indicates the attachment is selected for the supplier whose ID is present in supplier.id field.
+          example: true
+          readOnly: true
+    GuestRoomType:
+      title: GuestRoomType
+      description: 'Guest room type. `ANY`: Room can be any type. `SINGLE`: Room with one bed. `DOUBLE`: Room with two beds.
+        `SUITE`: Room is an entire suite. `STAFF`: Room is for staff.'
+      type: string
+      enum:
+      - ANY
+      - SINGLE
+      - DOUBLE
+      - SUITE
+      - STAFF
+      example: DOUBLE
+    choice-sort-order:
+      type: string
+      description: 'The sort order for the choices. `AToZ`: sorted alphabetically in ascending order. `AsEntered`: Sorted
+        in the order they were added, oldest choices first. `Random`: Random sort.'
+      enum:
+      - AToZ
+      - AsEntered
+      - Random
+    text-answer-format:
+      description: 'Text answer format. Used for `OpenEndedTextOneLine` question types.`CustomFormat`: Answers must follow
+        a planner defined custom format. `EmailAddress`: Answers must follow the pattern of an email address. `General`: Answers
+        can be any string. `USPhoneNumber`: Answers must be formatted as a phone number.'
+      type: string
+      enum:
+      - CustomFormat
+      - EmailAddress
+      - General
+      - USPhoneNumber
+    RfpAttachmentBase:
+      type: object
+      title: RfpAttachmentBase
+      description: RFP-level attributes of an attachment.
+      required:
+      - id
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID for an attachment record.
+          example: 1a8bf4fe-6996-4f3d-833d-8edb04197195
+          readOnly: true
+        created:
+          type: string
+          format: date-time
+          description: ISO 8601 date-time the attachment was uploaded.
+          example: '2021-01-13T14:06:20.080Z'
+          readOnly: true
+        size:
+          type: integer
+          format: int64
+          description: The size of attachment in bytes.
+          example: 777835
+          readOnly: true
+        type:
+          $ref: '#/components/schemas/DocumentType-1'
+        secure:
+          type: boolean
+          description: True indicates the attachment is uploaded behind a secure URL and won't be returned in the `url` field.
+          example: true
+          readOnly: true
+        name:
+          type: string
+          description: Display name of the attachment.
+          example: BudgetCostSavings
+          readOnly: true
+        uniqueName:
+          type: string
+          description: Name of the attachment. Must be unique in the account.
+          example: 183f9efaa4c14070985782ee31abbf3c.jpg
+          readOnly: true
+        mimeType:
+          type: string
+          description: The [MIME](https://www.iana.org/assignments/media-types) media type of the attachment.
+          example: image/jpeg
+          readOnly: true
+        relativePath:
+          type: string
+          description: The file path pointing to where the attachment is stored in Cvent. This path is relative to the base
+            URL of the storage system and omits the root address.
+          example: 0B7DEF22676A4434982BDAD2D6EC591F/files/supplier/0713cef78d4e4d818899d4522022d5ad/73ab2e3054fd4321a5e0f846a7adb0d7.jpg
+          readOnly: true
+        deletionAllowed:
+          type: boolean
+          description: True indicates this attachment can be deleted.
+          example: true
+          readOnly: true
+        url:
+          type: string
+          format: uri
+          description: URL of the attachment. This field is null if `secure` is true.
+          example: https://custom.t2.cvent.com/0B7DEF22676A4434982BDAD2D6EC591F/files/supplier/0713cef78d4e4d818899d4522022d5ad/73ab2e3054fd4321a5e0f846a7adb0d7.jpg
+          readOnly: true
+        supplierSpecific:
+          type: boolean
+          description: True indicates the attachment is only shown in the UI to the supplier whose ID is present in supplier.id
+            field.
+          example: true
+          readOnly: true
+        source:
+          $ref: '#/components/schemas/AttachmentSource'
+    QuestionType:
+      title: QuestionType
+      enum:
+      - CommentBox
+      - DateTime
+      - FileUpload
+      - Form
+      - LargeChoices
+      - MatrixMultiChoice
+      - MatrixRating
+      - MatrixSideBySide
+      - MatrixSingleChoice
+      - MatrixSpreadSheet
+      - MultiChoice
+      - NetPromoter
+      - Number
+      - NumberAllocation
+      - OpenEndedDateTime
+      - OpenEndedNumeric
+      - OpenEndedTextCommentBox
+      - OpenEndedTextOneLine
+      - RankOrder
+      - Rating
+      - SingleChoice
+      - Text
+      type: string
+      description: The type of question. See [this article](https://support.cvent.com/s/communityarticle/Survey-Adding-Questions)
+        for details on each enum.
+      example: SingleChoice
+    ErrorResponseBase1:
+      title: ErrorResponseBase
+      type: object
+      description: Represents an error response with no additional details.
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          description: The HTTP status code representing the error.
+          example: 400
+        message:
+          type: string
+          description: A brief description of the error.
+          example: Bad Request
+        target:
+          type: string
+          description: The target resource of the error.
+          example: example target
+    display-type:
+      type: string
+      description: 'The type of display for the field. `Bar`: It is associated with choice questions type. `DropDown`: It
+        is associated with drop down type questions. `Horizontal`: It is associated with horizontal type questions. `List`:
+        It is associated with list type questions. `MultiSelectBox`: It is associated with multi select box type questions.
+        `Vertical`: It is associated with vertical type questions.'
+      enum:
+      - Bar
+      - DropDown
+      - Horizontal
+      - List
+      - MultiSelectBox
+      - Vertical
+    AdditionalChoice:
+      title: additionalChoice
+      description: Contains text of additional choice i.e notApplicableAnswer choice or otherAnswer choice.
+      type: object
+      properties:
+        text:
+          type: string
+          description: Display text of additional choice.
+          example: Dietary Restriction - Other
+        shortText:
+          type: string
+          description: Name of additional choice text in reporting.
+          example: Dietary Preference - Other Allergies
+    date-answer-format:
+      type: string
+      description: 'The answer format that a given date is stored in. `Date`: Answer format is stored in Date format. `DateTime`:
+        Answer format is stored in DateTime format. `Time`: Answer format is stored in Time format.'
+      enum:
+      - Date
+      - DateTime
+      - Time
+      default: DateTime
+    CustomFieldAnswers:
+      title: RfpCustomField
+      description: This object contains RFP custom fields attributes only.
+      type: object
+      properties:
+        customField:
+          title: ExpandableCustomObject
+          properties:
+            id:
+              type: string
+              format: uuid
+              description: Unique identifier for custom field.
+              example: 50dc08af-24a9-4d01-84be-3d43133dc945
+          required:
+          - id
+          type: object
+          description: 'An object containing custom field data. By default, contains only the field ID.
+
+
+            This is an **expandable** object. When requested via the `expand` query parameter with value `customField`, this
+            object expands to include all properties of a custom field definition.
+
+
+            See the `expand` parameter documentation and refer to the [Get Custom Field](#tag/Custom-Fields/operation/getCustomField)
+            API for the complete expanded schema.'
+        answers:
+          type: array
+          description: List of answers for the RFP custom field.
+          maxItems: 100
+          items:
+            type: string
+            description: Answer String
+            example: Choice 1
+      required:
+      - customField
+      - answers
+    QuestionClassificationType:
+      type: string
+      title: QuestionClassificationType
+      description: 'Indicates the types of RFP that can be assigned this custom question. `MEETING_ROOM`: Meeting room type
+        RFPs can be assigned this custom question. `GUEST_ROOM`: Guest room type RFPs can be assigned this custom question.
+        `ALL_RFPS`:  All RFPs can be assigned this custom question.'
+      enum:
+      - MEETING_ROOM
+      - GUEST_ROOM
+      - ALL_RFPS
+    numeric-answer-format:
+      type: string
+      description: The answer format that a given number is stored in.
+      enum:
+      - Currency
+      - Decimal
+      - Number
+    RfpAgendaItemRequest:
+      type: object
+      title: RfpAgendaItemRequest
+      description: Request body for creating or updating an RFP agenda item.
+      required:
+      - number
+      - schedules
+      allOf:
+      - $ref: '#/components/schemas/Audit'
+      properties:
+        name:
+          type: string
+          description: The name of the agenda item.
+          minLength: 0
+          maxLength: 50
+          example: Agenda Item 1
+        type:
+          $ref: '#/components/schemas/AgendaItemType'
+        setup:
+          $ref: '#/components/schemas/AgendaItemSetup'
+        note:
+          type: string
+          description: The note sent along with agenda item.
+          minLength: 0
+          maxLength: 2500
+          example: This is a sample comment for this agenda item.
+        startTime:
+          type: string
+          description: The start time of the agenda item in 24-hour format (HH:mm:ss). This represents the local time at event
+            location. For RFPs spanning multiple time zones, this time applies uniformly in each location's respective timezone
+            (e.g., 13:00:00 means 1 PM local time at every venue).
+          example: '10:00:00'
+        endTime:
+          type: string
+          description: The end time of the agenda item in 24-hour format (HH:mm:ss). This represents the local time at event
+            location. For RFPs spanning multiple time zones, this time applies uniformly in each location's respective timezone
+            (e.g., 14:00:00 means 2 PM local time at every venue).
+          example: '10:30:00'
+        roomSize:
+          type: integer
+          minimum: 0
+          description: The required room size. It is specified in the default measurement unit of the RFP. Use <a href="#tag/RFP/operation/getRFP">GET
+            RFP</a> API to get the default measurement unit.
+          example: 1000
+        attendeeCount:
+          type: integer
+          minimum: 1
+          maximum: 49999
+          description: Expected number of people attending the agenda.
+          example: 10000
+        roomInfoRequired:
+          type: boolean
+          description: True indicates room information like type, description is required.
+          example: false
+        twentyFourHourHold:
+          type: boolean
+          description: True indicates that twenty four hour hold is required.
+          example: true
+        locatedAtPrimaryEventVenue:
+          type: boolean
+          description: True indicates that agenda location is at primary event venue.
+          example: false
+        rfpMeal:
+          $ref: '#/components/schemas/RfpMeal'
+        number:
+          type: integer
+          description: The sequence number of the agenda item.
+          minimum: 1
+          maximum: 49999
+          example: 5
+        schedules:
+          type: array
+          minItems: 1
+          maxItems: 150
+          description: List of dates when this agenda item is scheduled.
+          items:
+            $ref: '#/components/schemas/RfpAgendaItemSchedule'
+    FieldType:
+      title: FieldType
+      enum:
+      - DateTime
+      - MultiChoice
+      - Number
+      - SingleChoice
+      - Text
+      type: string
+      description: 'Determines the required format for a field. `DateTime`: Data is in date-time format. `MultiChoice`: Data
+        is one or more options from a list. `Number`: Data is a number. `SingleChoice`: Data is a a single option from a list.
+        `Text`: Data is free-text input.'
+    GuestRoomOccupancyPerRoomType:
+      title: GuestRoomOccupancyPerRoomType
+      description: Room occupancy for a room type.
+      type: object
+      properties:
+        occupancy:
+          $ref: '#/components/schemas/GuestRoomOccupancy'
+        type:
+          $ref: '#/components/schemas/GuestRoomType'
+    RfpAgendaItemSchedule:
+      type: object
+      title: RfpAgendaItemSchedule
+      description: Schedule information for an RFP agenda item.
+      required:
+      - dayNumber
+      properties:
+        dayNumber:
+          type: integer
+          description: Day number relative to start of event on which the agenda item occurs.
+          example: 1
+        date:
+          type: string
+          format: date
+          readOnly: true
+          description: The ISO 8601 date of the agenda item.
+          example: '2021-07-03'
+    TextField:
+      title: TextField
+      description: A survey text field.
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Text field ID.
+          readOnly: true
+        text:
+          type: string
+          description: Text value of the field. Displays to users in the UI.
+          example: Are you spending any significant time offsite and need transportation?
+        shortText:
+          type: string
+          description: Concise version or abbreviation of the question text. Set by the planner to simplify presentation of
+            the question in reports.
+          example: Needs offsite transportation?
+    SupplierType:
+      title: SupplierType
+      description: 'Type of supplier. `CONVENTION_AND_CONFERENCE_CENTER`: Supplier of large event venues such as convention
+        centers, conference centers, and exposition halls. `CVB`: CVBs (Convention and Visitors Bureau) are suppliers that
+        assist in the promotion and facilitation of tourism, conventions, and events in their respective areas. `HOTEL`: Suppliers
+        that are hotels or resorts. `OTHER`: Suppliers that do not fall under other categories.'
+      type: string
+      enum:
+      - CONVENTION_AND_CONFERENCE_CENTER
+      - CVB
+      - HOTEL
+      - OTHER
+    PaginatedRfpAgendaItems:
+      title: PaginatedRfpAgendaItems
+      description: Paginated list of agenda items associated with an RFP.
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          description: List of agenda items associated with an RFP.
+          type: array
+          items:
+            $ref: '#/components/schemas/RfpAgendaItem'
+    AgendaItemSetup:
+      type: string
+      title: AgendaItemSetup
+      description: Setup type for the agenda.
+      enum:
+      - BUFFET
+      - CABARET
+      - CHEVRON
+      - CLASSROOM
+      - CONFERENCE
+      - CRESCENT_ROUNDS
+      - EIGHT_BY_TEN
+      - FLOW
+      - HERRINGBONE
+      - HOLLOW_SQUARE
+      - ISLAND
+      - OFFSITE
+      - OTHER
+      - PENINSULA
+      - PLATED
+      - RECEPTION
+      - ROUNDS
+      - ROUNDS_OF_10
+      - ROUNDS_OF_6
+      - ROUNDS_OF_8
+      - SCHOOL_ROOM
+      - TABLETOP
+      - TEN_BY_TEN
+      - THEATER
+      - T_SHAPED
+      - U_SHAPED
+    QuestionCommon:
+      title: QuestionCommon
+      description: Base model with common properties for a question.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/Audit'
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the question.
+          readOnly: true
+        text:
+          type: string
+          description: Text value of the question field. Displays to users in the UI.
+          example: Are you spending any significant time offsite and need transportation?
+        shortText:
+          type: string
+          description: Concise version or abbreviation of the question text. Set by the planner to simplify presentation of
+            the question in reports.
+          example: Needs offsite transportation?
+        htmlText:
+          type: string
+          description: Html of the question.
+          example: Question Html
+          maxLength: 5000
+        code:
+          type: string
+          description: Question code is unique identifier for every questions within a survey (can be same across surveys).
+            This code is used in reporting and in question and answer data tags for emails. With every new question a random
+            question code is generated.
+          example: 4l6x
+          maxLength: 30
+        type:
+          $ref: '#/components/schemas/QuestionType'
+        choices:
+          type: array
+          description: List of choices for the question.
+          items:
+            $ref: '#/components/schemas/Choice'
+          maxItems: 100
+        categories:
+          type: array
+          description: List of categories for the question.
+          items:
+            $ref: '#/components/schemas/Category'
+          maxItems: 100
+        subCategories:
+          type: array
+          description: List of sub categories for matrix side-by-side questions.
+          items:
+            $ref: '#/components/schemas/TextField'
+          maxItems: 100
+        notApplicableAnswer:
+          $ref: '#/components/schemas/AdditionalChoice'
+        otherAnswer:
+          $ref: '#/components/schemas/AdditionalChoice'
+        comments:
+          type: string
+          description: Text Value of Comments Input box placeholder.
+          example: Comments Text
+          maxLength: 16000
+        required:
+          type: boolean
+          default: false
+          description: True indicates this is a mandatory question field.
+          example: true
+        fields:
+          type: array
+          description: List of fields for form/matrix questions.
+          items:
+            $ref: '#/components/schemas/Field'
+          maxItems: 100
+        maxScore:
+          type: number
+          description: Max possible score.
+          example: 20
+          minimum: 0
+        totalSum:
+          type: integer
+          description: Total configured sum of all choices for number allocation question.
+          example: 45
+        choiceSortOrder:
+          $ref: '#/components/schemas/choice-sort-order'
+        displayType:
+          $ref: '#/components/schemas/display-type'
+        minSelection:
+          type: integer
+          description: Minimum number of choices that must be selected.
+          example: 1
+          default: 0
+        maxSelection:
+          type: integer
+          description: Maximum number of choices that can be selected.
+          example: 3
+          default: 0
+        minDate:
+          type: string
+          format: date
+          description: The earliest date that can be selected, starting from or after this date.
+          example: '2020-01-01'
+        maxDate:
+          type: string
+          format: date
+          description: The latest date that can be selected, up to or before this date.
+          example: '2020-12-31'
+        showDateSelector:
+          type: boolean
+          description: Indicates if this is a date range question.
+          example: true
+        showCurrentDate:
+          type: boolean
+          description: Indicates if the current date should be shown.
+          example: true
+        dateAnswerFormat:
+          $ref: '#/components/schemas/date-answer-format'
+        numericAnswerFormat:
+          $ref: '#/components/schemas/numeric-answer-format'
+        unitLabel:
+          type: string
+          description: Label to add before or after textbox.
+          example: miles
+        unitPosition:
+          $ref: '#/components/schemas/unit-position'
+        minLength:
+          type: integer
+          description: Minimum number of characters that must be entered.
+          example: 5
+          default: 0
+        maxLength:
+          type: integer
+          description: Maximum number of characters that can be entered.
+          example: 100
+          default: 500
+        textAnswerFormat:
+          $ref: '#/components/schemas/text-answer-format'
+        customAnswerFormat:
+          type: object
+          description: An object that contains custom answer format data.
+          properties:
+            id:
+              type: integer
+              description: The unique identifier of the custom answer format for the account.
+              example: 104
+    AgendaItemType:
+      type: string
+      title: AgendaItemType
+      description: Type of the agenda.
+      enum:
+      - BREAK
+      - BREAKFAST
+      - BREAKOUT
+      - DINNER
+      - EXHIBIT
+      - GENERAL_SESSION
+      - HOSPITALITY_DESK
+      - HOSPITALITY_SUITE
+      - LUNCH
+      - MEETING
+      - OFFICE
+      - OTHER
+      - RECEPTION
+      - REGISTRATION
+      - SETUP
+      - SNACK
+      - SPEAKER_ROOM
+      - STORAGE_ROOM
+      - TEARDOWN
+    RfpQuestion:
+      title: RfpQuestion
+      description: Question associated with an RFP.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/QuestionCommon'
+      properties:
+        supplierTypes:
+          type: array
+          description: List of supplier types that can view the question on the RFP.
+          items:
+            $ref: '#/components/schemas/SupplierType'
+          uniqueItems: true
+          example:
+          - CVB
+          - HOTEL
+        classificationType:
+          $ref: '#/components/schemas/QuestionClassificationType'
+        order:
+          type: integer
+          description: Determines the display order for questions on the RFP. Questions with smaller values appear first.
+          example: 1
+          minimum: 1
+        standardQuestion:
+          $ref: '#/components/schemas/StandardQuestion'
+        aiQuestionGenerationSource:
+          type: string
+          maxLength: 100
+          readOnly: true
+          description: Represents the AI generation source for the custom question on RFP. This field is set during question
+            creation and cannot be modified afterwards.
+          example: MCP-Visual Studio Code/1.107.1
+    GuestRoomOccupancy:
+      title: GuestRoomOccupancy
+      description: 'Guest room occupancy. `SINGLE`: Single occupant. `DOUBLE`: Two occupants. `TRIPLE`: Three occupants. `QUAD`:
+        Four occupants. '
+      type: string
+      enum:
+      - SINGLE
+      - DOUBLE
+      - TRIPLE
+      - QUAD
+      example: SINGLE
+    PaginatedRfpAttachments:
+      title: PaginatedRFPAttachments
+      description: Paginated list of RFP attachments.
+      type: object
+      required:
+      - paging
+      - data
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/RfpAttachment'
+          description: List of attachments added on an RFP.
+    RfpGuestRooms:
+      title: RfpGuestRooms
+      description: Guest Room Requirements
+      type: object
+      properties:
+        totalRooms:
+          description: Sum of the number of rooms required each night across all the nights for the event.
+          type: integer
+          readOnly: true
+          example: 24
+          minimum: 0
+          maximum: 9999000
+        peakRooms:
+          description: The number of rooms required during peak nights.
+          type: integer
+          readOnly: true
+          example: 24
+          minimum: 0
+          maximum: 49995
+        occupancies:
+          description: Occupancies for every room type.
+          type: array
+          items:
+            $ref: '#/components/schemas/GuestRoomOccupancyPerRoomType'
+          minItems: 0
+          maxItems: 5
+        checkInDate:
+          type: string
+          format: date
+          description: The ISO 8601 check-in date.
+          example: '2025-10-13'
+        roomBlocks:
+          description: List of room blocks required.
+          type: array
+          items:
+            $ref: '#/components/schemas/RoomBlock'
+          minItems: 0
+          maxItems: 200
+        additionalInformation:
+          type: string
+          description: Additional Info (if any).
+          example: 2 Executive suites are mandatory.
+          minLength: 0
+          maxLength: 2500
+    DocumentType-1:
+      type: string
+      title: DocumentType
+      readOnly: true
+      description: The document type.
+      enum:
+      - AI
+      - AVI
+      - BMP
+      - DOC
+      - DOCX
+      - EML
+      - EPS
+      - FLV
+      - GIF
+      - HTM
+      - HTML
+      - ICS
+      - JFIF
+      - JPEG
+      - JPG
+      - LINK
+      - MOV
+      - MP4
+      - MSG
+      - ONE
+      - OST
+      - PDF
+      - PNG
+      - PPT
+      - PPTX
+      - PST
+      - SVG
+      - TIF
+      - TIFF
+      - TXT
+      - WMV
+      - XLS
+      - XLSX
+    PaginationLinks:
+      title: PaginationLinks
+      type: object
+      description: Represents pagination links for navigating between pages of data.
+      properties:
+        next:
+          $ref: '#/components/schemas/Link'
+        self:
+          $ref: '#/components/schemas/Link'
+        prev:
+          $ref: '#/components/schemas/Link'
+    PaginatedRfpAgendaItemsSchedule:
+      title: PaginatedRfpAgendaItemsSchedule
+      description: Paginated list of agenda items schedule attached to an RFP.
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          description: List of agenda items schedule attached to an RFP.
+          type: array
+          items:
+            $ref: '#/components/schemas/RfpAgendaItemScheduleWithId'
+    Paging:
+      title: Paging
+      required:
+      - _links
+      type: object
+      description: Represents pagination information for a collection of resources.
+      properties:
+        previousToken:
+          type: string
+          description: The pagination token for the previous page, if one exists. You can use this token to navigate to the
+            previous page of data.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        nextToken:
+          type: string
+          description: The pagination token for the next page. If this value is present in the response, there is another
+            page of data you can fetch.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        currentToken:
+          type: string
+          description: The pagination token for the current page.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        limit:
+          type: integer
+          description: The number of records to return on the page. Not to exceed 200.
+          example: 100
+        totalCount:
+          type: integer
+          description: The total number of records available. This field may return blank, even if there are more records.
+            To confirm if there are more records, check the `nextToken` field.
+          example: 2
+        _links:
+          $ref: '#/components/schemas/PaginationLinks'
+    StandardQuestion:
+      title: StandardQuestion
+      description: Standard questions are selected from a predefined list of Cvent questions that can be used in an RFP.
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for standard question.
+          example: 50dc08af-24a9-4d01-84be-3d43133dc945
+    RfpInternalDocument:
+      type: object
+      title: RfpInternalDocument
+      description: This object contains RFP specific internal documents attributes only.
+      required:
+      - id
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique ID of the file.
+          example: f56a51a4-84b0-46c9-a612-716dc95a1c96
+        created:
+          type: string
+          format: date-time
+          description: ISO 8601 date-time the document was uploaded.
+          example: '2021-01-13T14:06:20.080Z'
+        name:
+          type: string
+          description: Display name of the document.
+          example: BudgetCostSavings
+        uniqueName:
+          type: string
+          description: Name of the document. Must be unique in the account.
+          example: 183f9efaa4c14070985782ee31abbf3c.jpg
+          readOnly: true
+        size:
+          type: integer
+          format: int64
+          description: The size of document in bytes.
+          example: 777835
+          readOnly: true
+        url:
+          type: string
+          format: uri
+          description: URL of the document if `secure` is false. This field is null if `secure` is true.
+          example: https://custom.cvent.com/0B7DEF22676A4434982BDAD2D6EC591F/files/supplier/0713cef78d4e4d818899d4522022d5ad/73ab2e3054fd4321a5e0f846a7adb0d7.jpg
+        type:
+          $ref: '#/components/schemas/DocumentType-1'
+        mimeType:
+          type: string
+          description: The content type of the document.
+          example: image/jpeg
+    Category:
+      title: Category
+      description: A question category.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/TextField'
+      properties:
+        required:
+          type: boolean
+          default: false
+          description: True indicates the category is mandatory for answer.
+          example: true
+    PaginatedInternalDocuments:
+      title: PaginatedInternalDocuments
+      description: Paginated list of internal documents attached to an RFP.
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          description: List of internal documents linked to an RFP.
+          type: array
+          items:
+            $ref: '#/components/schemas/RfpInternalDocument'
+    AttachmentSource:
+      type: string
+      title: AttachmentSource
+      description: The source from where the attachment was uploaded.
+      enum:
+      - FILE_COPY_ADMIN_LIBRARY
+      - FILE_UPLOAD_LINK_URL
+      - FILE_UPLOAD_TO_CUSTOM_DRIVE
+      - FILE_UPLOAD_TO_TEMP_LOCATION
+      - USER_DOCUMENT_LINK_URL
+    Field:
+      title: Field
+      description: A question field.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/TextField'
+      properties:
+        type:
+          $ref: '#/components/schemas/FieldType'
+        choices:
+          type: array
+          description: List of choices for this field.
+          items:
+            $ref: '#/components/schemas/Choice'
+          minItems: 1
+          maxItems: 100
+        notApplicableAnswer:
+          $ref: '#/components/schemas/AdditionalChoice'
+        otherAnswer:
+          $ref: '#/components/schemas/AdditionalChoice'
+        required:
+          type: boolean
+          default: false
+          description: True indicates this is a mandatory question field.
+          example: true
+    Audit:
+      title: Audit
+      description: Audit information
+      type: object
+      properties:
+        created:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date time when this record was created.
+          readOnly: true
+          example: '2017-01-02T02:00:00Z'
+        createdBy:
+          type: string
+          description: The identifier of the user that created this record.
+          readOnly: true
+          example: hporter
+        lastModified:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date time when this record was updated.
+          readOnly: true
+          example: '2019-02-12T03:00:00Z'
+        lastModifiedBy:
+          type: string
+          description: The identifier of the user that last updated this record.
+          readOnly: true
+          example: hporter
+    ErrorResponse-12:
+      title: ErrorResponse
+      description: Represents an error response with additional details of cascading error messages.
+      allOf:
+      - $ref: '#/components/schemas/ErrorResponseBase1'
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorResponseBase1'
+          description: Additional details of cascading error messages.
+  responses:
+    NotFound1:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 404
+            message: Not found
+    BadRequest1:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 400
+            message: Bad Request
+    TooManyRequests1:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 429
+            message: Limit Exceeded
+    Unauthorized1:
+      description: Bad or expired token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 401
+            message: Unauthorized
+    Forbidden1:
+      description: You do not have access to the resource
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 403
+            message: Access Forbidden
+  parameters:
+    customFieldExpand:
+      name: expand
+      in: query
+      explode: false
+      required: false
+      description: "This endpoint allows you to request additional information as an expanded response using the expand query\
+        \ parameter. The expanded entity is retrieved and displayed inline for each specified expand value.\n\nAn object contains\
+        \ the ID of a related object in its response properties. For example, the RFP custom field\nwill have the custom field\
+        \ ID associated with the RFP custom field. You can expand these objects in-line using the expand query parameter.\n\
+        \nYou can expand multiple objects at the same time by identifying multiple items in the expand array.\n\nThe respective\
+        \ scopes for each expansion are required.\n\nThe following fields are expandable:\n  * customField\n    * **Scope**:\
+        \ event/custom-fields:read\n    * **Reference**: <a href=\"#tag/Custom-Fields/operation/getCustomField\">Get Custom\
+        \ Field</a>\n"
+      example:
+      - customField
+      schema:
+        type: array
+        items:
+          type: string
+          enum:
+          - customField
+    token:
+      name: token
+      in: query
+      description: 'The continuation token returned from a previous class. This must be a valid UUID v4 if provided.
+
+        This will override any other pageable parameters provided.
+
+        '
+      style: form
+      explode: true
+      schema:
+        type: string
+        example: 0e28af57-511f-47ab-ae46-46cd1ca51a1a
+    limit:
+      name: limit
+      in: query
+      description: The maximum number of records to return per page.
+      style: form
+      explode: true
+      schema:
+        maximum: 200
+        minimum: 1
+        type: integer
+        default: 100
+        example: 100
+    rfpId:
+      name: rfpId
+      description: The unique identifier of the RFP we are requesting
+      style: simple
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+  securitySchemes:
+    OAuth2.clientCredentials:
+      type: oauth2
+      description: OAuth2 Client Credentials Flow.
+      flows:
+        clientCredentials:
+          tokenUrl: https://api-platform.cvent.com/ea/oauth2/token
+          scopes:
+            account/hooks:delete: Allows the deletion of hooks.
+            account/hooks:read: Allows the reading of hooks.
+            account/hooks:write: Allows the creation/updation of hooks.
+            account/user-groups:delete: Allows deletion for user groups
+            account/user-groups:read: Allows the reading of user groups
+            account/user-groups:write: Allows the writing of user groups
+            account/users:delete: Allows the deletion of User
+            account/users:read: Allows the reading of User, User Group
+            account/users:write: Allows the creation/updating of User
+            appointments/appointment-attendees:read: Allows the reading of appointment attendees and their related entities.
+            appointments/appointment-events:read: Allows the reading of appointment events and their related entities.
+            appointments/appointment-types:read: Allows the reading of appointment types and their related entities.
+            appointments/appointments:read: Allows the reading of appointment and their related entities.
+            appointments/appointments:write: Allows the writing of appointments and their related entities.
+            appointments/available-times:read: Allows the reading of availability times.
+            appointments/locations:read: Allows the reading of appointment locations and their related entities.
+            attendee-insights/attendee-insights:read: Allows the reading of engagement scores (attendee insights).
+            attendee-insights/scores:read: Allows the reading of scores.
+            attendee-insights/stats:read: Allows the reading of engagement score (attendee insight) stats.
+            budget/budget-items:delete: Allows the deletion of budget items
+            budget/budget-items:read: Allows the reading of all budget items
+            budget/budget-items:write: Allows creation/updation of budget item
+            budget/budget-totals:read: Allows the reading of all event budget totals
+            budget/budget-vendors:read: Allows reading of account-level budget vendors.
+            budget/cards:read: Allows the reading of cards
+            budget/currency-conversion-rate:delete: Allows deletion of currency conversion rate for currency.
+            budget/currency-conversion-rate:read: Allows reading of currency conversion rate for currency.
+            budget/currency-conversion-rate:write: Allows creation/update of currency conversion rate for currency.
+            budget/payments:delete: Allows deletion of payments.
+            budget/payments:read: Allows reading of payment for budget item.
+            budget/payments:write: Allows creation of payment in a budget item.
+            budget/transactions:delete: Allows delete card transactions.
+            budget/transactions:read: Allows the reading of all card's transactions
+            budget/transactions:write: Allows creation of card transactions.
+            bulk/bulk-jobs:read: Allows the reading of bulk job related entities
+            bulk/bulk-jobs:write: Allows the creation, update and deletion of bulk job related entities
+            business-transient/bids:read: Allows the reading of Business Transient Bid data
+            business-transient/proposals:read: Allows the reading of Business Transient Proposal data
+            business-transient/supplier-brands:read: Allows the reading of a supplier brand or a list of travel supplier brands.
+            business-transient/supplier-chains:read: Allows the reading of a travel supplier chain or a list of travel supplier
+              chains.
+            business-transient/supplier-properties:read: Allows the reading of a travel supplier property or a list of travel
+              supplier properties.
+            business-transient/supplier-property-rooms:read: Allows the reading of a list of travel supplier property rooms.
+            business-transient/travel-accounts:read: Allows the reading of business transient travel account data.
+            business-transient/travel-program-questions:read: Allows the reading of business transient travel program question
+              data.
+            business-transient/travel-programs:read: Allows the reading of business transient travel program data.
+            business-transient/travel-supplier-accounts:read: Allows the reading of business transient travel supplier account
+              data.
+            business-travel/bids:read: Allows the reading of Business Travel Bid data
+            business-travel/proposals:read: Allows the reading of Business Travel Proposal data
+            business-travel/travel-accounts:read: Allows the reading of business travel account data.
+            business-travel/travel-program-questions:read: Allows the reading of business travel program question data.
+            business-travel/travel-programs:read: Allows the reading of business travel program data.
+            compliance/communications:read: Allows the reading of communication compliance
+            compliance/communications:write: Allows the writing of communication compliance
+            email/bounces:read: Allow the reading of email bounces.
+            email/email-status:read: Allows the reading of email statuses.
+            email/emails:read: Allows the reading of emails.
+            eMarketing/campaigns:read: Allows the reading of campaigns.
+            emarketing/emarketing-email-status:read: Allows the reading of eMarketing email statuses.
+            eMarketing/eMarketing-email-templates:read: Allows the reading of email-templates.
+            eMarketing/eMarketing-send-emails:write: Allows the writing of eMarketing emails.
+            event/admission-items:read: Allows the reading of admission items
+            event/air-request:read: Allow reading the air request or air actual detail for attendees.
+            event/alternate-travel:read: Allow reading the alternate travel answers for attendees.
+            event/attendance-durations:read: Allows the read of Duration records
+            event/attendee-activities-metadata:delete: Allows the deletion of attendees activities metadata.
+            event/attendee-activities-metadata:read: Allows the reading of attendee activities metadata.
+            event/attendee-activities-metadata:write: Allows the creation/updating of attendees activities metadata.
+            event/attendee-activities:read: Allows the reading of attendee activities.
+            event/attendee-activities:write: Allows the writing of external attendee activities.
+            event/attendee-credits:read: Allows the reading of attendee credits.
+            event/attendee-links:delete: Allows the deletion of attendee links
+            event/attendee-links:read: Allows the reading of attendee links
+            event/attendee-links:write: Allows the creation of attendee links
+            event/attendee-messages:read: Allows the reading of attendee messages
+            event/attendees:read: Allows the reading of attendees.
+            event/attendees:write: Allows the creation of an attendee in an event.
+            event/audience-segments:read: Allows the reading of audience segments.
+            event/audience-segments:write: Allows the creation/updating/deletion of audience segments.
+            event/contact-groups:read: Allows the reading of contact groups.
+            event/contact-groups:write: Allows the creation/updating of contact groups.
+            event/contact-types:read: Allows the reading of contact types.
+            event/contacts:delete: Allows the deletion of contacts.
+            event/contacts:read: Allows the reading of contacts.
+            event/contacts:write: Allows the creation/updating of contacts.
+            event/contacts:write-sensitive: Allows the creation/updating of sensitive data related to contacts.
+            event/custom-fields:read: Allows the reading of custom fields
+            event/custom-fields:write: Allows the writing of custom fields
+            event/discounts:write: Allows the writing of discounts
+            event/donation-items:read: Allows the reading of donation items.
+            event/event-discounts:read: Allows the reading of event discounts.
+            event/event-discounts:write: Allows the writing of event discounts.
+            event/event-email-status:read: Allows the reading of event email statuses.
+            event/event-emails:read: Allows the reading of event emails
+            event/event-emails:write: Allows to send event emails.
+            event/event-features:read: Allows the reading of events-features
+            event/event-features:write: Allows updating the event-features
+            event/event-user-groups:read: Allows the reading of user groups
+            event/event-user-groups:write: Allows associating/disassociating user groups to event
+            event/events:read: Allows the reading of events
+            event/events:write: Allows the creation/updating of events
+            event/fee-items:read: Allows the reading of fee items.
+            event/hotel-request:read: Allow reading the hotel request or housing reservation request detail for attendees.
+            event/invitation-lists:read: Allows the reading of the invitation lists for an event
+            event/meeting-request-forms:read: Allows the reading of meeting request forms.
+            event/meeting-requests:read: Allows the reading of meeting requests.
+            event/meeting-requests:write: Allows the creation/updating of meeting requests.
+            event/membership-items:read: Allows reading of membership items.
+            event/orders:read: Allows the reading of orders
+            event/planning-documents:read: Allows the reading of event planning documents
+            event/players:read: Allows the reading of players
+            event/process-form-submissions:read: Allows the reading of process form submissions.
+            event/program-items:delete: Allows deletion of session program items
+            event/program-items:read: Allows reading of session program items
+            event/program-items:write: Allows writing of session program items
+            event/quantity-items:read: Allows the reading of quantity items.
+            event/quantity-items:write: Allows the writing of quantity items
+            event/registration-paths:read: Allows the reading of registration paths
+            event/registration-types:read: Allows the reading of registration types
+            event/registration-types:write: Allows the writing of registration types
+            event/role-assignments:read: Allows the reading of event role assignment.
+            event/session-attendance:read: Allows the reading of sessions attendance
+            event/session-attendance:write: Allows the creation/updating of sessions attendance
+            event/session-categories:read: Allows reading of session categories
+            event/session-categories:write: Allows writing of session categories
+            event/session-enrollment:delete: Allows the deletion of session registrations
+            event/session-enrollment:read: Allows the reading of sessions registrations
+            event/session-enrollment:write: Allows the writing of sessions registrations
+            event/session-segments:read: Allows reading of session segments
+            event/sessions:delete: Allows the deletion of a session in an event
+            event/sessions:read: Allows the reading of sessions
+            event/sessions:write: Allows the creation of a session in an event
+            event/speaker-categories:read: Allows reading of speaker categories
+            event/speaker-categories:write: Allows writing of speaker categories
+            event/speakers:delete: Allows the deletion of a speaker in an event
+            event/speakers:read: Allows the reading of speakers
+            event/speakers:write: Allows the creation of a speaker in an event
+            event/taxes:read: Allows the reading of taxes.
+            event/transactions:read: Allows the reading of transactions
+            event/transactions:write: Allows the writing of transactions
+            event/video-views:read: Allows reading of video views.
+            event/videos:read: Allows the reading of video data.
+            event/videos:write: Allows the creation/updating of video data.
+            event/vouchers:read: Allows reading of event vouchers.
+            event/webcasts:delete: Allows the deletion of webcast
+            event/webcasts:read: Allows the reading of webcasts
+            event/webcasts:write: Allows the creation of webcast
+            event/weblinks:read: Allows the reading of event weblinks
+            events-plus/hubs:read: Allows the reading of Events+ hub data.
+            exhibitor/badges:read: Allows reading badges
+            exhibitor/badges:write: Allows creating/updating badges
+            exhibitor/booth-staff:delete: Allows deleting booth staff
+            exhibitor/booth-staff:read: Allows reading booth staff
+            exhibitor/booth-staff:write: Allows creating booth staff
+            exhibitor/eliterature-requests:read: Allows reading eliterature document request data
+            exhibitor/exhibitor-admins:read: Allows reading exhibitor admins
+            exhibitor/exhibitor-admins:write: Allows creating/updating exhibitor admins
+            exhibitor/exhibitor-answers:read: Allows reading exhibitor answers
+            exhibitor/exhibitor-answers:write: Allows updating exhibitor answers
+            exhibitor/exhibitor-categories:delete: Allows deleting exhibitor categories
+            exhibitor/exhibitor-categories:read: Allows reading exhibitor categories
+            exhibitor/exhibitor-categories:write: Allows creating/updating exhibitor categories
+            exhibitor/exhibitor-contents:delete: Allows deleting exhibitor content
+            exhibitor/exhibitor-contents:read: Allows reading exhibitor content
+            exhibitor/exhibitor-contents:write: Allows creating/updating exhibitor content
+            exhibitor/exhibitor-questions:read: Allows reading exhibitor questions
+            exhibitor/exhibitors:delete: Allows deleting exhibitors
+            exhibitor/exhibitors:read: Allows reading exhibitors
+            exhibitor/exhibitors:write: Allows creating/updating exhibitors
+            exhibitor/lead-qualification-answers:read: Allows reading Lead Qualification Answers
+            exhibitor/lead-qualification-questions:read: Allows reading Lead Qualification Questions.
+            exhibitor/leads:read: Allows reading leads.
+            exhibitor/registration-packs:delete: Allows deleting registration pack
+            exhibitor/registration-packs:read: Allows reading registration pack
+            exhibitor/registration-packs:write: Allows creating/updating registration pack
+            exhibitor/sponsorship-levels:read: Allows reading sponsorship level
+            file/file:read: Allows the reading of file
+            file/file:write: Allows the uploading of file
+            housing/connections:write: Allows the user to connect to the Reglink APIs.
+            housing/hotel-room-rates:write: Allows the user to create/update hotel room rates.
+            housing/housing-event-available-nights:read: Allows the user to read availability information for given event.
+            housing/housing-event-hotels:read: Allows the user to read information about event hotels.
+            housing/housing-event-inventory:read: Allows the user to get information about housing event inventory.
+            housing/housing-event-room-types:read: Allows the user to read information about event room types.
+            housing/housing-events:read: Allows the user to read information about events.
+            housing/reservation-requests:delete: Allows the user to cancel reservation request.
+            housing/reservation-requests:read: Allows the user to read reservation request information.
+            housing/reservation-requests:write: Allows the user to create/update reservation request.
+            housing/reservations-link:delete: Allows the user to remove association from reservation.
+            housing/reservations-link:write: Allows the user to associate reservation to reservation request.
+            housing/reservations:delete: Allows the user to cancel reservation.
+            housing/reservations:read: Allows the user to read reservation details information.
+            housing/reservations:write: Allows the user to create/update reservation.
+            onsite/signatures:read: Allows reading signatures.
+            proposal/proposals:write: Allows the creation/writing of proposal
+            remote-printing/badge-print-jobs:read: Allows reading print jobs.
+            remote-printing/badge-print-jobs:write: Allows creating print jobs.
+            remote-printing/badge-printer-pools:read: Allows reading pools.
+            rfp/rfp-agenda-items:read: Allows the reading of RFP agenda items.
+            rfp/rfp-attachments:read: Allows the reading of RFP attachments.
+            rfp/rfp-custom-fields:read: Allows the reading of RFP custom fields.
+            rfp/rfp-guest-rooms:read: Allows the reading of RFP guest rooms.
+            rfp/rfp-internal-documents:read: Allows the reading of RFP internal documents.
+            rfp/rfp-lead-sources:read: Allows the reading of RFP lead sources.
+            rfp/rfp-past-events:read: Allows the reading of past events similar to rfp event.
+            rfp/rfp-questions:read: Allows the reading of RFP questions.
+            rfp/rfp-recipients-history:read: Allows the reading of RFP recipients history.
+            rfp/rfp-suppliers:read: Allows the reading of RFP suppliers.
+            rfp/rfps:read: Allows the reading of basic details of RFP.
+            seating/assignments:read: Allows to read attendee seat assignment information.
+            seating/event-seatings:read: Allows to read event seating.
+            seating/seats:read: Allows to read seat information.
+            seating/tables:read: Allows to read table information.
+            secure-ecommerce/card-tokens:write: Allows creation of credit card tokens
+            survey/questions:read: Allows the reading of survey questions
+            survey/respondents:read: Allows reading the survey respondents
+            survey/responses:read: Allows reading the survey responses
+            survey/standard-survey-email-templates:read: Allows reading the standalone survey email templates
+            survey/standard-survey-email:write: Allows writing operations on standalone survey emails
+            survey/standard-survey-questions:read: Allows the reading of standalone surveys questions
+            survey/standard-survey-respondents:read: Allows reading the standalone survey respondents
+            survey/standard-survey-respondents:write: Allows write operations on standalone survey respondents
+            survey/standard-survey-responses:read: Allows reading the standalone survey responses
+            survey/standard-survey-responses:write: Allows write operations on standalone surveys respondent's responses
+            survey/standard-surveys:read: Allows the reading of standalone surveys
+            survey/survey-questions:read: Allows the reading of event survey questions
+            survey/survey-respondents:read: Allows reading the event survey respondents
+            survey/survey-respondents:write: Allows write operations on the event survey respondents
+            survey/survey-responses:read: Allows reading the event survey responses
+            survey/survey-responses:write: Allows write operations on the event surveys respondent's responses
+            survey/surveys:read: Allows the reading of event surveys
+            venue/meeting-room-images:delete: Allows disassociating images from meeting rooms.
+            venue/meeting-room-images:read: Allows retrieving meeting room images.
+            venue/meeting-room-images:write: Allows associating images with meeting rooms.
+            venue/meeting-room-overviews:read: Allows read access for overview of meeting room.
+            venue/meeting-rooms:write: Allows the creation and modification of meeting rooms.
+            venue/venue-details-overview:read: Allows read access for overview of venue details.
+            venue/venue-details:write: Allows the creation and modification of venue details.
+            venue/venue-facility:write: Allows the modification of venue facility information.
+    OAuth2.authorizationCode:
+      type: oauth2
+      description: OAuth2 Authorization Code Flow.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api-platform.cvent.com/ea/oauth2/authorize
+          tokenUrl: https://api-platform.cvent.com/ea/oauth2/token
+          scopes:
+            account/hooks:delete: Allows the deletion of hooks.
+            account/hooks:read: Allows the reading of hooks.
+            account/hooks:write: Allows the creation/updation of hooks.
+            account/user-groups:delete: Allows deletion for user groups
+            account/user-groups:read: Allows the reading of user groups
+            account/user-groups:write: Allows the writing of user groups
+            account/users:delete: Allows the deletion of User
+            account/users:read: Allows the reading of User, User Group
+            account/users:write: Allows the creation/updating of User
+            appointments/appointment-attendees:read: Allows the reading of appointment attendees and their related entities.
+            appointments/appointment-events:read: Allows the reading of appointment events and their related entities.
+            appointments/appointment-types:read: Allows the reading of appointment types and their related entities.
+            appointments/appointments:read: Allows the reading of appointment and their related entities.
+            appointments/appointments:write: Allows the writing of appointments and their related entities.
+            appointments/available-times:read: Allows the reading of available times.
+            appointments/locations:read: Allows the reading of appointment locations and their related entities.
+            attendee-insights/attendee-insights:read: Allows the reading of engagement scores (attendee insights).
+            attendee-insights/scores:read: Allows the reading of scores.
+            attendee-insights/stats:read: Allows the reading of engagement score (attendee insight) stats.
+            budget/budget-items:delete: Allows the deletion of budget items
+            budget/budget-items:read: Allows the reading of all budget items
+            budget/budget-items:write: Allows creation/updation of budget item
+            budget/budget-totals:read: Allows the reading of all event budget totals
+            budget/budget-vendors:read: Allows reading of account-level budget vendors.
+            budget/cards:read: Allows the reading of cards
+            budget/currency-conversion-rate:delete: Allows deletion of currency conversion rate for currency.
+            budget/currency-conversion-rate:read: Allows reading of currency conversion rate for currency.
+            budget/currency-conversion-rate:write: Allows creation/update of currency conversion rate for currency.
+            budget/payments:delete: Allows deletion of payments.
+            budget/payments:read: Allows reading of payment for budget item.
+            budget/payments:write: Allows creation of payment in a budget item.
+            budget/transactions:delete: Allows delete card transactions.
+            budget/transactions:read: Allows the reading of all card's transactions
+            budget/transactions:write: Allows creation of card transactions.
+            business-transient/bids:read: Allows the reading of BT Bid data
+            business-transient/proposals:read: Allows the reading of BT Proposal data
+            business-travel/bids:read: Allows the reading of BT Bid data
+            business-travel/proposals:read: Allows the reading of BT Proposal data
+            compliance/communications:read: Allows the reading of communication compliance
+            compliance/communications:write: Allows the writing of communication compliance
+            email/bounces:read: Allow the reading of email bounces.
+            email/email-status:read: Allows the reading of email statuses.
+            email/emails:read: Allows the reading of emails.
+            eMarketing/campaigns:read: Allows the reading of campaigns.
+            emarketing/emarketing-email-status:read: Allows the reading of eMarketing email statuses.
+            eMarketing/eMarketing-email-templates:read: Allows the reading of email-templates.
+            eMarketing/eMarketing-send-emails:write: Allows the writing of eMarketing emails.
+            event/admission-items:read: Allows the reading of admission items
+            event/air-request:read: Allow reading the air request or air actual detail for attendees.
+            event/alternate-travel:read: Allow reading the alternate travel answers for attendees.
+            event/attendance-durations:read: Allows the read of Duration records
+            event/attendee-activities-metadata:delete: Allows the deletion of attendees activities metadata.
+            event/attendee-activities-metadata:read: Allows the reading of attendee activities metadata.
+            event/attendee-activities-metadata:write: Allows the creation/updating of attendees activities metadata.
+            event/attendee-activities:read: Allows the reading of attendee activities.
+            event/attendee-activities:write: Allows the writing of attendee activities.
+            event/attendee-credits:read: Allows the reading of attendee credits.
+            event/attendee-links:delete: Allows the deletion of attendee links
+            event/attendee-links:read: Allows the reading of attendee links
+            event/attendee-links:write: Allows the creation of attendee links
+            event/attendee-messages:read: Allows the reading of attendee messages
+            event/attendees:read: Allows the reading of attendees.
+            event/attendees:write: Allows the creation of an attendee in an event.
+            event/audience-segments:read: Allows the reading of audience segments.
+            event/audience-segments:write: Allows the creation/updating/deletion of audience segments.
+            event/contact-groups:read: Allows the reading of contact groups.
+            event/contact-groups:write: Allows the creation/updating of contact groups.
+            event/contact-types:read: Allows the reading of contact types.
+            event/contacts:delete: Allows the deletion of contacts.
+            event/contacts:read: Allows the reading of contacts.
+            event/contacts:write: Allows the creation/updating of contacts.
+            event/contacts:write-sensitive: Allows the creation/updating of sensitive data related to contacts.
+            event/custom-fields:read: Allows the reading of custom fields
+            event/custom-fields:write: Allows the writing of custom fields
+            event/discounts:write: Allows the writing of discounts
+            event/donation-items:read: Allows the reading of donation items.
+            event/event-discounts:read: Allows the reading of event discounts.
+            event/event-discounts:write: Allows the writing of event discounts.
+            event/event-email-status:read: Allows the reading of event email statuses.
+            event/event-emails:read: Allows the reading of event emails
+            event/event-emails:write: Allows to send event emails.
+            event/event-features:read: Allows the reading of events-features
+            event/event-features:write: Allows updating the event-features
+            event/event-user-groups:read: Allows the reading of user groups
+            event/event-user-groups:write: Allows associating/disassociating user groups to event
+            event/events:read: Allows the reading of events
+            event/events:write: Allows the creation/updating of events
+            event/fee-items:read: Allows the reading of fee items.
+            event/hotel-request:read: Allow reading the hotel request or housing reservation request detail for attendees.
+            event/invitation-lists:read: Allows the reading of the invitation lists for an event
+            event/meeting-request-forms:read: Allows the reading of meeting request forms.
+            event/meeting-requests:read: Allows the reading of meeting requests.
+            event/meeting-requests:write: Allows the creation/updating of meeting requests.
+            event/membership-items:read: Allows reading of membership items.
+            event/orders:read: Allows the reading of orders
+            event/planning-documents:read: Allows the reading of event planning documents
+            event/players:read: Allows the reading of players
+            event/process-form-submissions:read: Allows the reading of process form submissions.
+            event/program-items:delete: Allows deletion of session program items
+            event/program-items:read: Allows reading of session program items
+            event/program-items:write: Allows writing of session program items
+            event/quantity-items:read: Allows the reading of quantity items.
+            event/quantity-items:write: Allows the writing of quantity items
+            event/registration-paths:read: Allows the reading of registration paths
+            event/registration-types:read: Allows the reading of registration types
+            event/registration-types:write: Allows the writing of registration types
+            event/role-assignments:read: Allows the reading of event role assignment.
+            event/session-attendance:read: Allows the reading of sessions attendance
+            event/session-attendance:write: Allows the creation/updating of sessions attendance
+            event/session-categories:read: Allows reading of session categories
+            event/session-categories:write: Allows writing of session categories
+            event/session-enrollment:delete: Allows the deletion of session registrations
+            event/session-enrollment:read: Allows the reading of sessions registrations
+            event/session-enrollment:write: Allows the writing of sessions registrations
+            event/session-segments:read: Allows reading of session segments
+            event/sessions:delete: Allows the deletion of a session in an event
+            event/sessions:read: Allows the reading of sessions
+            event/sessions:write: Allows the creation of a session in an event
+            event/speaker-categories:read: Allows reading of speaker categories
+            event/speaker-categories:write: Allows writing of speaker categories
+            event/speakers:delete: Allows the deletion of a speaker in an event
+            event/speakers:read: Allows the reading of speakers
+            event/speakers:write: Allows the creation of a speaker in an event
+            event/taxes:read: Allows the reading of taxes.
+            event/transactions:read: Allows the reading of transactions
+            event/transactions:write: Allows the writing of transactions
+            event/video-views:read: Allows reading of video views.
+            event/videos:read: Allows the reading of video data.
+            event/videos:write: Allows the creation/updating of video data.
+            event/vouchers:read: Allows reading of event vouchers and their associated attendees.
+            event/webcasts:delete: Allows the deletion of webcast
+            event/webcasts:read: Allows the reading of webcasts
+            event/webcasts:write: Allows the creation of webcast
+            event/weblinks:read: Allows the reading of event weblinks
+            events-plus/hubs:read: Allows the reading of Events+ hub data.
+            exhibitor/badges:read: Allows reading badges
+            exhibitor/badges:write: Allows creating/updating badges
+            exhibitor/booth-staff:delete: Allows deleting booth staff
+            exhibitor/booth-staff:read: Allows reading booth staff
+            exhibitor/booth-staff:write: Allows creating booth staff
+            exhibitor/eliterature-requests:read: Allows reading eliterature document request data
+            exhibitor/exhibitor-admins:read: Allows reading exhibitor admins
+            exhibitor/exhibitor-admins:write: Allows creating/updating exhibitor admins
+            exhibitor/exhibitor-answers:read: Allows reading exhibitor answers
+            exhibitor/exhibitor-answers:write: Allows updating exhibitor answers
+            exhibitor/exhibitor-categories:delete: Allows deleting exhibitor categories
+            exhibitor/exhibitor-categories:read: Allows reading exhibitor categories
+            exhibitor/exhibitor-categories:write: Allows creating/updating exhibitor categories
+            exhibitor/exhibitor-contents:delete: Allows deleting exhibitor content
+            exhibitor/exhibitor-contents:read: Allows reading exhibitor content
+            exhibitor/exhibitor-contents:write: Allows creating/updating exhibitor content
+            exhibitor/exhibitor-questions:read: Allows reading exhibitor questions
+            exhibitor/exhibitors:delete: Allows deleting exhibitors
+            exhibitor/exhibitors:read: Allows reading exhibitors
+            exhibitor/exhibitors:write: Allows creating/updating exhibitors
+            exhibitor/lead-qualification-answers:read: Allows reading Lead Qualification Answers
+            exhibitor/lead-qualification-questions:read: Allows reading Lead Qualification Questions.
+            exhibitor/leads:read: Allows reading leads.
+            exhibitor/registration-packs:delete: Allows deleting registration pack
+            exhibitor/registration-packs:read: Allows reading registration pack
+            exhibitor/registration-packs:write: Allows creating/updating registration pack
+            exhibitor/sponsorship-levels:read: Allows reading sponsorship level
+            file/file:read: Allows the reading of file
+            file/file:write: Allows the uploading of file
+            onsite/signatures:read: Allows reading signatures.
+            remote-printing/badge-print-jobs:read: Allows reading print jobs.
+            remote-printing/badge-print-jobs:write: Allows creating print jobs.
+            remote-printing/badge-printer-pools:read: Allows reading pools.
+            rfp/rfp-agenda-items:read: Allows the reading of RFP agenda items.
+            rfp/rfp-attachments:read: Allows the reading of RFP attachments.
+            rfp/rfp-custom-fields:read: Allows the reading of RFP custom fields.
+            rfp/rfp-guest-rooms:read: Allows the reading of RFP guest rooms.
+            rfp/rfp-internal-documents:read: Allows the reading of RFP internal documents.
+            rfp/rfp-lead-sources:read: Allows the reading of RFP lead sources.
+            rfp/rfp-past-events:read: Allows the reading of past events similar to rfp event.
+            rfp/rfp-questions:read: Allows the reading of RFP questions.
+            rfp/rfp-recipients-history:read: Allows the reading of RFP recipients history.
+            rfp/rfp-suppliers:read: Allows the reading of RFP suppliers.
+            rfp/rfps:read: Allows the reading of basic details of RFP.
+            seating/assignments:read: Allows to read attendee seat assignment information.
+            seating/event-seatings:read: Allows to read event seating.
+            seating/seats:read: Allows to read seat information.
+            seating/tables:read: Allows to read table information.
+            survey/questions:read: Allows the reading of survey questions
+            survey/respondents:read: Allows reading the survey respondents
+            survey/responses:read: Allows reading the survey responses
+            survey/standard-survey-email-templates:read: Allows reading the standalone survey email templates
+            survey/standard-survey-email:write: Allows writing operations on standalone survey emails
+            survey/standard-survey-questions:read: Allows the reading of standalone surveys questions
+            survey/standard-survey-respondents:read: Allows reading the standalone survey respondents
+            survey/standard-survey-respondents:write: Allows write operations on standalone survey respondents
+            survey/standard-survey-responses:read: Allows reading the standalone survey responses
+            survey/standard-survey-responses:write: Allows write operations on standalone surveys respondent's responses
+            survey/standard-surveys:read: Allows the reading of standalone surveys
+            survey/survey-questions:read: Allows the reading of event survey questions
+            survey/survey-respondents:read: Allows reading the event survey respondents
+            survey/survey-respondents:write: Allows write operations on the event survey respondents
+            survey/survey-responses:read: Allows reading the event survey responses
+            survey/survey-responses:write: Allows write operations on the event surveys respondent's responses
+            survey/surveys:read: Allows the reading of event surveys
+            venue/meeting-room-images:delete: Allows disassociating images from meeting rooms.
+            venue/meeting-room-images:read: Allows retrieving meeting room images.
+            venue/meeting-room-images:write: Allows associating images with meeting rooms.
+            venue/meeting-room-overviews:read: Allows read access for overview of meeting room.
+            venue/meeting-rooms:write: Allows the creation and modification of meeting rooms.
+            venue/venue-details-overview:read: Allows read access for overview of venue details.
+            venue/venue-details:write: Allows the creation and modification of venue details.
+            venue/venue-facility:write: Allows the modification of venue facility information.

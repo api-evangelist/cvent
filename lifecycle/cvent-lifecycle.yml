@@ -1,0 +1,65 @@
+generated: '2026-09-07'
+method: searched
+source: https://developers.cvent.com/documentation; https://developers.cvent.com/docs/rest-api/changelog; https://developers.cvent.com/docs/legacy-api/soap-api/overview;
+  https://status.cvent.com
+versioning:
+  scheme: URI path
+  current_version: ea
+  supported_versions:
+  - ea
+  policy: Backward-compatible changes ship continuously; backward-incompatible changes create a new URI version
+    while the existing version is deprecated and remains available for a limited period.
+  backward_compatible_changes:
+  - Adding new resources
+  - Adding new optional request parameters
+  - Adding new attributes to requests or responses
+  - Changing the length or format (not type) of resource identifiers
+  - Increasing the length of string fields
+  breaking_changes:
+  - Adding a new required parameter
+  - Deleting API resources
+  - Deleting any attribute from API responses
+  - Changing the data type of any parameter or attribute
+  consumer_obligation: Clients must tolerate unknown attributes and must not depend on JSON property order.
+  evidence:
+  - https://developers.cvent.com/documentation
+deprecation:
+  policy_published: true
+  detail: Cvent states that when breaking changes occur a new version is published while the existing version is
+    deprecated but remains available for a limited period. The period is not quantified, and no Deprecation or Sunset
+    (RFC 8594) response header is documented or declared in the contract.
+  rfc8594_headers: false
+  deprecated_operations: 0
+  deprecated_fields: The changelog records field-level deprecations (e.g. the attendee "unsubscribed" field marked
+    deprecated in favour of PUT /attendees/{id}/email-subscriptions).
+  product_level: The entire SOAP API (V200611, 51 operations) is deprecated in favour of the REST API, with a published
+    migration guide covering calls, methods and object mappings.
+  evidence:
+  - https://developers.cvent.com/docs/rest-api/changelog
+  - https://developers.cvent.com/docs/rest-api/migration-guide/benefits
+change_log:
+  url: https://developers.cvent.com/docs/rest-api/changelog
+  cadence: biweekly
+  entries_published: 71
+  earliest: '2022'
+  latest: 2026-08-19/20
+  see: changelog/cvent-changelog.yml
+status_page:
+  url: https://status.cvent.com
+  detail: Cvent runs a per-region, per-product status board (the root redirects to /NA/Event%20Marketing); subscribers
+    can follow individual products and data centres.
+  http_status: 200
+sla:
+  published: false
+  detail: No public SLA document is linked from cvent.com/en/company/legal or the developer portal; availability
+    commitments sit in the customer contract.
+maintenance:
+  detail: TLS certificate renewals affecting API consumers are announced through a dedicated developer guide.
+  evidence:
+  - https://developers.cvent.com/docs/rest-api/guides/tls-cert-renewal
+credential_rotation:
+  detail: Cvent publishes a credential rotation procedure for API client secrets, and applications can carry Termination
+    Protection to prevent accidental deletion of a production client.
+  evidence:
+  - https://developers.cvent.com/docs/rest-api/guides/rotating-api-credentials
+  - https://developers.cvent.com/docs/rest-api/explanation/concepts

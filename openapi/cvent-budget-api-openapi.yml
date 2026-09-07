@@ -1,0 +1,3635 @@
+openapi: 3.0.2
+info:
+  title: Cvent REST APIs — Budget
+  version: ea
+  description: Budget is an event feature used to organize spending and track [allocations](https://support.cvent.com/s/communityarticle/Setting-Up-Budget-Allocations).
+    Use this API to view budget items, cards and card transactions related to the budget module.
+  contact:
+    name: Cvent Development Platform
+    url: https://developers.cvent.com/
+externalDocs:
+  description: Cvent REST API documentation
+  url: https://developers.cvent.com/documentation
+servers:
+- url: https://api-platform.cvent.com/ea
+- url: https://api-platform-eur.cvent.com/ea
+tags:
+- name: Budget
+  description: Budget is an event feature used to organize spending and track [allocations](https://support.cvent.com/s/communityarticle/Setting-Up-Budget-Allocations).
+    Use this API to view budget items, cards and card transactions related to the budget module.
+paths:
+  /budget-items:
+    get:
+      security:
+      - OAuth2.clientCredentials:
+        - budget/budget-items:read
+      - OAuth2.authorizationCode:
+        - budget/budget-items:read
+      summary: List Budget Items
+      description: Gets a paginated list of budget items across all events linked to the account associated with the access
+        token. The data can be filtered by the specified after and before date parameters, based on the last modified date,
+        for a maximum duration of 1 year per request.
+      operationId: getAccountBudgetItems
+      parameters:
+      - $ref: '#/components/parameters/afterRequired'
+      - $ref: '#/components/parameters/beforeRequired'
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      - name: filter
+        in: query
+        required: false
+        description: 'Use filter query parameters to limit results
+
+          to data that matches your criteria. See
+
+          [Filters](/docs/rest-api/reference/filters) for details.
+
+
+          Supported fields and operators are listed below:
+
+
+          | Field            | Operators  |
+
+          |:-----------------|:-----------|
+
+          | event.id         | `eq`, `ne` |
+
+          | rfp.id           | `eq`, `ne` |
+
+          | budgetVersion.id | `eq`, `ne` |
+
+          | id               | `eq`, `ne` |
+
+          | category.id      | `eq`, `ne` |
+
+          | category.name    | `eq`, `ne` |
+
+          | subCategory.id   | `eq`, `ne` |
+
+          | subCategory.name | `eq`, `ne` |
+
+
+          The following logical operators are supported for combining filters:
+
+          * and
+
+          * or
+
+          '
+        schema:
+          type: string
+          example: event.id eq 'e7120b27-ca4c-46c1-b5de-cbe5ea0e26d5' and budgetVersion.id ne 'e7120b27-ca4c-46c1-b5de-cbe5ea0e26d5'
+      tags:
+      - Budget
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of budget items across all events linked to the account, filtered
+            by the specified after and before date parameters.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/account-budget-items-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+  /budget-vendors:
+    get:
+      security:
+      - OAuth2.clientCredentials:
+        - budget/budget-vendors:read
+      - OAuth2.authorizationCode:
+        - budget/budget-vendors:read
+      summary: List Account Vendors
+      description: Gets a paginated list of account-level budget vendors configured in Admin > Budget > Vendors for your account.
+        Event-scoped vendors and CSN-only vendors are not included in this endpoint.
+      operationId: getAccountVendors
+      parameters:
+      - $ref: '#/components/parameters/after'
+      - $ref: '#/components/parameters/before'
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      - name: filter
+        in: query
+        required: false
+        description: 'Use filter query parameters to limit results
+
+          to data that matches your criteria. See
+
+          [Filters](/docs/rest-api/reference/filters) for details.
+
+
+          Supported fields and operators are listed below:
+
+
+          | Field         | Operators                          |
+
+          |:--------------|:-----------------------------------|
+
+          | id            | `eq`, `ne`                         |
+
+          | lastModified  | `eq`, `ne`, `lt`, `le`, `gt`, `ge` |
+
+          | active        | `eq`, `ne`                         |
+
+
+          The following logical operators are supported for combining filters:
+
+          * and
+
+          * or
+
+          '
+        schema:
+          type: string
+          example: active eq true and id eq '5b5a6e5c-1234-4af5-9d1f-9bcb9e7c1234' and lastModified ge '2025-01-01T00:00:00Z'
+      tags:
+      - Budget
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of vendors.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/budget-vendors-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+  /cards:
+    get:
+      security:
+      - OAuth2.clientCredentials:
+        - budget/cards:read
+      - OAuth2.authorizationCode:
+        - budget/cards:read
+      summary: List Cards
+      description: Gets a paginated list of payment cards associated to the account of the access token.
+      operationId: getCards
+      parameters:
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      - name: filter
+        in: query
+        required: false
+        description: 'Use filter query parameters to limit results
+
+          to data that matches your criteria. See
+
+          [Filters](/docs/rest-api/reference/filters) for details.
+
+
+          Supported fields and operators are listed below:
+
+
+          | Field    | Operators |
+
+          |:---------|:----------|
+
+          | event.id | `eq`      |
+
+          '
+        schema:
+          type: string
+          example: event.id eq 'E05029A8-39F5-49DF-8450-2EB41B302421'
+      tags:
+      - Budget
+      responses:
+        '200':
+          description: Successfully retrieved a Paginated list of Cards.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/card-details-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+  /cards/transactions:
+    get:
+      security:
+      - OAuth2.clientCredentials:
+        - budget/transactions:read
+      - OAuth2.authorizationCode:
+        - budget/transactions:read
+      summary: List Card Transactions
+      description: Gets a paginated list of card transactions associated with the account of the access token.
+      operationId: getCardTransactions
+      parameters:
+      - $ref: '#/components/parameters/after'
+      - $ref: '#/components/parameters/before'
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      - name: filter
+        in: query
+        required: false
+        description: 'Use filter query parameters to limit results
+
+          to data that matches your criteria. See
+
+          [Filters](/docs/rest-api/reference/filters) for details.
+
+
+          Supported fields and operators are listed below:
+
+
+          | Field                          | Operators              |
+
+          |:-------------------------------|:-----------------------|
+
+          | event.id                       | `eq`                   |
+
+          | type                           | `eq`, `ne`             |
+
+          | status                         | `eq`, `ne`             |
+
+          | fromDate                       | `gt`, `ge`             |
+
+          | toDate                         | `lt`, `le`             |
+
+          | reconciliations.reconciledDate | `lt`, `le`, `gt`, `ge` |
+
+
+          The following logical operators are supported for combining filters:
+
+          * and
+
+          * or
+
+          '
+        schema:
+          type: string
+          example: event.id eq 'E05029A8-39F5-49DF-8450-2EB41B302421' and type ne 'Virtual' and status eq 'Active' or status
+            eq 'Inactive'
+      tags:
+      - Budget
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of card transactions.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/card-transaction-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+    post:
+      security:
+      - OAuth2.clientCredentials:
+        - budget/transactions:write
+      - OAuth2.authorizationCode:
+        - budget/transactions:write
+      summary: Create Card Transaction
+      description: Creates a single card transaction record.
+      operationId: createCardTransaction
+      tags:
+      - Budget
+      requestBody:
+        description: Single card transaction record to be created.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/card-transaction-create'
+      responses:
+        '201':
+          description: Successfully created a transaction record.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/card-transaction-create-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+  /cards/transactions/{transactionId}:
+    parameters:
+    - $ref: '#/components/parameters/transactionIdPathParam'
+    delete:
+      security:
+      - OAuth2.clientCredentials:
+        - budget/transactions:delete
+      - OAuth2.authorizationCode:
+        - budget/transactions:delete
+      summary: Delete Card Transaction
+      description: Deletes a card transaction record.
+      operationId: deleteCardTransaction
+      tags:
+      - Budget
+      responses:
+        '204':
+          description: Successfully deleted a transaction record.
+          headers: {}
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '409':
+          $ref: '#/components/responses/Conflict1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+    put:
+      security:
+      - OAuth2.clientCredentials:
+        - budget/transactions:write
+      - OAuth2.authorizationCode:
+        - budget/transactions:write
+      summary: Update Card Transaction
+      description: Updates a card transaction record.
+      operationId: updateCardTransaction
+      tags:
+      - Budget
+      requestBody:
+        description: Single card transaction record to be updated.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/card-transaction-update'
+      responses:
+        '200':
+          description: Successfully updated a transaction record.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/card-transaction-create-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+  /currencies/{currency}/conversion-rates:
+    parameters:
+    - $ref: '#/components/parameters/currency'
+    get:
+      security:
+      - OAuth2.clientCredentials:
+        - budget/currency-conversion-rate:read
+      - OAuth2.authorizationCode:
+        - budget/currency-conversion-rate:read
+      summary: List Currency Conversion Rates
+      description: Gets a paginated list of conversion rates for a currency in an account.
+      operationId: getCurrencyConversionRate
+      parameters:
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      - $ref: '#/components/parameters/after'
+      - $ref: '#/components/parameters/before'
+      - name: filter
+        in: query
+        required: false
+        description: 'Use filter query parameters to limit results
+
+          to data that matches your criteria. See
+
+          [Filters](/docs/rest-api/reference/filters) for details.
+
+
+          Supported fields and operators are listed below:
+
+
+          | Field     | Operators                    |
+
+          |:----------|:-----------------------------|
+
+          | id        | `eq`                         |
+
+          | startDate | `gt`, `ge`, `lt`, `le`, `eq` |
+
+          | endDate   | `gt`, `ge`, `lt`, `le`, `eq` |
+
+
+          The following logical operators are supported for combining filters:
+
+          * and
+
+          * or
+
+          '
+        schema:
+          type: string
+          example: 'startDate eq ''2020-02-07'' '
+      tags:
+      - Budget
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of currency conversion rates.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/currency-conversion-rate-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+    post:
+      security:
+      - OAuth2.clientCredentials:
+        - budget/currency-conversion-rate:write
+      - OAuth2.authorizationCode:
+        - budget/currency-conversion-rate:write
+      summary: Create Conversion Rate
+      description: Create conversion rate for a currency in an account.
+      operationId: createCurrencyConversionRate
+      tags:
+      - Budget
+      requestBody:
+        description: Currency conversion rate to be created.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/currency-conversion-rate'
+      responses:
+        '201':
+          description: Successfully created a conversion rate for the currency.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/currency-conversion-rate-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+  /currencies/{currency}/conversion-rates/{conversionRateId}:
+    parameters:
+    - $ref: '#/components/parameters/currency'
+    - $ref: '#/components/parameters/conversionRateId'
+    put:
+      security:
+      - OAuth2.clientCredentials:
+        - budget/currency-conversion-rate:write
+      - OAuth2.authorizationCode:
+        - budget/currency-conversion-rate:write
+      summary: Update Conversion Rate
+      description: Updates a conversion rate for a currency in an account.
+      operationId: updateCurrencyConversionRate
+      tags:
+      - Budget
+      requestBody:
+        description: The currency conversion rate to be updated.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/currency-conversion-rate-request'
+      responses:
+        '200':
+          description: Successfully updated currency conversion rate.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/currency-conversion-rate-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+    delete:
+      security:
+      - OAuth2.clientCredentials:
+        - budget/currency-conversion-rate:delete
+      - OAuth2.authorizationCode:
+        - budget/currency-conversion-rate:delete
+      summary: Delete Conversion Rate
+      description: Deletes conversion rate defined for currency.
+      operationId: deleteCurrencyConversionRate
+      tags:
+      - Budget
+      responses:
+        '204':
+          description: Successfully deleted a currency conversion rate record.
+          headers: {}
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+  /events/{id}/budget-items:
+    parameters:
+    - $ref: '#/components/parameters/id4'
+    get:
+      security:
+      - OAuth2.clientCredentials:
+        - budget/budget-items:read
+      - OAuth2.authorizationCode:
+        - budget/budget-items:read
+      summary: List Event Budget Items
+      description: Gets a paginated list of budget items for event associated to the account of the access token.
+      operationId: getBudgetItems
+      parameters:
+      - $ref: '#/components/parameters/after'
+      - $ref: '#/components/parameters/before'
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      - name: filter
+        in: query
+        required: false
+        description: 'Use filter query parameters to limit results
+
+          to data that matches your criteria. See
+
+          [Filters](/docs/rest-api/reference/filters) for details.
+
+
+          Supported fields and operators are listed below:
+
+
+          | Field               | Operators                          | Notes                                                                                                                                         |
+
+          |:--------------------|:-----------------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------|
+
+          | id                  | `eq`                               |                                                                                                                                               |
+
+          | costType            | `eq`, `ne`                         |                                                                                                                                               |
+
+          | category.id         | `eq`, `ne`                         |                                                                                                                                               |
+
+          | category.name       | `eq`, `ne`                         |                                                                                                                                               |
+
+          | subCategory.id      | `eq`, `ne`                         |                                                                                                                                               |
+
+          | subCategory.name    | `eq`, `ne`                         |                                                                                                                                               |
+
+          | status              | `eq`, `ne`                         |                                                                                                                                               |
+
+          | vendor.id           | `eq`, `ne`                         |                                                                                                                                               |
+
+          | vendor.name         | `eq`, `ne`                         |                                                                                                                                               |
+
+          | date                | `gt`, `ge`, `lt`, `le`             |                                                                                                                                               |
+
+          | customFields.{uuid} | `eq`, `ne`, `lt`, `le`, `gt`, `ge` |                                                                                                                                               |
+
+          | deleted             | `eq`, `ne`                         | Budget items that are deleted are available for 3 months
+          after deletion. After this, they are removed and no longer appear in search results. |
+
+
+          The following logical operators are supported for combining filters:
+
+          * and
+
+          * or
+
+          '
+        schema:
+          type: string
+          example: category.name eq 'Accommodation' and status ne 'Estimated'
+      tags:
+      - Budget
+      responses:
+        '200':
+          description: Successfully retrieved a Paginated list of Budget Items.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/budget-items-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+    post:
+      security:
+      - OAuth2.clientCredentials:
+        - budget/budget-items:write
+      - OAuth2.authorizationCode:
+        - budget/budget-items:write
+      summary: Create Budget Item
+      description: Create single Budget Item based on the values provided.
+      operationId: createBudgetItem
+      tags:
+      - Budget
+      requestBody:
+        description: Budget Item to be created
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/budget-item'
+      responses:
+        '201':
+          description: Successfully created a Budget Item.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/budget-item-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+  /events/{id}/budget-items/allocations:
+    parameters:
+    - $ref: '#/components/parameters/id4'
+    get:
+      security:
+      - OAuth2.clientCredentials:
+        - budget/budget-items:read
+      - OAuth2.authorizationCode:
+        - budget/budget-items:read
+      summary: List Budget Allocations
+      description: Gets a paginated list of budget allocations for all budget items within an event.
+      operationId: getBudgetAllocations
+      tags:
+      - Budget
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of budget allocations for all budget items within an event.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/budget-allocations-paginated-list-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+      parameters:
+      - $ref: '#/components/parameters/after'
+      - $ref: '#/components/parameters/before'
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      - name: filter
+        in: query
+        required: false
+        description: 'Use filter query parameters to limit results
+
+          to data that matches your criteria. See
+
+          [Filters](/docs/rest-api/reference/filters) for details.
+
+
+          Supported fields and operators are listed below:
+
+
+          | Field            | Operators                    |
+
+          |:-----------------|:-----------------------------|
+
+          | budgetVersion.id | `eq`                         |
+
+          | budgetItem.id    | `eq`                         |
+
+          | category.id      | `eq`, `ne`                   |
+
+          | subcategory.id   | `eq`, `ne`                   |
+
+          | generalLedger.id | `eq`, `ne`                   |
+
+          | value            | `lt`, `le`, `gt`, `ge`, `eq` |
+
+
+          The following logical operators are supported for combining filters:
+
+          * and
+
+          * or
+
+          '
+        schema:
+          type: string
+          example: category.id eq 'e9ee2669-65db-46f8-872c-dbafbf9b0e92' or value lt 1000
+  /events/{id}/budget-items/{budgetItemId}:
+    parameters:
+    - $ref: '#/components/parameters/id4'
+    - $ref: '#/components/parameters/budgetItemId'
+    put:
+      security:
+      - OAuth2.clientCredentials:
+        - budget/budget-items:write
+      - OAuth2.authorizationCode:
+        - budget/budget-items:write
+      summary: Update Budget Item
+      description: Update single Budget Item based on the values provided.
+      operationId: updateBudgetItem
+      tags:
+      - Budget
+      requestBody:
+        description: Budget Item to be updated
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/budget-item'
+      responses:
+        '200':
+          description: Successfully updated a Budget Item.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/budget-item-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+  /events/{id}/budget-items/{budgetItemId}/allocations:
+    parameters:
+    - $ref: '#/components/parameters/id4'
+    - $ref: '#/components/parameters/budgetItemId'
+    put:
+      security:
+      - OAuth2.clientCredentials:
+        - budget/budget-items:write
+      - OAuth2.authorizationCode:
+        - budget/budget-items:write
+      summary: Update Budget Allocations
+      description: Bulk add or update budget allocations in a budget item. If budget allocations already exist for the budget
+        item, they will be updated.
+      operationId: updateBudgetAllocations
+      tags:
+      - Budget
+      requestBody:
+        description: The budget allocations to upsert.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/budget-allocations-list'
+      responses:
+        '200':
+          description: Successfully updated the budget allocations in the budget item.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/budget-allocations-list'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+    delete:
+      security:
+      - OAuth2.clientCredentials:
+        - budget/budget-items:delete
+      - OAuth2.authorizationCode:
+        - budget/budget-items:delete
+      summary: Delete  Budget Allocations
+      description: Delete all budget allocations for a given budget item.
+      operationId: deleteBudgetAllocations
+      tags:
+      - Budget
+      responses:
+        '204':
+          description: Successfully deleted all budget allocations for the budget item.
+          headers: {}
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '409':
+          $ref: '#/components/responses/Conflict1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+  /events/{id}/budget-items/{budgetItemId}/budget-payments:
+    parameters:
+    - $ref: '#/components/parameters/id4'
+    - $ref: '#/components/parameters/budgetItemId'
+    post:
+      security:
+      - OAuth2.clientCredentials:
+        - budget/payments:write
+      - OAuth2.authorizationCode:
+        - budget/payments:write
+      summary: Create Budget Payment
+      description: Create single payment for the budget item given in an event.
+      operationId: createPayment
+      tags:
+      - Budget
+      requestBody:
+        description: Payment to be created.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/payment'
+      responses:
+        '201':
+          description: Successfully created a payment for the budget item.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/payment-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+  /events/{id}/budget-items/{budgetItemId}/budget-payments/{paymentId}:
+    parameters:
+    - $ref: '#/components/parameters/id4'
+    - $ref: '#/components/parameters/budgetItemId'
+    - $ref: '#/components/parameters/paymentId'
+    put:
+      security:
+      - OAuth2.clientCredentials:
+        - budget/payments:write
+      - OAuth2.authorizationCode:
+        - budget/payments:write
+      summary: Update Budget Payment
+      description: Updates a payment for a budget item.
+      operationId: updatePayment
+      tags:
+      - Budget
+      requestBody:
+        description: The budget item payment to be updated.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/payment-request'
+      responses:
+        '200':
+          description: Successfully updated a payment record.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/payment-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+    delete:
+      security:
+      - OAuth2.clientCredentials:
+        - budget/payments:delete
+      - OAuth2.authorizationCode:
+        - budget/payments:delete
+      summary: Delete Budget Payment
+      description: Deletes a budget item payment.
+      operationId: deletePayment
+      tags:
+      - Budget
+      responses:
+        '204':
+          description: Successfully deleted a payment record.
+          headers: {}
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '409':
+          $ref: '#/components/responses/Conflict1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+  /events/{id}/budget-items/{budgetItemId}/custom-fields/{customFieldId}/answers:
+    parameters:
+    - $ref: '#/components/parameters/id4'
+    - $ref: '#/components/parameters/budgetItemId'
+    - $ref: '#/components/parameters/customFieldId3'
+    put:
+      tags:
+      - Budget
+      operationId: answerBudgetCustomField
+      security:
+      - OAuth2.clientCredentials:
+        - budget/budget-items:write
+      - OAuth2.authorizationCode:
+        - budget/budget-items:write
+      summary: Update Budget Cstm Fld Answers
+      description: "Updates answers to a budget custom field using the details you provided in the body of the request. Answers\
+        \ must be formatted correctly according to the specific type of custom field. The available fields and their formats\
+        \ are listed below:\n* **Open Ended Text - Date/Time**. This field type has several possible user-selected answer\
+        \ formats:\n  - Date/Time (2022-01-01T12:00:00.000Z). Denoted by *DateTime* in the response payload.\n  - Date (2022-01-01).\
+        \ Denoted by *Date* in the response payload.\n* **Open Ended Text - One Line**. This field type has several possible\
+        \ user-selected answer formats:\n  - General (Text). Denoted by *General* in the response payload.\n  - Number (Whole\
+        \ numbers, 10, -10). Denoted by *Number* in the response payload.\n  - Currency (Positive decimal value, 10.5). Denoted\
+        \ by *Currency* in the response payload.\n  - Decimal (-20.5). Denoted by *Decimal* in the response payload.\n  -\
+        \ US Phone Number (123-456-7890). Denoted by *USPhoneNumber* in the response payload.\n  - Email Address (h.potterfield@test.com).\
+        \ Denoted by *Email* in the response payload.\n* **Open Ended Text - Comment Box**. Answer format is free-text (any\
+        \ value). Denoted by *FreeText* in the\n    response payload.\n* **Choice - Single Answer (Drop-Down, Vertical, Horizontal).**\
+        \ Answer format is exactly one response to a\n    list of user-defined choices. Denoted by *SingleSelect* in the response\
+        \ payload.\n* **Choice - Multiple Answers (Multi-Select Box, Vertical, Horizontal).** Answer format is one or more\n\
+        \    responses from a list of user-defined choices. Denoted by *MultiSelect* in the response payload.\n\nTo delete\
+        \ a custom field answer, either omit the `value` parameter or provide an empty list of answers for the specified custom\
+        \ field ID.\n"
+      requestBody:
+        description: Custom field answer to be updated.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/custom-field'
+        required: true
+      responses:
+        '200':
+          description: Successfully updated custom field answer in the budget.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/custom-field'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+  /events/{id}/budget-payments:
+    parameters:
+    - $ref: '#/components/parameters/id4'
+    get:
+      security:
+      - OAuth2.clientCredentials:
+        - budget/payments:read
+      - OAuth2.authorizationCode:
+        - budget/payments:read
+      summary: List Budget Payments
+      description: Gets a paginated list of payments for budget items in an event.
+      operationId: getPayments
+      parameters:
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      - $ref: '#/components/parameters/after'
+      - $ref: '#/components/parameters/before'
+      - name: filter
+        in: query
+        required: false
+        description: 'Use filter query parameters to limit results
+
+          to data that matches your criteria. See
+
+          [Filters](/docs/rest-api/reference/filters) for details.
+
+
+          Supported fields and operators are listed below:
+
+
+          | Field            | Operators              | Notes                                                                                                                                                                                         |
+
+          |:-----------------|:-----------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+
+          | budgetItem.id    | `eq`                   |                                                                                                                                                                                               |
+
+          | id               | `eq`                   |                                                                                                                                                                                               |
+
+          | budgetVersion.id | `eq`                   |                                                                                                                                                                                               |
+
+          | lastModified     | `gt`, `ge`, `lt`, `le` | `lastModified` refers to the date the associated budget item was last
+          modified. Filtering by `lastModified` returns payments linked to budget items modified within the specified date
+          range. |
+
+
+          The following logical operators are supported for combining filters:
+
+          * and
+
+          * or
+
+          '
+        schema:
+          type: string
+          example: budgetItem.id eq '2c3a755a-d440-498d-baab-30f45dae3cf5' or id eq '1b3a755a-d440-498d-baab-30f45dae3cf5'
+      tags:
+      - Budget
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of budget item payments.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/payment-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+  /events/{id}/budget-payments/{paymentId}/invoices/{invoiceId}:
+    parameters:
+    - $ref: '#/components/parameters/id4'
+    - $ref: '#/components/parameters/paymentId'
+    - $ref: '#/components/parameters/invoiceId'
+    put:
+      security:
+      - OAuth2.clientCredentials:
+        - budget/payments:write
+      - OAuth2.authorizationCode:
+        - budget/payments:write
+      summary: Assign Invoice To Payment
+      description: Assign a single invoice to a payment using the ID of file. Upload files via the <a href="#operation/uploadFile">file
+        upload</a> endpoint.
+      operationId: attachInvoiceToPayment
+      tags:
+      - Budget
+      responses:
+        '200':
+          description: Successfully assigned an invoice to a payment.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/invoice-file'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+  /events/{id}/budget-totals:
+    parameters:
+    - $ref: '#/components/parameters/id4'
+    get:
+      security:
+      - OAuth2.clientCredentials:
+        - budget/budget-totals:read
+      - OAuth2.authorizationCode:
+        - budget/budget-totals:read
+      summary: List Budget Totals
+      description: Gets a paginated list of budget totals for event associated to the account of the access token.
+      operationId: getEventBudgetTotals
+      parameters:
+      - $ref: '#/components/parameters/after'
+      - $ref: '#/components/parameters/before'
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/token'
+      - name: filter
+        in: query
+        required: false
+        description: 'Use filter query parameters to limit results
+
+          to data that matches your criteria. See
+
+          [Filters](/docs/rest-api/reference/filters) for details.
+
+
+          Supported fields and operators are listed below:
+
+
+          | Field           | Operators  |
+
+          |:----------------|:-----------|
+
+          | version.id      | `eq`       |
+
+          | version.name    | `eq`       |
+
+          | version.default | `eq`, `ne` |
+
+
+          The following logical operators are supported for combining filters:
+
+          * and
+
+          * or
+
+          '
+        schema:
+          type: string
+          example: version.name eq 'Test version' and version.id eq '1b3a755a-d440-498d-baab-30f45dae3cf5'
+      tags:
+      - Budget
+      responses:
+        '200':
+          description: Successfully retrieved a Paginated list of Event Budget Totals.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/event-budget-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+components:
+  schemas:
+    Link:
+      title: Link
+      required:
+      - href
+      type: object
+      description: Represents a link to a related resource.
+      properties:
+        href:
+          type: string
+          description: A url provided that can be followed for linking
+          example: ?token=90c5f062-76ad-4ea4-aa53-00eb698d9262
+    GeneralLedger1:
+      title: GeneralLedger
+      type: object
+      description: This is used to denote the general ledger code associated with budget.
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid-property'
+        code:
+          type: string
+          description: General Ledger Code.
+          maxLength: 30
+          example: MU
+          readOnly: true
+        name:
+          type: string
+          description: Name of the General Ledger.
+          maxLength: 30
+          example: Meet up
+          readOnly: true
+    VirtualCardReportingFieldAndValue:
+      title: Virtual card reporting field and value.
+      description: Reporting fields and values for a virtual card.
+      type: object
+      properties:
+        name:
+          type: string
+          description: The reporting field's name.
+          example: Department Code
+          readOnly: true
+        value:
+          type: string
+          description: The reporting field value.
+          example: '12'
+          readOnly: true
+    BudgetAllocation:
+      title: BudgetAllocation
+      description: Budget allocations within a budget item for an event.
+      type: object
+      required:
+      - value
+      properties:
+        category:
+          $ref: '#/components/schemas/AllocationCategory'
+        subcategory:
+          $ref: '#/components/schemas/AllocationSubCategory'
+        generalLedger:
+          $ref: '#/components/schemas/AllocationGeneralLedger'
+        value:
+          type: number
+          description: 'Amount from the actual budget allocated to this category or subcategory. Note: The sum of amounts
+            for all allocations should equal the total actual amount for that budget item.'
+          example: 200.5
+        note:
+          type: string
+          description: Remark by an allocator for an allocation.
+          example: This will be handled by manager.
+    CustomFieldType:
+      title: CustomFieldType
+      enum:
+      - AutoIncrement
+      - ConsentQuestion
+      - Currency
+      - Decimal
+      - Date
+      - DateTime
+      - Email
+      - FileUpload
+      - FreeText
+      - General
+      - MultiChoice
+      - MultiSelect
+      - Number
+      - OpenEndedDateTime
+      - OpenEndedText
+      - SingleChoice
+      - SingleSelect
+      - USPhoneNumber
+      - Unknown
+      type: string
+      description: The type of data collected by a custom field.
+      example: General
+    EventBudgetTotals:
+      title: Event Budget Totals
+      description: Budget Totals for a Event.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/EventId2'
+      properties:
+        version:
+          type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/uuid-property'
+            name:
+              type: string
+              description: Name of the budget version.
+              example: Budget Version 2
+            default:
+              type: boolean
+              description: True indicates the associated budget is the default budget version of the event.
+              example: true
+          description: The identifier of the Budget version for an event.
+        lastModifiedDate:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date and time for budget version last modified date.
+          example: '2020-02-07T00:00:00.000Z'
+        currency:
+          type: string
+          description: The ISO 4217 standard format currency code used of transaction currency.
+          maxLength: 3
+          example: USD
+        totalHighLevelEstimate:
+          type: object
+          description: Total High-level estimation details.
+          properties:
+            amount:
+              type: number
+              description: The total amount of high level estimate of the event.
+              example: 5001.99
+        costDetail:
+          type: array
+          items:
+            $ref: '#/components/schemas/BudgetCostDetail'
+          description: The list of cost details.
+    uuid-property:
+      title: UUID Property
+      description: A string that has to be a format matching the industry standard uuid
+      type: string
+      format: uuid
+      example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+    BudgetAllocationsPaginatedResponse:
+      title: BudgetAllocationsPaginatedResponse
+      description: Information about an allocation.
+      type: object
+      properties:
+        budgetVersion:
+          type: object
+          properties:
+            id:
+              type: string
+              description: Identifier of a particular budget version.
+              format: uuid
+              example: 3d808ee8-94f8-4f3a-9ad1-6b23f4e4c329
+          description: This is the budget version where this allocation was made.
+        budgetItem:
+          $ref: '#/components/schemas/AllocationBudgetItemId'
+        category:
+          $ref: '#/components/schemas/AllocationCategory'
+        subcategory:
+          $ref: '#/components/schemas/AllocationSubCategory'
+        generalLedger:
+          $ref: '#/components/schemas/AllocationGeneralLedger'
+        method:
+          $ref: '#/components/schemas/AllocateBy'
+        value:
+          type: number
+          description: 'Amount from the actual budget allocated to this category/subcategory or general ledger. Note: The
+            sum of amounts for all allocations should equal the total actual amount for that budget item.'
+          example: 200.5
+        note:
+          type: string
+          description: Remark by an allocator for an allocation.
+          example: This will be handled by manager.
+    BudgetCategory:
+      title: BudgetCategory
+      description: Denotes the category assigned to the budget item.
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          type: integer
+          description: Unique identifier of the budget category.
+          example: 3
+        name:
+          type: string
+          description: Name of the budget category assigned to the budget item.
+          example: Travel
+          readOnly: true
+    card-transaction-create:
+      title: CardTransactionPost
+      type: object
+      description: The transaction you're posting and its associated details.
+      properties:
+        id:
+          type: string
+          description: A unique ID assigned to the transaction, typically generated by the payment processor or gateway. Must
+            be a unique value.
+          example: 1VCAPITRAN18012023
+        eventId:
+          type: string
+          description: Unique ID of the event where the transaction will be posted.
+          format: uuid
+          example: 9463c74e-18c6-401a-a710-ae0f485bf959
+        cardDescription:
+          type: string
+          description: Description of the card associated with the transaction.
+          example: API Card Transaction
+        transactionAmount:
+          type: number
+          description: The transaction amount.
+          example: 1000.87
+        transactionDate:
+          type: string
+          description: ISO 8601 date and time of the transaction (in UTC).
+          format: date-time
+          example: '2020-02-07T00:00:00.000Z'
+        transactionCurrency:
+          type: string
+          description: ISO 4217 currency code of the transaction currency.
+          maxLength: 3
+          example: USD
+        transactionMerchant:
+          type: string
+          description: Name of the merchant used in the transaction.
+          example: API Merchant
+    AllocationGeneralLedger:
+      title: AllocationGeneralLedger
+      description: General Ledger to which the budget of a budget item is allocated.
+      type: object
+      properties:
+        id:
+          description: Identifier of a particular general ledger.
+          type: string
+          format: uuid
+          example: ff28f935-3670-43d2-98f6-5247a18f686c
+    payment-paginated-response:
+      title: Budget Payment Paginated Response
+      description: The response from a request to get the list of payments for event.
+      required:
+      - paging
+      - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/payment-response'
+          description: Collection of payments for budget items for an event.
+    payment-response:
+      title: Payment
+      description: Payment for a budget item in an event.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/payment-request'
+      properties:
+        budgetVersion:
+          type: object
+          properties:
+            id:
+              type: string
+              description: The ID of the budget version where this payment was made.
+              format: uuid
+              example: 9463c74e-18c6-401a-a710-ae0f485bf959
+          description: This is the budget version where this payment was made.
+        budgetItem:
+          type: object
+          properties:
+            id:
+              type: string
+              description: The ID of the budget item where this payment was made.
+              format: uuid
+              example: 9463c74e-18c6-401a-a710-ae0f485bf959
+          description: This is the budget item where this payment was made.
+    BudgetRFP:
+      title: BudgetRFP
+      description: RFP associated with a budget item.
+      readOnly: true
+      type: object
+      properties:
+        id:
+          type: string
+          description: The identifier of the related RFP. If an ID is present, the budget item originates from an RFP. You
+            can use this ID to get more details on the related RFP via the [CSN APIs](https://developers.cvent.com/docs/legacy-api/csn/planner-guide/rfp-objects).
+          format: uuid
+          example: 79b975b9-07e2-4d78-b7bc-941eb1bf894b
+    payment-request:
+      title: PaymentRequest
+      description: Payment request for a budget item in an event.
+      required:
+      - id
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/payment'
+      properties:
+        id:
+          type: string
+          description: The ID of the payment.
+          format: uuid
+          example: 9463c74e-18c6-401a-a710-ae0f485bf959
+    BudgetCostDetail-1:
+      title: BudgetCostDetail
+      description: Budget item cost details.
+      type: object
+      required:
+      - id
+      - units
+      - cost
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid-property'
+        name:
+          $ref: '#/components/schemas/BudgetCostName'
+        units:
+          type: number
+          description: The number of units associated with a budget item. This field can be any number if the budget item
+            is a Variable cost type. If the budget item uses a Fixed cost type, set this field to 1.
+          example: 5.2
+        cost:
+          type: number
+          description: Budget item cost amount.
+          example: 100.5
+        gratuityDetail:
+          $ref: '#/components/schemas/BudgetGratuity'
+        taxDetail:
+          type: array
+          items:
+            $ref: '#/components/schemas/BudgetTax'
+          description: Collection of tax related information.
+        totalCost:
+          type: number
+          description: Total cost of budget item including applicable tax and gratuity.
+          example: 100.5
+          readOnly: true
+    budget-items-paginated-response:
+      title: BudgetItemsPaginatedResponse
+      description: The response from a request to get the list of budget items for the event.
+      required:
+      - paging
+      - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/BudgetItemListResponse'
+          description: Collection of budget items.
+    BudgetItem:
+      title: BudgetItem
+      description: Budget item associated with an event.
+      type: object
+      required:
+      - name
+      - costType
+      - category
+      - date
+      - costIncludesTaxGratuity
+      - calculateTaxOnGratuity
+      - currency
+      - conversionRate
+      - gratuityType
+      - status
+      allOf:
+      - $ref: '#/components/schemas/EventId2'
+      properties:
+        id:
+          type: string
+          description: The identifier of the budget item.
+          format: uuid
+          example: 9463c74e-18c6-401a-a710-ae0f485bf959
+          readOnly: true
+        costType:
+          $ref: '#/components/schemas/BudgetCostType'
+        name:
+          type: string
+          minLength: 1
+          maxLength: 200
+          description: Name of the budget item.
+          example: Airport Transportation
+        code:
+          type: string
+          maxLength: 60
+          description: User defined code of the budget item.
+          example: AIRTRP
+        category:
+          $ref: '#/components/schemas/BudgetCategory'
+        subCategory:
+          $ref: '#/components/schemas/BudgetSubCategory'
+        status:
+          $ref: '#/components/schemas/BudgetStatus'
+        vendor:
+          $ref: '#/components/schemas/BudgetVendor'
+        rfp:
+          $ref: '#/components/schemas/BudgetRFP'
+        date:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date and time assigned to the budget item, typically denotes the date and time of
+            spending.
+          example: '2020-02-07T00:00:00.000Z'
+        lastModifiedDate:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date and time when the budget item was last modified.
+          example: '2020-02-07T00:00:00.000Z'
+          readOnly: true
+        generalLedger:
+          $ref: '#/components/schemas/GeneralLedger1'
+        costAvoidance:
+          $ref: '#/components/schemas/BudgetCostAvoidance'
+        costIncludesTaxGratuity:
+          type: boolean
+          description: True indicates the budget item cost includes tax and gratuity.
+          example: true
+        calculateTaxOnGratuity:
+          type: boolean
+          description: True indicates the tax should be calculated on gratuity.
+          example: false
+        gratuityType:
+          $ref: '#/components/schemas/BudgetTaxGratuityType'
+        internalNote:
+          type: string
+          maxLength: 5000
+          description: User defined note associated with the budget item.
+          example: This item is inclusive of taxes.
+        currency:
+          type: string
+          description: The ISO 4217 currency code assigned to the budget item's costs.
+          maxLength: 3
+          example: USD
+        conversionRateLocked:
+          type: boolean
+          description: Determines which conversion rate to apply when a currency has multiple conversion rates for the same
+            dates. If set as 'True', the conversion rate defined in the budget item is used for reporting and calculations.
+          example: true
+        conversionRate:
+          type: number
+          description: Conversion rate for converting an amount into a different currency. Value must be greater than 0.000001
+          example: 5.2
+        costDetail:
+          type: array
+          maxItems: 5
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/BudgetCostDetail-1'
+          description: The list of cost details for a budget item.
+        savings:
+          type: array
+          items:
+            $ref: '#/components/schemas/BudgetSavings'
+          description: Result of user-defined formula comparing two columns of a budget item cost. Typically this is the difference
+            between budgeted and actual cost.
+          readOnly: true
+        associatedRegistrants:
+          type: array
+          items:
+            $ref: '#/components/schemas/BudgetAssociatedRegistrant'
+          description: The list of registrants associated to a budget item. Typically used to attribute cost to specific registrants
+            in reporting.
+        associatedSession:
+          type: string
+          description: Identifies the session associated with the budget item.
+          format: uuid
+          example: 9463c74e-18c6-401a-a710-ae0f485bf959
+    card-transaction-paginated-response:
+      title: CardTransactionsPaginatedResponse
+      description: The response from a request to get the list of transaction for the event.
+      required:
+      - paging
+      - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CardTransaction'
+          description: Collection of virtual card transaction.
+    account-budget-items-paginated-response:
+      title: AccountBudgetItemsPaginatedResponse
+      description: The response from a request to retrieve a paginated list of budget items across all events linked to the
+        account.
+      required:
+      - paging
+      - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          type: array
+          maxItems: 200
+          items:
+            $ref: '#/components/schemas/AccountBudgetItemListResponse'
+          description: Collection of budget items.
+    Audit:
+      title: Audit
+      description: Audit information
+      type: object
+      properties:
+        created:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date time when this record was created.
+          readOnly: true
+          example: '2017-01-02T02:00:00Z'
+        createdBy:
+          type: string
+          description: The identifier of the user that created this record.
+          readOnly: true
+          example: hporter
+        lastModified:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date time when this record was updated.
+          readOnly: true
+          example: '2019-02-12T03:00:00Z'
+        lastModifiedBy:
+          type: string
+          description: The identifier of the user that last updated this record.
+          readOnly: true
+          example: hporter
+    ErrorResponse-12:
+      title: ErrorResponse
+      description: Represents an error response with additional details of cascading error messages.
+      allOf:
+      - $ref: '#/components/schemas/ErrorResponseBase1'
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorResponseBase1'
+          description: Additional details of cascading error messages.
+    CustomFieldBase:
+      title: CustomFieldBase
+      description: Base schema for Custom Field - allows type to be customized by extending schemas
+      required:
+      - id
+      - value
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique ID representing this custom field.
+          format: uuid
+        name:
+          type: string
+          description: The actual text of the custom field.
+          example: What is your favorite color?
+          readOnly: true
+        value:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            description: A question answer value
+            maxLength: 16000
+          description: The set of answers or possible answers to a question.
+          example:
+          - Choice C
+          - Choice A
+        order:
+          type: integer
+          description: The order of this question in the bigger list of questions.
+          example: 1
+          readOnly: true
+    event-budget-paginated-response:
+      title: Event Budget Paginated Response
+      description: The response from a request to get the list of event budget totals.
+      required:
+      - paging
+      - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/EventBudgetTotals'
+          description: Collection of Event Budget Totals Information.
+    CardTransaction:
+      title: CardTransaction
+      description: Card transaction associated with an event.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/EventId2'
+      properties:
+        card:
+          type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/uuid-property'
+          description: The identifier of the Card.
+        id:
+          type: string
+          description: Card transaction ID.
+          example: '1000000012'
+        transactionDate:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date and time for Card transaction date.
+          example: '2020-02-07T09:37:50Z'
+        type:
+          $ref: '#/components/schemas/TransactionType1'
+        amount:
+          type: number
+          description: Transaction amount.
+          example: 100.5
+        currency:
+          type: string
+          description: The ISO 4217 standard format currency code used of transaction currency.
+          maxLength: 3
+          example: USD
+        merchant:
+          type: string
+          description: Merchant name.
+          example: Test Merchant
+        reconciliation:
+          type: object
+          allOf:
+          - $ref: '#/components/schemas/TransactionReconciliation'
+          - deprecated: true
+            description: This property is deprecated to support more then one items. Use 'reconciliations'.
+        reconciliations:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransactionReconciliation'
+          description: The list of reconciled item.
+        descriptions:
+          type: array
+          maxItems: 5
+          minItems: 0
+          items:
+            type: string
+          example:
+          - Electricity bill
+          - Event ticket
+          - Miscellaneous charge
+          - Purchase car
+          - Accommodation charge
+          description: The list of transaction description.
+    BudgetCostName:
+      title: BudgetCostName
+      type: string
+      description: Denotes the name of the budget column associated to this cost.
+      example: Budgeted
+      readOnly: true
+    TransactionReconciliation:
+      title: Transaction Reconciliation
+      description: A transaction reconciliation record.
+      type: object
+      properties:
+        budgetItem:
+          type: object
+          properties:
+            id:
+              type: string
+              description: The budget item ID.
+              format: uuid
+          description: The identifier of reconciled budget item.
+        status:
+          $ref: '#/components/schemas/ReconciliationStatus'
+        amount:
+          type: number
+          description: Reconciliation amount.
+          example: 100.5
+        reconciledBy:
+          type: string
+          description: Reconciled by user.
+          example: Test User
+        reconciledDate:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date and time for Reconciled date.
+          example: '2020-02-07T09:37:50Z'
+    BudgetCostDetail:
+      title: Budget Cost Detail
+      description: Event Budget cost detail information.
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid-property'
+        name:
+          $ref: '#/components/schemas/BudgetCostName'
+        totalCostValue:
+          type: number
+          description: The total cost amount of the budget version in an event.
+          example: 5500.5
+        totalAppliedTax:
+          type: number
+          description: The total tax amount of the budget version in an event for the cost column.
+          example: 500
+        totalAppliedGratuity:
+          type: number
+          description: The total gratuity amount of the budget version in an event for the cost column.
+          example: 100.5
+    AllocationSubCategory:
+      title: AllocationSubCategory
+      description: Allocation subcategory in which budget item cost is allocated.
+      type: object
+      properties:
+        id:
+          description: Identifier of a particular subcategory.
+          type: string
+          format: uuid
+          example: b2f194bd-a62c-4e27-a713-48b08196b8a7
+    currency-conversion-rate-paginated-response:
+      title: Currency Conversion Rate Paginated Response
+      description: The response from a request to get the list of conversions rate for a currency.
+      required:
+      - paging
+      - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CurrencyConversionRateListResponse'
+          description: Collection of conversion rate for a currency in an account.
+    BudgetSubCategory:
+      title: BudgetSubCategory
+      type: object
+      description: This is used to denote the sub category for a budget.
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid-property'
+        name:
+          type: string
+          description: Name of the budget subcategory assigned to the budget item.
+          readOnly: true
+          example: utilities
+    CardType1:
+      title: CardType
+      enum:
+      - Virtual
+      - Plastic
+      type: string
+      description: This is used to denote the card type for a card.
+      example: Virtual
+    CardStatus:
+      title: CardStatus
+      enum:
+      - Pending
+      - Active
+      - Inactive
+      - Expired
+      - Cancelled
+      type: string
+      description: This is used to denote the card status for a card.
+      example: Pending
+    card-details-paginated-response:
+      title: CardDetailsPaginatedResponse
+      description: The response from a request to get the list of Card Details for the event.
+      required:
+      - paging
+      - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CardDetails'
+          description: Collection of Card Details.
+    ReconciliationStatus:
+      title: ReconciliationStatus
+      enum:
+      - Reconciled
+      - Not Reconciled
+      type: string
+      description: This is used to denote the reconciliation status for a transaction.
+      example: Reconciled
+    BudgetGratuity:
+      title: BudgetGratuity
+      description: Budget item gratuity details.
+      type: object
+      required:
+      - gratuity
+      properties:
+        gratuity:
+          type: number
+          description: Gratuity applied to the budget item. This value can be a percentage of the cost or a flat dollar amount.
+          example: 5.2
+        appliedGratuityValue:
+          type: number
+          description: Calculated gratuity amount based on gratuity field.
+          example: 25.2
+          readOnly: true
+    currency-conversion-rate:
+      title: CurrencyConversionRate
+      description: Currency conversion rate for a currency based on dates in an account.
+      required:
+      - conversionRate
+      - startDate
+      type: object
+      properties:
+        conversionRate:
+          type: number
+          description: Currency conversion rate from accounts base currency to the other defined currency in this conversion
+            rate.
+          example: 5.2
+        startDate:
+          type: string
+          format: date
+          description: The ISO 8601 date format assigned for the currency conversion, typically denotes start date from when
+            defined conversion rate is applicable.
+          example: '2020-02-07'
+        endDate:
+          type: string
+          format: date
+          description: The ISO 8601 date format for the currency conversion, typically denotes end date till when defined
+            conversion rate is applicable.
+          example: '2020-02-08'
+    BudgetCostAvoidance:
+      title: BudgetCostAvoidance
+      description: Budget cost avoidance information.
+      type: object
+      properties:
+        amount:
+          type: number
+          description: Cost avoidance amount.
+          example: 99.5
+        description:
+          type: string
+          maxLength: 5000
+          description: Cost avoidance description.
+          example: Discounted Cost
+    card-transaction-update:
+      title: CardTransactionUpdate
+      type: object
+      description: The transaction you're updating and its associated details.
+      allOf:
+      - $ref: '#/components/schemas/card-transaction-create'
+    currency-conversion-rate-request:
+      title: CurrencyConversionRateRequest
+      description: Currency conversion rate request for a currency in an account.
+      required:
+      - id
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/currency-conversion-rate'
+      properties:
+        id:
+          type: string
+          description: The unique ID for this defined conversion rate.
+          format: uuid
+          example: 9463c74e-18c6-401a-a710-ae0f485bf959
+    BudgetCostType:
+      title: BudgetCostType
+      enum:
+      - FIXED
+      - VARIABLE
+      type: string
+      description: Denotes the cost type of a budget item. FIXED costs stay the same regardless of quantity. VARIABLE costs
+        are based on a quantity.
+      example: FIXED
+    BudgetTaxGratuityType:
+      title: BudgetTaxGratuityType
+      enum:
+      - AMOUNT
+      - PERCENTAGE
+      type: string
+      description: Denotes the type of tax or gratuity.
+      example: PERCENTAGE
+    invoice-file:
+      title: InvoiceFile
+      required:
+      - file
+      - href
+      description: An invoice attached to the payment.
+      properties:
+        file:
+          properties:
+            id:
+              type: string
+              format: uuid
+              description: The ID of the invoice.
+        href:
+          format: uri
+          type: string
+          description: URL of the attached invoice.
+          readOnly: true
+          example: https://custom.cvent.com/a5154f85f71a4cf2464e037feb75b308/00000000000000000000000000000000/files/universal-file/tmp/e209d73d845746b7a6deda4da9d91b2c.png
+    ErrorResponseBase1:
+      title: ErrorResponseBase
+      type: object
+      description: Represents an error response with no additional details.
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          description: The HTTP status code representing the error.
+          example: 400
+        message:
+          type: string
+          description: A brief description of the error.
+          example: Bad Request
+        target:
+          type: string
+          description: The target resource of the error.
+          example: example target
+    BaseAddress:
+      title: Base Address
+      description: Base Address Model
+      type: object
+      properties:
+        address1:
+          type: string
+          maxLength: 40
+          description: The first line of an address.
+          example: Cvent Inc.
+        address2:
+          type: string
+          maxLength: 40
+          description: The second line of an address.
+          example: 4001 West Parmer Lane
+        address3:
+          type: string
+          maxLength: 40
+          description: The third line of an address.
+          example: PO Box 123
+        city:
+          type: string
+          maxLength: 40
+          description: The name of the city.
+          example: Austin
+        countryCode:
+          type: string
+          maxLength: 3
+          minLength: 2
+          description: ISO 3166 two-letter (alpha-2) country code.
+          example: US
+        postalCode:
+          type: string
+          maxLength: 25
+          description: Postal code (also known as zipcode) of the address.
+          example: '78727'
+    TransactionType1:
+      title: TransactionType
+      enum:
+      - Payments
+      - Refunds
+      - Authorized
+      - Approved
+      - Declined
+      type: string
+      description: This is used to denote the transaction type for a transaction.
+      example: Approved
+    BudgetSavings:
+      title: BudgetSavings
+      description: Budget savings detail information.
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Budget savings detail ID.
+          readOnly: true
+          example: 1
+        name:
+          type: string
+          description: Denotes a mathematical formula to calculate savings. For example, Budgeted Amount - Actual amount =
+            Savings.
+          example: Budgeted - Actual
+          readOnly: true
+        value:
+          type: number
+          description: Calculated value based on the savings formula.
+          example: 15.8
+          readOnly: true
+    AllocationCategory:
+      title: AllocationCategory
+      description: Allocation category in which budget item cost is allocated.
+      type: object
+      properties:
+        id:
+          description: Identifier of a particular category.
+          type: string
+          format: uuid
+          example: e9ee2669-65db-46f8-872c-dbafbf9b0e92
+    ContactInformation:
+      title: ContactInformation
+      description: Primary contact details associated with the entity.
+      type: object
+      properties:
+        firstName:
+          type: string
+          minLength: 1
+          maxLength: 50
+          description: First name of the contact person.
+          example: Rahul
+        lastName:
+          type: string
+          minLength: 1
+          maxLength: 50
+          description: Last name of the contact person.
+          example: Sharma
+        title:
+          type: string
+          maxLength: 50
+          description: Professional title or designation of the contact person.
+          example: Operations Manager
+        phone:
+          type: string
+          maxLength: 30
+          description: Primary phone number of the contact person, including country and area code if applicable.
+          example: +91-9876543210
+        fax:
+          type: string
+          maxLength: 30
+          description: Fax number of the contact person, if available.
+          example: +91-11-23456789
+        emailAddress:
+          type: string
+          format: email
+          maxLength: 80
+          description: Email address of the contact person.
+          example: rahul.sharma@example.com
+        additionalInformation:
+          type: string
+          maxLength: 1000
+          description: Any additional contact-related notes or instructions.
+          example: Available only during business hours (9 AM – 6 PM IST).
+    EventId2:
+      title: EventId
+      description: Event ID Information.
+      type: object
+      properties:
+        event:
+          type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/uuid-property'
+          description: The identifier of the Event.
+          readOnly: true
+    currency-conversion-rate-response:
+      title: CurrencyConversionRateResponse
+      description: Currency conversion rate response for a currency in an account.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/currency-conversion-rate-request'
+      properties:
+        baseCurrency:
+          type: string
+          description: The ISO 4217 standard format currency code for account base currency.
+          maxLength: 3
+          example: USD
+        currency:
+          type: string
+          description: The ISO 4217 standard format currency code of currency for which conversion rate is defined.
+          maxLength: 3
+          example: EUR
+        lastModified:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date and time when the conversion rate was last modified.
+          example: '2020-02-07T00:00:00.000Z'
+          readOnly: true
+    PaginationLinks:
+      title: PaginationLinks
+      type: object
+      description: Represents pagination links for navigating between pages of data.
+      properties:
+        next:
+          $ref: '#/components/schemas/Link'
+        self:
+          $ref: '#/components/schemas/Link'
+        prev:
+          $ref: '#/components/schemas/Link'
+    Paging:
+      title: Paging
+      required:
+      - _links
+      type: object
+      description: Represents pagination information for a collection of resources.
+      properties:
+        previousToken:
+          type: string
+          description: The pagination token for the previous page, if one exists. You can use this token to navigate to the
+            previous page of data.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        nextToken:
+          type: string
+          description: The pagination token for the next page. If this value is present in the response, there is another
+            page of data you can fetch.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        currentToken:
+          type: string
+          description: The pagination token for the current page.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        limit:
+          type: integer
+          description: The number of records to return on the page. Not to exceed 200.
+          example: 100
+        totalCount:
+          type: integer
+          description: The total number of records available. This field may return blank, even if there are more records.
+            To confirm if there are more records, check the `nextToken` field.
+          example: 2
+        _links:
+          $ref: '#/components/schemas/PaginationLinks'
+    AllocationBudgetItemId:
+      title: AllocationBudgetItemId
+      description: Represents the budget item where the allocation was made.
+      type: object
+      properties:
+        id:
+          type: string
+          description: Identifier of a particular budget item.
+          format: uuid
+          example: 49037583-aec5-4ca7-8f2a-0afd499b10da
+    BudgetStatus:
+      title: BudgetStatus
+      enum:
+      - ESTIMATED
+      - REQUESTED
+      - PENDING
+      - CONFIRMED
+      - INVOICED
+      - PAID
+      type: string
+      description: Denotes the status assigned to a budget item.
+      example: ESTIMATED
+    budget-item-response:
+      title: BudgetItemResponse
+      description: Customized budget item associated with an event.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/BudgetItem'
+      properties:
+        budgetVersion:
+          $ref: '#/components/schemas/budget-version-id'
+        customFields:
+          type: array
+          items:
+            $ref: '#/components/schemas/BudgetItemCustomField'
+          description: List of budget item custom fields.
+    CardDetails:
+      title: CardDetails
+      description: Card details associated with an event.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/EventId2'
+      properties:
+        id:
+          type: string
+          description: The identifier of the Card.
+          format: uuid
+          example: 9463c74e-18c6-401a-a710-ae0f485bf959
+          readOnly: true
+        first6:
+          type: string
+          description: Card's first six digits.
+          example: '435278'
+        last4:
+          type: string
+          description: Card's last four digits.
+          example: '4352'
+        type:
+          $ref: '#/components/schemas/CardType1'
+        status:
+          $ref: '#/components/schemas/CardStatus'
+        issuer:
+          type: string
+          description: Card issuer name.
+          example: Financial Institution
+        spendLimit:
+          type: number
+          description: Card spending limit.
+          example: 1000.87
+        totalTransactionAmount:
+          type: number
+          description: Total cleared transaction amount.
+          example: 99.5
+        availableBalance:
+          type: number
+          description: Card available balance.
+          example: 900.37
+        description:
+          type: string
+          description: Description of the card.
+          example: virtual card for annual event
+        company:
+          type: string
+          description: The company/organization the contact belongs to.
+          minLength: 1
+          example: Cvent Inc
+        purchaseTemplate:
+          type: string
+          description: Name of the purchase template.
+          example: Annual Template
+        start:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date and time for card start date.
+          example: '2020-02-07T00:00:00.000Z'
+        end:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date and time for card end date.
+          example: '2022-02-07T00:00:00.000Z'
+        billingAccountId:
+          type: string
+          description: The billing account id for the virtual card.
+          example: '132907'
+        fullName:
+          type: string
+          description: First and last name of the user who requested the card.
+          example: Steve Smith
+        reportingFields:
+          type: array
+          maxItems: 20
+          minItems: 0
+          items:
+            $ref: '#/components/schemas/VirtualCardReportingFieldAndValue'
+          description: The list of report fields and their values for a virtual card.
+        cardHolderName:
+          type: string
+          minLength: 1
+          maxLength: 50
+          description: Name as it appears on card.
+          example: Shivam Verma
+        last7:
+          type: string
+          minLength: 7
+          maxLength: 7
+          description: 'Card''s last seven digits. DEPRECATED: This field will return ''0000000'' for American Express (Amex)
+            cards and will not be present for other card types. Use the last 4 digits from the last4 field instead.'
+          example: '0000000'
+          deprecated: true
+    budget-allocations-paginated-list-response:
+      title: BudgetAllocationsPaginatedListResponse
+      description: The response from a request to get the list of budget allocations for the event.
+      required:
+      - paging
+      - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/BudgetAllocationsPaginatedResponse'
+          description: Collection of budget allocations.
+    budget-version-id:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Identifier of a particular budget version.
+          format: uuid
+          example: 3d808ee8-94f8-4f3a-9ad1-6b23f4e4c329
+      description: Budget Version ID Information.
+    custom-field:
+      title: CustomField
+      description: A Custom Field
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/CustomFieldBase'
+      properties:
+        type:
+          description: The type of data collected by a custom field.
+          type: string
+          allOf:
+          - $ref: '#/components/schemas/CustomFieldType'
+          - readOnly: true
+            example: MultiSelect
+    budget-vendors-paginated-response:
+      title: Budget Vendors Paginated Response
+      description: The response from a request to get the list of vendors.
+      required:
+      - paging
+      - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          type: array
+          description: Collection of budget vendor entities.
+          items:
+            $ref: '#/components/schemas/BudgetVendorResponse'
+    CurrencyConversionRateListResponse:
+      title: CurrencyConversionRateListResponse
+      description: Currency conversion rate list response for a currency in an account.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/currency-conversion-rate-response'
+      properties:
+        currentConversionRate:
+          type: boolean
+          description: True indicates this conversion rate is current applicable.
+          example: true
+    card-transaction-create-response:
+      title: CardTransactionPostResponse
+      type: object
+      description: Create card transaction response details.
+      allOf:
+      - $ref: '#/components/schemas/card-transaction-create'
+    AccountBudgetItemListResponse:
+      title: AccountBudgetItemListResponse
+      description: The response from a request to retrieve list of budget items across all events linked to the account.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/Audit'
+      properties:
+        event:
+          $ref: '#/components/schemas/budget-version-id'
+        rfp:
+          $ref: '#/components/schemas/budget-version-id'
+        budgetVersion:
+          $ref: '#/components/schemas/budget-version-id'
+        id:
+          type: string
+          description: The identifier of the budget item.
+          format: uuid
+          example: 9463c74e-18c6-401a-a710-ae0f485bf959
+          readOnly: true
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+          description: Name of the budget item.
+          example: Airport Transportation
+        code:
+          type: string
+          maxLength: 30
+          description: User defined code of the budget item.
+          example: AIRTRP
+        category:
+          $ref: '#/components/schemas/BudgetCategory'
+        subCategory:
+          $ref: '#/components/schemas/BudgetSubCategory'
+        deleted:
+          type: boolean
+          description: True indicates the event budget item is deleted.
+          example: false
+    BudgetVendorResponse:
+      title: BudgetVendorResponse
+      description: Represents an account-level budget vendor configured in Admin > Budget > Vendors.
+      type: object
+      required:
+      - id
+      - name
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The unique identifier for the budget vendor.
+          example: 9463c74e-18c6-401a-a710-ae0f485bf959
+          readOnly: true
+        name:
+          type: string
+          minLength: 1
+          maxLength: 300
+          description: The display name of the budget vendor.
+          example: Global Event Supplies Pvt Ltd
+        code:
+          type: string
+          maxLength: 100
+          description: Internal vendor code for tracking and reference.
+          example: GES-IND-01
+        active:
+          type: boolean
+          description: True indicates the vendor is active and available for budget item assignments.
+          example: true
+        description:
+          type: string
+          maxLength: 2000
+          description: Additional information or notes about the vendor.
+          example: Preferred logistics and on-ground support vendor.
+        url:
+          type: string
+          format: uri
+          description: Official website URL for the vendor organization.
+          example: https://www.example.com
+        contactInformation:
+          $ref: '#/components/schemas/ContactInformation'
+        addressInformation:
+          $ref: '#/components/schemas/BaseAddress'
+        created:
+          type: string
+          format: date-time
+          description: Date and time when the vendor was created, in ISO 8601 UTC (Zulu) format.
+          example: '2024-01-01T12:00:00Z'
+          readOnly: true
+        createdBy:
+          type: string
+          maxLength: 100
+          description: User who created the vendor record.
+          example: john.doe@cvent.com
+          readOnly: true
+        lastModified:
+          type: string
+          format: date-time
+          description: Date and time when the vendor was last modified, in ISO 8601 UTC (Zulu) format.
+          example: '2024-01-01T12:00:00Z'
+          readOnly: true
+        lastModifiedBy:
+          type: string
+          maxLength: 100
+          description: User who last modified the vendor record.
+          example: jane.smith@cvent.com
+          readOnly: true
+    BudgetItemListResponse:
+      title: BudgetItemListResponse
+      description: The response from a request to get the budget items for the event.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/budget-item-response'
+      properties:
+        deleted:
+          type: boolean
+          description: True indicates the event budget item is deleted.
+          example: false
+    AllocateBy:
+      title: AllocateBy
+      enum:
+      - PERCENTAGE
+      - AMOUNT
+      type: string
+      description: Specifies the method of budget allocation. Select "AMOUNT" to allocate a fixed amount (e.g., $700 from
+        a $1000 budget), or "PERCENTAGE" to allocate based on a percentage (e.g., 70% of a $1000 budget).
+      example: AMOUNT
+    payment:
+      title: Payment
+      description: Payment for a budget item in an event.
+      required:
+      - name
+      - date
+      - amount
+      - currency
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+          description: Name of the payment.
+          example: Check Payment
+        referenceNumber:
+          type: string
+          maxLength: 30
+          description: Reference number for the payment. Assists the user in reconciling the payment with their bank statement.
+          example: abc12bde
+        currency:
+          type: string
+          description: The ISO 4217 standard format currency code used of payment currency.
+          maxLength: 3
+          example: USD
+        amount:
+          type: number
+          description: Payment amount.
+          example: 5.2
+        date:
+          type: string
+          format: date
+          description: The ISO 8601 zoned date assigned to the payment, typically denotes the date of payment.
+          example: '2020-02-07'
+        note:
+          type: string
+          maxLength: 300
+          description: Note for the payment done.
+          example: This payment is for admission.
+        type:
+          $ref: '#/components/schemas/PaymentType1'
+        lastModified:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date and time when the budget item was last modified.
+          example: '2020-02-07T00:00:00.000Z'
+          readOnly: true
+    BudgetVendor:
+      title: BudgetVendor
+      description: List of details for a vendor assigned to a budget item.
+      type: object
+      properties:
+        id:
+          description: The vendor's unique ID. If the `type` field is `CSN`, this vendor ID correlates to a venueID in the
+            [CSN APIs](https://developers.cvent.com/docs/legacy-api/csn/planner-guide/venue-objects).
+          type: string
+          format: uuid
+          example: d64380fd-3631-43e9-aac7-bd6bb6eccf6b
+        name:
+          type: string
+          description: Vendor name.
+          example: Best Rest Hotels
+          readOnly: true
+        type:
+          type: string
+          enum:
+          - NOT_SPECIFIED
+          - VENDOR
+          - CSN
+          - REPOSITE
+          description: Indicates how the vendor was added to your account. CSN indicates the vendor was sourced from the Cvent
+            Supplier Network. VENDOR indicates a user added the vendor information to your account. REPOSITE indicates the
+            vendor was sourced from the Reposite.
+          example: CSN
+          readOnly: true
+    budget-item:
+      title: CreateUpdateBudgetItem
+      description: Budget item updates associated with an event.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/BudgetItem'
+    PaymentType1:
+      title: PaymentType
+      enum:
+      - AIRPLUS
+      - AMERICAN_EXPRESS
+      - AURORA
+      - AURORE
+      - AUTHORIZE_NET_SIM
+      - BANK_TRANSFER
+      - BCMC
+      - BILLY
+      - CASH
+      - CB
+      - CHECK
+      - COFINOGA
+      - CORPORATE_CARD
+      - CREDIT
+      - CYBERSOURCE_HOSTED_ORDER_PAGE
+      - CYBERSOURCE_SECURE_ACCEPTANCE
+      - DANKORT
+      - DINERS_CLUB
+      - DIRECT_BILL
+      - DISCOVER
+      - EUROCARD_MASTERCARD
+      - INVOICE
+      - JCB
+      - LASER
+      - MAESTRO
+      - MAESTROUK
+      - MASTERCARD
+      - MASTERCARD_DEBIT
+      - MONEY_ORDER
+      - NETRESERVE
+      - OTHER
+      - OTHER_2
+      - OTHER_3
+      - PAY_GOV
+      - PAYMENT_CREDITS
+      - PAYPAL
+      - P_CARD
+      - PRIVILEGE
+      - PURCHASE_ORDER
+      - SOLO
+      - TOUCHNET
+      - UATP
+      - UNIONPAY
+      - VISA
+      - VISA_DEBIT
+      - VISA_ELECTRON
+      - WPM
+      type: string
+      description: Denotes the method of payment.
+      example: Visa
+    BudgetAssociatedRegistrant:
+      title: BudgetAssociatedRegistrant
+      description: Contains information about a registrant associated with a budget.
+      type: object
+      properties:
+        firstName:
+          type: string
+          description: First name of associated registrant.
+          example: Amit
+          readOnly: true
+        lastName:
+          type: string
+          description: Last name of associated registrant.
+          example: Kumar
+          readOnly: true
+        hcpStatus:
+          type: boolean
+          description: True indicates the associated registrant is a HCP (Health Care Practitioner).
+          example: true
+          readOnly: true
+        inviteeId:
+          type: string
+          description: Unique identifier for the invitee associated with the budget.
+          example: 7cc5304a-9323-452f-8ae8-111cae0047b0
+          format: uuid
+        contactId:
+          type: string
+          description: Unique identifier for the contact associated with the budget.
+          example: 0c478ddc-cf11-4026-a8e5-e6a59ae1c902
+          format: uuid
+    BudgetTax:
+      title: BudgetTax
+      description: Budget item tax details.
+      type: object
+      required:
+      - id
+      - taxType
+      - tax
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid-property'
+        name:
+          type: string
+          description: Tax name.
+          example: Applicable Tax
+          readOnly: true
+        taxType:
+          $ref: '#/components/schemas/BudgetTaxGratuityType'
+        tax:
+          type: number
+          description: Tax applied to the budget item. This value can be a percentage of the cost or a flat dollar amount.
+          example: 5.2
+        appliedTaxValue:
+          type: number
+          description: Calculated tax amount based on tax field.
+          example: 5.2
+          readOnly: true
+    budget-allocations-list:
+      title: BudgetAllocationsList
+      description: Request body  for creating or updating the budget allocations for the event. The soft limit for the maximum
+        number of allocations is 100.
+      type: object
+      required:
+      - allocateBy
+      - allocations
+      properties:
+        allocateBy:
+          $ref: '#/components/schemas/AllocateBy'
+        allocations:
+          type: array
+          maxItems: 120
+          items:
+            $ref: '#/components/schemas/BudgetAllocation'
+          description: List of budget allocations.
+    BudgetItemCustomField:
+      title: BudgetItemCustomField
+      description: A Budget Item Custom Field
+      required:
+      - id
+      - value
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique ID representing this budget item custom field.
+          format: uuid
+        name:
+          type: string
+          description: The actual text of the custom field.
+          example: What is a your favorite color?
+          readOnly: true
+        type:
+          description: The type of data collected by a custom field.
+          type: string
+          allOf:
+          - $ref: '#/components/schemas/CustomFieldType'
+          - readOnly: true
+            example: MultiSelect
+        value:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            description: A question answer value.
+          description: The set of answers or possible answers to a question.
+          example:
+          - Choice C
+          - Choice A
+        order:
+          type: integer
+          description: The order of this question in the bigger list of questions.
+          example: 1
+          readOnly: true
+  responses:
+    Conflict1:
+      description: The request conflicts with current state of the target resource
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 409
+            message: Conflict
+    BadRequest1:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 400
+            message: Bad Request
+    TooManyRequests1:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 429
+            message: Limit Exceeded
+    Unauthorized1:
+      description: Bad or expired token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 401
+            message: Unauthorized
+    Forbidden1:
+      description: You do not have access to the resource
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 403
+            message: Access Forbidden
+    NotFound1:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 404
+            message: Not found
+  parameters:
+    budgetItemId:
+      in: path
+      name: budgetItemId
+      description: Unique ID of a budget item.
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid-property'
+    paymentId:
+      in: path
+      name: paymentId
+      description: Unique ID of a payment.
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid-property'
+    transactionIdPathParam:
+      in: path
+      name: transactionId
+      description: Unique ID of a transaction.
+      required: true
+      example: 1VCAPITRAN18012023
+      schema:
+        type: string
+        format: transactionId
+    beforeRequired:
+      name: before
+      required: true
+      description: Used to query records that have been modified before this point
+      in: query
+      schema:
+        type: string
+        format: date-time
+        example: '2017-01-02T02:00:00Z'
+    customFieldId3:
+      in: path
+      name: customFieldId
+      description: Unique ID of the custom field.
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid-property'
+    currency:
+      in: path
+      name: currency
+      description: The ISO 4217 standard format currency code.
+      required: true
+      example: USD
+      schema:
+        type: string
+        pattern: ^[A-Z]{3}$
+    before:
+      name: before
+      required: false
+      in: query
+      description: Used to query records that have been added or updated before this time point.
+      schema:
+        type: string
+        format: date-time
+        example: '2017-01-02T02:00:00Z'
+    after:
+      name: after
+      required: false
+      description: Used to query records that have been added or updated after this time point. Default to the beginning of
+        time of the data store.
+      in: query
+      schema:
+        type: string
+        format: date-time
+        example: '2017-01-02T02:00:00Z'
+    afterRequired:
+      name: after
+      required: true
+      description: Used to query records that have been modified after this time point.
+      in: query
+      schema:
+        type: string
+        format: date-time
+        example: '2017-01-02T02:00:00Z'
+    id4:
+      in: path
+      name: id
+      description: Unique ID of an event.
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid-property'
+    conversionRateId:
+      in: path
+      name: conversionRateId
+      description: Unique ID of currency conversion rate.
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid-property'
+    token:
+      name: token
+      in: query
+      description: 'The continuation token returned from a previous class. This must be a valid UUID v4 if provided.
+
+        This will override any other pageable parameters provided.
+
+        '
+      style: form
+      explode: true
+      schema:
+        type: string
+        example: 0e28af57-511f-47ab-ae46-46cd1ca51a1a
+    invoiceId:
+      in: path
+      name: invoiceId
+      description: Unique ID of an invoice.
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid-property'
+    limit:
+      name: limit
+      in: query
+      description: The maximum number of records to return per page.
+      style: form
+      explode: true
+      schema:
+        maximum: 200
+        minimum: 1
+        type: integer
+        default: 100
+        example: 100
+  securitySchemes:
+    OAuth2.clientCredentials:
+      type: oauth2
+      description: OAuth2 Client Credentials Flow.
+      flows:
+        clientCredentials:
+          tokenUrl: https://api-platform.cvent.com/ea/oauth2/token
+          scopes:
+            account/hooks:delete: Allows the deletion of hooks.
+            account/hooks:read: Allows the reading of hooks.
+            account/hooks:write: Allows the creation/updation of hooks.
+            account/user-groups:delete: Allows deletion for user groups
+            account/user-groups:read: Allows the reading of user groups
+            account/user-groups:write: Allows the writing of user groups
+            account/users:delete: Allows the deletion of User
+            account/users:read: Allows the reading of User, User Group
+            account/users:write: Allows the creation/updating of User
+            appointments/appointment-attendees:read: Allows the reading of appointment attendees and their related entities.
+            appointments/appointment-events:read: Allows the reading of appointment events and their related entities.
+            appointments/appointment-types:read: Allows the reading of appointment types and their related entities.
+            appointments/appointments:read: Allows the reading of appointment and their related entities.
+            appointments/appointments:write: Allows the writing of appointments and their related entities.
+            appointments/available-times:read: Allows the reading of availability times.
+            appointments/locations:read: Allows the reading of appointment locations and their related entities.
+            attendee-insights/attendee-insights:read: Allows the reading of engagement scores (attendee insights).
+            attendee-insights/scores:read: Allows the reading of scores.
+            attendee-insights/stats:read: Allows the reading of engagement score (attendee insight) stats.
+            budget/budget-items:delete: Allows the deletion of budget items
+            budget/budget-items:read: Allows the reading of all budget items
+            budget/budget-items:write: Allows creation/updation of budget item
+            budget/budget-totals:read: Allows the reading of all event budget totals
+            budget/budget-vendors:read: Allows reading of account-level budget vendors.
+            budget/cards:read: Allows the reading of cards
+            budget/currency-conversion-rate:delete: Allows deletion of currency conversion rate for currency.
+            budget/currency-conversion-rate:read: Allows reading of currency conversion rate for currency.
+            budget/currency-conversion-rate:write: Allows creation/update of currency conversion rate for currency.
+            budget/payments:delete: Allows deletion of payments.
+            budget/payments:read: Allows reading of payment for budget item.
+            budget/payments:write: Allows creation of payment in a budget item.
+            budget/transactions:delete: Allows delete card transactions.
+            budget/transactions:read: Allows the reading of all card's transactions
+            budget/transactions:write: Allows creation of card transactions.
+            bulk/bulk-jobs:read: Allows the reading of bulk job related entities
+            bulk/bulk-jobs:write: Allows the creation, update and deletion of bulk job related entities
+            business-transient/bids:read: Allows the reading of Business Transient Bid data
+            business-transient/proposals:read: Allows the reading of Business Transient Proposal data
+            business-transient/supplier-brands:read: Allows the reading of a supplier brand or a list of travel supplier brands.
+            business-transient/supplier-chains:read: Allows the reading of a travel supplier chain or a list of travel supplier
+              chains.
+            business-transient/supplier-properties:read: Allows the reading of a travel supplier property or a list of travel
+              supplier properties.
+            business-transient/supplier-property-rooms:read: Allows the reading of a list of travel supplier property rooms.
+            business-transient/travel-accounts:read: Allows the reading of business transient travel account data.
+            business-transient/travel-program-questions:read: Allows the reading of business transient travel program question
+              data.
+            business-transient/travel-programs:read: Allows the reading of business transient travel program data.
+            business-transient/travel-supplier-accounts:read: Allows the reading of business transient travel supplier account
+              data.
+            business-travel/bids:read: Allows the reading of Business Travel Bid data
+            business-travel/proposals:read: Allows the reading of Business Travel Proposal data
+            business-travel/travel-accounts:read: Allows the reading of business travel account data.
+            business-travel/travel-program-questions:read: Allows the reading of business travel program question data.
+            business-travel/travel-programs:read: Allows the reading of business travel program data.
+            compliance/communications:read: Allows the reading of communication compliance
+            compliance/communications:write: Allows the writing of communication compliance
+            email/bounces:read: Allow the reading of email bounces.
+            email/email-status:read: Allows the reading of email statuses.
+            email/emails:read: Allows the reading of emails.
+            eMarketing/campaigns:read: Allows the reading of campaigns.
+            emarketing/emarketing-email-status:read: Allows the reading of eMarketing email statuses.
+            eMarketing/eMarketing-email-templates:read: Allows the reading of email-templates.
+            eMarketing/eMarketing-send-emails:write: Allows the writing of eMarketing emails.
+            event/admission-items:read: Allows the reading of admission items
+            event/air-request:read: Allow reading the air request or air actual detail for attendees.
+            event/alternate-travel:read: Allow reading the alternate travel answers for attendees.
+            event/attendance-durations:read: Allows the read of Duration records
+            event/attendee-activities-metadata:delete: Allows the deletion of attendees activities metadata.
+            event/attendee-activities-metadata:read: Allows the reading of attendee activities metadata.
+            event/attendee-activities-metadata:write: Allows the creation/updating of attendees activities metadata.
+            event/attendee-activities:read: Allows the reading of attendee activities.
+            event/attendee-activities:write: Allows the writing of external attendee activities.
+            event/attendee-credits:read: Allows the reading of attendee credits.
+            event/attendee-links:delete: Allows the deletion of attendee links
+            event/attendee-links:read: Allows the reading of attendee links
+            event/attendee-links:write: Allows the creation of attendee links
+            event/attendee-messages:read: Allows the reading of attendee messages
+            event/attendees:read: Allows the reading of attendees.
+            event/attendees:write: Allows the creation of an attendee in an event.
+            event/audience-segments:read: Allows the reading of audience segments.
+            event/audience-segments:write: Allows the creation/updating/deletion of audience segments.
+            event/contact-groups:read: Allows the reading of contact groups.
+            event/contact-groups:write: Allows the creation/updating of contact groups.
+            event/contact-types:read: Allows the reading of contact types.
+            event/contacts:delete: Allows the deletion of contacts.
+            event/contacts:read: Allows the reading of contacts.
+            event/contacts:write: Allows the creation/updating of contacts.
+            event/contacts:write-sensitive: Allows the creation/updating of sensitive data related to contacts.
+            event/custom-fields:read: Allows the reading of custom fields
+            event/custom-fields:write: Allows the writing of custom fields
+            event/discounts:write: Allows the writing of discounts
+            event/donation-items:read: Allows the reading of donation items.
+            event/event-discounts:read: Allows the reading of event discounts.
+            event/event-discounts:write: Allows the writing of event discounts.
+            event/event-email-status:read: Allows the reading of event email statuses.
+            event/event-emails:read: Allows the reading of event emails
+            event/event-emails:write: Allows to send event emails.
+            event/event-features:read: Allows the reading of events-features
+            event/event-features:write: Allows updating the event-features
+            event/event-user-groups:read: Allows the reading of user groups
+            event/event-user-groups:write: Allows associating/disassociating user groups to event
+            event/events:read: Allows the reading of events
+            event/events:write: Allows the creation/updating of events
+            event/fee-items:read: Allows the reading of fee items.
+            event/hotel-request:read: Allow reading the hotel request or housing reservation request detail for attendees.
+            event/invitation-lists:read: Allows the reading of the invitation lists for an event
+            event/meeting-request-forms:read: Allows the reading of meeting request forms.
+            event/meeting-requests:read: Allows the reading of meeting requests.
+            event/meeting-requests:write: Allows the creation/updating of meeting requests.
+            event/membership-items:read: Allows reading of membership items.
+            event/orders:read: Allows the reading of orders
+            event/planning-documents:read: Allows the reading of event planning documents
+            event/players:read: Allows the reading of players
+            event/process-form-submissions:read: Allows the reading of process form submissions.
+            event/program-items:delete: Allows deletion of session program items
+            event/program-items:read: Allows reading of session program items
+            event/program-items:write: Allows writing of session program items
+            event/quantity-items:read: Allows the reading of quantity items.
+            event/quantity-items:write: Allows the writing of quantity items
+            event/registration-paths:read: Allows the reading of registration paths
+            event/registration-types:read: Allows the reading of registration types
+            event/registration-types:write: Allows the writing of registration types
+            event/role-assignments:read: Allows the reading of event role assignment.
+            event/session-attendance:read: Allows the reading of sessions attendance
+            event/session-attendance:write: Allows the creation/updating of sessions attendance
+            event/session-categories:read: Allows reading of session categories
+            event/session-categories:write: Allows writing of session categories
+            event/session-enrollment:delete: Allows the deletion of session registrations
+            event/session-enrollment:read: Allows the reading of sessions registrations
+            event/session-enrollment:write: Allows the writing of sessions registrations
+            event/session-segments:read: Allows reading of session segments
+            event/sessions:delete: Allows the deletion of a session in an event
+            event/sessions:read: Allows the reading of sessions
+            event/sessions:write: Allows the creation of a session in an event
+            event/speaker-categories:read: Allows reading of speaker categories
+            event/speaker-categories:write: Allows writing of speaker categories
+            event/speakers:delete: Allows the deletion of a speaker in an event
+            event/speakers:read: Allows the reading of speakers
+            event/speakers:write: Allows the creation of a speaker in an event
+            event/taxes:read: Allows the reading of taxes.
+            event/transactions:read: Allows the reading of transactions
+            event/transactions:write: Allows the writing of transactions
+            event/video-views:read: Allows reading of video views.
+            event/videos:read: Allows the reading of video data.
+            event/videos:write: Allows the creation/updating of video data.
+            event/vouchers:read: Allows reading of event vouchers.
+            event/webcasts:delete: Allows the deletion of webcast
+            event/webcasts:read: Allows the reading of webcasts
+            event/webcasts:write: Allows the creation of webcast
+            event/weblinks:read: Allows the reading of event weblinks
+            events-plus/hubs:read: Allows the reading of Events+ hub data.
+            exhibitor/badges:read: Allows reading badges
+            exhibitor/badges:write: Allows creating/updating badges
+            exhibitor/booth-staff:delete: Allows deleting booth staff
+            exhibitor/booth-staff:read: Allows reading booth staff
+            exhibitor/booth-staff:write: Allows creating booth staff
+            exhibitor/eliterature-requests:read: Allows reading eliterature document request data
+            exhibitor/exhibitor-admins:read: Allows reading exhibitor admins
+            exhibitor/exhibitor-admins:write: Allows creating/updating exhibitor admins
+            exhibitor/exhibitor-answers:read: Allows reading exhibitor answers
+            exhibitor/exhibitor-answers:write: Allows updating exhibitor answers
+            exhibitor/exhibitor-categories:delete: Allows deleting exhibitor categories
+            exhibitor/exhibitor-categories:read: Allows reading exhibitor categories
+            exhibitor/exhibitor-categories:write: Allows creating/updating exhibitor categories
+            exhibitor/exhibitor-contents:delete: Allows deleting exhibitor content
+            exhibitor/exhibitor-contents:read: Allows reading exhibitor content
+            exhibitor/exhibitor-contents:write: Allows creating/updating exhibitor content
+            exhibitor/exhibitor-questions:read: Allows reading exhibitor questions
+            exhibitor/exhibitors:delete: Allows deleting exhibitors
+            exhibitor/exhibitors:read: Allows reading exhibitors
+            exhibitor/exhibitors:write: Allows creating/updating exhibitors
+            exhibitor/lead-qualification-answers:read: Allows reading Lead Qualification Answers
+            exhibitor/lead-qualification-questions:read: Allows reading Lead Qualification Questions.
+            exhibitor/leads:read: Allows reading leads.
+            exhibitor/registration-packs:delete: Allows deleting registration pack
+            exhibitor/registration-packs:read: Allows reading registration pack
+            exhibitor/registration-packs:write: Allows creating/updating registration pack
+            exhibitor/sponsorship-levels:read: Allows reading sponsorship level
+            file/file:read: Allows the reading of file
+            file/file:write: Allows the uploading of file
+            housing/connections:write: Allows the user to connect to the Reglink APIs.
+            housing/hotel-room-rates:write: Allows the user to create/update hotel room rates.
+            housing/housing-event-available-nights:read: Allows the user to read availability information for given event.
+            housing/housing-event-hotels:read: Allows the user to read information about event hotels.
+            housing/housing-event-inventory:read: Allows the user to get information about housing event inventory.
+            housing/housing-event-room-types:read: Allows the user to read information about event room types.
+            housing/housing-events:read: Allows the user to read information about events.
+            housing/reservation-requests:delete: Allows the user to cancel reservation request.
+            housing/reservation-requests:read: Allows the user to read reservation request information.
+            housing/reservation-requests:write: Allows the user to create/update reservation request.
+            housing/reservations-link:delete: Allows the user to remove association from reservation.
+            housing/reservations-link:write: Allows the user to associate reservation to reservation request.
+            housing/reservations:delete: Allows the user to cancel reservation.
+            housing/reservations:read: Allows the user to read reservation details information.
+            housing/reservations:write: Allows the user to create/update reservation.
+            onsite/signatures:read: Allows reading signatures.
+            proposal/proposals:write: Allows the creation/writing of proposal
+            remote-printing/badge-print-jobs:read: Allows reading print jobs.
+            remote-printing/badge-print-jobs:write: Allows creating print jobs.
+            remote-printing/badge-printer-pools:read: Allows reading pools.
+            rfp/rfp-agenda-items:read: Allows the reading of RFP agenda items.
+            rfp/rfp-attachments:read: Allows the reading of RFP attachments.
+            rfp/rfp-custom-fields:read: Allows the reading of RFP custom fields.
+            rfp/rfp-guest-rooms:read: Allows the reading of RFP guest rooms.
+            rfp/rfp-internal-documents:read: Allows the reading of RFP internal documents.
+            rfp/rfp-lead-sources:read: Allows the reading of RFP lead sources.
+            rfp/rfp-past-events:read: Allows the reading of past events similar to rfp event.
+            rfp/rfp-questions:read: Allows the reading of RFP questions.
+            rfp/rfp-recipients-history:read: Allows the reading of RFP recipients history.
+            rfp/rfp-suppliers:read: Allows the reading of RFP suppliers.
+            rfp/rfps:read: Allows the reading of basic details of RFP.
+            seating/assignments:read: Allows to read attendee seat assignment information.
+            seating/event-seatings:read: Allows to read event seating.
+            seating/seats:read: Allows to read seat information.
+            seating/tables:read: Allows to read table information.
+            secure-ecommerce/card-tokens:write: Allows creation of credit card tokens
+            survey/questions:read: Allows the reading of survey questions
+            survey/respondents:read: Allows reading the survey respondents
+            survey/responses:read: Allows reading the survey responses
+            survey/standard-survey-email-templates:read: Allows reading the standalone survey email templates
+            survey/standard-survey-email:write: Allows writing operations on standalone survey emails
+            survey/standard-survey-questions:read: Allows the reading of standalone surveys questions
+            survey/standard-survey-respondents:read: Allows reading the standalone survey respondents
+            survey/standard-survey-respondents:write: Allows write operations on standalone survey respondents
+            survey/standard-survey-responses:read: Allows reading the standalone survey responses
+            survey/standard-survey-responses:write: Allows write operations on standalone surveys respondent's responses
+            survey/standard-surveys:read: Allows the reading of standalone surveys
+            survey/survey-questions:read: Allows the reading of event survey questions
+            survey/survey-respondents:read: Allows reading the event survey respondents
+            survey/survey-respondents:write: Allows write operations on the event survey respondents
+            survey/survey-responses:read: Allows reading the event survey responses
+            survey/survey-responses:write: Allows write operations on the event surveys respondent's responses
+            survey/surveys:read: Allows the reading of event surveys
+            venue/meeting-room-images:delete: Allows disassociating images from meeting rooms.
+            venue/meeting-room-images:read: Allows retrieving meeting room images.
+            venue/meeting-room-images:write: Allows associating images with meeting rooms.
+            venue/meeting-room-overviews:read: Allows read access for overview of meeting room.
+            venue/meeting-rooms:write: Allows the creation and modification of meeting rooms.
+            venue/venue-details-overview:read: Allows read access for overview of venue details.
+            venue/venue-details:write: Allows the creation and modification of venue details.
+            venue/venue-facility:write: Allows the modification of venue facility information.
+    OAuth2.authorizationCode:
+      type: oauth2
+      description: OAuth2 Authorization Code Flow.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api-platform.cvent.com/ea/oauth2/authorize
+          tokenUrl: https://api-platform.cvent.com/ea/oauth2/token
+          scopes:
+            account/hooks:delete: Allows the deletion of hooks.
+            account/hooks:read: Allows the reading of hooks.
+            account/hooks:write: Allows the creation/updation of hooks.
+            account/user-groups:delete: Allows deletion for user groups
+            account/user-groups:read: Allows the reading of user groups
+            account/user-groups:write: Allows the writing of user groups
+            account/users:delete: Allows the deletion of User
+            account/users:read: Allows the reading of User, User Group
+            account/users:write: Allows the creation/updating of User
+            appointments/appointment-attendees:read: Allows the reading of appointment attendees and their related entities.
+            appointments/appointment-events:read: Allows the reading of appointment events and their related entities.
+            appointments/appointment-types:read: Allows the reading of appointment types and their related entities.
+            appointments/appointments:read: Allows the reading of appointment and their related entities.
+            appointments/appointments:write: Allows the writing of appointments and their related entities.
+            appointments/available-times:read: Allows the reading of available times.
+            appointments/locations:read: Allows the reading of appointment locations and their related entities.
+            attendee-insights/attendee-insights:read: Allows the reading of engagement scores (attendee insights).
+            attendee-insights/scores:read: Allows the reading of scores.
+            attendee-insights/stats:read: Allows the reading of engagement score (attendee insight) stats.
+            budget/budget-items:delete: Allows the deletion of budget items
+            budget/budget-items:read: Allows the reading of all budget items
+            budget/budget-items:write: Allows creation/updation of budget item
+            budget/budget-totals:read: Allows the reading of all event budget totals
+            budget/budget-vendors:read: Allows reading of account-level budget vendors.
+            budget/cards:read: Allows the reading of cards
+            budget/currency-conversion-rate:delete: Allows deletion of currency conversion rate for currency.
+            budget/currency-conversion-rate:read: Allows reading of currency conversion rate for currency.
+            budget/currency-conversion-rate:write: Allows creation/update of currency conversion rate for currency.
+            budget/payments:delete: Allows deletion of payments.
+            budget/payments:read: Allows reading of payment for budget item.
+            budget/payments:write: Allows creation of payment in a budget item.
+            budget/transactions:delete: Allows delete card transactions.
+            budget/transactions:read: Allows the reading of all card's transactions
+            budget/transactions:write: Allows creation of card transactions.
+            business-transient/bids:read: Allows the reading of BT Bid data
+            business-transient/proposals:read: Allows the reading of BT Proposal data
+            business-travel/bids:read: Allows the reading of BT Bid data
+            business-travel/proposals:read: Allows the reading of BT Proposal data
+            compliance/communications:read: Allows the reading of communication compliance
+            compliance/communications:write: Allows the writing of communication compliance
+            email/bounces:read: Allow the reading of email bounces.
+            email/email-status:read: Allows the reading of email statuses.
+            email/emails:read: Allows the reading of emails.
+            eMarketing/campaigns:read: Allows the reading of campaigns.
+            emarketing/emarketing-email-status:read: Allows the reading of eMarketing email statuses.
+            eMarketing/eMarketing-email-templates:read: Allows the reading of email-templates.
+            eMarketing/eMarketing-send-emails:write: Allows the writing of eMarketing emails.
+            event/admission-items:read: Allows the reading of admission items
+            event/air-request:read: Allow reading the air request or air actual detail for attendees.
+            event/alternate-travel:read: Allow reading the alternate travel answers for attendees.
+            event/attendance-durations:read: Allows the read of Duration records
+            event/attendee-activities-metadata:delete: Allows the deletion of attendees activities metadata.
+            event/attendee-activities-metadata:read: Allows the reading of attendee activities metadata.
+            event/attendee-activities-metadata:write: Allows the creation/updating of attendees activities metadata.
+            event/attendee-activities:read: Allows the reading of attendee activities.
+            event/attendee-activities:write: Allows the writing of attendee activities.
+            event/attendee-credits:read: Allows the reading of attendee credits.
+            event/attendee-links:delete: Allows the deletion of attendee links
+            event/attendee-links:read: Allows the reading of attendee links
+            event/attendee-links:write: Allows the creation of attendee links
+            event/attendee-messages:read: Allows the reading of attendee messages
+            event/attendees:read: Allows the reading of attendees.
+            event/attendees:write: Allows the creation of an attendee in an event.
+            event/audience-segments:read: Allows the reading of audience segments.
+            event/audience-segments:write: Allows the creation/updating/deletion of audience segments.
+            event/contact-groups:read: Allows the reading of contact groups.
+            event/contact-groups:write: Allows the creation/updating of contact groups.
+            event/contact-types:read: Allows the reading of contact types.
+            event/contacts:delete: Allows the deletion of contacts.
+            event/contacts:read: Allows the reading of contacts.
+            event/contacts:write: Allows the creation/updating of contacts.
+            event/contacts:write-sensitive: Allows the creation/updating of sensitive data related to contacts.
+            event/custom-fields:read: Allows the reading of custom fields
+            event/custom-fields:write: Allows the writing of custom fields
+            event/discounts:write: Allows the writing of discounts
+            event/donation-items:read: Allows the reading of donation items.
+            event/event-discounts:read: Allows the reading of event discounts.
+            event/event-discounts:write: Allows the writing of event discounts.
+            event/event-email-status:read: Allows the reading of event email statuses.
+            event/event-emails:read: Allows the reading of event emails
+            event/event-emails:write: Allows to send event emails.
+            event/event-features:read: Allows the reading of events-features
+            event/event-features:write: Allows updating the event-features
+            event/event-user-groups:read: Allows the reading of user groups
+            event/event-user-groups:write: Allows associating/disassociating user groups to event
+            event/events:read: Allows the reading of events
+            event/events:write: Allows the creation/updating of events
+            event/fee-items:read: Allows the reading of fee items.
+            event/hotel-request:read: Allow reading the hotel request or housing reservation request detail for attendees.
+            event/invitation-lists:read: Allows the reading of the invitation lists for an event
+            event/meeting-request-forms:read: Allows the reading of meeting request forms.
+            event/meeting-requests:read: Allows the reading of meeting requests.
+            event/meeting-requests:write: Allows the creation/updating of meeting requests.
+            event/membership-items:read: Allows reading of membership items.
+            event/orders:read: Allows the reading of orders
+            event/planning-documents:read: Allows the reading of event planning documents
+            event/players:read: Allows the reading of players
+            event/process-form-submissions:read: Allows the reading of process form submissions.
+            event/program-items:delete: Allows deletion of session program items
+            event/program-items:read: Allows reading of session program items
+            event/program-items:write: Allows writing of session program items
+            event/quantity-items:read: Allows the reading of quantity items.
+            event/quantity-items:write: Allows the writing of quantity items
+            event/registration-paths:read: Allows the reading of registration paths
+            event/registration-types:read: Allows the reading of registration types
+            event/registration-types:write: Allows the writing of registration types
+            event/role-assignments:read: Allows the reading of event role assignment.
+            event/session-attendance:read: Allows the reading of sessions attendance
+            event/session-attendance:write: Allows the creation/updating of sessions attendance
+            event/session-categories:read: Allows reading of session categories
+            event/session-categories:write: Allows writing of session categories
+            event/session-enrollment:delete: Allows the deletion of session registrations
+            event/session-enrollment:read: Allows the reading of sessions registrations
+            event/session-enrollment:write: Allows the writing of sessions registrations
+            event/session-segments:read: Allows reading of session segments
+            event/sessions:delete: Allows the deletion of a session in an event
+            event/sessions:read: Allows the reading of sessions
+            event/sessions:write: Allows the creation of a session in an event
+            event/speaker-categories:read: Allows reading of speaker categories
+            event/speaker-categories:write: Allows writing of speaker categories
+            event/speakers:delete: Allows the deletion of a speaker in an event
+            event/speakers:read: Allows the reading of speakers
+            event/speakers:write: Allows the creation of a speaker in an event
+            event/taxes:read: Allows the reading of taxes.
+            event/transactions:read: Allows the reading of transactions
+            event/transactions:write: Allows the writing of transactions
+            event/video-views:read: Allows reading of video views.
+            event/videos:read: Allows the reading of video data.
+            event/videos:write: Allows the creation/updating of video data.
+            event/vouchers:read: Allows reading of event vouchers and their associated attendees.
+            event/webcasts:delete: Allows the deletion of webcast
+            event/webcasts:read: Allows the reading of webcasts
+            event/webcasts:write: Allows the creation of webcast
+            event/weblinks:read: Allows the reading of event weblinks
+            events-plus/hubs:read: Allows the reading of Events+ hub data.
+            exhibitor/badges:read: Allows reading badges
+            exhibitor/badges:write: Allows creating/updating badges
+            exhibitor/booth-staff:delete: Allows deleting booth staff
+            exhibitor/booth-staff:read: Allows reading booth staff
+            exhibitor/booth-staff:write: Allows creating booth staff
+            exhibitor/eliterature-requests:read: Allows reading eliterature document request data
+            exhibitor/exhibitor-admins:read: Allows reading exhibitor admins
+            exhibitor/exhibitor-admins:write: Allows creating/updating exhibitor admins
+            exhibitor/exhibitor-answers:read: Allows reading exhibitor answers
+            exhibitor/exhibitor-answers:write: Allows updating exhibitor answers
+            exhibitor/exhibitor-categories:delete: Allows deleting exhibitor categories
+            exhibitor/exhibitor-categories:read: Allows reading exhibitor categories
+            exhibitor/exhibitor-categories:write: Allows creating/updating exhibitor categories
+            exhibitor/exhibitor-contents:delete: Allows deleting exhibitor content
+            exhibitor/exhibitor-contents:read: Allows reading exhibitor content
+            exhibitor/exhibitor-contents:write: Allows creating/updating exhibitor content
+            exhibitor/exhibitor-questions:read: Allows reading exhibitor questions
+            exhibitor/exhibitors:delete: Allows deleting exhibitors
+            exhibitor/exhibitors:read: Allows reading exhibitors
+            exhibitor/exhibitors:write: Allows creating/updating exhibitors
+            exhibitor/lead-qualification-answers:read: Allows reading Lead Qualification Answers
+            exhibitor/lead-qualification-questions:read: Allows reading Lead Qualification Questions.
+            exhibitor/leads:read: Allows reading leads.
+            exhibitor/registration-packs:delete: Allows deleting registration pack
+            exhibitor/registration-packs:read: Allows reading registration pack
+            exhibitor/registration-packs:write: Allows creating/updating registration pack
+            exhibitor/sponsorship-levels:read: Allows reading sponsorship level
+            file/file:read: Allows the reading of file
+            file/file:write: Allows the uploading of file
+            onsite/signatures:read: Allows reading signatures.
+            remote-printing/badge-print-jobs:read: Allows reading print jobs.
+            remote-printing/badge-print-jobs:write: Allows creating print jobs.
+            remote-printing/badge-printer-pools:read: Allows reading pools.
+            rfp/rfp-agenda-items:read: Allows the reading of RFP agenda items.
+            rfp/rfp-attachments:read: Allows the reading of RFP attachments.
+            rfp/rfp-custom-fields:read: Allows the reading of RFP custom fields.
+            rfp/rfp-guest-rooms:read: Allows the reading of RFP guest rooms.
+            rfp/rfp-internal-documents:read: Allows the reading of RFP internal documents.
+            rfp/rfp-lead-sources:read: Allows the reading of RFP lead sources.
+            rfp/rfp-past-events:read: Allows the reading of past events similar to rfp event.
+            rfp/rfp-questions:read: Allows the reading of RFP questions.
+            rfp/rfp-recipients-history:read: Allows the reading of RFP recipients history.
+            rfp/rfp-suppliers:read: Allows the reading of RFP suppliers.
+            rfp/rfps:read: Allows the reading of basic details of RFP.
+            seating/assignments:read: Allows to read attendee seat assignment information.
+            seating/event-seatings:read: Allows to read event seating.
+            seating/seats:read: Allows to read seat information.
+            seating/tables:read: Allows to read table information.
+            survey/questions:read: Allows the reading of survey questions
+            survey/respondents:read: Allows reading the survey respondents
+            survey/responses:read: Allows reading the survey responses
+            survey/standard-survey-email-templates:read: Allows reading the standalone survey email templates
+            survey/standard-survey-email:write: Allows writing operations on standalone survey emails
+            survey/standard-survey-questions:read: Allows the reading of standalone surveys questions
+            survey/standard-survey-respondents:read: Allows reading the standalone survey respondents
+            survey/standard-survey-respondents:write: Allows write operations on standalone survey respondents
+            survey/standard-survey-responses:read: Allows reading the standalone survey responses
+            survey/standard-survey-responses:write: Allows write operations on standalone surveys respondent's responses
+            survey/standard-surveys:read: Allows the reading of standalone surveys
+            survey/survey-questions:read: Allows the reading of event survey questions
+            survey/survey-respondents:read: Allows reading the event survey respondents
+            survey/survey-respondents:write: Allows write operations on the event survey respondents
+            survey/survey-responses:read: Allows reading the event survey responses
+            survey/survey-responses:write: Allows write operations on the event surveys respondent's responses
+            survey/surveys:read: Allows the reading of event surveys
+            venue/meeting-room-images:delete: Allows disassociating images from meeting rooms.
+            venue/meeting-room-images:read: Allows retrieving meeting room images.
+            venue/meeting-room-images:write: Allows associating images with meeting rooms.
+            venue/meeting-room-overviews:read: Allows read access for overview of meeting room.
+            venue/meeting-rooms:write: Allows the creation and modification of meeting rooms.
+            venue/venue-details-overview:read: Allows read access for overview of venue details.
+            venue/venue-details:write: Allows the creation and modification of venue details.
+            venue/venue-facility:write: Allows the modification of venue facility information.

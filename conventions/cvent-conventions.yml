@@ -1,0 +1,167 @@
+generated: '2026-09-07'
+method: searched
+source: https://developers.cvent.com/documentation (info.description of the published OpenAPI); https://developers.cvent.com/docs/rest-api/explanation/concepts;
+  https://developers.cvent.com/docs/rest-api/reference/api-standards; https://developers.cvent.com/docs/rest-api/reference/filters;
+  https://developers.cvent.com/docs/rest-api/guides/handling-rate-limits
+api: Cvent Platform REST API (version ea)
+auth:
+  style: OAuth 2.0 bearer
+  flows:
+  - clientCredentials
+  - authorizationCode
+  token_endpoint: https://api-platform.cvent.com/ea/oauth2/token
+  token_ttl_seconds: 3600
+  client_auth: HTTP Basic with base64(client_id:client_secret) on the token call
+  authorization_code_restriction: Authorization code flow is available only to planner users holding the Cvent administrator
+    role; developer users cannot use it.
+  scope_model: read / write / delete per data domain (e.g. event/attendees:read); scopes are granted to an application
+    inside a workspace (max 5 workspaces per account).
+  gotcha: Granting an application too many scopes inflates the token and can produce HTTP 431 Request Header Fields
+    Too Large.
+  see:
+  - authentication/cvent-authentication.yml
+  - scopes/cvent-scopes.yml
+idempotency:
+  coverage: none
+  mechanism: null
+  header: null
+  detail: No idempotency mechanism exists. The published OpenAPI (469 operations, 211 of them mutating) declares
+    no Idempotency-Key header, no idempotency parameter and no idempotency extension anywhere; the string "idempoten"
+    does not occur in the contract. The one mention in the docs — "Follow idempotency guidelines for mutating endpoints
+    when supported (for example use idempotency keys where available)" on the Concepts page — is generic client
+    advice, not a Cvent-provided mechanism, and no Cvent endpoint documents such a key. A retried POST is a second
+    write.
+  evidence:
+  - https://developers.cvent.com/docs/rest-api/explanation/concepts
+  - openapi/_original/cvent-openapi.json
+reversibility:
+  grade: documented
+  detail: Reversal paths exist and are documented per operation, but no reversal WINDOW is stated anywhere in the
+    contract or the docs, so an agent cannot know how long it has to undo an action.
+  reversals:
+  - write: createAppointment / appointment booking
+    reversal: cancelAppointment
+    operation: DELETE /appointment-events/{id}/appointments/{apptId}
+    window: null
+  - write: housing reservation
+    reversal: cancelReservation
+    operation: DELETE /reservations/{reservationId}
+    window: null
+    note: Cancelling a reservation does NOT cancel the linked reservation request — cancelReservationRequest must
+      be called separately, then unlinkReservation before a new link.
+  - write: reservation request
+    reversal: cancelReservationRequest
+    operation: DELETE /reservation-requests/{reservationRequestsId}
+    window: null
+  - write: bulk job (createBulkJob)
+    reversal: cancelBulkJob
+    operation: POST /bulk-jobs/{id}/cancel
+    window: null
+    note: The job stops after finishing its current batch — rows already written are not rolled back.
+  - write: event check-in
+    reversal: deleteEventCheckIn
+    operation: DELETE /events/{id}/check-in/{attendeeId}
+    window: null
+  - write: session enrollment
+    reversal: deleteSessionEnrollment
+    operation: DELETE /sessions/{id}/enrollment/{attendeeId}
+    window: null
+  - write: contact creation
+    reversal: deleteContactById
+    operation: DELETE /contacts/{id}
+    window: null
+    note: Deletes from the address book but does NOT remove the contact from events; deleted and purged contacts
+      remain queryable via the deleted filter and includePurged parameter.
+  no_reversal:
+  - Emails sent through the Emails/Campaigns surface
+  - Attendee registration transactions and Transactions entries (financial records are retrieved, not reversed,
+    through the API)
+  evidence:
+  - openapi/_original/cvent-openapi.json
+dry_run_mode:
+  supported: false
+  detail: No dry-run, preview, validate-only or simulate parameter exists in the contract. The Validate Token operation
+    validates a credential, not a write.
+pagination:
+  style: opaque cursor token
+  request_params:
+  - limit
+  - token
+  response_object: paging
+  response_fields:
+  - currentToken
+  - nextToken
+  - previousToken
+  - limit
+  - totalCount
+  - _links
+  detail: Pass the nextToken (or previousToken) value back as the token query parameter. Absence of nextToken means
+    the last page. An empty final data array is possible when the result count divides evenly — clients must handle
+    it.
+  evidence:
+  - https://developers.cvent.com/documentation
+filtering:
+  style: 'RSQL-like string: filter=''field'' comparison ''value'''
+  operators:
+  - eq
+  - ne
+  - lt
+  - le
+  - gt
+  - ge
+  - sw
+  - contains
+  - in
+  - and
+  - or
+  quoting: Single or double quotes; use double quotes around a value containing a single quote, and backslash-escape
+    embedded double quotes.
+  evidence:
+  - https://developers.cvent.com/docs/rest-api/reference/filters
+  - https://developers.cvent.com/documentation
+sorting:
+  supported: per-operation
+  detail: A sort parameter is documented on selected list operations (e.g. List Sessions, List Speaker Categories)
+    rather than globally.
+change_tracking:
+  detail: List operations expose lastModified and (for contacts) deleted / includePurged filters so a consumer can
+    poll for changes.
+  evidence:
+  - https://developers.cvent.com/docs/rest-api/reference/api-standards
+data_standards:
+  currency: ISO 4217
+  country: ISO 3166 (with Cvent-specific GB1–GB4 sub-codes for England/Scotland/Wales/Northern Ireland)
+  region: Cvent region/state code table
+  datetime: ISO 8601 UTC
+  evidence:
+  - https://developers.cvent.com/docs/rest-api/reference/api-standards
+request_id:
+  header: Request-ID
+  direction: Cvent → your endpoint on webhook deliveries
+  note: 'The REST API does not document a correlation-id request header for inbound calls; Request-ID appears on
+    outbound webhook POSTs alongside User-Agent: Cvent-Webhooks.'
+versioning:
+  scheme: URI path version
+  current: ea
+  detail: Only ea is currently supported. See lifecycle/cvent-lifecycle.yml for the backward-compatibility contract.
+error_envelope:
+  media_type: application/json
+  shape: '{code, message, target?, details[]?}'
+  rfc9457: false
+  see: errors/cvent-problem-types.yml
+rate_limit_signaling:
+  headers:
+  - X-RateLimit-Limit
+  - X-RateLimit-Remaining
+  - X-RateLimit-Reset
+  exhausted_status: 429
+  see: rate-limits/cvent-rate-limits.yml
+expansion:
+  supported: false
+  detail: No field-expansion or sparse-fieldset parameter is documented; related entities are fetched through their
+    own endpoints.
+bulk:
+  detail: A dedicated Bulk API (6 operations) uploads large data sets asynchronously and returns 207 Multi-Status
+    results per row.
+  evidence:
+  - https://developers.cvent.com/docs/rest-api/guides/bulk-api-user-guide

@@ -1,0 +1,3373 @@
+openapi: 3.0.2
+info:
+  title: Cvent REST APIs — Housing
+  version: ea
+  description: "RegLink APIs allow you to exchange data with Cvent Passkey events and hotel reservation-booking engines.\n\
+    Generally, there are four primary categories of functionality that RegLink APIs support:\n  * **Sync Registrants.** Allow\
+    \ individual registrant information to be sent to Cvent Passkey, streamlining the hotel reservation process for attendees.\
+    \ Attendees can then be directed to Passkey post-registration and reserve a hotel room without re-entering their data\
+    \ again. This is done with the reservation request endpoint.\n  * **Fetch Rooms.** The ability for an external system\
+    \ to fetch Passkey event details and hotel room availability based on various criteria.\n  * **Fetch Reservations.** The\
+    \ ability for an external system to fetch detailed reservation information for individual registrants. This is done with\
+    \ the Reservation endpoint and the Callback system.\n  * **Manage Reservations.** The ability for an external system to\
+    \ create, modify or cancel a registrant's hotel reservation directly or indirectly.\n\nIf you need authentication credentials\
+    \ or have any questions regarding the RegLink APIs, contact the [Cvent Passkey Integrations Team](https://web.cvent.com/survey/c6a60a30-d981-4ae8-af28-686af0eeb9b7/welcome).\n\
+    \n* **Passkey.** A software solution allowing your invitees to book room reservations directly with hotels.\n* **Housing\
+    \ Event.** An Passkey event where invitees will be able to register and book rooms.\n* **Reservation Request.** Represents\
+    \ a request to book rooms in the housing event.\n* **RegLink.** A feature that links Passkey events to your registration\
+    \ events, enabling you to sync data between the two events.\n* **Callback.** [Passkey's callback system](/docs/passkey/REST/callbacks)\
+    \ allows for a push notification to be sent to your system when a reservation is created, modified or cancelled.\n"
+  contact:
+    name: Cvent Development Platform
+    url: https://developers.cvent.com/
+externalDocs:
+  description: Cvent REST API documentation
+  url: https://developers.cvent.com/documentation
+servers:
+- url: https://api-platform.cvent.com/ea
+- url: https://api-platform-eur.cvent.com/ea
+tags:
+- name: Housing
+  description: "RegLink APIs allow you to exchange data with Cvent Passkey events and hotel reservation-booking engines.\n\
+    Generally, there are four primary categories of functionality that RegLink APIs support:\n  * **Sync Registrants.** Allow\
+    \ individual registrant information to be sent to Cvent Passkey, streamlining the hotel reservation process for attendees.\
+    \ Attendees can then be directed to Passkey post-registration and reserve a hotel room without re-entering their data\
+    \ again. This is done with the reservation request endpoint.\n  * **Fetch Rooms.** The ability for an external system\
+    \ to fetch Passkey event details and hotel room availability based on various criteria.\n  * **Fetch Reservations.** The\
+    \ ability for an external system to fetch detailed reservation information for individual registrants. This is done with\
+    \ the Reservation endpoint and the Callback system.\n  * **Manage Reservations.** The ability for an external system to\
+    \ create, modify or cancel a registrant's hotel reservation directly or indirectly.\n\nIf you need authentication credentials\
+    \ or have any questions regarding the RegLink APIs, contact the [Cvent Passkey Integrations Team](https://web.cvent.com/survey/c6a60a30-d981-4ae8-af28-686af0eeb9b7/welcome).\n\
+    \n* **Passkey.** A software solution allowing your invitees to book room reservations directly with hotels.\n* **Housing\
+    \ Event.** An Passkey event where invitees will be able to register and book rooms.\n* **Reservation Request.** Represents\
+    \ a request to book rooms in the housing event.\n* **RegLink.** A feature that links Passkey events to your registration\
+    \ events, enabling you to sync data between the two events.\n* **Callback.** [Passkey's callback system](/docs/passkey/REST/callbacks)\
+    \ allows for a push notification to be sent to your system when a reservation is created, modified or cancelled.\n"
+paths:
+  /connections:
+    post:
+      tags:
+      - Housing
+      summary: Create Connection
+      description: 'Create a connection between an integration partner and an event using an access code provided by the Passkey
+
+        event owner. This connection is required to authorize all other API calls for the event. Only one active
+
+        connection is supported per access code at a time.
+
+        '
+      operationId: createConnection
+      security:
+      - OAuth2.clientCredentials:
+        - housing/connections:write
+      parameters:
+      - $ref: '#/components/parameters/accessCode'
+      responses:
+        '200':
+          description: Successfully connected.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connection-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+  /housing-events/summaries:
+    get:
+      tags:
+      - Housing
+      summary: Get Housing Events Summaries
+      description: 'Gets a paginated list of summary information for your individual housing events. Use this endpoint to
+        discover
+
+        which events your integration has access to and to retrieve housing event IDs for use in other endpoints.
+
+        '
+      operationId: getHousingEventsSummaries
+      security:
+      - OAuth2.clientCredentials:
+        - housing/housing-events:read
+      parameters:
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/paginationParam'
+      - $ref: '#/components/parameters/housingEventsSummariesFilter'
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of summary information for your individual housing events.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/housing-event-summary-list'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+  /housing-events/{housingEventId}:
+    get:
+      tags:
+      - Housing
+      summary: Get Housing Event Info
+      description: 'Retrieves housing event details based on the given housing event ID. Use this endpoint to get event-level
+
+        information such as event name, dates, attendee types, and related configuration. Get the housing event ID
+
+        from the [Get Housing Events Summaries](#operation/getHousingEventsSummaries) endpoint, from the
+
+        [Create Connection](#operation/createConnection) response, or directly from the Passkey event owner.
+
+        '
+      operationId: getHousingEventInfo
+      security:
+      - OAuth2.clientCredentials:
+        - housing/housing-events:read
+      parameters:
+      - $ref: '#/components/parameters/housingEventId'
+      responses:
+        '200':
+          description: Successfully retrieved the housing events details.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/housing-event'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+  /housing-events/{housingEventId}/hotels:
+    get:
+      tags:
+      - Housing
+      summary: Get Housing Event Hotels
+      description: 'Get a list of hotels for the given housing event. Returns a paginated list of all hotels in the housing
+        event''s
+
+        room block, including hotel names, addresses, and IDs. Use the hotel IDs from this response to query
+
+        [room types](#operation/getHousingEventRoomTypes), [availability](#operation/getHousingEventHotelAvailability), and
+        [inventory](#operation/getRoomTypeInventory).
+
+        '
+      operationId: getHousingEventHotels
+      security:
+      - OAuth2.clientCredentials:
+        - housing/housing-event-hotels:read
+      parameters:
+      - $ref: '#/components/parameters/housingEventId'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/paginationParam'
+      - $ref: '#/components/parameters/locale2'
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of hotels for the housing event, and their related details.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/housing-event-hotels-list'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+  /housing-events/{housingEventId}/hotels/{hotelId}:
+    get:
+      tags:
+      - Housing
+      summary: Get Housing Event Hotel
+      description: 'Gets a single hotel''s details in a housing event. Returns detailed information about a specific hotel,
+
+        including address and localized content. Use this endpoint when you need full details for
+
+        a single hotel rather than the [summary list](#operation/getHousingEventHotels).
+
+        '
+      operationId: getHousingEventHotel
+      security:
+      - OAuth2.clientCredentials:
+        - housing/housing-event-hotels:read
+      parameters:
+      - $ref: '#/components/parameters/housingEventId'
+      - $ref: '#/components/parameters/hotelId1'
+      - $ref: '#/components/parameters/locale2'
+      responses:
+        '200':
+          description: Successfully retrieved a hotel's details.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/housing-event-hotel'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+  /housing-events/{housingEventId}/hotels/{hotelId}/available-nights:
+    get:
+      tags:
+      - Housing
+      summary: Get Event Hotel Availability
+      description: 'Get a filterable list of available room nights for a particular hotel and housing event. Returns availability
+
+        by date, showing which nights have rooms remaining.
+
+
+        Filter by attendee type and date range to narrow results.
+
+        '
+      operationId: getHousingEventHotelAvailability
+      security:
+      - OAuth2.clientCredentials:
+        - housing/housing-event-available-nights:read
+      parameters:
+      - $ref: '#/components/parameters/housingEventId'
+      - $ref: '#/components/parameters/hotelId1'
+      - $ref: '#/components/parameters/availableNightsFilter'
+      - $ref: '#/components/parameters/availabilityLimit'
+      - $ref: '#/components/parameters/paginationParam'
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of room nights.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/available-nights'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+  /housing-events/{housingEventId}/hotels/{hotelId}/room-types:
+    get:
+      tags:
+      - Housing
+      summary: Get Housing Event Room Types
+      description: 'Get a filterable list of room types for a given hotel in a housing event. Room types represent categories
+        of
+
+        rooms (for example, Standard King or Double Queen) available at the hotel for this event. Use the returned
+
+        room type IDs to query [room details](#operation/getRoomTypeDetails) and [inventory](#operation/getRoomTypeInventory).
+
+
+        Filter by attendee type to retrieve only the room types available to a specific attendee segment.
+
+        '
+      operationId: getHousingEventRoomTypes
+      security:
+      - OAuth2.clientCredentials:
+        - housing/housing-event-room-types:read
+      parameters:
+      - $ref: '#/components/parameters/housingEventId'
+      - $ref: '#/components/parameters/hotelId1'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/paginationParam'
+      - $ref: '#/components/parameters/roomTypesFilter'
+      - $ref: '#/components/parameters/locale2'
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of room types.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/housing-event-room-types-list'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+  /housing-events/{housingEventId}/hotels/{hotelId}/room-types/{roomTypeId}:
+    get:
+      tags:
+      - Housing
+      summary: Get Room Type Details
+      description: 'Get a room type''s details for the given housing event, hotel, and room type. Returns detailed information
+        about
+
+        a specific room type, including room description and available images.
+
+        '
+      operationId: getRoomTypeDetails
+      security:
+      - OAuth2.clientCredentials:
+        - housing/housing-event-room-types:read
+      parameters:
+      - $ref: '#/components/parameters/housingEventId'
+      - $ref: '#/components/parameters/hotelId1'
+      - $ref: '#/components/parameters/roomTypeId'
+      - $ref: '#/components/parameters/locale2'
+      responses:
+        '200':
+          description: Successfully retrieved room details.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/room-type-details'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+  /housing-events/{housingEventId}/hotels/{hotelId}/room-types/{roomTypeId}/inventory:
+    get:
+      tags:
+      - Housing
+      summary: Get Room Type Inventory
+      description: 'Gets a list of room type inventory details (by date) for the given housing event, hotel, and room type.
+        Returns
+
+        date-by-date inventory counts (total rooms, rooms picked up, and rooms remaining) for a specific room type.
+
+
+        Filter by date range to retrieve inventory for specific nights.
+
+        '
+      operationId: getRoomTypeInventory
+      security:
+      - OAuth2.clientCredentials:
+        - housing/housing-event-inventory:read
+      parameters:
+      - $ref: '#/components/parameters/housingEventId'
+      - $ref: '#/components/parameters/hotelId1'
+      - $ref: '#/components/parameters/roomTypeId'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/paginationParam'
+      - $ref: '#/components/parameters/inventoryFilter'
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of room type inventory details.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inventory-details-list'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+  /housing-events/{housingEventId}/inventory:
+    get:
+      tags:
+      - Housing
+      summary: Get Housing Event Inventory
+      description: 'Gets a list (sorted by date) of housing event inventory details for the given housing event. Returns aggregated
+
+        inventory across all hotels and room types in the event. This provides a high-level view of total event capacity
+
+        and pickup.
+
+
+        For per-hotel or per-room-type breakdowns, use [Get Room Type Inventory](#operation/getRoomTypeInventory) instead.
+
+        '
+      operationId: getHousingEventInventory
+      security:
+      - OAuth2.clientCredentials:
+        - housing/housing-event-inventory:read
+      parameters:
+      - $ref: '#/components/parameters/housingEventId'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/paginationParam'
+      - $ref: '#/components/parameters/inventoryFilter'
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of housing event inventory details.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inventory-details-list'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+  /housing-events/{housingEventId}/reservations:
+    get:
+      tags:
+      - Housing
+      summary: Get Housing Event Reservations
+      description: 'Get a list of reservation details for the given housing event. Returns a paginated list of all reservations
+        in
+
+        the event, including guest details, stay dates, hotel, room type, and reservation status. Use the `before`
+
+        and `after` parameters to filter by when a reservation was added or last updated, which is useful for incremental
+        syncing.
+
+
+        Returns an empty list when no reservations match the criteria.
+
+        '
+      operationId: getHousingEventReservations
+      security:
+      - OAuth2.clientCredentials:
+        - housing/reservations:read
+      parameters:
+      - $ref: '#/components/parameters/housingEventId'
+      - $ref: '#/components/parameters/after'
+      - $ref: '#/components/parameters/before'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/paginationParam'
+      - $ref: '#/components/parameters/housingReservationsFilter'
+      responses:
+        '200':
+          description: Successfully returned reservations details.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/reservations-paginated-response'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+  /reservation-requests:
+    post:
+      tags:
+      - Housing
+      summary: Create Reservation Request
+      description: 'Creates a reservation request from guest details.
+
+
+        A reservation request represents a registration and stores guest details such as name, email, and preferences.
+
+        The response includes a guest-specific `bookingSite` URL. When the guest books through that URL, Passkey
+
+        pre-populates their details and links the new reservation to the reservation request for tracking.
+
+        '
+      operationId: createReservationRequest
+      security:
+      - OAuth2.clientCredentials:
+        - housing/reservation-requests:write
+      requestBody:
+        description: Reservation request information.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/reservation-request'
+      responses:
+        '200':
+          description: Successfully created reservation request.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/existing-reservation-request'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+  /reservation-requests/{reservationRequestsId}:
+    get:
+      tags:
+      - Housing
+      summary: Get Reservation Request
+      description: 'Returns reservation request details for a given reservation request ID. The response includes guest details,
+
+        the `bookingSite` URL, and a linked Reservation ID/ack number if present.
+
+        '
+      operationId: getReservationRequest
+      security:
+      - OAuth2.clientCredentials:
+        - housing/reservation-requests:read
+      parameters:
+      - $ref: '#/components/parameters/reservationRequestsId'
+      responses:
+        '200':
+          description: Successfully returned response with reservation request information.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/existing-reservation-request'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+    put:
+      tags:
+      - Housing
+      summary: Update Reservation Request
+      description: 'Update a reservation request using the given reservation request ID. Use this endpoint to update guest
+        details
+
+        (name, email, preferences) on the reservation request. The request body overwrites the current version entirely.
+
+
+        If a reservation has already been booked through this request, changes to the reservation request do not affect
+
+        the linked reservation. To update the hotel booking itself, use [Update Reservation](#operation/updateReservationSync)
+        instead.
+
+
+        You cannot update a cancelled reservation request.
+
+        '
+      operationId: updateReservationRequest
+      security:
+      - OAuth2.clientCredentials:
+        - housing/reservation-requests:write
+      requestBody:
+        description: Reservation request details. This data will overwrite the current version of the reservation request
+          for the given ID.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/existing-reservation-request'
+      parameters:
+      - $ref: '#/components/parameters/reservationRequestsId'
+      responses:
+        '200':
+          description: Successfully returned response with updated reservation request information.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/existing-reservation-request'
+        '400':
+          description: Reservation request was cancelled and cannot be modified.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error-response'
+              example:
+                code: 400
+                message: The reservation request is cancelled and cannot be modified.
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+    delete:
+      tags:
+      - Housing
+      summary: Cancel Reservation Request
+      description: 'Update the status of a reservation request to cancelled. If a reservation has already been booked through
+        this
+
+        request, cancelling the request does not cancel the linked reservation. To cancel the hotel booking itself,
+
+        use [Cancel Reservation](#operation/cancelReservation).
+
+
+        You cannot cancel a reservation request that already has a linked reservation. [Unlink the reservation](#operation/unlinkReservation)
+        first,
+
+        then cancel the request.
+
+        '
+      operationId: cancelReservationRequest
+      security:
+      - OAuth2.clientCredentials:
+        - housing/reservation-requests:delete
+      parameters:
+      - $ref: '#/components/parameters/reservationRequestsId'
+      responses:
+        '204':
+          description: Successfully cancelled reservation request.
+        '400':
+          description: Reservation already exists for given reservation request, so we cannot cancel it.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error-response'
+              example:
+                code: 400
+                message: Reservation record already present.
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+  /reservation-requests/{reservationRequestsId}/reservations/{reservationId}:
+    post:
+      tags:
+      - Housing
+      summary: Link Reservation
+      description: 'Link an existing reservation to a reservation request. Commonly used when a reservation was created outside
+        the
+
+        normal booking flow, such as when a guest calls the hotel directly or when staff books through the Passkey
+
+        Call Center. Linking associates the reservation with the registration represented by the reservation request,
+
+        enabling tracking and callback reporting.
+
+        '
+      operationId: linkReservation
+      security:
+      - OAuth2.clientCredentials:
+        - housing/reservations-link:write
+      parameters:
+      - $ref: '#/components/parameters/reservationRequestsId'
+      - $ref: '#/components/parameters/reservationId'
+      responses:
+        '204':
+          description: Successfully linked reservation to reservation request.
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+    delete:
+      tags:
+      - Housing
+      summary: Unlink Reservation
+      description: 'Unlink a reservation from a reservation request. Commonly used when a linked reservation has been cancelled
+        and
+
+        you need to free up the reservation request so a new reservation can be linked in its place.
+
+        Unlinking does not cancel or change the reservation itself.
+
+
+        After unlinking, you can [link a new reservation](#operation/linkReservation) or allow the guest to book again using
+        the reservation
+
+        request''s `bookingSite` URL.
+
+        '
+      operationId: unlinkReservation
+      security:
+      - OAuth2.clientCredentials:
+        - housing/reservations-link:delete
+      parameters:
+      - $ref: '#/components/parameters/reservationRequestsId'
+      - $ref: '#/components/parameters/reservationId'
+      responses:
+        '204':
+          description: Successfully removed link between reservation request and reservation.
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+  /reservations:
+    post:
+      tags:
+      - Housing
+      summary: Create Reservation
+      description: 'Create a hotel reservation in a housing event based on the details provided in the request body. This
+        endpoint
+
+        directly creates a hotel booking on behalf of a guest. Requires a valid hotel ID, room type ID, and guest
+
+        details (including arrival and departure dates).
+
+
+        To generate a booking URL that guests complete themselves, use [Create Reservation Request](#operation/createReservationRequest)
+        instead.
+
+        '
+      operationId: createReservation
+      security:
+      - OAuth2.clientCredentials:
+        - housing/reservations:write
+      requestBody:
+        description: Reservation you are creating.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/new-reservation'
+      responses:
+        '200':
+          description: Successfully created the reservation.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/existing-reservation'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+  /reservations/{reservationId}:
+    get:
+      tags:
+      - Housing
+      summary: Get Reservation
+      description: 'Get reservation details for the given reservation ID. Commonly used in response to
+
+        [Passkey callbacks](/docs/passkey/REST/callbacks), where a callback payload includes the reservation ID.
+
+        Call this endpoint to retrieve the full reservation details after receiving a callback notification.
+
+        '
+      operationId: getReservation
+      security:
+      - OAuth2.clientCredentials:
+        - housing/reservations:read
+      parameters:
+      - $ref: '#/components/parameters/reservationId'
+      responses:
+        '200':
+          description: Successfully returned reservation details.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/existing-reservation'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+    delete:
+      tags:
+      - Housing
+      summary: Cancel Reservation
+      description: 'Cancel a reservation for the given reservation ID. Cancelling a reservation does not cancel the linked
+
+        reservation request. If you need to also [cancel the reservation request](#operation/cancelReservationRequest), do
+        so separately. After cancellation,
+
+        [unlink the reservation](#operation/unlinkReservation) from its reservation request so you can link a new one.
+
+        '
+      operationId: cancelReservation
+      security:
+      - OAuth2.clientCredentials:
+        - housing/reservations:delete
+      parameters:
+      - $ref: '#/components/parameters/reservationId'
+      responses:
+        '204':
+          description: Successfully cancelled reservation.
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+    put:
+      tags:
+      - Housing
+      summary: Update Reservation
+      description: 'Updates an existing reservation for the given reservation ID. This is a synchronous operation that returns
+
+        the updated reservation in the response. The request body must include the full reservation object.
+
+        Use [Get Reservation](#operation/getReservation) to retrieve the current reservation before making changes.
+
+
+        To update stay dates, room type, or guest details, include all required fields in the request body.
+
+        '
+      operationId: updateReservationSync
+      security:
+      - OAuth2.clientCredentials:
+        - housing/reservations:write
+      parameters:
+      - $ref: '#/components/parameters/reservationId'
+      requestBody:
+        description: Updated reservation data.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/new-reservation'
+      responses:
+        '200':
+          description: Successfully updated reservation details.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/existing-reservation'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '404':
+          $ref: '#/components/responses/NotFound1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+components:
+  schemas:
+    Link:
+      title: Link
+      required:
+      - href
+      type: object
+      description: Represents a link to a related resource.
+      properties:
+        href:
+          type: string
+          description: A url provided that can be followed for linking
+          example: ?token=90c5f062-76ad-4ea4-aa53-00eb698d9262
+    existing-reservation:
+      type: object
+      title: ExistingReservation
+      description: Details about existing reservation.
+      allOf:
+      - $ref: '#/components/schemas/Reservation'
+      required:
+      - id
+      - sendAcknowledgement
+      - startDate
+      - endDate
+      - numberOfAdults
+      - numberOfChildren
+      - guests
+      - bookingSite
+      - housingEvent
+      - hotel
+      - attendeeType
+      - roomType
+      properties:
+        housingEvent:
+          description: Information about Passkey event for this reservation.
+          type: object
+          allOf:
+          - readOnly: true
+          - $ref: '#/components/schemas/HousingEventId'
+        hotel:
+          $ref: '#/components/schemas/HotelInfo'
+        totalCharges:
+          description: Calculated total charges for this reservation.
+          type: object
+          allOf:
+          - readOnly: true
+          - $ref: '#/components/schemas/ReservationTotalCharges'
+        bookingSite:
+          $ref: '#/components/schemas/BookingWebsiteLink'
+        callCenter:
+          $ref: '#/components/schemas/CallCenterLink'
+        bookingContact:
+          description: Booking contact information.
+          type: object
+          required:
+          - id
+          properties:
+            id:
+              description: Group booking ID.
+              type: string
+              example: 323CZK3H
+        addOns:
+          description: List of room add-ons.
+          type: array
+          items:
+            $ref: '#/components/schemas/AddOn'
+        blockCode:
+          description: Block Code. DEPRECATED - use attendee type and room type to identify block code instead.
+          type: string
+          example: '85439769333'
+          deprecated: true
+    room-inventory:
+      description: Room inventory details for single night.
+      type: object
+      required:
+      - housingEvent
+      - hotel
+      - roomType
+      - date
+      allOf:
+      - $ref: '#/components/schemas/inventory-details'
+      properties:
+        housingEvent:
+          $ref: '#/components/schemas/HousingEventId'
+        hotel:
+          $ref: '#/components/schemas/HotelId'
+        roomType:
+          $ref: '#/components/schemas/RoomId'
+        date:
+          description: Inventory date.
+          type: string
+          format: date
+          example: '2024-12-01'
+        freeSell:
+          description: Number of inventory that can be sold to any attendee type.
+          type: integer
+          example: 80
+        unassigned:
+          description: Number of unassigned inventory. Inventory left in unassigned will not be sold until allocated to an
+            attendee type or marked for free-sell to any attendee type.
+          type: integer
+          example: 20
+        allocation:
+          description: Inventory allocation by attendee type.
+          type: array
+          items:
+            $ref: '#/components/schemas/InventoryAllocation'
+          minItems: 1
+    housing-event-hotels-list:
+      type: object
+      title: HotelsList
+      description: List of hotels associated with a particular housing event.
+      required:
+      - paging
+      - data
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/housing-event-hotel'
+          description: List of hotels associated with a particular housing event.
+    HousingEventStatus:
+      description: Housing event status.
+      title: HousingEventStatus
+      type: string
+      enum:
+      - Open
+      - PreOpen
+      - Closed
+      - Cancelled
+      - New
+    TravelDepartureArrival:
+      title: TravelDepartureArrival
+      type: object
+      description: Common object that holds travel departure/arrival information.
+      properties:
+        time:
+          description: The ISO 8601 formatted date.
+          type: string
+          format: date-time
+          example: '2024-12-01T00:00:00Z'
+        carrier:
+          description: ICAO code.
+          type: string
+          example: JBU
+          maxLength: 3
+        carrierNumber:
+          description: Carrier number.
+          type: string
+          example: '12345'
+          maxLength: 32
+    RoomId:
+      type: object
+      title: RoomId
+      description: Contains unique ID of the room.
+      required:
+      - id
+      properties:
+        id:
+          description: The unique ID of the room.
+          type: integer
+          example: 11549984
+    OtherPay:
+      description: Other payment details.
+      title: OtherPay
+      type: object
+      properties:
+        amount:
+          description: Amount paid.
+          type: integer
+          example: 0
+        paymentDate:
+          description: Payment due date or date of payment.
+          type: string
+          example: '2021-12-31'
+          format: date
+        referenceItem:
+          description: Payment reference item.
+          type: string
+          example: Reference Item
+        checkNumber:
+          description: Pay check number.
+          type: string
+          example: Check Num
+        received:
+          description: True indicates a payment was received.
+          type: boolean
+          example: false
+        note:
+          description: Payment note.
+          type: string
+          example: No Comment
+          maxLength: 250
+    ReservationNightRate:
+      description: Rate details for a single reservation night.
+      title: ReservationNightRate
+      type: object
+      required:
+      - base
+      - currency
+      allOf:
+      - $ref: '#/components/schemas/night-rate'
+      properties:
+        additionalGuestFees:
+          description: List of additional guest fees.
+          type: array
+          items:
+            $ref: '#/components/schemas/AdditionalGuestFees'
+          maxItems: 4
+        displayRate:
+          $ref: '#/components/schemas/DisplayRate'
+    Venue:
+      title: Venue
+      description: Event venue details.
+      type: object
+      properties:
+        name:
+          description: Venue name.
+          type: string
+          example: Holiday Inn
+        address:
+          $ref: '#/components/schemas/VenueAddress'
+    ReservationContact:
+      title: ReservationContact
+      description: Reservation contact details for this event.
+      type: object
+      properties:
+        phone:
+          description: Phone number.
+          type: string
+          example: 2345239540-123
+        fax:
+          description: Fax number.
+          type: string
+          example: 25123-234-12
+        tollFree:
+          description: Toll-free number.
+          type: string
+          example: 323-324
+        email:
+          description: Email address.
+          type: string
+          example: venue@example.com
+    RewardProgram:
+      title: RewardProgram
+      type: object
+      description: Represents reward program information.
+      required:
+      - id
+      properties:
+        id:
+          description: Reward ID.
+          type: integer
+          example: 10000
+        name:
+          description: Reward name.
+          type: string
+          example: Test name
+    BookingWebsiteLink:
+      type: object
+      title: BookingWebsiteLink
+      description: Unique URL for a guest to access a reservation in Passkey's booking tool.
+      readOnly: true
+      allOf:
+      - $ref: '#/components/schemas/Link'
+      example:
+        href: https://book.passkey.com/entry?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXlsb2FkIjp7ImVudHJ5IjoiUkVHSVNUUkFUSU9OIiwicGFyYW1zIjpbeyJuYW1lIjoiYnJpZGdlSWQiLCJ2YWx1ZSI6IlQ3VFdNTEhQLUdFNEQifV19fQ.7sH1gO_1Aambk-SRRlO2c7ac2DOpqLmCB-zsxB71q_A
+    AttendeeType:
+      title: AttendeeType
+      description: Attendee type details.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AttendeeTypeId'
+      required:
+      - id
+      - name
+      - codes
+      properties:
+        name:
+          description: The name of the attendee type.
+          type: string
+          example: Staff
+        codes:
+          description: A list of attendee type codes.
+          type: array
+          minItems: 1
+          maxItems: 6
+          items:
+            description: An attendee type code.
+            type: string
+            example: PEWATT0524317
+    CustomFields:
+      description: Custom fields.
+      title: CustomFields
+      type: object
+      example:
+        customField1: CustomField1
+        customField2: CustomField2
+        customField3: CustomField3
+        customField4: CustomField4
+        customField5: CustomField5
+        customField6: CustomField6
+      properties:
+        customField1:
+          description: Custom field 1.
+          type: string
+          example: CustomField1
+        customField2:
+          description: Custom field 2.
+          type: string
+          example: CustomField2
+        customField3:
+          description: Custom field 3.
+          type: string
+          example: CustomField3
+        customField4:
+          description: Custom field 4.
+          type: string
+          example: CustomField4
+        customField5:
+          description: Custom field 5.
+          type: string
+          example: CustomField5
+        customField6:
+          description: Custom field 6.
+          type: string
+          example: CustomField6
+    inventory-details-list:
+      type: object
+      title: InventoryDetailsList
+      description: List of inventory details for room type by night.
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/room-inventory'
+          description: List of inventory details by night.
+    RoomAttendeeType:
+      title: RoomAttendeeType
+      description: Attendee type details specific to room.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AttendeeType'
+      properties:
+        cancelPolicy:
+          description: Room cancellation policy for the attendee types.
+          type: string
+          example: If you wish to cancel your reservation, please do so 72 hours prior to your arrival date.
+        taxPolicy:
+          description: Room tax policy for the attendee types.
+          type: string
+          example: New York State Sales Tax is currently 8.875% per night.
+    TaxAndFee:
+      title: TaxAndFee
+      description: A single tax or fee applicable to a room.
+      type: object
+      required:
+      - name
+      - amount
+      - amountType
+      - frequency
+      - partOfBaseRate
+      - partOfDisplayRate
+      properties:
+        name:
+          description: Name of the tax or fee.
+          type: string
+          example: State Tax
+        amount:
+          description: Amount or percentage value of the tax or fee.
+          type: number
+          example: 6
+        amountType:
+          description: Specifies if the amount is a fixed value or a percentage.
+          type: string
+          enum:
+          - amount
+          - percentage
+          example: percentage
+        frequency:
+          description: 'Defines how often the tax or fee is applied.
+
+            - per_guest: Applied per guest.
+
+            - per_room: Applied per room.
+
+            - per_night: Applied per night.
+
+            - per_stay: Applied per stay.'
+          type: string
+          enum:
+          - per_guest
+          - per_room
+          - per_night
+          - per_stay
+          example: per_room
+        partOfBaseRate:
+          description: 'Indicates if the tax or fee is included in the base room rate set by the hotel (before any taxes or
+            fees are applied).
+
+
+            - true: The tax or fee is already part of the nightly rate set by the hotel.
+
+            - false: The tax or fee will be added to the hotel nightly rate as a separate charge.'
+          type: boolean
+          example: false
+        partOfDisplayRate:
+          description: 'Indicates if the tax or fee is included in the displayed rate shown to the guest.
+
+
+            - true: The tax or fee is included in the displayed rate as part of the room rate. (Displayed rate = base room
+            rate + tax/fee.)
+
+            - false: The tax or fee is listed separately at the end of the booking process. (Displayed rate is the room rate
+            only.)'
+          type: boolean
+          example: false
+    Locale:
+      title: Locale
+      description: Locale code
+      type: string
+      example: en-US
+      minLength: 1
+      maxLength: 200
+    Audit:
+      title: Audit
+      description: Audit information
+      type: object
+      properties:
+        created:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date time when this record was created.
+          readOnly: true
+          example: '2017-01-02T02:00:00Z'
+        createdBy:
+          type: string
+          description: The identifier of the user that created this record.
+          readOnly: true
+          example: hporter
+        lastModified:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date time when this record was updated.
+          readOnly: true
+          example: '2019-02-12T03:00:00Z'
+        lastModifiedBy:
+          type: string
+          description: The identifier of the user that last updated this record.
+          readOnly: true
+          example: hporter
+    ErrorResponse-12:
+      title: ErrorResponse
+      description: Represents an error response with additional details of cascading error messages.
+      allOf:
+      - $ref: '#/components/schemas/ErrorResponseBase1'
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorResponseBase1'
+          description: Additional details of cascading error messages.
+    CallCenterLink:
+      type: object
+      title: CallCenterLink
+      description: Unique URL for Passkey users (rather than guests) to access a reservation in Passkey's call center tool.
+      readOnly: true
+      allOf:
+      - $ref: '#/components/schemas/Link'
+      example:
+        href: https://manage.passkey.com/Login?src=api&redirect=ccbridge&regacknumber=WODS7LK4-GA8C
+    HotelId:
+      type: object
+      title: HotelId
+      description: Contains unique ID of the hotel.
+      required:
+      - id
+      properties:
+        id:
+          description: The unique ID of the hotel.
+          type: integer
+          example: 49543342
+    RoomCategoryId:
+      type: object
+      title: RoomCategoryId
+      description: Contains the unique ID of the room category.
+      required:
+      - id
+      properties:
+        id:
+          description: The unique ID of the room category.
+          type: integer
+          example: 12345
+    ReservationRequestStatus:
+      title: ReservationRequestStatus
+      description: Reservation request status.
+      readOnly: true
+      type: string
+      enum:
+      - Active
+      - Cancel
+    TokenizedCreditCard:
+      description: Credit card info.
+      title: Tokenized Credit Card
+      type: object
+      required:
+      - paymentToken
+      allOf:
+      - $ref: '#/components/schemas/CreditCard'
+      properties:
+        number:
+          description: Credit card number. DEPRECATED - use 'lastFour' instead.
+          type: string
+          example: '************1111'
+          readOnly: true
+          deprecated: true
+        lastFour:
+          description: Last four digits of the credit card number.
+          type: string
+          example: '1111'
+          readOnly: true
+        expiration:
+          description: Card expiration date.
+          type: string
+          example: '2021-12-31'
+          format: date
+          readOnly: true
+        paymentToken:
+          description: Credit card token. Use Tokenization API to generate.
+          type: string
+          writeOnly: true
+          example: '1234567890'
+    InventoryAllocation:
+      description: Inventory allocation for specific attendee type.
+      title: InventoryAllocation
+      type: object
+      required:
+      - attendeeType
+      - openForReservation
+      allOf:
+      - $ref: '#/components/schemas/inventory-details'
+      properties:
+        attendeeType:
+          $ref: '#/components/schemas/AttendeeTypeId'
+        openForReservation:
+          description: Indicates if this night is available for sale.
+          type: boolean
+          example: true
+        freeSellEnabled:
+          description: Indicates if free-sell is enabled for this night, which allows any attendee type to purchase the room.
+          type: boolean
+          example: true
+        sellHighestRate:
+          description: Indicates if this night inventory should be sold by highest possible rate.
+          type: boolean
+          example: false
+        waitListEnabled:
+          description: Indicates if wait list is enabled for this night.
+          type: boolean
+          example: false
+        guaranteed:
+          description: Indicates if attendee has guaranteed their blocks. Enabling this option will ensure that any unsold
+            guaranteed rooms will be included in the total pickup.
+          type: boolean
+          example: true
+        arrivals:
+          description: Number of reservations starting from this night.
+          type: integer
+          example: 10
+          minimum: 0
+    inventory-details:
+      description: Inventory details for single night.
+      type: object
+      required:
+      - rate
+      - currentBlock
+      - pickup
+      - available
+      properties:
+        hideRates:
+          description: Indicates if rates are hidden on booking site for this night.
+          type: boolean
+          example: false
+        rate:
+          $ref: '#/components/schemas/night-rate'
+        originalBlock:
+          description: Number of inventory blocked on event creation.
+          type: integer
+          example: 100
+          minimum: 0
+        currentBlock:
+          description: Current inventory number.
+          type: integer
+          example: 150
+          minimum: 0
+        pickup:
+          description: Number of rooms sold.
+          type: integer
+          example: 50
+          minimum: 0
+        finalPickup:
+          description: Reported number of sold rooms.
+          type: integer
+          example: 45
+          minimum: 0
+        maxGuests:
+          $ref: '#/components/schemas/MaxGuests'
+        minLengthOfStay:
+          description: Minimum number nights of stay when starting from this night.
+          type: integer
+          example: 1
+          minimum: 1
+          maximum: 10
+        waitListRequests:
+          description: Number of reservations in wait list.
+          type: integer
+          example: 1
+          minimum: 0
+        available:
+          description: Number of unsold rooms.
+          type: integer
+          example: 30
+    night-rate:
+      description: Rate details for single night.
+      type: object
+      required:
+      - base
+      - currency
+      properties:
+        base:
+          description: Base rate.
+          type: number
+          example: 150
+        currency:
+          $ref: '#/components/schemas/Currency1'
+    rooms-sort-type:
+      description: 'Rooms sort type. CustomOrder: A user-defined sort order. PriceAscending: Data sorted with lowest price
+        first. PriceDescending: Data sorted by highest price first.'
+      type: string
+      enum:
+      - CustomOrder
+      - PriceAscending
+      - PriceDescending
+    ReservationPaymentInfo:
+      description: Payment information.
+      title: Reservation Payment Info
+      allOf:
+      - $ref: '#/components/schemas/PaymentInfo'
+      properties:
+        creditCard:
+          $ref: '#/components/schemas/TokenizedCreditCard'
+    credit-card-types:
+      description: Credit card type.
+      type: string
+      enum:
+      - VISA
+      - MasterCard
+      - AmericanExpr
+      - Discover
+      - DinersClub
+      - JCB
+      - UnionPay
+      - AliPay
+      - NotSupported
+    PaymentInfo:
+      description: Payment information.
+      title: PaymentInfo
+      type: object
+      properties:
+        paymentType:
+          $ref: '#/components/schemas/payment-types'
+        fullName:
+          description: Full name.
+          type: string
+          example: Gustav Schultz
+        address:
+          $ref: '#/components/schemas/Address3'
+        phone:
+          description: Phone number.
+          type: string
+          example: (231)213-1222
+        other:
+          $ref: '#/components/schemas/OtherPay'
+    HotelInfo:
+      title: HotelInfo
+      type: object
+      description: Hotel information.
+      readOnly: true
+      allOf:
+      - $ref: '#/components/schemas/HotelId'
+      properties:
+        name:
+          description: Hotel name.
+          type: string
+          example: Northern Hotel
+    DisplayRate:
+      description: The room rate displayed to guests, which includes any fees configured to display in the hotel tax settings.
+      title: DisplayRate
+      type: number
+      example: 150
+    RoomInfo:
+      title: RoomInfo
+      type: object
+      description: Room information.
+      allOf:
+      - $ref: '#/components/schemas/RoomId'
+      properties:
+        name:
+          description: Room name.
+          type: string
+          example: King
+          readOnly: true
+        roomCategory:
+          $ref: '#/components/schemas/RoomCategory'
+    AdditionalGuestFees:
+      title: AdditionalGuestFees
+      description: Details about additional fees for extra guests.
+      type: object
+      required:
+      - guestCount
+      - fee
+      properties:
+        guestCount:
+          description: The number of guests for which the additional fee applies.
+          type: integer
+          example: 2
+          minimum: 2
+          maximum: 5
+        fee:
+          description: The value of the additional fee for extra guests.
+          type: number
+          example: 20
+    AttendeeTypeId:
+      type: object
+      title: AttendeeTypeId
+      description: Contains the unique ID of the attendee type.
+      required:
+      - id
+      properties:
+        id:
+          description: The unique ID of the attendee type.
+          type: integer
+          example: 34549966
+    Address3:
+      title: Address
+      description: Address details. Required to create/update a guest's reservation if the hotel/event requires an address
+        in reservations.
+      type: object
+      properties:
+        address1:
+          description: Address line 1.
+          type: string
+          example: West St. 1
+        address2:
+          description: Address line 2.
+          type: string
+          example: Apt. 16
+        city:
+          description: City name.
+          type: string
+          example: Austin
+        region:
+          description: Region name.
+          type: string
+          example: Texas
+        regionCode:
+          description: Region code.
+          type: string
+          example: TX
+        postalCode:
+          description: Postal code.
+          type: string
+          example: 23452AB
+        country:
+          description: Country name.
+          type: string
+          example: United States of America
+        countryCode:
+          description: ISO 3166 alpha-2 country code.
+          type: string
+          example: US
+    ReservationGuest:
+      type: object
+      title: ReservationGuest
+      description: Guest details for confirmed reservation.
+      required:
+      - firstName
+      - lastName
+      - arrival
+      - departure
+      - email
+      allOf:
+      - $ref: '#/components/schemas/Guest1'
+      properties:
+        ageQualifyingCode:
+          description: Code that specifies if the guest is an adult or child. (10 - adult, 8 - child)
+          type: integer
+          enum:
+          - 10
+          - 8
+          default: 10
+        primary:
+          description: True indicates this guest is the primary guest for the reservation.
+          type: boolean
+          example: true
+          default: false
+        paymentInfo:
+          $ref: '#/components/schemas/ReservationPaymentInfo'
+        locale:
+          $ref: '#/components/schemas/Locale-11'
+    housing-event-hotel:
+      type: object
+      title: HotelDetails
+      description: Hotel details including name, description, policies and IDs.
+      required:
+      - id
+      - housingEvent
+      - name
+      - description
+      properties:
+        id:
+          description: The hotel's unique ID.
+          type: integer
+          example: 125664
+        housingEvent:
+          $ref: '#/components/schemas/HousingEventId'
+        name:
+          description: The hotel's name.
+          type: string
+          example: Hotel New York
+        description:
+          description: The hotel's description.
+          type: string
+          example: Since first opening its doors in 1936, the Hotel New York has welcomed countless guests.
+        integrated:
+          description: True means hotel is integrated.
+          type: boolean
+          example: true
+        childPolicy:
+          description: The hotel's child policy.
+          type: string
+          example: Children 17 years or younger will stay free of charge in adult’s room with existing bedding.
+        images:
+          type: array
+          description: List of hotel images.
+          items:
+            $ref: '#/components/schemas/ImageLink'
+        proximity:
+          $ref: '#/components/schemas/Proximity'
+        amenities:
+          type: array
+          description: List of available amenities at the hotel.
+          items:
+            description: Amenity name.
+            type: string
+            example: Room Service
+          maxItems: 70
+        reservationAccessDate:
+          description: The hotel's reservation access date.
+          type: string
+          format: date
+          example: '2030-03-21'
+        hotelCloseDate:
+          description: The hotel's close date.
+          type: string
+          format: date
+          example: '2030-01-14'
+        rating:
+          $ref: '#/components/schemas/HotelRating'
+        address:
+          $ref: '#/components/schemas/Address3'
+        rewardPrograms:
+          type: array
+          description: List of reward programs available at the hotel.
+          items:
+            $ref: '#/components/schemas/RewardProgram'
+          example:
+          - id: 10000
+            name: Hotel Rewards Program
+    room-type-details:
+      type: object
+      title: RoomTypeDetails
+      description: Room type details.
+      required:
+      - id
+      - housingEvent
+      - hotel
+      - name
+      - description
+      properties:
+        id:
+          description: The Room type's unique ID.
+          type: integer
+          example: 2345
+        housingEvent:
+          $ref: '#/components/schemas/HousingEventId'
+        hotel:
+          $ref: '#/components/schemas/HotelId'
+        attendeeTypes:
+          description: List of supported attendee types for this room type, and their individual room policies.
+          type: array
+          items:
+            $ref: '#/components/schemas/RoomAttendeeType'
+        name:
+          description: Name of the room type.
+          type: string
+          example: Double King
+        description:
+          description: Room description.
+          type: string
+          example: This room is equipped with king bed, a polished marble bedroom and generous wardrobes.
+        images:
+          type: array
+          description: List of room images.
+          items:
+            $ref: '#/components/schemas/ImageLink'
+        roomCategory:
+          $ref: '#/components/schemas/RoomCategory'
+        customOrder:
+          description: Specifies a custom sort order defined by the user. This property is applicable only when the default
+            price-based sorting is not active.
+          type: integer
+          minimum: 1
+          example: 1
+    MaxGuests:
+      title: MaxGuests
+      description: Maximum number of guests the room can accommodate.
+      type: integer
+      example: 2
+      minimum: 1
+      maximum: 10
+    ReservationTotalCharges:
+      title: ReservationTotalCharges
+      type: object
+      description: Total charges for reservation.
+      properties:
+        amountBeforeTax:
+          description: Total charges for the given reservation without taxes.
+          type: integer
+          example: 750
+        taxes:
+          description: The amount of taxes.
+          type: number
+          example: 50
+        totalGuestFees:
+          description: Total amount of additional guest fees.
+          type: number
+          example: 50
+        totalAddons:
+          description: Total add-ons charges.
+          type: number
+          example: 30
+        amountAfterTax:
+          description: Total charges for the given reservation including taxes.
+          type: integer
+          example: 800
+        totalAmount:
+          description: Total charges for the given reservation including add-ons.
+          type: number
+          example: 830
+        currency:
+          $ref: '#/components/schemas/Currency1'
+    RoomTypeId:
+      type: object
+      title: roomTypeId
+      description: Contains unique ID of the room type.
+      required:
+      - id
+      properties:
+        id:
+          description: The unique ID of the room type.
+          type: integer
+          example: 11549984
+    connection-response:
+      title: ConnectionResponse
+      description: Connection response.
+      type: object
+      required:
+      - eventId
+      - status
+      - defaultCallbacks
+      properties:
+        eventId:
+          description: ID for a housing event in Passkey.
+          type: integer
+          example: 123456
+        status:
+          description: Status of the connection. `REQUESTED` indicates the connection request is being processed. `NOT_CONNECTED`
+            indicates there is no current connection. `CONNECTED` indicates this housing event is connected to a registration
+            event.
+          type: string
+          enum:
+          - NOT_CONNECTED
+          - CONNECTED
+          - REQUESTED
+          example: CONNECTED
+        defaultCallbacks:
+          description: True indicates the integrated partner has callbacks enabled by default.
+          type: boolean
+          example: true
+    HousingEventSummary:
+      type: object
+      title: HousingEventSummary
+      description: Information about housing event with key information, providing a summarized view.
+      required:
+      - id
+      - name
+      - start
+      - end
+      - cutOff
+      - timeZone
+      - venue
+      - status
+      properties:
+        id:
+          description: The unique ID of the housing event.
+          type: integer
+          example: 21738574
+        name:
+          description: Event name.
+          type: string
+          example: Summit 2027
+        start:
+          description: The ISO 8601 formatted date and time of the first attended day of the event, excluding shoulder days.
+          type: string
+          example: '2027-01-13T05:00:00Z'
+          format: date-time
+        end:
+          description: The ISO 8601 date and time of the last attended day of the event, excluding shoulder days.
+          type: string
+          example: '2027-01-15T05:00:00Z'
+          format: date-time
+        cutOff:
+          description: The ISO 8601 formatted date and time of a contractually agreed date which triggers configurable business
+            rules, like releasing reserved room blocks back to general availability.
+          type: string
+          example: '2026-10-13T04:00:00Z'
+          format: date-time
+        timeZone:
+          description: The event timezone from the Olson specification.
+          type: string
+          example: America/New_York
+          maxLength: 29
+        venue:
+          $ref: '#/components/schemas/Venue'
+        status:
+          $ref: '#/components/schemas/HousingEventStatus'
+    ErrorResponseBase1:
+      title: ErrorResponseBase
+      type: object
+      description: Represents an error response with no additional details.
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          description: The HTTP status code representing the error.
+          example: 400
+        message:
+          type: string
+          description: A brief description of the error.
+          example: Bad Request
+        target:
+          type: string
+          description: The target resource of the error.
+          example: example target
+    existing-reservation-request:
+      type: object
+      title: ExistingReservationRequest
+      description: Contains information about existing reservation request record.
+      required:
+      - id
+      - status
+      allOf:
+      - $ref: '#/components/schemas/reservation-request'
+      properties:
+        id:
+          description: Reservation request ID.
+          type: string
+          example: D6A63423-G796
+        status:
+          $ref: '#/components/schemas/ReservationRequestStatus'
+        bookingSite:
+          $ref: '#/components/schemas/BookingWebsiteLink'
+        callCenter:
+          $ref: '#/components/schemas/CallCenterLink'
+    AddOn:
+      title: Add-on
+      type: object
+      description: Common object that holds add-on information.
+      required:
+      - id
+      properties:
+        id:
+          description: Add-on identifier.
+          type: integer
+          example: 43454324455
+        name:
+          description: Add-on name.
+          type: string
+          example: Fresh Towels
+        rate:
+          description: Add-on rate details.
+          type: object
+          required:
+          - base
+          - currency
+          properties:
+            base:
+              description: Base rate.
+              type: number
+              example: 15
+            currency:
+              $ref: '#/components/schemas/Currency1'
+    HousingEventId:
+      type: object
+      title: HousingEventId
+      description: Contains unique ID of the housing event.
+      required:
+      - id
+      properties:
+        id:
+          description: The unique ID of the housing event.
+          type: integer
+          example: 69121314
+    housing-event-room-types-list:
+      type: object
+      title: RoomTypesList
+      description: List of room types.
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/room-type-details'
+          description: List of room types and their associated details.
+    Planner:
+      title: Planner
+      description: Planner details.
+      type: object
+      properties:
+        firstName:
+          description: Planner first name.
+          type: string
+          example: Alan
+        lastName:
+          description: Planner last name.
+          type: string
+          example: Wood
+        email:
+          description: Planner email.
+          type: string
+          example: aw@example.com
+    new-reservation:
+      type: object
+      title: NewReservation
+      description: Details about reservation.
+      allOf:
+      - $ref: '#/components/schemas/Reservation'
+      required:
+      - numberOfAdults
+      - guests
+      - attendeeType
+      - roomType
+      - housingEvent
+      - hotel
+      properties:
+        housingEvent:
+          description: Information about Passkey event for this reservation.
+          type: object
+          allOf:
+          - $ref: '#/components/schemas/HousingEventId'
+        hotel:
+          type: object
+          description: Hotel information.
+          allOf:
+          - $ref: '#/components/schemas/HotelId'
+        modifiers:
+          type: object
+          description: Specifies reservation options for customizing reservation behavior.
+          properties:
+            allowWaitList:
+              type: boolean
+              description: Indicates if waitlisted nights are allowed.
+              example: true
+              default: false
+    Currency1:
+      description: ISO 4217 currency code.
+      title: Currency
+      type: string
+      example: USD
+    CreditCard:
+      description: Credit card info.
+      title: CreditCard
+      type: object
+      properties:
+        number:
+          description: Card number.
+          type: string
+          example: '4444333322221111'
+        expiration:
+          description: Card expiration date in ISO 8601 format.
+          type: string
+          example: '2021-12-31'
+          format: date
+        type:
+          $ref: '#/components/schemas/credit-card-types'
+    PaginationLinks:
+      title: PaginationLinks
+      type: object
+      description: Represents pagination links for navigating between pages of data.
+      properties:
+        next:
+          $ref: '#/components/schemas/Link'
+        self:
+          $ref: '#/components/schemas/Link'
+        prev:
+          $ref: '#/components/schemas/Link'
+    Paging:
+      title: Paging
+      required:
+      - _links
+      type: object
+      description: Represents pagination information for a collection of resources.
+      properties:
+        previousToken:
+          type: string
+          description: The pagination token for the previous page, if one exists. You can use this token to navigate to the
+            previous page of data.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        nextToken:
+          type: string
+          description: The pagination token for the next page. If this value is present in the response, there is another
+            page of data you can fetch.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        currentToken:
+          type: string
+          description: The pagination token for the current page.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        limit:
+          type: integer
+          description: The number of records to return on the page. Not to exceed 200.
+          example: 100
+        totalCount:
+          type: integer
+          description: The total number of records available. This field may return blank, even if there are more records.
+            To confirm if there are more records, check the `nextToken` field.
+          example: 2
+        _links:
+          $ref: '#/components/schemas/PaginationLinks'
+    Locale-11:
+      description: Locale code in IETF language tag format.
+      title: Locale
+      type: string
+      example: es-DO
+      maxLength: 8
+    reservations-paginated-response:
+      type: object
+      title: ExistingReservations
+      description: Details list about existing reservations.
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/existing-reservation'
+          description: List of reservation details.
+    ReservationNight:
+      description: Reservation night details.
+      title: ReservationNight
+      type: object
+      required:
+      - stayDate
+      - status
+      - rate
+      properties:
+        stayDate:
+          description: Night date.
+          type: string
+          format: date
+          example: '2024-12-01'
+        status:
+          description: Indicator of night's status.
+          type: string
+          enum:
+          - confirmed
+          - waitlisted
+        hideRates:
+          description: True indicates the rates are hidden for this night.
+          type: boolean
+          example: false
+        rate:
+          $ref: '#/components/schemas/ReservationNightRate'
+    housing-event:
+      type: object
+      title: HousingEvent
+      description: Information about housing event.
+      allOf:
+      - $ref: '#/components/schemas/HousingEventSummary'
+      required:
+      - id
+      - name
+      - start
+      - end
+      - cutOff
+      - timeZone
+      - defaultLocale
+      - locales
+      - image
+      - venue
+      - reservationContact
+      - attendeeTypes
+      - planners
+      - status
+      - currency
+      properties:
+        launchAfter:
+          description: The ISO 8601 formatted date and time when event will launch.
+          type: string
+          example: '2027-01-12T05:00:00Z'
+          format: date-time
+        closeAfter:
+          description: The ISO 8601 formatted date and time, after which no reservation can be made.
+          type: string
+          example: '2027-02-16T05:00:00Z'
+          format: date-time
+        webLaunchAfter:
+          description: The ISO 8601 formatted date and time when event will be available for reservations through website.
+          type: string
+          example: '2026-01-13T05:00:00Z'
+          format: date-time
+        webCloseAfter:
+          description: The ISO 8601 formatted date and time after which no website reservation can be made.
+          type: string
+          example: '2026-12-13T05:00:00Z'
+          format: date-time
+        defaultLocale:
+          $ref: '#/components/schemas/Locale-11'
+        locales:
+          description: List of event locales.
+          type: array
+          items:
+            $ref: '#/components/schemas/Locale-11'
+        image:
+          description: Event image URL.
+          type: string
+          format: uri
+          example: https://example.com/content/example.jpg
+        reservationContact:
+          $ref: '#/components/schemas/ReservationContact'
+        attendeeTypes:
+          description: List of attendee types for this event.
+          type: array
+          items:
+            $ref: '#/components/schemas/AttendeeType'
+        planners:
+          description: A collection of event planners for this housing event.
+          type: array
+          items:
+            $ref: '#/components/schemas/Planner'
+        currency:
+          $ref: '#/components/schemas/Currency1'
+        roomsSortType:
+          $ref: '#/components/schemas/rooms-sort-type'
+    Reservation:
+      type: object
+      title: Reservation
+      description: Details about reservation.
+      allOf:
+      - $ref: '#/components/schemas/Audit'
+      properties:
+        id:
+          description: Reservation identifier.
+          type: string
+          example: 327RVMXT
+          readOnly: true
+        confirmationNumber:
+          description: Housing system confirmation number.
+          type: string
+          example: 327RVMXT
+          readOnly: true
+        hotelConfirmationNumber:
+          description: Hotel system confirmation number.
+          type: string
+          example: '442173430305'
+          readOnly: true
+        reservationRequest:
+          description: Reservation request information.
+          type: object
+          required:
+          - id
+          properties:
+            id:
+              description: Reservation request identifier.
+              type: string
+              readOnly: true
+              example: D6A63423-G796
+            externalId:
+              description: External reservation request identifier.
+              type: string
+              example: '1239350605'
+              readOnly: true
+        attendeeTypeCode:
+          description: Attendee type code.
+          type: string
+          example: MVFBES0320484
+          readOnly: true
+        attendeeType:
+          $ref: '#/components/schemas/AttendeeTypeId'
+        roomType:
+          $ref: '#/components/schemas/RoomInfo'
+        sendAcknowledgement:
+          description: True indicates an email acknowledgement after reservation creation will be sent.
+          type: boolean
+          default: true
+        splitFolio:
+          description: True indicates each guest in this reservation would pay separately.
+          type: boolean
+          example: false
+        startDate:
+          description: The ISO 8601 zoned date time when the reservation starts.
+          type: string
+          format: date-time
+          example: '2024-12-01T00:00:00Z'
+          readOnly: true
+        endDate:
+          description: The ISO 8601 zoned date time when the reservation ends.
+          type: string
+          format: date-time
+          example: '2024-12-06T00:00:00Z'
+          readOnly: true
+        numberOfAdults:
+          description: Number of adults for this reservation.
+          type: integer
+          example: 2
+        numberOfChildren:
+          description: Number of children for this reservation.
+          type: integer
+          example: 1
+        nights:
+          description: Array of nights for this reservation.
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/ReservationNight'
+          readOnly: true
+        guests:
+          description: Array of reservation guest details.
+          type: array
+          minItems: 1
+          maxItems: 10
+          items:
+            $ref: '#/components/schemas/ReservationGuest'
+        customFields:
+          $ref: '#/components/schemas/CustomFields'
+        accessible:
+          description: True indicates this reservation requires an accessible room.
+          type: boolean
+          example: false
+        specialRequest:
+          description: Special requests.
+          type: string
+          example: Double bed
+        isCancelled:
+          description: True indicates this reservation is cancelled. DEPRECATED - use `isCanceled` instead.
+          type: boolean
+          default: false
+          deprecated: true
+          readOnly: true
+        isCanceled:
+          description: True indicates this reservation is cancelled.
+          type: boolean
+          default: false
+          readOnly: true
+        noShow:
+          description: True indicates this reservation is a NO SHOW.
+          type: boolean
+          default: false
+          readOnly: true
+        isModified:
+          description: True indicates this reservation was modified.
+          type: boolean
+          default: false
+          readOnly: true
+        isWaitListed:
+          description: True indicates this reservation is on the wait list.
+          type: boolean
+          default: false
+          readOnly: true
+        cancelled:
+          description: The ISO 8601 zoned date time when the reservation was cancelled.
+          type: string
+          format: date-time
+          example: '2024-12-01T00:00:00Z'
+          readOnly: true
+        rewardProgram:
+          $ref: '#/components/schemas/RewardProgram'
+        membershipId:
+          description: Reward program membership number.
+          type: string
+          example: 1154example
+        travelDetails:
+          $ref: '#/components/schemas/TravelDetails'
+    housing-event-summary-list:
+      type: object
+      title: HousingEventSummaryList
+      description: List of housing events with key information, providing a summarized view of each event.
+      required:
+      - paging
+      - data
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/HousingEventSummary'
+          description: List of housing events with key information, providing a summarized view of each event.
+    payment-types:
+      description: Payment type.
+      type: string
+      enum:
+      - CreditCard
+      - Other
+    Proximity:
+      description: Proximity of the event venue to the hotel.
+      title: Proximity
+      type: object
+      properties:
+        distance:
+          $ref: '#/components/schemas/Distance'
+        mapMessage:
+          description: Message shown on map.
+          type: string
+          example: Your hotel is located here.
+    AvailableNight:
+      description: Night availability details.
+      title: AvailableNight
+      type: object
+      required:
+      - hotel
+      - roomType
+      - attendeeType
+      - date
+      - quantity
+      - roomRate
+      - currency
+      - minLengthOfStay
+      - hideRate
+      - waitListEnabled
+      properties:
+        hotel:
+          $ref: '#/components/schemas/HotelId'
+        roomType:
+          $ref: '#/components/schemas/RoomTypeId'
+        attendeeType:
+          $ref: '#/components/schemas/AttendeeType'
+        date:
+          description: Date the rooms are available.
+          type: string
+          example: '2025-03-25'
+          format: date
+        quantity:
+          description: Number of rooms available.
+          type: integer
+          example: 130
+        roomRate:
+          description: Cost of room per night booked.
+          type: number
+          example: 150
+        displayRate:
+          $ref: '#/components/schemas/DisplayRate'
+        additionalGuestFees:
+          description: List of additional guest fees.
+          type: array
+          items:
+            $ref: '#/components/schemas/AdditionalGuestFees'
+          maxItems: 4
+        taxStructure:
+          $ref: '#/components/schemas/TaxStructure'
+        currency:
+          $ref: '#/components/schemas/Currency1'
+        maxGuests:
+          $ref: '#/components/schemas/MaxGuests'
+        minLengthOfStay:
+          description: Minimum number of nights required for a stay.
+          type: integer
+          example: 1
+          minimum: 1
+          maximum: 10
+        hideRate:
+          description: True indicates the cost of the room is hidden from attendees on the booking site.
+          type: boolean
+          example: false
+        waitListEnabled:
+          description: True indicates a waitlist is enabled for this night.
+          type: boolean
+          example: false
+    ImageLink:
+      type: object
+      title: ImageLink
+      description: Image URL.
+      allOf:
+      - $ref: '#/components/schemas/Link'
+      example:
+        href: https://example.com/content/example.jpg
+    Guest1:
+      description: Guest details.
+      title: Guest
+      type: object
+      required:
+      - lastName
+      properties:
+        arrival:
+          description: Arrival date in ISO 8601 format.
+          type: string
+          example: '2020-03-05'
+          format: date
+        departure:
+          description: Departure date in ISO 8601 format.
+          type: string
+          example: '2020-03-07'
+          format: date
+        firstName:
+          description: First name of the guest.
+          type: string
+          example: Gustav
+          maxLength: 40
+        lastName:
+          description: Last name of the guest.
+          type: string
+          example: Schultz
+          maxLength: 40
+        middleName:
+          description: Middle name of the guest.
+          type: string
+          example: Al
+          maxLength: 20
+        title:
+          description: Title of the guest.
+          type: string
+          example: Dr.
+        position:
+          description: Position of the guest.
+          type: string
+          example: manager
+        company:
+          description: Organization or company name of the guest.
+          type: string
+          example: Test Inc
+        homeFax:
+          description: Home fax number of the guest.
+          type: string
+          example: '9785674321'
+        email:
+          description: Email address of the guest.
+          type: string
+          example: guest@cvent.com
+        homePhone:
+          description: Home phone number of the guest. Required if the hotel/event requires address in reservations.
+          type: string
+          example: (231)-213-1222
+        workPhone:
+          description: Work phone number of the guest.
+          type: string
+          example: (231)-213-1222
+        homeAddress:
+          $ref: '#/components/schemas/Address3'
+        paymentInfo:
+          $ref: '#/components/schemas/PaymentInfo'
+    Distance:
+      description: Distance information.
+      title: Distance
+      type: object
+      required:
+      - distance
+      - distanceUnit
+      properties:
+        distance:
+          description: Distance from the hotel to the venue.
+          type: number
+          example: 18.3
+        distanceUnit:
+          description: Unit of measurement for the distance.
+          type: string
+          enum:
+          - Kilometers
+          - Meters
+          - Miles
+          - Yards
+          - Blocks
+          example: Kilometers
+    reservation-request:
+      type: object
+      title: ReservationRequest
+      description: Contains information about reservation request record.
+      required:
+      - housingEvent
+      - guests
+      properties:
+        sourceId:
+          description: Optional ID field you can use to attach ID's from your system to a reservation.
+          type: string
+          example: Ext ack number
+        attendeeTypeCode:
+          description: Attendee Type Code. If attendeeType is also included, the ID is used and this code is ignored.
+          type: string
+          example: MVFBES0320484
+        confirmationNumber:
+          description: Reservation request confirmation number in the Passkey housing event.
+          type: string
+          example: 327PP24H
+          readOnly: true
+        locale:
+          $ref: '#/components/schemas/Locale-11'
+        housingEvent:
+          $ref: '#/components/schemas/HousingEventId'
+        block:
+          deprecated: true
+          description: Information about room block. DEPRECATED - use combination of attendeeType and roomType instead.
+          type: object
+          properties:
+            id:
+              description: Property ID.
+              type: integer
+              example: 11549984
+              deprecated: true
+        attendeeType:
+          $ref: '#/components/schemas/AttendeeTypeId'
+        roomType:
+          $ref: '#/components/schemas/RoomTypeId'
+        hotel:
+          $ref: '#/components/schemas/HotelId'
+        sendAcknowledgement:
+          description: True indicates the system will send email acknowledgement after reservation creation.
+          type: boolean
+          example: true
+        splitFolio:
+          description: True indicates if each guest should have own payment.
+          type: boolean
+          example: false
+        redirectURL:
+          description: URL used to redirect a guest to another site after they create or update their reservation (commonly,
+            back to the registration event).
+          type: string
+          format: uri
+          maxLength: 2048
+          example: https://cvent.com
+        guests:
+          description: Guests information.
+          type: array
+          minItems: 1
+          maxItems: 10
+          items:
+            $ref: '#/components/schemas/Guest1'
+        customFields:
+          $ref: '#/components/schemas/CustomFields'
+        accessible:
+          description: True indicates this reservation request is for an accessible room.
+          type: boolean
+          example: false
+        specialRequest:
+          description: Special requests for room.
+          type: string
+          example: Double bed
+        rewardProgram:
+          $ref: '#/components/schemas/RewardProgram'
+        membershipId:
+          description: Reward program membership number.
+          type: string
+          example: 1154example
+        travelDetails:
+          $ref: '#/components/schemas/TravelDetails'
+    RoomCategory:
+      title: RoomCategory
+      type: object
+      description: The category that classifies a room type.
+      readOnly: true
+      allOf:
+      - $ref: '#/components/schemas/RoomCategoryId'
+      properties:
+        name:
+          description: The name of the category that classifies this room type.
+          type: string
+          example: Deluxe King
+    TaxStructure:
+      title: TaxStructure
+      description: Details about taxes and fees applicable to a room.
+      type: object
+      required:
+      - disclosureStatement
+      - items
+      properties:
+        disclosureStatement:
+          description: Statement disclosing tax and fee information.
+          type: string
+          example: Total room charges will include all room fees and taxes (Subject to change).
+        items:
+          description: List of tax or fee items.
+          type: array
+          items:
+            $ref: '#/components/schemas/TaxAndFee'
+          minItems: 0
+          maxItems: 15
+    VenueAddress:
+      type: object
+      title: VenueAddress
+      description: Address details for venue.
+      allOf:
+      - $ref: '#/components/schemas/Address3'
+      properties:
+        latitude:
+          description: Location latitude.
+          type: number
+          example: 2342.23423
+        longitude:
+          description: Location longitude.
+          type: number
+          example: 231234.23423
+    TravelDetails:
+      title: TravelDetails
+      type: object
+      description: Common object that holds travel details information.
+      properties:
+        arrival:
+          $ref: '#/components/schemas/TravelDepartureArrival'
+        departure:
+          $ref: '#/components/schemas/TravelDepartureArrival'
+        additionalInformation:
+          description: Additional information about travel.
+          type: string
+          example: Additional Information
+          maxLength: 1000
+    error-response:
+      title: ErrorResponse
+      description: Represents an error response with additional details of cascading error messages.
+      allOf:
+      - $ref: '#/components/schemas/ErrorResponseBase1'
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorResponseBase1'
+          description: Additional details of cascading error messages.
+    available-nights:
+      type: object
+      title: AvailableNightsList
+      description: List of available room nights and the availabilities associated details.
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AvailableNight'
+          description: List of available room nights and their associated details.
+    HotelRating:
+      description: The hotel's rating, used to classify the hotel's quality.
+      title: HotelRating
+      type: string
+      enum:
+      - N/A
+      - Budget
+      - 1 Star
+      - 2 Star
+      - 3 Star
+      - 4 Star
+      - 5 Star
+      example: 3 Star
+  responses:
+    BadRequest1:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 400
+            message: Bad Request
+    TooManyRequests1:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 429
+            message: Limit Exceeded
+    Unauthorized1:
+      description: Bad or expired token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 401
+            message: Unauthorized
+    Forbidden1:
+      description: You do not have access to the resource
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 403
+            message: Access Forbidden
+    NotFound1:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 404
+            message: Not found
+  parameters:
+    accessCode:
+      in: header
+      name: Cvent-Access-Code
+      description: 'Example:
+
+
+        Cvent-Access-Code: c44bf029-f7f1-43dc-95c7-79403b247e2a
+
+
+
+        Access code for the event. It can be provided to integration partner in an email.
+
+        '
+      required: true
+      schema:
+        type: string
+    availableNightsFilter:
+      name: filter
+      in: query
+      required: false
+      description: '"A filter query string narrows search results and supports the combination of logical and comparison operators.
+        The filter adheres to the pattern filter=''field'' comparisonType ''value''."
+
+
+        These are the comparison types that can be used in filter expressions:
+
+        * equal: eq
+
+        * less or equal: le
+
+        * greater or equal: ge
+
+        * greater than: gt
+
+        * less than: lt
+
+
+        The following fields are filterable:
+
+        * attendeeType.codes (eq)
+
+        * attendeeType.id (eq)
+
+        * roomType.id (eq)
+
+        * date (eq|le|ge|lt|gt)
+
+
+        Limits for the number of fields that can be passed in a filter: 36
+
+
+        The following operators are available:
+
+        * and
+
+        * or
+
+        '
+      schema:
+        type: string
+        example: attendeeType.codes eq 'PEWATT0524317' and (date ge '2023-01-12' and date le '2023-01-15')
+    availabilityLimit:
+      in: query
+      name: limit
+      description: Limit to this number of search results. Maximum of 50, default of 10.
+      required: false
+      example: 10
+      schema:
+        type: integer
+        maximum: 50
+        minimum: 1
+        default: 10
+    paginationParam:
+      name: token
+      in: query
+      description: 'The continuation token returned from a previous class. This must be a valid UUID v4 if provided.
+
+        This will override any other pageable parameters provided.
+
+        '
+      style: form
+      explode: true
+      schema:
+        type: string
+        example: 0e28af57-511f-47ab-ae46-46cd1ca51a1a
+    roomTypesFilter:
+      name: filter
+      in: query
+      required: false
+      description: '"A filter query string narrows search results and supports the combination of logical and comparison operators.
+        The filter adheres to the pattern filter=''field'' comparisonType ''value''."
+
+
+        These are the comparison types that can be used in filter expressions:
+
+        * equal: eq
+
+
+        The following fields are filterable:
+
+        * attendeeTypes.id (eq)
+
+        * attendeeTypes.codes (eq)
+
+
+        The following operators are available:
+
+        * and
+
+        * or
+
+        '
+      schema:
+        type: string
+        example: attendeeTypes.id eq 10345 or attendeeTypes.codes eq 'PEWATT0524317'
+    locale2:
+      name: locale
+      required: false
+      description: Locale code in IETF Language tag format. Indicates desired locale of return values.
+      in: query
+      schema:
+        $ref: '#/components/schemas/Locale'
+    housingEventId:
+      in: path
+      name: housingEventId
+      description: ID for a Passkey housing event.
+      required: true
+      schema:
+        type: integer
+      example: 35325345
+    roomTypeId:
+      in: path
+      name: roomTypeId
+      description: Room Type ID.
+      required: true
+      schema:
+        type: integer
+      example: 4
+    before:
+      name: before
+      required: false
+      in: query
+      description: Used to query records that have been added or updated before this time point.
+      schema:
+        type: string
+        format: date-time
+        example: '2017-01-02T02:00:00Z'
+    limitParam:
+      in: query
+      name: limit
+      description: Limit to this number of search results. Maximum of 200, default of 100.
+      required: false
+      example: '10'
+      schema:
+        type: integer
+        maximum: 200
+        minimum: 1
+        default: 100
+    inventoryFilter:
+      name: filter
+      in: query
+      required: false
+      description: '"A filter query string narrows search results and supports the combination of logical and comparison operators.
+        The filter adheres to the pattern filter=''field'' comparisonType ''value''. If the parameter is not specified, all
+        inventory dates will be returned."
+
+
+        These are the comparison types that can be used in filter expressions:
+
+        * equal: eq
+
+        * greater than: gt
+
+        * less than: lt
+
+        * greater or equal: ge
+
+        * less than or equal: le
+
+
+        The following fields are filterable:
+
+
+        * date (eq|le|ge|lt|gt)
+
+
+        Limits for the number of fields that can be passed in a filter: 18
+
+
+        The following operators are available:
+
+        * and
+
+        * or
+
+        '
+      schema:
+        type: string
+        example: (date ge '2023-01-12' and date le '2023-01-15') or (date eq '2023-02-01')
+    after:
+      name: after
+      required: false
+      description: Used to query records that have been added or updated after this time point. Default to the beginning of
+        time of the data store.
+      in: query
+      schema:
+        type: string
+        format: date-time
+        example: '2017-01-02T02:00:00Z'
+    housingEventsSummariesFilter:
+      name: filter
+      in: query
+      required: false
+      description: 'A filter query string narrows search results. If the parameter is not specified, future housing events
+        will be returned.
+
+
+        The filter supports the combination of logical and comparison operators, adheres to the pattern filter=''field'' comparisonType
+        ''value''.
+
+
+        These are the comparison types that can be used in filter expressions:
+
+        * equal: eq
+
+        * greater than: gt
+
+        * less than: lt
+
+        * greater or equal: ge
+
+        * less than or equal: le
+
+
+        The following fields are filterable:
+
+        * start (eq|le|ge|lt|gt)
+
+        * end (eq|le|ge|lt|gt)
+
+
+        The following operators are available:
+
+        * and
+
+        * or
+
+        '
+      schema:
+        type: string
+        example: (start ge '2027-01-11T05:00:00.000Z' and end le '2027-01-15T05:00:00.000Z') or (end eq '2027-02-01T05:00:00.000Z')
+    hotelId1:
+      in: path
+      name: hotelId
+      description: The hotel's unique ID.
+      required: true
+      schema:
+        type: integer
+      example: 454345
+    housingReservationsFilter:
+      name: filter
+      in: query
+      required: false
+      description: '"A filter query string narrows search results and supports the combination of logical and comparison operators.
+        The filter adheres to the pattern filter=''field'' comparisonType ''value''."
+
+
+        These are the comparison types that can be used in filter expressions:
+
+        * equal: eq
+
+
+        The following fields are filterable:
+
+        * attendeeType.id (eq)
+
+        * hotel.id (eq)
+
+
+        The following operators are available:
+
+        * and
+
+        * or
+
+        '
+      schema:
+        type: string
+        example: attendeeType.id eq 10345 and hotel.id eq 11355
+    reservationRequestsId:
+      in: path
+      name: reservationRequestsId
+      description: Unique room reservation request ID.
+      required: true
+      schema:
+        type: string
+      example: D6A63423-G796
+    reservationId:
+      in: path
+      name: reservationId
+      description: Cvent Passkey confirmation number.
+      required: true
+      schema:
+        type: string
+      example: 327S856H
+  securitySchemes:
+    OAuth2.clientCredentials:
+      type: oauth2
+      description: OAuth2 Client Credentials Flow.
+      flows:
+        clientCredentials:
+          tokenUrl: https://api-platform.cvent.com/ea/oauth2/token
+          scopes:
+            account/hooks:delete: Allows the deletion of hooks.
+            account/hooks:read: Allows the reading of hooks.
+            account/hooks:write: Allows the creation/updation of hooks.
+            account/user-groups:delete: Allows deletion for user groups
+            account/user-groups:read: Allows the reading of user groups
+            account/user-groups:write: Allows the writing of user groups
+            account/users:delete: Allows the deletion of User
+            account/users:read: Allows the reading of User, User Group
+            account/users:write: Allows the creation/updating of User
+            appointments/appointment-attendees:read: Allows the reading of appointment attendees and their related entities.
+            appointments/appointment-events:read: Allows the reading of appointment events and their related entities.
+            appointments/appointment-types:read: Allows the reading of appointment types and their related entities.
+            appointments/appointments:read: Allows the reading of appointment and their related entities.
+            appointments/appointments:write: Allows the writing of appointments and their related entities.
+            appointments/available-times:read: Allows the reading of availability times.
+            appointments/locations:read: Allows the reading of appointment locations and their related entities.
+            attendee-insights/attendee-insights:read: Allows the reading of engagement scores (attendee insights).
+            attendee-insights/scores:read: Allows the reading of scores.
+            attendee-insights/stats:read: Allows the reading of engagement score (attendee insight) stats.
+            budget/budget-items:delete: Allows the deletion of budget items
+            budget/budget-items:read: Allows the reading of all budget items
+            budget/budget-items:write: Allows creation/updation of budget item
+            budget/budget-totals:read: Allows the reading of all event budget totals
+            budget/budget-vendors:read: Allows reading of account-level budget vendors.
+            budget/cards:read: Allows the reading of cards
+            budget/currency-conversion-rate:delete: Allows deletion of currency conversion rate for currency.
+            budget/currency-conversion-rate:read: Allows reading of currency conversion rate for currency.
+            budget/currency-conversion-rate:write: Allows creation/update of currency conversion rate for currency.
+            budget/payments:delete: Allows deletion of payments.
+            budget/payments:read: Allows reading of payment for budget item.
+            budget/payments:write: Allows creation of payment in a budget item.
+            budget/transactions:delete: Allows delete card transactions.
+            budget/transactions:read: Allows the reading of all card's transactions
+            budget/transactions:write: Allows creation of card transactions.
+            bulk/bulk-jobs:read: Allows the reading of bulk job related entities
+            bulk/bulk-jobs:write: Allows the creation, update and deletion of bulk job related entities
+            business-transient/bids:read: Allows the reading of Business Transient Bid data
+            business-transient/proposals:read: Allows the reading of Business Transient Proposal data
+            business-transient/supplier-brands:read: Allows the reading of a supplier brand or a list of travel supplier brands.
+            business-transient/supplier-chains:read: Allows the reading of a travel supplier chain or a list of travel supplier
+              chains.
+            business-transient/supplier-properties:read: Allows the reading of a travel supplier property or a list of travel
+              supplier properties.
+            business-transient/supplier-property-rooms:read: Allows the reading of a list of travel supplier property rooms.
+            business-transient/travel-accounts:read: Allows the reading of business transient travel account data.
+            business-transient/travel-program-questions:read: Allows the reading of business transient travel program question
+              data.
+            business-transient/travel-programs:read: Allows the reading of business transient travel program data.
+            business-transient/travel-supplier-accounts:read: Allows the reading of business transient travel supplier account
+              data.
+            business-travel/bids:read: Allows the reading of Business Travel Bid data
+            business-travel/proposals:read: Allows the reading of Business Travel Proposal data
+            business-travel/travel-accounts:read: Allows the reading of business travel account data.
+            business-travel/travel-program-questions:read: Allows the reading of business travel program question data.
+            business-travel/travel-programs:read: Allows the reading of business travel program data.
+            compliance/communications:read: Allows the reading of communication compliance
+            compliance/communications:write: Allows the writing of communication compliance
+            email/bounces:read: Allow the reading of email bounces.
+            email/email-status:read: Allows the reading of email statuses.
+            email/emails:read: Allows the reading of emails.
+            eMarketing/campaigns:read: Allows the reading of campaigns.
+            emarketing/emarketing-email-status:read: Allows the reading of eMarketing email statuses.
+            eMarketing/eMarketing-email-templates:read: Allows the reading of email-templates.
+            eMarketing/eMarketing-send-emails:write: Allows the writing of eMarketing emails.
+            event/admission-items:read: Allows the reading of admission items
+            event/air-request:read: Allow reading the air request or air actual detail for attendees.
+            event/alternate-travel:read: Allow reading the alternate travel answers for attendees.
+            event/attendance-durations:read: Allows the read of Duration records
+            event/attendee-activities-metadata:delete: Allows the deletion of attendees activities metadata.
+            event/attendee-activities-metadata:read: Allows the reading of attendee activities metadata.
+            event/attendee-activities-metadata:write: Allows the creation/updating of attendees activities metadata.
+            event/attendee-activities:read: Allows the reading of attendee activities.
+            event/attendee-activities:write: Allows the writing of external attendee activities.
+            event/attendee-credits:read: Allows the reading of attendee credits.
+            event/attendee-links:delete: Allows the deletion of attendee links
+            event/attendee-links:read: Allows the reading of attendee links
+            event/attendee-links:write: Allows the creation of attendee links
+            event/attendee-messages:read: Allows the reading of attendee messages
+            event/attendees:read: Allows the reading of attendees.
+            event/attendees:write: Allows the creation of an attendee in an event.
+            event/audience-segments:read: Allows the reading of audience segments.
+            event/audience-segments:write: Allows the creation/updating/deletion of audience segments.
+            event/contact-groups:read: Allows the reading of contact groups.
+            event/contact-groups:write: Allows the creation/updating of contact groups.
+            event/contact-types:read: Allows the reading of contact types.
+            event/contacts:delete: Allows the deletion of contacts.
+            event/contacts:read: Allows the reading of contacts.
+            event/contacts:write: Allows the creation/updating of contacts.
+            event/contacts:write-sensitive: Allows the creation/updating of sensitive data related to contacts.
+            event/custom-fields:read: Allows the reading of custom fields
+            event/custom-fields:write: Allows the writing of custom fields
+            event/discounts:write: Allows the writing of discounts
+            event/donation-items:read: Allows the reading of donation items.
+            event/event-discounts:read: Allows the reading of event discounts.
+            event/event-discounts:write: Allows the writing of event discounts.
+            event/event-email-status:read: Allows the reading of event email statuses.
+            event/event-emails:read: Allows the reading of event emails
+            event/event-emails:write: Allows to send event emails.
+            event/event-features:read: Allows the reading of events-features
+            event/event-features:write: Allows updating the event-features
+            event/event-user-groups:read: Allows the reading of user groups
+            event/event-user-groups:write: Allows associating/disassociating user groups to event
+            event/events:read: Allows the reading of events
+            event/events:write: Allows the creation/updating of events
+            event/fee-items:read: Allows the reading of fee items.
+            event/hotel-request:read: Allow reading the hotel request or housing reservation request detail for attendees.
+            event/invitation-lists:read: Allows the reading of the invitation lists for an event
+            event/meeting-request-forms:read: Allows the reading of meeting request forms.
+            event/meeting-requests:read: Allows the reading of meeting requests.
+            event/meeting-requests:write: Allows the creation/updating of meeting requests.
+            event/membership-items:read: Allows reading of membership items.
+            event/orders:read: Allows the reading of orders
+            event/planning-documents:read: Allows the reading of event planning documents
+            event/players:read: Allows the reading of players
+            event/process-form-submissions:read: Allows the reading of process form submissions.
+            event/program-items:delete: Allows deletion of session program items
+            event/program-items:read: Allows reading of session program items
+            event/program-items:write: Allows writing of session program items
+            event/quantity-items:read: Allows the reading of quantity items.
+            event/quantity-items:write: Allows the writing of quantity items
+            event/registration-paths:read: Allows the reading of registration paths
+            event/registration-types:read: Allows the reading of registration types
+            event/registration-types:write: Allows the writing of registration types
+            event/role-assignments:read: Allows the reading of event role assignment.
+            event/session-attendance:read: Allows the reading of sessions attendance
+            event/session-attendance:write: Allows the creation/updating of sessions attendance
+            event/session-categories:read: Allows reading of session categories
+            event/session-categories:write: Allows writing of session categories
+            event/session-enrollment:delete: Allows the deletion of session registrations
+            event/session-enrollment:read: Allows the reading of sessions registrations
+            event/session-enrollment:write: Allows the writing of sessions registrations
+            event/session-segments:read: Allows reading of session segments
+            event/sessions:delete: Allows the deletion of a session in an event
+            event/sessions:read: Allows the reading of sessions
+            event/sessions:write: Allows the creation of a session in an event
+            event/speaker-categories:read: Allows reading of speaker categories
+            event/speaker-categories:write: Allows writing of speaker categories
+            event/speakers:delete: Allows the deletion of a speaker in an event
+            event/speakers:read: Allows the reading of speakers
+            event/speakers:write: Allows the creation of a speaker in an event
+            event/taxes:read: Allows the reading of taxes.
+            event/transactions:read: Allows the reading of transactions
+            event/transactions:write: Allows the writing of transactions
+            event/video-views:read: Allows reading of video views.
+            event/videos:read: Allows the reading of video data.
+            event/videos:write: Allows the creation/updating of video data.
+            event/vouchers:read: Allows reading of event vouchers.
+            event/webcasts:delete: Allows the deletion of webcast
+            event/webcasts:read: Allows the reading of webcasts
+            event/webcasts:write: Allows the creation of webcast
+            event/weblinks:read: Allows the reading of event weblinks
+            events-plus/hubs:read: Allows the reading of Events+ hub data.
+            exhibitor/badges:read: Allows reading badges
+            exhibitor/badges:write: Allows creating/updating badges
+            exhibitor/booth-staff:delete: Allows deleting booth staff
+            exhibitor/booth-staff:read: Allows reading booth staff
+            exhibitor/booth-staff:write: Allows creating booth staff
+            exhibitor/eliterature-requests:read: Allows reading eliterature document request data
+            exhibitor/exhibitor-admins:read: Allows reading exhibitor admins
+            exhibitor/exhibitor-admins:write: Allows creating/updating exhibitor admins
+            exhibitor/exhibitor-answers:read: Allows reading exhibitor answers
+            exhibitor/exhibitor-answers:write: Allows updating exhibitor answers
+            exhibitor/exhibitor-categories:delete: Allows deleting exhibitor categories
+            exhibitor/exhibitor-categories:read: Allows reading exhibitor categories
+            exhibitor/exhibitor-categories:write: Allows creating/updating exhibitor categories
+            exhibitor/exhibitor-contents:delete: Allows deleting exhibitor content
+            exhibitor/exhibitor-contents:read: Allows reading exhibitor content
+            exhibitor/exhibitor-contents:write: Allows creating/updating exhibitor content
+            exhibitor/exhibitor-questions:read: Allows reading exhibitor questions
+            exhibitor/exhibitors:delete: Allows deleting exhibitors
+            exhibitor/exhibitors:read: Allows reading exhibitors
+            exhibitor/exhibitors:write: Allows creating/updating exhibitors
+            exhibitor/lead-qualification-answers:read: Allows reading Lead Qualification Answers
+            exhibitor/lead-qualification-questions:read: Allows reading Lead Qualification Questions.
+            exhibitor/leads:read: Allows reading leads.
+            exhibitor/registration-packs:delete: Allows deleting registration pack
+            exhibitor/registration-packs:read: Allows reading registration pack
+            exhibitor/registration-packs:write: Allows creating/updating registration pack
+            exhibitor/sponsorship-levels:read: Allows reading sponsorship level
+            file/file:read: Allows the reading of file
+            file/file:write: Allows the uploading of file
+            housing/connections:write: Allows the user to connect to the Reglink APIs.
+            housing/hotel-room-rates:write: Allows the user to create/update hotel room rates.
+            housing/housing-event-available-nights:read: Allows the user to read availability information for given event.
+            housing/housing-event-hotels:read: Allows the user to read information about event hotels.
+            housing/housing-event-inventory:read: Allows the user to get information about housing event inventory.
+            housing/housing-event-room-types:read: Allows the user to read information about event room types.
+            housing/housing-events:read: Allows the user to read information about events.
+            housing/reservation-requests:delete: Allows the user to cancel reservation request.
+            housing/reservation-requests:read: Allows the user to read reservation request information.
+            housing/reservation-requests:write: Allows the user to create/update reservation request.
+            housing/reservations-link:delete: Allows the user to remove association from reservation.
+            housing/reservations-link:write: Allows the user to associate reservation to reservation request.
+            housing/reservations:delete: Allows the user to cancel reservation.
+            housing/reservations:read: Allows the user to read reservation details information.
+            housing/reservations:write: Allows the user to create/update reservation.
+            onsite/signatures:read: Allows reading signatures.
+            proposal/proposals:write: Allows the creation/writing of proposal
+            remote-printing/badge-print-jobs:read: Allows reading print jobs.
+            remote-printing/badge-print-jobs:write: Allows creating print jobs.
+            remote-printing/badge-printer-pools:read: Allows reading pools.
+            rfp/rfp-agenda-items:read: Allows the reading of RFP agenda items.
+            rfp/rfp-attachments:read: Allows the reading of RFP attachments.
+            rfp/rfp-custom-fields:read: Allows the reading of RFP custom fields.
+            rfp/rfp-guest-rooms:read: Allows the reading of RFP guest rooms.
+            rfp/rfp-internal-documents:read: Allows the reading of RFP internal documents.
+            rfp/rfp-lead-sources:read: Allows the reading of RFP lead sources.
+            rfp/rfp-past-events:read: Allows the reading of past events similar to rfp event.
+            rfp/rfp-questions:read: Allows the reading of RFP questions.
+            rfp/rfp-recipients-history:read: Allows the reading of RFP recipients history.
+            rfp/rfp-suppliers:read: Allows the reading of RFP suppliers.
+            rfp/rfps:read: Allows the reading of basic details of RFP.
+            seating/assignments:read: Allows to read attendee seat assignment information.
+            seating/event-seatings:read: Allows to read event seating.
+            seating/seats:read: Allows to read seat information.
+            seating/tables:read: Allows to read table information.
+            secure-ecommerce/card-tokens:write: Allows creation of credit card tokens
+            survey/questions:read: Allows the reading of survey questions
+            survey/respondents:read: Allows reading the survey respondents
+            survey/responses:read: Allows reading the survey responses
+            survey/standard-survey-email-templates:read: Allows reading the standalone survey email templates
+            survey/standard-survey-email:write: Allows writing operations on standalone survey emails
+            survey/standard-survey-questions:read: Allows the reading of standalone surveys questions
+            survey/standard-survey-respondents:read: Allows reading the standalone survey respondents
+            survey/standard-survey-respondents:write: Allows write operations on standalone survey respondents
+            survey/standard-survey-responses:read: Allows reading the standalone survey responses
+            survey/standard-survey-responses:write: Allows write operations on standalone surveys respondent's responses
+            survey/standard-surveys:read: Allows the reading of standalone surveys
+            survey/survey-questions:read: Allows the reading of event survey questions
+            survey/survey-respondents:read: Allows reading the event survey respondents
+            survey/survey-respondents:write: Allows write operations on the event survey respondents
+            survey/survey-responses:read: Allows reading the event survey responses
+            survey/survey-responses:write: Allows write operations on the event surveys respondent's responses
+            survey/surveys:read: Allows the reading of event surveys
+            venue/meeting-room-images:delete: Allows disassociating images from meeting rooms.
+            venue/meeting-room-images:read: Allows retrieving meeting room images.
+            venue/meeting-room-images:write: Allows associating images with meeting rooms.
+            venue/meeting-room-overviews:read: Allows read access for overview of meeting room.
+            venue/meeting-rooms:write: Allows the creation and modification of meeting rooms.
+            venue/venue-details-overview:read: Allows read access for overview of venue details.
+            venue/venue-details:write: Allows the creation and modification of venue details.
+            venue/venue-facility:write: Allows the modification of venue facility information.
