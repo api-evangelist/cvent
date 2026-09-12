@@ -1,46 +1,35 @@
 ---
 kin_checks:
   slug: cvent
-  schema_version: 0.19.0
-  scored_at: '2026-09-06'
-  run_ts: 2026-09-06T224210
+  schema_version: 0.21.0
+  scored_at: '2026-09-12'
+  run_ts: 2026-09-12T080032
   note: Actionable checks only (missed + partial). earned/na are every other check
-    in rubric/scoring-0.19.0.yml; counts below let you verify that.
+    in rubric/scoring-0.21.0.yml; counts below let you verify that.
   counts:
-    total: 132
-    earned: 43
-    partial: 10
-    missed: 53
-    na: 26
+    total: 136
+    earned: 64
+    partial: 12
+    missed: 35
+    na: 25
   checks:
+  - id: maintainer_present
+    status: missed
   - id: multiple_apis
     status: missed
   - id: base_url_per_api
     status: missed
   - id: well_known_published
     status: missed
-  - id: llms_txt_published
-    status: missed
   - id: apis_json_self_hosted
     status: missed
   - id: openapi_3_2
     status: missed
-    detail: 0 of 7 openapi documents pass
-  - id: openapi_3_0
+    detail: 0 of 56 openapi documents pass
+  - id: openapi_3_1
     status: missed
-    detail: 0 of 7 openapi documents pass
-  - id: operations_operation_ids
-    status: missed
-    detail: 0 of 7 openapi documents pass
-  - id: examples_present
-    status: missed
-  - id: components_reuse
-    status: missed
-    detail: 0 of 7 openapi documents pass
-  - id: webhooks_or_callbacks
-    status: missed
-    detail: 0 of 7 openapi documents pass
-  - id: asyncapi_present
+    detail: 0 of 56 openapi documents pass
+  - id: inbound_contract_published
     status: missed
   - id: json_schema_present
     status: missed
@@ -62,53 +51,25 @@ kin_checks:
     status: missed
   - id: vocabulary_published
     status: missed
-  - id: conformance_declared
-    status: missed
   - id: overlay_published
-    status: missed
-  - id: deprecation_policy
-    status: missed
-  - id: webhooks_advertised
     status: missed
   - id: roadmap_present
     status: missed
   - id: examples_published
     status: missed
-  - id: sdk_count_1
-    status: missed
   - id: sdk_count_3
     status: missed
   - id: cli_present
     status: missed
-  - id: console_or_sandbox
-    status: missed
   - id: postman_present
     status: missed
-  - id: agent_skill_present
+  - id: upsert_outcome_discriminator
     status: missed
-  - id: terms_of_service
-    status: missed
-    detail: pointer liveness 0.0
-  - id: compliance_published
-    status: missed
-  - id: reg_vulnerability_disclosure
-    status: missed
-  - id: reg_terms_of_service
-    status: missed
-    detail: pointer liveness 0.0
-  - id: reg_standards_conformance
+  - id: upsert_named
     status: missed
   - id: mcp_server
     status: missed
   - id: idempotency
-    status: missed
-  - id: error_semantics
-    status: missed
-  - id: openapi_examples
-    status: missed
-  - id: event_surface_described
-    status: missed
-  - id: agent_skills
     status: missed
   - id: well_known_catalog
     status: missed
@@ -118,47 +79,55 @@ kin_checks:
     status: missed
   - id: dry_run_mode
     status: missed
-  - id: delegated_identity
-    status: missed
   - id: protected_resource_metadata
     status: missed
   - id: dynamic_client_registration
     status: missed
   - id: agentic_commerce
     status: missed
-  - id: operations_description_coverage
+  - id: info_complete
     status: partial
-    earned: 0.86
-    detail: 1 of 7 openapi documents pass
-  - id: error_responses_documented
+    earned: 3.86
+    detail: 54 of 56 openapi documents pass
+  - id: response_coverage
     status: partial
-    earned: 0.57
-    detail: 1 of 7 openapi documents pass
-  - id: rate_limits_documented
+    earned: 4.91
+    detail: 55 of 56 openapi documents pass
+  - id: examples_present
     status: partial
-    earned: 2.0
-  - id: rate_limits_rich
+    earned: 0.32
+  - id: webhooks_or_callbacks
     status: partial
-    earned: 1.0
-  - id: plans_present
-    status: partial
-    earned: 2.0
-  - id: plans_multiple
+    earned: 0.04
+    detail: 1 of 56 openapi documents pass
+  - id: github_org_present
     status: partial
     earned: 1.0
+    detail: pointer liveness 0.5
+  - id: agent_skill_present
+    status: partial
+    earned: 0.75
   - id: agentic_access
     status: partial
     earned: 2.5
     detail: 'authorship: derived'
-  - id: reversibility_documented
-    status: partial
-    earned: 2.4
-    detail: 'grade: documented'
   - id: auth_clarity
     status: partial
     earned: 7.5
     detail: 'grade: negotiable'
+  - id: openapi_examples
+    status: partial
+    earned: 3.5
+    detail: 'grade: partial'
   - id: rate_limit_signal
     status: partial
     earned: 3.5
+    detail: 'grade: documented'
+  - id: agent_skills
+    status: partial
+    earned: 1.25
+    detail: 'authorship: derived'
+  - id: delegated_identity
+    status: partial
+    earned: 3.0
     detail: 'grade: documented'
