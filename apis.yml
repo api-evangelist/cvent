@@ -57,7 +57,7 @@ tags:
 - Hybrid Events
 - Meetings
 - Authentication
-- Passkey
+- Passkeys
 - Registration
 - REST API
 - SOAP API
@@ -197,6 +197,11 @@ apis:
   image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
   humanURL: https://developers.cvent.com/docs/passkey/REST/overview
   tags:
+  - Accommodation
+  - Hotels
+  - Registration
+  - Reservations
+  tags_raw:
   - Accommodations
   - Hotels
   - Registration
@@ -252,6 +257,11 @@ apis:
   image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
   humanURL: https://developers.cvent.com/docs/custom-widgets/overview
   tags:
+  - Customization
+  - Embeddings
+  - Registration
+  - Widgets
+  tags_raw:
   - Customization
   - Embedding
   - Registration
@@ -486,6 +496,8 @@ apis:
   humanURL: https://developers.cvent.com/documentation
   baseURL: https://api-platform.cvent.com/ea
   tags:
+  - Budgets
+  tags_raw:
   - Budget
   properties:
   - type: OpenAPI
@@ -586,6 +598,8 @@ apis:
   humanURL: https://developers.cvent.com/documentation
   baseURL: https://api-platform.cvent.com/ea
   tags:
+  - Email
+  tags_raw:
   - Emails
   properties:
   - type: OpenAPI
