@@ -272,7 +272,364 @@ paths:
         '429':
           $ref: '#/components/responses/TooManyRequests1'
 components:
+  parameters:
+    property-filter:
+      name: filter
+      in: query
+      required: false
+      description: 'A filter query string narrows search results and supports the combination of logical and comparison operators. The filter adheres to the pattern filter=''field'' comparisonType ''value''.
+
+
+        There are eight comparison types that can be used in filter expressions:
+
+        * equal: eq
+
+        * not equal: ne
+
+        * greater than: gt
+
+        * greater or equal: ge
+
+        * less than: lt
+
+        * less than or equal: le
+
+        * starts with: sw
+
+        * contains a value: contains
+
+
+        The following fields are filterable:
+
+        * id (eq|ne)
+
+        * name (eq|ne|sw|contains)
+
+        * code (eq|ne)
+
+        * brand.id (eq|ne|contains)
+
+        * chain.id (eq|ne)
+
+        * created (eq|ne|lt|le|gt|ge)
+
+        * lastModified (eq|ne|lt|le|gt|ge)
+
+        '
+      schema:
+        type: string
+        example: code eq ABC123
+    token:
+      name: token
+      in: query
+      description: 'The continuation token returned from a previous class. This must be a valid UUID v4 if provided.
+
+        This will override any other pageable parameters provided.
+
+        '
+      style: form
+      explode: true
+      schema:
+        type: string
+        example: 0e28af57-511f-47ab-ae46-46cd1ca51a1a
+    after:
+      name: after
+      required: false
+      description: Used to query records that have been added or updated after this time point. Default to the beginning of time of the data store.
+      in: query
+      schema:
+        type: string
+        format: date-time
+        example: '2017-01-02T02:00:00Z'
+    limit:
+      name: limit
+      in: query
+      description: The maximum number of records to return per page.
+      style: form
+      explode: true
+      schema:
+        maximum: 200
+        minimum: 1
+        type: integer
+        default: 100
+        example: 100
+    property-room-filter:
+      name: filter
+      in: query
+      required: false
+      description: 'A filter query string narrows search results and supports the combination of logical and comparison operators. The filter adheres to the pattern filter=''field'' comparisonType ''value''.
+
+
+        There are eight comparison types that can be used in filter expressions:
+
+        * equal: eq
+
+        * not equal: ne
+
+        * greater than: gt
+
+        * greater or equal: ge
+
+        * less than: lt
+
+        * less than or equal: le
+
+        * starts with: sw
+
+        * contains a value: contains
+
+
+        The following fields are filterable:
+
+        * id (eq|ne)
+
+        * name (eq|ne|sw|contains)
+
+        * code (eq|ne)
+
+        * property.id (eq|ne)
+
+        * created (eq|ne|lt|le|gt|ge)
+
+        * lastModified (eq|ne|lt|le|gt|ge)
+
+        '
+      schema:
+        type: string
+        example: code eq dlx
+    brand-filter:
+      name: filter
+      in: query
+      required: false
+      description: 'A filter query string narrows search results and supports the combination of logical and comparison operators. The filter adheres to the pattern filter=''field'' comparisonType ''value''.
+
+
+        There are eight comparison types that can be used in filter expressions:
+
+        * equal: eq
+
+        * not equal: ne
+
+        * greater than: gt
+
+        * greater or equal: ge
+
+        * less than: lt
+
+        * less than or equal: le
+
+        * starts with: sw
+
+        * contains a value: contains
+
+
+        The following fields are filterable:
+
+        * id (eq|ne|contains)
+
+        * name (eq|ne|sw|contains)
+
+        '
+      schema:
+        type: string
+        example: name eq AB
+    propertyId1:
+      description: The ID of the property.
+      name: propertyId
+      required: true
+      in: path
+      schema:
+        title: property ID
+        type: string
+        format: uuid
+        example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+    before:
+      name: before
+      required: false
+      in: query
+      description: Used to query records that have been added or updated before this time point.
+      schema:
+        type: string
+        format: date-time
+        example: '2017-01-02T02:00:00Z'
+    roomId:
+      description: The ID of the property room.
+      name: roomId
+      required: true
+      in: path
+      schema:
+        title: Property Room ID
+        type: string
+        format: uuid
+        example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+    brandId:
+      description: The ID of the brand.
+      name: brandId
+      required: true
+      in: path
+      schema:
+        title: Brand Code
+        type: string
+        example: NorthernHotels
+    chain-filter:
+      name: filter
+      in: query
+      required: false
+      description: 'A filter query string narrows search results and supports the combination of logical and comparison operators. The filter adheres to the pattern filter=''field'' comparisonType ''value''.
+
+
+        There are eight comparison types that can be used in filter expressions:
+
+        * equal: eq
+
+        * not equal: ne
+
+        * greater than: gt
+
+        * greater or equal: ge
+
+        * less than: lt
+
+        * less than or equal: le
+
+        * starts with: sw
+
+        * contains a value: contains
+
+
+        The following fields are filterable:
+
+        * id (eq|ne)
+
+        * name (eq|ne|sw|contains)
+
+        * code (eq|ne)
+
+        * brand.id (eq|ne|contains)
+
+        '
+      schema:
+        type: string
+        example: code eq NH
+    chainId:
+      description: The ID of the chain.
+      name: chainId
+      required: true
+      in: path
+      schema:
+        title: Chain ID
+        type: string
+        format: uuid
+        example: 0ab9e863-a748-457f-81cd-f294ff66f5e6
   schemas:
+    link.json:
+      title: Link
+      required:
+      - href
+      type: object
+      description: Represents a link to a related resource.
+      properties:
+        href:
+          type: string
+          description: A url provided that can be followed for linking
+          example: ?token=90c5f062-76ad-4ea4-aa53-00eb698d9262
+    property-room-paginated-response:
+      title: Property room paginated response
+      description: A list of property sleeping rooms.
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/paging.json'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/property-room'
+          description: Collection of property rooms and related details.
+    brand-paginated-response:
+      title: Brand paginated response
+      description: A list of brands.
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/paging.json'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/brand'
+          description: Collection of brands and their related details.
+    ErrorResponse-12:
+      title: ErrorResponse
+      description: Represents an error response with additional details of cascading error messages.
+      allOf:
+      - $ref: '#/components/schemas/ErrorResponseBase1'
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorResponseBase1'
+          description: Additional details of cascading error messages.
+    property-room-external-code.json:
+      title: Property Room External Code
+      description: The external room codes for the room
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/external-code-type.json'
+        roomCode:
+          type: string
+          maxLength: 10
+          example: std887
+          description: The code identifying the room in the given external system.
+    address.json:
+      title: Address
+      description: A physical address.
+      type: object
+      properties:
+        address1:
+          description: Address line 1.
+          type: string
+          maxLength: 45
+          example: 717 N Harwood St
+        address2:
+          description: Address line 2.
+          type: string
+          maxLength: 45
+          example: Suite 2800
+        city:
+          description: City name.
+          type: string
+          maxLength: 50
+          example: Dallas
+        region:
+          description: Region name.
+          type: string
+          maxLength: 50
+          example: Texas
+        regionCode:
+          description: Region code.
+          type: string
+          maxLength: 3
+          example: TX
+        postalCode:
+          description: Postal code.
+          type: string
+          maxLength: 16
+          example: '75201'
+        country:
+          description: Country name.
+          type: string
+          maxLength: 50
+          example: United States
+        countryCode:
+          description: ISO 3166 alpha-2 country code.
+          type: string
+          maxLength: 2
+          minLength: 2
+          example: US
     room-bed-type.json:
       title: Room bed type
       enum:
@@ -288,18 +645,6 @@ components:
       type: string
       description: Code representing the bed type.
       example: queen
-    property-paginated-response:
-      title: Property paginated response
-      description: A list of properties.
-      type: object
-      properties:
-        paging:
-          $ref: '#/components/schemas/paging.json'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/property'
-          description: Collection of properties and their related details.
     property:
       title: property
       description: Details of the property
@@ -388,268 +733,6 @@ components:
             $ref: '#/components/schemas/property-external-code.json'
           description: Collection of external codes for a property. This includes GDS nd other codes used to identify a property in external systems.
           maxItems: 5
-    ErrorResponse-12:
-      title: ErrorResponse
-      description: Represents an error response with additional details of cascading error messages.
-      allOf:
-      - $ref: '#/components/schemas/ErrorResponseBase1'
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        details:
-          type: array
-          items:
-            $ref: '#/components/schemas/ErrorResponseBase1'
-          description: Additional details of cascading error messages.
-    property-room-external-code.json:
-      title: Property Room External Code
-      description: The external room codes for the room
-      type: object
-      properties:
-        type:
-          $ref: '#/components/schemas/external-code-type.json'
-        roomCode:
-          type: string
-          maxLength: 10
-          example: std887
-          description: The code identifying the room in the given external system.
-    brand:
-      title: Brand
-      description: Brand details.
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/property/allOf/0'
-      properties:
-        id:
-          type: string
-          maxLength: 16
-          description: The ID of the travel supplier brand.
-          example: NorthernHotels
-        name:
-          type: string
-          description: The name of the travel supplier brand.
-          maxLength: 50
-          example: Northern Hotel Group
-        address:
-          $ref: '#/components/schemas/address.json'
-        deleted:
-          type: boolean
-          description: True indicates the brand is deleted.
-          default: false
-          example: false
-          readOnly: false
-    pagination-links.json:
-      title: PaginationLinks
-      type: object
-      description: Represents pagination links for navigating between pages of data.
-      properties:
-        next:
-          $ref: '#/components/schemas/link.json'
-        self:
-          $ref: '#/components/schemas/link.json'
-        prev:
-          $ref: '#/components/schemas/link.json'
-    chain:
-      title: Chain
-      description: Chain details.
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/property/allOf/0'
-      properties:
-        id:
-          title: Chain ID
-          description: The ID of the chain.
-          type: string
-          format: uuid
-          example: 415079ab-4bee-491e-84ad-c2379f840379
-        name:
-          type: string
-          description: The name of the travel supplier chain.
-          maxLength: 50
-          example: Northern Hotels
-        code:
-          type: string
-          maxLength: 6
-          description: The code identifying the travel supplier chain.
-          example: NH
-        brand:
-          description: The brand that the chain belongs to.
-          type: object
-          properties:
-            id:
-              title: Brand ID
-              description: The ID of the brand that the chain belongs to.
-              type: string
-              example: NorthernHotels
-        address:
-          $ref: '#/components/schemas/address.json'
-        deleted:
-          type: boolean
-          description: True indicates the chain is deleted.
-          default: false
-          example: false
-          readOnly: true
-    address.json:
-      title: Address
-      description: A physical address.
-      type: object
-      properties:
-        address1:
-          description: Address line 1.
-          type: string
-          maxLength: 45
-          example: 717 N Harwood St
-        address2:
-          description: Address line 2.
-          type: string
-          maxLength: 45
-          example: Suite 2800
-        city:
-          description: City name.
-          type: string
-          maxLength: 50
-          example: Dallas
-        region:
-          description: Region name.
-          type: string
-          maxLength: 50
-          example: Texas
-        regionCode:
-          description: Region code.
-          type: string
-          maxLength: 3
-          example: TX
-        postalCode:
-          description: Postal code.
-          type: string
-          maxLength: 16
-          example: '75201'
-        country:
-          description: Country name.
-          type: string
-          maxLength: 50
-          example: United States
-        countryCode:
-          description: ISO 3166 alpha-2 country code.
-          type: string
-          maxLength: 2
-          minLength: 2
-          example: US
-    property-room-paginated-response:
-      title: Property room paginated response
-      description: A list of property sleeping rooms.
-      type: object
-      properties:
-        paging:
-          $ref: '#/components/schemas/paging.json'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/property-room'
-          description: Collection of property rooms and related details.
-    link.json:
-      title: Link
-      required:
-      - href
-      type: object
-      description: Represents a link to a related resource.
-      properties:
-        href:
-          type: string
-          description: A url provided that can be followed for linking
-          example: ?token=90c5f062-76ad-4ea4-aa53-00eb698d9262
-    property-external-code.json:
-      title: Property External Codes
-      description: The external chain and property codes for the property
-      type: object
-      properties:
-        type:
-          $ref: '#/components/schemas/external-code-type.json'
-        chainCode:
-          type: string
-          maxLength: 6
-          example: NH
-          description: The code identifying the property's chain in the given external system.
-        propertyCode:
-          type: string
-          maxLength: 15
-          example: GH1
-          description: The code identifying a property in the given external system.
-    brand-paginated-response:
-      title: Brand paginated response
-      description: A list of brands.
-      type: object
-      properties:
-        paging:
-          $ref: '#/components/schemas/paging.json'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/brand'
-          description: Collection of brands and their related details.
-    paging.json:
-      title: Paging
-      required:
-      - _links
-      type: object
-      description: Represents pagination information for a collection of resources.
-      properties:
-        previousToken:
-          type: string
-          description: The pagination token for the previous page, if one exists. You can use this token to navigate to the previous page of data.
-          example: 1a2b3c4d5e6f7g8h9i10j11k
-        nextToken:
-          type: string
-          description: The pagination token for the next page. If this value is present in the response, there is another page of data you can fetch.
-          example: 1a2b3c4d5e6f7g8h9i10j11k
-        currentToken:
-          type: string
-          description: The pagination token for the current page.
-          example: 1a2b3c4d5e6f7g8h9i10j11k
-        limit:
-          type: integer
-          description: The number of records to return on the page. Not to exceed 200.
-          example: 100
-        totalCount:
-          type: integer
-          description: The total number of records available. This field may return blank, even if there are more records. To confirm if there are more records, check the `nextToken` field.
-          example: 2
-        _links:
-          $ref: '#/components/schemas/pagination-links.json'
-    ErrorResponseBase1:
-      title: ErrorResponseBase
-      type: object
-      description: Represents an error response with no additional details.
-      required:
-      - code
-      - message
-      properties:
-        code:
-          type: integer
-          description: The HTTP status code representing the error.
-          example: 400
-        message:
-          type: string
-          description: A brief description of the error.
-          example: Bad Request
-        target:
-          type: string
-          description: The target resource of the error.
-          example: example target
-    chain-paginated-response:
-      title: Chain paginated response
-      description: A list of chains.
-      type: object
-      properties:
-        paging:
-          $ref: '#/components/schemas/paging.json'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/chain'
-          description: Collection of chains and their related details.
     external-code-type.json:
       title: External Code Type
       enum:
@@ -721,255 +804,172 @@ components:
             $ref: '#/components/schemas/property-room-external-code.json'
           description: Collection of external codes for the room. This includes GDS and other codes used to identify a room in external systems.
           maxItems: 5
-  parameters:
-    limit:
-      name: limit
-      in: query
-      description: The maximum number of records to return per page.
-      style: form
-      explode: true
-      schema:
-        maximum: 200
-        minimum: 1
-        type: integer
-        default: 100
-        example: 100
-    brand-filter:
-      name: filter
-      in: query
-      required: false
-      description: 'A filter query string narrows search results and supports the combination of logical and comparison operators. The filter adheres to the pattern filter=''field'' comparisonType ''value''.
-
-
-        There are eight comparison types that can be used in filter expressions:
-
-        * equal: eq
-
-        * not equal: ne
-
-        * greater than: gt
-
-        * greater or equal: ge
-
-        * less than: lt
-
-        * less than or equal: le
-
-        * starts with: sw
-
-        * contains a value: contains
-
-
-        The following fields are filterable:
-
-        * id (eq|ne|contains)
-
-        * name (eq|ne|sw|contains)
-
-        '
-      schema:
-        type: string
-        example: name eq AB
-    token:
-      name: token
-      in: query
-      description: 'The continuation token returned from a previous class. This must be a valid UUID v4 if provided.
-
-        This will override any other pageable parameters provided.
-
-        '
-      style: form
-      explode: true
-      schema:
-        type: string
-        example: 0e28af57-511f-47ab-ae46-46cd1ca51a1a
-    after:
-      name: after
-      required: false
-      description: Used to query records that have been added or updated after this time point. Default to the beginning of time of the data store.
-      in: query
-      schema:
-        type: string
-        format: date-time
-        example: '2017-01-02T02:00:00Z'
-    property-room-filter:
-      name: filter
-      in: query
-      required: false
-      description: 'A filter query string narrows search results and supports the combination of logical and comparison operators. The filter adheres to the pattern filter=''field'' comparisonType ''value''.
-
-
-        There are eight comparison types that can be used in filter expressions:
-
-        * equal: eq
-
-        * not equal: ne
-
-        * greater than: gt
-
-        * greater or equal: ge
-
-        * less than: lt
-
-        * less than or equal: le
-
-        * starts with: sw
-
-        * contains a value: contains
-
-
-        The following fields are filterable:
-
-        * id (eq|ne)
-
-        * name (eq|ne|sw|contains)
-
-        * code (eq|ne)
-
-        * property.id (eq|ne)
-
-        * created (eq|ne|lt|le|gt|ge)
-
-        * lastModified (eq|ne|lt|le|gt|ge)
-
-        '
-      schema:
-        type: string
-        example: code eq dlx
-    before:
-      name: before
-      required: false
-      in: query
-      description: Used to query records that have been added or updated before this time point.
-      schema:
-        type: string
-        format: date-time
-        example: '2017-01-02T02:00:00Z'
-    property-filter:
-      name: filter
-      in: query
-      required: false
-      description: 'A filter query string narrows search results and supports the combination of logical and comparison operators. The filter adheres to the pattern filter=''field'' comparisonType ''value''.
-
-
-        There are eight comparison types that can be used in filter expressions:
-
-        * equal: eq
-
-        * not equal: ne
-
-        * greater than: gt
-
-        * greater or equal: ge
-
-        * less than: lt
-
-        * less than or equal: le
-
-        * starts with: sw
-
-        * contains a value: contains
-
-
-        The following fields are filterable:
-
-        * id (eq|ne)
-
-        * name (eq|ne|sw|contains)
-
-        * code (eq|ne)
-
-        * brand.id (eq|ne|contains)
-
-        * chain.id (eq|ne)
-
-        * created (eq|ne|lt|le|gt|ge)
-
-        * lastModified (eq|ne|lt|le|gt|ge)
-
-        '
-      schema:
-        type: string
-        example: code eq ABC123
-    roomId:
-      description: The ID of the property room.
-      name: roomId
-      required: true
-      in: path
-      schema:
-        title: Property Room ID
-        type: string
-        format: uuid
-        example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
-    chainId:
-      description: The ID of the chain.
-      name: chainId
-      required: true
-      in: path
-      schema:
-        title: Chain ID
-        type: string
-        format: uuid
-        example: 0ab9e863-a748-457f-81cd-f294ff66f5e6
-    propertyId1:
-      description: The ID of the property.
-      name: propertyId
-      required: true
-      in: path
-      schema:
-        title: property ID
-        type: string
-        format: uuid
-        example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
-    brandId:
-      description: The ID of the brand.
-      name: brandId
-      required: true
-      in: path
-      schema:
-        title: Brand Code
-        type: string
-        example: NorthernHotels
-    chain-filter:
-      name: filter
-      in: query
-      required: false
-      description: 'A filter query string narrows search results and supports the combination of logical and comparison operators. The filter adheres to the pattern filter=''field'' comparisonType ''value''.
-
-
-        There are eight comparison types that can be used in filter expressions:
-
-        * equal: eq
-
-        * not equal: ne
-
-        * greater than: gt
-
-        * greater or equal: ge
-
-        * less than: lt
-
-        * less than or equal: le
-
-        * starts with: sw
-
-        * contains a value: contains
-
-
-        The following fields are filterable:
-
-        * id (eq|ne)
-
-        * name (eq|ne|sw|contains)
-
-        * code (eq|ne)
-
-        * brand.id (eq|ne|contains)
-
-        '
-      schema:
-        type: string
-        example: code eq NH
+    chain:
+      title: Chain
+      description: Chain details.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/property/allOf/0'
+      properties:
+        id:
+          title: Chain ID
+          description: The ID of the chain.
+          type: string
+          format: uuid
+          example: 415079ab-4bee-491e-84ad-c2379f840379
+        name:
+          type: string
+          description: The name of the travel supplier chain.
+          maxLength: 50
+          example: Northern Hotels
+        code:
+          type: string
+          maxLength: 6
+          description: The code identifying the travel supplier chain.
+          example: NH
+        brand:
+          description: The brand that the chain belongs to.
+          type: object
+          properties:
+            id:
+              title: Brand ID
+              description: The ID of the brand that the chain belongs to.
+              type: string
+              example: NorthernHotels
+        address:
+          $ref: '#/components/schemas/address.json'
+        deleted:
+          type: boolean
+          description: True indicates the chain is deleted.
+          default: false
+          example: false
+          readOnly: true
+    brand:
+      title: Brand
+      description: Brand details.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/property/allOf/0'
+      properties:
+        id:
+          type: string
+          maxLength: 16
+          description: The ID of the travel supplier brand.
+          example: NorthernHotels
+        name:
+          type: string
+          description: The name of the travel supplier brand.
+          maxLength: 50
+          example: Northern Hotel Group
+        address:
+          $ref: '#/components/schemas/address.json'
+        deleted:
+          type: boolean
+          description: True indicates the brand is deleted.
+          default: false
+          example: false
+          readOnly: false
+    property-paginated-response:
+      title: Property paginated response
+      description: A list of properties.
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/paging.json'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/property'
+          description: Collection of properties and their related details.
+    property-external-code.json:
+      title: Property External Codes
+      description: The external chain and property codes for the property
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/external-code-type.json'
+        chainCode:
+          type: string
+          maxLength: 6
+          example: NH
+          description: The code identifying the property's chain in the given external system.
+        propertyCode:
+          type: string
+          maxLength: 15
+          example: GH1
+          description: The code identifying a property in the given external system.
+    paging.json:
+      title: Paging
+      required:
+      - _links
+      type: object
+      description: Represents pagination information for a collection of resources.
+      properties:
+        previousToken:
+          type: string
+          description: The pagination token for the previous page, if one exists. You can use this token to navigate to the previous page of data.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        nextToken:
+          type: string
+          description: The pagination token for the next page. If this value is present in the response, there is another page of data you can fetch.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        currentToken:
+          type: string
+          description: The pagination token for the current page.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        limit:
+          type: integer
+          description: The number of records to return on the page. Not to exceed 200.
+          example: 100
+        totalCount:
+          type: integer
+          description: The total number of records available. This field may return blank, even if there are more records. To confirm if there are more records, check the `nextToken` field.
+          example: 2
+        _links:
+          $ref: '#/components/schemas/pagination-links.json'
+    chain-paginated-response:
+      title: Chain paginated response
+      description: A list of chains.
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/paging.json'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/chain'
+          description: Collection of chains and their related details.
+    pagination-links.json:
+      title: PaginationLinks
+      type: object
+      description: Represents pagination links for navigating between pages of data.
+      properties:
+        next:
+          $ref: '#/components/schemas/link.json'
+        self:
+          $ref: '#/components/schemas/link.json'
+        prev:
+          $ref: '#/components/schemas/link.json'
+    ErrorResponseBase1:
+      title: ErrorResponseBase
+      type: object
+      description: Represents an error response with no additional details.
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          description: The HTTP status code representing the error.
+          example: 400
+        message:
+          type: string
+          description: A brief description of the error.
+          example: Bad Request
+        target:
+          type: string
+          description: The target resource of the error.
+          example: example target
   responses:
     Unauthorized1:
       description: Bad or expired token
@@ -980,24 +980,6 @@ components:
           example:
             code: 401
             message: Unauthorized
-    NotFound1:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 404
-            message: Not found
-    TooManyRequests1:
-      description: Too many requests
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 429
-            message: Limit Exceeded
     BadRequest1:
       description: Bad request
       content:
@@ -1016,6 +998,24 @@ components:
           example:
             code: 403
             message: Access Forbidden
+    NotFound1:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 404
+            message: Not found
+    TooManyRequests1:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 429
+            message: Limit Exceeded
   securitySchemes:
     OAuth2.authorizationCode:
       type: oauth2

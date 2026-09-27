@@ -332,115 +332,27 @@ paths:
         url: '#oauth2-auth-code-planner-admin'
 components:
   schemas:
-    AppointmentDenied:
-      title: AppointmentDenied
-      description: Appointment denied activity.
+    ActivityExhibitor:
       type: object
-      properties:
-        appointment:
-          $ref: '#/components/schemas/ActivityBaseAppointment'
-        contact:
-          $ref: '#/components/schemas/ActivityContact'
-    EventVideoPlayed:
-      type: object
-      title: event.videoPlayed
-      description: An event video-played activity.
-      allOf:
-      - $ref: '#/components/schemas/ActivityEventWebsite'
-      properties:
-        title:
-          type: string
-          description: The title of video.
-          example: We are Cvent!
-        pageName:
-          type: string
-          description: The name of the page.
-          example: Agenda
-    PollResponse:
-      title: PollResponse
-      description: This is used to denote the poll details.
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of the poll.
-          example: Do you like the session?
-        responses:
-          type: array
-          items:
-            $ref: '#/components/schemas/BaseQuestionResponse'
-          description: The list of question and answers for a poll.
-    EventCheckedOut:
-      type: object
-      title: event.checkedOut
-      description: An email-checked-out activity.
-      allOf:
-      - $ref: '#/components/schemas/EventActivity'
-      properties:
-        checkOut:
-          type: string
-          format: date-time
-          description: ISO 8601 date and time when an attendee checked out from an event.
-          example: '2020-02-03T13:00:00.000Z'
-    ActivityLead:
-      type: object
-      title: ActivityLead
-      description: An activity lead.
+      title: ActivityExhibitor
+      description: An activity exhibitor.
       properties:
         id:
           type: string
           format: uuid
-          description: Activity Lead ID
-        deviceId:
+          description: The unique identifier of the exhibitor.
+        code:
           type: string
-          description: The unique identifier of the device.
-          example: '123'
-        deviceName:
+          description: Unique code of an exhibitor at a booth.
+          example: CODE_UPDATE_1
+        marketingCode:
           type: string
-          description: Name of the device.
-          example: Jack's iPhone
-        boothStaff:
-          $ref: '#/components/schemas/ActivityBoothStaff'
-    ActivityExhibitorSponsorshipLevel:
-      type: object
-      title: ActivityExhibitorSponsorshipLevel
-      description: Sponsorship level for an activity exhibitor.
-      properties:
-        id:
-          type: string
-          format: uuid
-          example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
-          description: The unique identifier of the sponsorship level.
+          description: The marketing code of an exhibitor.
+          example: MARKETING_CODE_1
         name:
           type: string
-          description: The name of the sponsorship level.
-          example: Gold
-    UserPlatform:
-      title: UserPlatform
-      description: The platform used by the user.
-      type: string
-      example: Attendee Hub
-    SessionActivity:
-      title: Session Activity
-      description: A session activity.
-      type: object
-      properties:
-        session:
-          type: object
-          title: SessionActivity
-          description: The activity session.
-          properties:
-            id:
-              $ref: '#/components/schemas/UUIDProperty'
-            title:
-              type: string
-              description: The title of the session.
-              example: tech_session
-            code:
-              type: string
-              description: The code of the session.
-              example: XRNGB4YY3CX
-              readOnly: true
+          description: The Name of an exhibitor.
+          example: Example Company
     SpeakerFeedbackSubmitted:
       type: object
       title: speaker.feedbackSubmitted
@@ -452,15 +364,6 @@ components:
           $ref: '#/components/schemas/Speaker1'
         survey:
           $ref: '#/components/schemas/SurveyResponse'
-    LeadActivity:
-      title: Lead Activity
-      description: A lead activity
-      type: object
-      properties:
-        exhibitor:
-          $ref: '#/components/schemas/ActivityExhibitor'
-        lead:
-          $ref: '#/components/schemas/ActivityLead'
     ActivityBaseAppointment:
       type: object
       title: ActivityBaseAppointment
@@ -488,807 +391,28 @@ components:
               type: string
               description: The code of linked appointment event.
               example: VFNGZT7LH7D
-    BannerLinkTarget:
-      title: BannerLinkTarget
-      description: The target of the link clicked on the banner.
-      type: object
-      properties:
-        type:
-          description: The type of target associated with the banner link.
-          type: string
-          enum:
-          - Attendee Hub Page
-          - Discussion Topic
-          - External Url
-          - Floor Plan Details
-          - Session Details
-          - Speaker Details
-          - Virtual Booth
-        details:
-          type: string
-          description: The details of the target associated with the banner link.
-          example: https://www.cvent.com
-    external-activity-metadata:
-      title: ActivityMetadata
-      description: Metadata for an activity.
-      type: object
+    Link:
+      title: Link
       required:
-      - type
-      - name
-      allOf:
-      - $ref: '#/components/schemas/Audit'
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: The identifier of external attendee activity metadata.
-          example: 9463c74e-18c6-401a-a710-ae0f485bf059
-          readOnly: true
-        type:
-          $ref: '#/components/schemas/ExternalActivityType'
-        name:
-          type: string
-          description: Name of an external attendee activity.
-          example: social.media
-          minLength: 1
-          maxLength: 100
-        description:
-          type: string
-          description: Description of an external attendee activity.
-          example: This external activity contains data of social activities for an attendee.
-          maxLength: 500
-        fields:
-          description: Metadata for the fields.
-          type: array
-          items:
-            $ref: '#/components/schemas/ExternalActivityAdditionalFieldsMetadata'
-    ActivityExhibitor:
+      - href
       type: object
-      title: ActivityExhibitor
-      description: An activity exhibitor.
+      description: Represents a link to a related resource.
       properties:
-        id:
+        href:
           type: string
-          format: uuid
-          description: The unique identifier of the exhibitor.
-        code:
-          type: string
-          description: Unique code of an exhibitor at a booth.
-          example: CODE_UPDATE_1
-        marketingCode:
-          type: string
-          description: The marketing code of an exhibitor.
-          example: MARKETING_CODE_1
-        name:
-          type: string
-          description: The Name of an exhibitor.
-          example: Example Company
-    Audit:
-      title: Audit
-      description: Audit information
+          description: A url provided that can be followed for linking
+          example: ?token=90c5f062-76ad-4ea4-aa53-00eb698d9262
+    LeadQualifiedAnswer:
+      title: LeadQualifiedAnswer
+      description: A question answer.
       type: object
-      properties:
-        created:
-          type: string
-          format: date-time
-          description: The ISO 8601 zoned date time when this record was created.
-          readOnly: true
-          example: '2017-01-02T02:00:00Z'
-        createdBy:
-          type: string
-          description: The identifier of the user that created this record.
-          readOnly: true
-          example: hporter
-        lastModified:
-          type: string
-          format: date-time
-          description: The ISO 8601 zoned date time when this record was updated.
-          readOnly: true
-          example: '2019-02-12T03:00:00Z'
-        lastModifiedBy:
-          type: string
-          description: The identifier of the user that last updated this record.
-          readOnly: true
-          example: hporter
-    EmailBounced:
-      type: object
-      title: email.bounced
-      description: An email-bounced activity.
-      allOf:
-      - $ref: '#/components/schemas/EmailActivity'
-      properties:
-        reason:
-          type: string
-          description: Reason for the bounced email.
-          example: 5.x.x - delivery error
-        contact:
-          $ref: '#/components/schemas/ActivityContact'
-        bounced:
-          type: string
-          format: date-time
-          description: ISO 8601 date and time when an email bounced.
-          example: '2020-02-03T13:00:00.000Z'
-        smtpCode:
-          type: integer
-          description: The Simple Mail Transfer Protocol (SMTP) response status code.
-          example: 500
-        dsnDiagnostic:
-          type: string
-          description: Delivery Status Notification diagnostic details.
-          example: smtp;500 ESS - global exclusion
-        optOut:
-          type: boolean
-          default: false
-          description: Used to denote if a recipient has opted-out of receiving emails.
-          example: false
-    BaseQuestionResponse:
-      title: BaseQuestionResponse
-      description: Base entity for a question response.
-      type: object
-      properties:
-        question:
-          $ref: '#/components/schemas/BaseQuestion'
-        answers:
-          type: array
-          items:
-            $ref: '#/components/schemas/BaseAnswer'
-          description: List of answers.
-    Question2:
-      title: Question
-      type: object
-      description: The question that was answered.
       allOf:
       - $ref: '#/components/schemas/BaseQuestion'
       properties:
-        code:
-          type: string
-          description: Question code.
-          example: CODE_A
-    ExhibitorSocialLinkOpened:
-      title: exhibitor.socialLinkOpened
-      description: An exhibitor social-link-opened activity.
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/ActivityExhibitorBase'
-      properties:
-        sponsorshipLevel:
-          $ref: '#/components/schemas/ActivityExhibitorSponsorshipLevel'
-        socialNetwork:
-          type: string
-          description: The name of the social network.
-          example: LinkedIn
-        url:
-          type: string
-          format: uri
-          description: The link opened by the attendee.
-          example: https://www.linkedin.com/company/cvent/mycompany/
-    EventPageVisitTracked:
-      type: object
-      title: event.pageVisitTracked
-      description: Contains Urchin Tracking Module (UTM) data.
-      allOf:
-      - $ref: '#/components/schemas/EventActivity'
-      properties:
-        source:
-          type: string
-          description: Identifies which site sent the traffic.
-          example: twitter
-        medium:
-          type: string
-          description: Identifies what type of link was used, such as cost per click or email.
-          example: social
-        campaign:
-          type: string
-          description: Identifies a specific product promotion or strategic campaign.
-          example: sale
-        term:
-          type: string
-          description: Identifies search terms.
-          example: social-media
-        content:
-          type: string
-          description: Identifies what specifically was clicked to bring the user to the site, such as a banner ad or a text link.
-          example: register-button
-        custom:
-          type: string
-          description: An additional tracking parameter which can be used to compliment the standard UTM parameters.
-          example: custom-param
-        additional:
-          type: object
-          description: Contains any additional non-standard UTM parameters. Key represents the custom parameters added by the planner. Value represents the corresponding value recorded about the page viewer.
-          additionalProperties:
-            type: string
-          example:
-            id: d89eaf5b-b2dc-4ffb-964e-affbb0942e65
-            submitted: 'true'
-    ExternalActivityType:
-      title: ExternalActivityType
-      description: This is used to denote the type of the external attendee activity.
-      enum:
-      - event.external
-      - session.external
-      - appointment.external
-      - exhibitor.external
-      type: string
-      example: event.external
-    SpeakerFileDownloaded:
-      type: object
-      title: speaker.fileDownloaded
-      description: A speaker file-downloaded activity.
-      allOf:
-      - $ref: '#/components/schemas/ActivityEventWebsite'
-      properties:
-        name:
-          type: string
-          description: The name of the file.
-          example: Instructions
         type:
           type: string
-          description: The type of the file.
-          example: docx
-        speaker:
-          $ref: '#/components/schemas/Speaker1'
-    ExhibitorDocumentOpened:
-      title: exhibitor.documentOpened
-      description: An exhibitor document-opened activity.
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/ActivityExhibitorBase'
-      properties:
-        document:
-          $ref: '#/components/schemas/ActivityExhibitorDocument'
-    LeadQualified:
-      title: lead.qualified
-      description: A qualified lead.
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/LeadActivity'
-      properties:
-        responses:
-          type: array
-          items:
-            $ref: '#/components/schemas/LeadQualifiedQuestionResponse'
-          description: The list of responses provided by the attendee.
-    EmailActivity:
-      type: object
-      title: EmailActivity
-      description: An email activity.
-      properties:
-        type:
-          type: string
-          description: Type of the email.
-          example: Invitation Reminder
-    ActivityExhibitorWeblink:
-      type: object
-      title: ActivityExhibitorWeblink
-      description: A web-link for an activity exhibitor.
-      properties:
-        id:
-          type: string
-          format: uuid
-          example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
-          description: The unique identifier of the weblink.
-        name:
-          type: string
-          description: The name of the weblink.
-          example: Cvent's website
-    EventCustomCardOpened:
-      type: object
-      title: event.customCardOpened
-      description: This is used to denote the attendee activity fetched when a custom card is opened by an attendee.
-      properties:
-        name:
-          type: string
-          description: The name of the custom card.
-          example: Join our mailing list.
-        url:
-          type: string
-          format: uri
-          description: The URL associated with the custom card.
-          example: https://cvent.com
-        type:
-          type: string
-          description: The type of the custom card. This value can be Link, Video, Appointment etc.
-          example: Video
-        multipleLinks:
-          type: boolean
-          description: True indicates the custom card contains multiple links. An attendee uses only one link at a time in a custom card.
-          example: false
-    EmailClicked:
-      type: object
-      title: email.clicked
-      description: An email-clicked activity.
-      allOf:
-      - $ref: '#/components/schemas/EmailActivity'
-      properties:
-        clicked:
-          type: string
-          format: date-time
-          description: ISO 8601 date and time when an email link was clicked.
-          example: '2020-02-03T13:00:00.000Z'
-        url:
-          type: string
-          description: The URL clicked in the email.
-          example: http://www.cvent.com
-        urlText:
-          type: string
-          description: The URL text of the link.
-          example: Click Here
-    ExhibitorViewed:
-      title: exhibitor.viewed
-      description: An exhibitor viewed activity.
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/ActivityExhibitorBase'
-      properties:
-        sponsorshipLevel:
-          $ref: '#/components/schemas/ActivityExhibitorSponsorshipLevel'
-        navigationSource:
-          $ref: '#/components/schemas/ActivityExhibitorNavigationSource'
-    AppointmentCheckedIn:
-      type: object
-      title: appointment.checkedIn
-      description: Appointment checked-in activity.
-      allOf:
-      - $ref: '#/components/schemas/AppointmentActivity'
-      properties:
-        checkedIn:
-          type: string
-          format: date-time
-          description: ISO 8601 date and time when an attendee checked in to the appointment.
-          example: '2020-02-03T13:00:00.000Z'
-    QuestionDetail:
-      title: QuestionDetail
-      description: The question asked in a session.
-      type: object
-      properties:
-        id:
-          $ref: '#/components/schemas/UUIDProperty'
-        text:
-          type: string
-          description: Question text.
-          example: Is this a new session?
-    EventFeedbackSubmitted:
-      title: event.feedbackSubmitted
-      description: An event-feedback-submitted activity.
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/EventActivity'
-      properties:
-        survey:
-          $ref: '#/components/schemas/SurveyResponse'
-    ActivityBoothStaff:
-      type: object
-      title: ActivityBoothStaff
-      description: Booth staff for an activity.
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: The unique identifier of the exhibitor booth staff.
-        firstName:
-          type: string
-          description: The first name of the booth staff that captured the lead.
-          example: John
-        lastName:
-          type: string
-          description: The last name of the booth staff that captured the lead.
-          example: Doe
-        email:
-          type: string
-          format: email
-          description: The email address of the booth staff that captured the lead.
-          minLength: 6
-          maxLength: 80
-          example: h.potterfield@test.com
-    ExhibitorWeblinkOpened:
-      title: exhibitor.weblinkOpened
-      description: An exhibitor weblink-opened activity.
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/ActivityExhibitorBase'
-      properties:
-        weblink:
-          $ref: '#/components/schemas/ActivityExhibitorWeblink'
-    EmailSent:
-      type: object
-      title: email.sent
-      description: An email-sent activity.
-      allOf:
-      - $ref: '#/components/schemas/EmailActivity'
-      properties:
-        sent:
-          type: string
-          format: date-time
-          description: ISO 8601 date and time when an email was sent.
-          example: '2020-02-03T13:00:00.000Z'
-    QuestionResponse:
-      title: QuestionResponse
-      description: A Question response.
-      type: object
-      properties:
-        question:
-          $ref: '#/components/schemas/Question2'
-        answers:
-          type: array
-          description: List of answers.
-          items:
-            $ref: '#/components/schemas/Answer2'
-    AppointmentActivity:
-      title: Appointment Activity
-      description: Appointment activity
-      type: object
-      properties:
-        appointment:
-          $ref: '#/components/schemas/ActivityAppointment'
-        contact:
-          $ref: '#/components/schemas/ActivityContact'
-    ActivityExhibitorBase:
-      type: object
-      title: ActivityExhibitorBase
-      description: Base entity for an Activity Exhibitor.
-      properties:
-        exhibitor:
-          $ref: '#/components/schemas/Exhibitor1'
-        platform:
-          $ref: '#/components/schemas/UserPlatform'
-    LeadObject:
-      type: object
-      title: LeadObject
-      description: A Lead
-      properties:
-        id:
-          $ref: '#/components/schemas/UUIDProperty'
-        deviceId:
-          type: string
-          deprecated: true
-          description: The unique identifier of the device.
-          example: ID1
-        deviceName:
-          type: string
-          deprecated: true
-          description: Name of the device.
-          example: Device 1
-        boothStaff:
-          type: object
-          description: Booth staff for the lead.
-          allOf:
-          - $ref: '#/components/schemas/ActivityBoothStaff'
-          deprecated: true
-    EventAdViewed:
-      type: object
-      title: event.adViewed
-      description: Viewed an Event Ad.
-      allOf:
-      - $ref: '#/components/schemas/EventActivity'
-      properties:
-        platform:
-          type: string
-          description: The platform used by the user.
-          example: UserPlatform
-        ad:
-          $ref: '#/components/schemas/ActivityAd'
-    EventActivity:
-      type: object
-      title: Event Activity
-      description: An email activity.
-      properties:
-        event:
-          type: object
-          description: The event in which this activity occurred.
-          properties:
-            id:
-              type: string
-              format: uuid
-              description: Event ID.
-    external-activity-metadata-paginated-response:
-      title: ActivityMetadataPaginatedResponse
-      description: The response from a request to get the list of activities metadata in an account.  This includes the paging object as well as the collection of activities metadata in an account.
-      required:
-      - paging
-      - data
-      type: object
-      properties:
-        paging:
-          $ref: '#/components/schemas/Paging'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/external-activity-metadata'
-          description: Collection of external attendee activities metadata in an account.
-    ActivityAppointment:
-      type: object
-      title: ActivityAppointment
-      description: An activity appointment.
-      allOf:
-      - $ref: '#/components/schemas/ActivityBaseAppointment'
-      properties:
-        start:
-          type: string
-          format: date-time
-          description: The ISO 8601 zoned date time when an appointment starts.
-          example: '2020-02-03T13:00:00.000Z'
-        end:
-          type: string
-          format: date-time
-          description: The ISO 8601 zoned date time when an appointment ends.
-          example: '2020-02-03T14:00:00.000Z'
-    AdLocation:
-      title: AdLocation
-      description: The placement of the ad within the specific product.
-      enum:
-      - Home Page
-      - Exhibitor List
-      - Session List
-      type: string
-      example: Home Page
-    SessionCheckedIn:
-      title: Session Checked In
-      description: A session checked-in activity.
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/SessionActivity'
-      properties:
-        checkedIn:
-          type: string
-          format: date-time
-          description: ISO 8601 date and time when an attendee checked in to a session.
-          example: '2020-02-03T13:00:00.000Z'
-    attendee-activities-paginated-response:
-      title: AttendeeActivitiesPaginatedResponse
-      description: The response from a request to get the list of attendee activities. This includes the paging object as well as the collection of attendee activities.
-      required:
-      - paging
-      - data
-      type: object
-      properties:
-        paging:
-          $ref: '#/components/schemas/Paging'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/AttendeeActivity'
-          description: Collection of attendee activities.
-    LeadQualifiedQuestionResponse:
-      title: LeadQualifiedQuestionResponse
-      description: A Question response.
-      type: object
-      properties:
-        question:
-          $ref: '#/components/schemas/Question2'
-        answers:
-          type: array
-          description: List of answers.
-          items:
-            $ref: '#/components/schemas/LeadQualifiedAnswer'
-    AttendeeActivity:
-      title: AttendeeActivity
-      description: An attendee activity.
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/ActivityCommon'
-      properties:
-        name:
-          type: string
-          description: Unique name corresponding to the attendee activity type.
-          example: Registered for Event
-        type:
-          $ref: '#/components/schemas/ActivityType'
-        data:
-          $ref: '#/components/schemas/ActivityData'
-    SessionCheckedOut:
-      title: Session Checked Out
-      description: A session checked-Out activity.
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/SessionActivity'
-      properties:
-        checkOut:
-          type: string
-          format: date-time
-          description: ISO 8601 date and time when an attendee checked out from a session.
-          example: '2020-02-03T13:00:00.000Z'
-    AppointmentCreated:
-      title: appointment.created
-      type: object
-      description: Appointment created activity.
-      properties:
-        appointment:
-          $ref: '#/components/schemas/ActivityAppointment'
-        contact:
-          $ref: '#/components/schemas/ActivityContact'
-    UUIDProperty:
-      title: UUID Property
-      description: A string that has to be a format matching the industry standard uuid
-      type: string
-      format: uuid
-      example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
-    EventRegistered:
-      type: object
-      title: Event Registered
-      description: An event-registered activity.
-      allOf:
-      - $ref: '#/components/schemas/EventActivity'
-      properties:
-        status:
-          $ref: '#/components/schemas/AttendeeStatus'
-    SessionQuestionAsked:
-      type: object
-      title: session.questionAsked
-      description: The question asked activity details for the session.
-      allOf:
-      - $ref: '#/components/schemas/SessionQuestionActivity'
-      properties:
-        anonymous:
-          type: boolean
-          description: True indicates the question was posted anonymously.
-          example: false
-    LeadInboundCreated:
-      title: lead.inboundCreated
-      description: A lead inbound-created activity.
-      type: object
-      properties:
-        exhibitor:
-          $ref: '#/components/schemas/ActivityExhibitor'
-        lead:
-          $ref: '#/components/schemas/LeadObject'
-    ExhibitorVirtualBoothJoined:
-      title: exhibitor.virtualBoothJoined
-      description: An exhibitor virtual-booth-joined activity.
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/ActivityExhibitorBase'
-      properties:
-        sponsorshipLevel:
-          $ref: '#/components/schemas/ActivityExhibitorSponsorshipLevel'
-        solutionType:
-          type: string
-          description: The solution type used for the virtual booth.
-          example: CVC
-    EventAttendeeHubVisited:
-      type: object
-      title: event.attendeeHubVisited
-      description: An event attendee-hub-visited activity.
-      allOf:
-      - $ref: '#/components/schemas/ActivityEventWebsite'
-      properties:
-        pageName:
-          type: string
-          description: The name of the event website page before the attendee arrived in Attendee Hub.
-          example: event website visits
-        buttonText:
-          type: string
-          description: Text on the button.
-          example: Go to My Event 11
-    EmailOpened:
-      type: object
-      title: email.opened
-      description: An email-opened activity.
-      allOf:
-      - $ref: '#/components/schemas/EmailActivity'
-      properties:
-        opened:
-          type: string
-          format: date-time
-          description: ISO 8601 date and time when an email was opened.
-          example: '2020-02-03T13:00:00.000Z'
-    EventCheckedIn:
-      type: object
-      title: event.checkedIn
-      description: An email-checked-in activity.
-      allOf:
-      - $ref: '#/components/schemas/EventActivity'
-      properties:
-        checkedIn:
-          type: string
-          format: date-time
-          description: ISO 8601 date and time when an attendee checked in to an event.
-          example: '2020-02-03T13:00:00.000Z'
-    Speaker1:
-      type: object
-      title: Speaker
-      description: An activity speaker.
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: The unique identifier of the speaker.
-        name:
-          type: string
-          description: Name of the speaker.
-          example: Henry Ford
-    ExternalActivitiesAdditionalFields:
-      title: External Activities Additional Fields
-      description: Additional fields for external activities.
-      required:
-      - id
-      - externalActivityDate
-      properties:
-        id:
-          description: The identifier to the related entity i.e. Event, Session, Appointment or Exhibitor
-          type: string
-          format: uuid
-          example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
-        externalActivityDate:
-          type: string
-          format: date-time
-          description: The ISO 8601 zoned date time when the external activity was created.
-          example: '2019-08-24T14:15:22Z'
-        additionalFields:
-          type: object
-          description: Additional fields provided for the external attendee activity
-          additionalProperties:
-            type: string
-          example:
-            venue: tokyo
-            submitted: 'true'
-    EventAdClicked:
-      type: object
-      title: event.adClicked
-      description: Clicked an Event Ad.
-      allOf:
-      - $ref: '#/components/schemas/EventActivity'
-      properties:
-        platform:
-          type: string
-          description: The platform used by the user.
-          example: UserPlatform
-        ad:
-          $ref: '#/components/schemas/ActivityAd'
-    PaginationLinks:
-      title: PaginationLinks
-      type: object
-      description: Represents pagination links for navigating between pages of data.
-      properties:
-        next:
-          $ref: '#/components/schemas/Link'
-        self:
-          $ref: '#/components/schemas/Link'
-        prev:
-          $ref: '#/components/schemas/Link'
-    Exhibitor1:
-      type: object
-      title: Exhibitor
-      description: An exhibitor.
-      properties:
-        id:
-          type: string
-          format: uuid
-          example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
-          description: The unique identifier of the exhibitor.
-        name:
-          type: string
-          description: The Name of an exhibitor.
-          example: AutoExpo
-        featured:
-          type: boolean
-          description: If the exhibitor is featured.
-          example: true
-        eventSponsor:
-          type: boolean
-          description: If the exhibitor is an event sponsor.
-          example: true
-    external-activity:
-      title: ExternalAttendeeActivity
-      description: An external attendee activity.
-      type: object
-      required:
-      - type
-      - data
-      - name
-      allOf:
-      - $ref: '#/components/schemas/ActivityCommon'
-      properties:
-        name:
-          type: string
-          description: Name for the external attendee activity.
-          example: Registered for Event
-          minLength: 1
-          maxLength: 100
-        type:
-          $ref: '#/components/schemas/ExternalActivityType'
-        data:
-          $ref: '#/components/schemas/ExternalActivityData'
+          description: Data type of an answer.
+          example: simple
     Answer2:
       title: Answer
       description: A question answer.
@@ -1301,184 +425,6 @@ components:
           description: 'Data type of an answer. DEPRECATED: This field is deprecated and not applicable to this activity.'
           example: simple
           deprecated: true
-    Link:
-      title: Link
-      required:
-      - href
-      type: object
-      description: Represents a link to a related resource.
-      properties:
-        href:
-          type: string
-          description: A url provided that can be followed for linking
-          example: ?token=90c5f062-76ad-4ea4-aa53-00eb698d9262
-    AttendeeStatus:
-      title: AttendeeStatus
-      enum:
-      - No Response
-      - Accepted
-      - Declined
-      - Visited
-      - Waitlisted
-      - Cancelled
-      - Pending Approval
-      - Denied Approval
-      type: string
-      description: This is used to denote the status of an attendee.
-      example: Accepted
-    EventAttendeeSubstituted:
-      type: object
-      title: event.attendeeSubstituted
-      description: An attendee-substituted activity.
-      allOf:
-      - $ref: '#/components/schemas/EventActivity'
-      properties:
-        oldContact:
-          $ref: '#/components/schemas/ContactFields'
-        newContact:
-          $ref: '#/components/schemas/ContactFields'
-    ErrorResponse-12:
-      title: ErrorResponse
-      description: Represents an error response with additional details of cascading error messages.
-      allOf:
-      - $ref: '#/components/schemas/ErrorResponseBase1'
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        details:
-          type: array
-          items:
-            $ref: '#/components/schemas/ErrorResponseBase1'
-          description: Additional details of cascading error messages.
-    EventRegistrationAbandoned:
-      title: event.registrationAbandoned
-      description: An event registration-abandoned activity.
-      type: object
-      properties:
-        lastSavedRegistrationPageName:
-          type: string
-          description: The last page where an invitee left during the registration.
-          maxLength: 200
-          example: Personal Information
-        lastActivity:
-          type: string
-          format: date-time
-          description: ISO 8601 date and time when an invitee left the registration process.
-          example: '2020-02-03T13:00:00.000Z'
-        contact:
-          type: object
-          description: Related contact.
-          allOf:
-          - $ref: '#/components/schemas/ActivityContact'
-          deprecated: true
-    ExternalActivityData:
-      title: ExternalActivityData
-      description: This is used to denote the type of the external attendee activity.
-      type: object
-      anyOf:
-      - title: event.external
-        allOf:
-        - $ref: '#/components/schemas/ExternalActivitiesAdditionalFields'
-      - title: session.external
-        allOf:
-        - $ref: '#/components/schemas/ExternalActivitiesAdditionalFields'
-      - title: appointment.external
-        allOf:
-        - $ref: '#/components/schemas/ExternalActivitiesAdditionalFields'
-      - title: exhibitor.external
-        allOf:
-        - $ref: '#/components/schemas/ExternalActivitiesAdditionalFields'
-    BaseAnswer:
-      type: object
-      title: BaseAnswer
-      description: Base entity of a question answer.
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: The unique identifier of the Answer
-        value:
-          type: string
-          description: Value of an answer.
-          example: my answer
-    UUID:
-      title: UUID
-      description: The reference to the related entity. Contains only the ID of the related entity.
-      required:
-      - id
-      type: object
-      properties:
-        id:
-          $ref: '#/components/schemas/UUIDProperty'
-    ActivityExhibitorDocument:
-      type: object
-      title: ActivityExhibitorDocument
-      description: Document for an activity exhibitor.
-      properties:
-        id:
-          type: string
-          format: uuid
-          example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
-          description: The unique identifier of the document.
-        title:
-          type: string
-          description: The title of the document.
-          example: FAQs
-        format:
-          type: string
-          description: The format of the document eg. doc, docx, gif, jpg, pdf, etc.
-          example: pdf
-        downloaded:
-          type: boolean
-          description: If the document is downloaded.
-          example: true
-    SessionFeedbackSubmitted:
-      type: object
-      title: session.feedbackSubmitted
-      description: A session feedback-submitted activity.
-      allOf:
-      - $ref: '#/components/schemas/SessionActivity'
-      properties:
-        survey:
-          $ref: '#/components/schemas/SurveyResponse'
-    ActivityContact:
-      title: ActivityContact
-      description: An activity contact.
-      type: object
-      properties:
-        firstName:
-          type: string
-          description: The first name of the attendee.
-          maxLength: 30
-          example: Henry
-        lastName:
-          type: string
-          description: The last name of the attendee.
-          maxLength: 50
-          example: Potterfield
-        email:
-          type: string
-          format: email
-          description: The email address of the attendee.
-          minLength: 6
-          maxLength: 80
-          example: h.potterfield@test.com
-    EmailUndelivered:
-      type: object
-      title: email.undelivered
-      description: An email-undelivered activity.
-      allOf:
-      - $ref: '#/components/schemas/EmailActivity'
-      properties:
-        contact:
-          $ref: '#/components/schemas/ActivityContact'
-        undelivered:
-          type: string
-          format: date-time
-          description: ISO 8601 date and time when an email was undelivered.
-          example: '2020-02-03T13:00:00.000Z'
     ContactFields:
       title: ContactFields
       description: Details of a contact.
@@ -1505,73 +451,44 @@ components:
           minLength: 6
           maxLength: 80
           example: h.potterfield@test.com
-    SurveyResponse:
-      title: SurveyResponse
-      description: A survey response.
+    BannerLinkTarget:
+      title: BannerLinkTarget
+      description: The target of the link clicked on the banner.
       type: object
       properties:
-        id:
+        type:
+          description: The type of target associated with the banner link.
           type: string
-          format: uuid
-          description: The unique identifier of the survey.
-        responseMethod:
+          enum:
+          - Attendee Hub Page
+          - Discussion Topic
+          - External Url
+          - Floor Plan Details
+          - Session Details
+          - Speaker Details
+          - Virtual Booth
+        details:
           type: string
-          description: The method used to capture the survey response.
-          example: sample method
-        responses:
-          type: array
-          items:
-            $ref: '#/components/schemas/QuestionResponse'
-          description: The list of question and answers for a survey.
-    Paging:
-      title: Paging
-      required:
-      - _links
+          description: The details of the target associated with the banner link.
+          example: https://www.cvent.com
+    EventFeedbackSubmitted:
+      title: event.feedbackSubmitted
+      description: An event-feedback-submitted activity.
       type: object
-      description: Represents pagination information for a collection of resources.
+      allOf:
+      - $ref: '#/components/schemas/EventActivity'
       properties:
-        previousToken:
-          type: string
-          description: The pagination token for the previous page, if one exists. You can use this token to navigate to the previous page of data.
-          example: 1a2b3c4d5e6f7g8h9i10j11k
-        nextToken:
-          type: string
-          description: The pagination token for the next page. If this value is present in the response, there is another page of data you can fetch.
-          example: 1a2b3c4d5e6f7g8h9i10j11k
-        currentToken:
-          type: string
-          description: The pagination token for the current page.
-          example: 1a2b3c4d5e6f7g8h9i10j11k
-        limit:
-          type: integer
-          description: The number of records to return on the page. Not to exceed 200.
-          example: 100
-        totalCount:
-          type: integer
-          description: The total number of records available. This field may return blank, even if there are more records. To confirm if there are more records, check the `nextToken` field.
-          example: 2
-        _links:
-          $ref: '#/components/schemas/PaginationLinks'
-    ErrorResponseBase1:
-      title: ErrorResponseBase
+        survey:
+          $ref: '#/components/schemas/SurveyResponse'
+    LeadActivity:
+      title: Lead Activity
+      description: A lead activity
       type: object
-      description: Represents an error response with no additional details.
-      required:
-      - code
-      - message
       properties:
-        code:
-          type: integer
-          description: The HTTP status code representing the error.
-          example: 400
-        message:
-          type: string
-          description: A brief description of the error.
-          example: Bad Request
-        target:
-          type: string
-          description: The target resource of the error.
-          example: example target
+        exhibitor:
+          $ref: '#/components/schemas/ActivityExhibitor'
+        lead:
+          $ref: '#/components/schemas/ActivityLead'
     ActivityAd:
       type: object
       title: ActivityAd
@@ -1604,32 +521,6 @@ components:
               type: string
               description: The type of attribution.
               example: CUSTOM
-    LeadQualifiedAnswer:
-      title: LeadQualifiedAnswer
-      description: A question answer.
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/BaseQuestion'
-      properties:
-        type:
-          type: string
-          description: Data type of an answer.
-          example: simple
-    SessionQuestionActivity:
-      type: object
-      title: session.questionActivity
-      description: This denotes the question asked in the session.
-      allOf:
-      - $ref: '#/components/schemas/SessionActivity'
-      properties:
-        question:
-          $ref: '#/components/schemas/QuestionDetail'
-        platform:
-          $ref: '#/components/schemas/UserPlatform'
-        votes:
-          type: integer
-          description: The number of votes for a question.
-          example: 0
     ActivityType:
       title: ActivityType
       description: This is used to denote the type of the attendee activity.
@@ -1688,6 +579,387 @@ components:
       - event.adClicked
       type: string
       example: event.registered
+    LeadQualified:
+      title: lead.qualified
+      description: A qualified lead.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/LeadActivity'
+      properties:
+        responses:
+          type: array
+          items:
+            $ref: '#/components/schemas/LeadQualifiedQuestionResponse'
+          description: The list of responses provided by the attendee.
+    EventPageVisitTracked:
+      type: object
+      title: event.pageVisitTracked
+      description: Contains Urchin Tracking Module (UTM) data.
+      allOf:
+      - $ref: '#/components/schemas/EventActivity'
+      properties:
+        source:
+          type: string
+          description: Identifies which site sent the traffic.
+          example: twitter
+        medium:
+          type: string
+          description: Identifies what type of link was used, such as cost per click or email.
+          example: social
+        campaign:
+          type: string
+          description: Identifies a specific product promotion or strategic campaign.
+          example: sale
+        term:
+          type: string
+          description: Identifies search terms.
+          example: social-media
+        content:
+          type: string
+          description: Identifies what specifically was clicked to bring the user to the site, such as a banner ad or a text link.
+          example: register-button
+        custom:
+          type: string
+          description: An additional tracking parameter which can be used to compliment the standard UTM parameters.
+          example: custom-param
+        additional:
+          type: object
+          description: Contains any additional non-standard UTM parameters. Key represents the custom parameters added by the planner. Value represents the corresponding value recorded about the page viewer.
+          additionalProperties:
+            type: string
+          example:
+            id: d89eaf5b-b2dc-4ffb-964e-affbb0942e65
+            submitted: 'true'
+    SessionCheckedIn:
+      title: Session Checked In
+      description: A session checked-in activity.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/SessionActivity'
+      properties:
+        checkedIn:
+          type: string
+          format: date-time
+          description: ISO 8601 date and time when an attendee checked in to a session.
+          example: '2020-02-03T13:00:00.000Z'
+    SessionPollResponseSubmitted:
+      type: object
+      title: session.pollResponseSubmitted
+      description: The poll created for a session.
+      allOf:
+      - $ref: '#/components/schemas/SessionActivity'
+      properties:
+        poll:
+          $ref: '#/components/schemas/PollResponse'
+    AttendeeActivity:
+      title: AttendeeActivity
+      description: An attendee activity.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/ActivityCommon'
+      properties:
+        name:
+          type: string
+          description: Unique name corresponding to the attendee activity type.
+          example: Registered for Event
+        type:
+          $ref: '#/components/schemas/ActivityType'
+        data:
+          $ref: '#/components/schemas/ActivityData'
+    BaseAnswer:
+      type: object
+      title: BaseAnswer
+      description: Base entity of a question answer.
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The unique identifier of the Answer
+        value:
+          type: string
+          description: Value of an answer.
+          example: my answer
+    ExhibitorSocialLinkOpened:
+      title: exhibitor.socialLinkOpened
+      description: An exhibitor social-link-opened activity.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/ActivityExhibitorBase'
+      properties:
+        sponsorshipLevel:
+          $ref: '#/components/schemas/ActivityExhibitorSponsorshipLevel'
+        socialNetwork:
+          type: string
+          description: The name of the social network.
+          example: LinkedIn
+        url:
+          type: string
+          format: uri
+          description: The link opened by the attendee.
+          example: https://www.linkedin.com/company/cvent/mycompany/
+    ExternalActivitiesAdditionalFields:
+      title: External Activities Additional Fields
+      description: Additional fields for external activities.
+      required:
+      - id
+      - externalActivityDate
+      properties:
+        id:
+          description: The identifier to the related entity i.e. Event, Session, Appointment or Exhibitor
+          type: string
+          format: uuid
+          example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+        externalActivityDate:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date time when the external activity was created.
+          example: '2019-08-24T14:15:22Z'
+        additionalFields:
+          type: object
+          description: Additional fields provided for the external attendee activity
+          additionalProperties:
+            type: string
+          example:
+            venue: tokyo
+            submitted: 'true'
+    EventAttendeeSubstituted:
+      type: object
+      title: event.attendeeSubstituted
+      description: An attendee-substituted activity.
+      allOf:
+      - $ref: '#/components/schemas/EventActivity'
+      properties:
+        oldContact:
+          $ref: '#/components/schemas/ContactFields'
+        newContact:
+          $ref: '#/components/schemas/ContactFields'
+    EventAttendeeHubVisited:
+      type: object
+      title: event.attendeeHubVisited
+      description: An event attendee-hub-visited activity.
+      allOf:
+      - $ref: '#/components/schemas/ActivityEventWebsite'
+      properties:
+        pageName:
+          type: string
+          description: The name of the event website page before the attendee arrived in Attendee Hub.
+          example: event website visits
+        buttonText:
+          type: string
+          description: Text on the button.
+          example: Go to My Event 11
+    ActivityBoothStaff:
+      type: object
+      title: ActivityBoothStaff
+      description: Booth staff for an activity.
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The unique identifier of the exhibitor booth staff.
+        firstName:
+          type: string
+          description: The first name of the booth staff that captured the lead.
+          example: John
+        lastName:
+          type: string
+          description: The last name of the booth staff that captured the lead.
+          example: Doe
+        email:
+          type: string
+          format: email
+          description: The email address of the booth staff that captured the lead.
+          minLength: 6
+          maxLength: 80
+          example: h.potterfield@test.com
+    EventActivityDetail:
+      title: Event Activity Detail
+      description: Details for an event activity.
+      type: object
+      properties:
+        id:
+          description: The identifier of the event.
+          type: string
+          format: uuid
+          example: d84855b0-eeda-41c4-8e7a-53e80364cb95
+        title:
+          type: string
+          description: The title of the event.
+          example: Cvent Connect 2020
+          readOnly: true
+        code:
+          type: string
+          description: The code of the event.
+          example: XRNGB4YY3CX
+          readOnly: true
+        timezone:
+          type: string
+          description: The timezone of the event.
+          example: America/New_York
+          readOnly: true
+    external-activity:
+      title: ExternalAttendeeActivity
+      description: An external attendee activity.
+      type: object
+      required:
+      - type
+      - data
+      - name
+      allOf:
+      - $ref: '#/components/schemas/ActivityCommon'
+      properties:
+        name:
+          type: string
+          description: Name for the external attendee activity.
+          example: Registered for Event
+          minLength: 1
+          maxLength: 100
+        type:
+          $ref: '#/components/schemas/ExternalActivityType'
+        data:
+          $ref: '#/components/schemas/ExternalActivityData'
+    ActivityExhibitorDocument:
+      type: object
+      title: ActivityExhibitorDocument
+      description: Document for an activity exhibitor.
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+          description: The unique identifier of the document.
+        title:
+          type: string
+          description: The title of the document.
+          example: FAQs
+        format:
+          type: string
+          description: The format of the document eg. doc, docx, gif, jpg, pdf, etc.
+          example: pdf
+        downloaded:
+          type: boolean
+          description: If the document is downloaded.
+          example: true
+    EventAdViewed:
+      type: object
+      title: event.adViewed
+      description: Viewed an Event Ad.
+      allOf:
+      - $ref: '#/components/schemas/EventActivity'
+      properties:
+        platform:
+          type: string
+          description: The platform used by the user.
+          example: UserPlatform
+        ad:
+          $ref: '#/components/schemas/ActivityAd'
+    ExternalActivityType:
+      title: ExternalActivityType
+      description: This is used to denote the type of the external attendee activity.
+      enum:
+      - event.external
+      - session.external
+      - appointment.external
+      - exhibitor.external
+      type: string
+      example: event.external
+    EmailUndelivered:
+      type: object
+      title: email.undelivered
+      description: An email-undelivered activity.
+      allOf:
+      - $ref: '#/components/schemas/EmailActivity'
+      properties:
+        contact:
+          $ref: '#/components/schemas/ActivityContact'
+        undelivered:
+          type: string
+          format: date-time
+          description: ISO 8601 date and time when an email was undelivered.
+          example: '2020-02-03T13:00:00.000Z'
+    ExhibitorVirtualBoothJoined:
+      title: exhibitor.virtualBoothJoined
+      description: An exhibitor virtual-booth-joined activity.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/ActivityExhibitorBase'
+      properties:
+        sponsorshipLevel:
+          $ref: '#/components/schemas/ActivityExhibitorSponsorshipLevel'
+        solutionType:
+          type: string
+          description: The solution type used for the virtual booth.
+          example: CVC
+    EventVideoPlayed:
+      type: object
+      title: event.videoPlayed
+      description: An event video-played activity.
+      allOf:
+      - $ref: '#/components/schemas/ActivityEventWebsite'
+      properties:
+        title:
+          type: string
+          description: The title of video.
+          example: We are Cvent!
+        pageName:
+          type: string
+          description: The name of the page.
+          example: Agenda
+    ErrorResponse-12:
+      title: ErrorResponse
+      description: Represents an error response with additional details of cascading error messages.
+      allOf:
+      - $ref: '#/components/schemas/ErrorResponseBase1'
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorResponseBase1'
+          description: Additional details of cascading error messages.
+    ExternalActivityData:
+      title: ExternalActivityData
+      description: This is used to denote the type of the external attendee activity.
+      type: object
+      anyOf:
+      - title: event.external
+        allOf:
+        - $ref: '#/components/schemas/ExternalActivitiesAdditionalFields'
+      - title: session.external
+        allOf:
+        - $ref: '#/components/schemas/ExternalActivitiesAdditionalFields'
+      - title: appointment.external
+        allOf:
+        - $ref: '#/components/schemas/ExternalActivitiesAdditionalFields'
+      - title: exhibitor.external
+        allOf:
+        - $ref: '#/components/schemas/ExternalActivitiesAdditionalFields'
+    EmailSent:
+      type: object
+      title: email.sent
+      description: An email-sent activity.
+      allOf:
+      - $ref: '#/components/schemas/EmailActivity'
+      properties:
+        sent:
+          type: string
+          format: date-time
+          description: ISO 8601 date and time when an email was sent.
+          example: '2020-02-03T13:00:00.000Z'
+    PaginationLinks:
+      title: PaginationLinks
+      type: object
+      description: Represents pagination links for navigating between pages of data.
+      properties:
+        next:
+          $ref: '#/components/schemas/Link'
+        self:
+          $ref: '#/components/schemas/Link'
+        prev:
+          $ref: '#/components/schemas/Link'
     ActivityEventWebsite:
       type: object
       title: ActivityEventWebsite
@@ -1701,6 +973,98 @@ components:
           type: string
           description: The name of the operating system.
           example: windows
+    EventRegistered:
+      type: object
+      title: Event Registered
+      description: An event-registered activity.
+      allOf:
+      - $ref: '#/components/schemas/EventActivity'
+      properties:
+        status:
+          $ref: '#/components/schemas/AttendeeStatus'
+    Audit:
+      title: Audit
+      description: Audit information
+      type: object
+      properties:
+        created:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date time when this record was created.
+          readOnly: true
+          example: '2017-01-02T02:00:00Z'
+        createdBy:
+          type: string
+          description: The identifier of the user that created this record.
+          readOnly: true
+          example: hporter
+        lastModified:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date time when this record was updated.
+          readOnly: true
+          example: '2019-02-12T03:00:00Z'
+        lastModifiedBy:
+          type: string
+          description: The identifier of the user that last updated this record.
+          readOnly: true
+          example: hporter
+    ActivityExhibitorBase:
+      type: object
+      title: ActivityExhibitorBase
+      description: Base entity for an Activity Exhibitor.
+      properties:
+        exhibitor:
+          $ref: '#/components/schemas/Exhibitor1'
+        platform:
+          $ref: '#/components/schemas/UserPlatform'
+    SessionFeedbackSubmitted:
+      type: object
+      title: session.feedbackSubmitted
+      description: A session feedback-submitted activity.
+      allOf:
+      - $ref: '#/components/schemas/SessionActivity'
+      properties:
+        survey:
+          $ref: '#/components/schemas/SurveyResponse'
+    EmailOpened:
+      type: object
+      title: email.opened
+      description: An email-opened activity.
+      allOf:
+      - $ref: '#/components/schemas/EmailActivity'
+      properties:
+        opened:
+          type: string
+          format: date-time
+          description: ISO 8601 date and time when an email was opened.
+          example: '2020-02-03T13:00:00.000Z'
+    AppointmentActivity:
+      title: Appointment Activity
+      description: Appointment activity
+      type: object
+      properties:
+        appointment:
+          $ref: '#/components/schemas/ActivityAppointment'
+        contact:
+          $ref: '#/components/schemas/ActivityContact'
+    SpeakerFileDownloaded:
+      type: object
+      title: speaker.fileDownloaded
+      description: A speaker file-downloaded activity.
+      allOf:
+      - $ref: '#/components/schemas/ActivityEventWebsite'
+      properties:
+        name:
+          type: string
+          description: The name of the file.
+          example: Instructions
+        type:
+          type: string
+          description: The type of the file.
+          example: docx
+        speaker:
+          $ref: '#/components/schemas/Speaker1'
     EventBannerLinkClicked:
       type: object
       title: event.bannerLinkClicked
@@ -1718,6 +1082,161 @@ components:
               description: Banner ID
         target:
           $ref: '#/components/schemas/BannerLinkTarget'
+    BaseQuestion:
+      title: BaseQuestion
+      type: object
+      description: The question that was answered.
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The unique identifier of the question.
+          example: 861b51ec-aa7e-475f-b38d-4c8e35c47d63
+        text:
+          type: string
+          description: Question text.
+          example: How would you rate this session?
+    Paging:
+      title: Paging
+      required:
+      - _links
+      type: object
+      description: Represents pagination information for a collection of resources.
+      properties:
+        previousToken:
+          type: string
+          description: The pagination token for the previous page, if one exists. You can use this token to navigate to the previous page of data.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        nextToken:
+          type: string
+          description: The pagination token for the next page. If this value is present in the response, there is another page of data you can fetch.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        currentToken:
+          type: string
+          description: The pagination token for the current page.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        limit:
+          type: integer
+          description: The number of records to return on the page. Not to exceed 200.
+          example: 100
+        totalCount:
+          type: integer
+          description: The total number of records available. This field may return blank, even if there are more records. To confirm if there are more records, check the `nextToken` field.
+          example: 2
+        _links:
+          $ref: '#/components/schemas/PaginationLinks'
+    EmailBounced:
+      type: object
+      title: email.bounced
+      description: An email-bounced activity.
+      allOf:
+      - $ref: '#/components/schemas/EmailActivity'
+      properties:
+        reason:
+          type: string
+          description: Reason for the bounced email.
+          example: 5.x.x - delivery error
+        contact:
+          $ref: '#/components/schemas/ActivityContact'
+        bounced:
+          type: string
+          format: date-time
+          description: ISO 8601 date and time when an email bounced.
+          example: '2020-02-03T13:00:00.000Z'
+        smtpCode:
+          type: integer
+          description: The Simple Mail Transfer Protocol (SMTP) response status code.
+          example: 500
+        dsnDiagnostic:
+          type: string
+          description: Delivery Status Notification diagnostic details.
+          example: smtp;500 ESS - global exclusion
+        optOut:
+          type: boolean
+          default: false
+          description: Used to denote if a recipient has opted-out of receiving emails.
+          example: false
+    ActivityExhibitorSponsorshipLevel:
+      type: object
+      title: ActivityExhibitorSponsorshipLevel
+      description: Sponsorship level for an activity exhibitor.
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+          description: The unique identifier of the sponsorship level.
+        name:
+          type: string
+          description: The name of the sponsorship level.
+          example: Gold
+    ActivityAppointment:
+      type: object
+      title: ActivityAppointment
+      description: An activity appointment.
+      allOf:
+      - $ref: '#/components/schemas/ActivityBaseAppointment'
+      properties:
+        start:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date time when an appointment starts.
+          example: '2020-02-03T13:00:00.000Z'
+        end:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date time when an appointment ends.
+          example: '2020-02-03T14:00:00.000Z'
+    SessionQuestionAsked:
+      type: object
+      title: session.questionAsked
+      description: The question asked activity details for the session.
+      allOf:
+      - $ref: '#/components/schemas/SessionQuestionActivity'
+      properties:
+        anonymous:
+          type: boolean
+          description: True indicates the question was posted anonymously.
+          example: false
+    EventCheckedIn:
+      type: object
+      title: event.checkedIn
+      description: An email-checked-in activity.
+      allOf:
+      - $ref: '#/components/schemas/EventActivity'
+      properties:
+        checkedIn:
+          type: string
+          format: date-time
+          description: ISO 8601 date and time when an attendee checked in to an event.
+          example: '2020-02-03T13:00:00.000Z'
+    BaseQuestionResponse:
+      title: BaseQuestionResponse
+      description: Base entity for a question response.
+      type: object
+      properties:
+        question:
+          $ref: '#/components/schemas/BaseQuestion'
+        answers:
+          type: array
+          items:
+            $ref: '#/components/schemas/BaseAnswer'
+          description: List of answers.
+    external-activity-metadata-paginated-response:
+      title: ActivityMetadataPaginatedResponse
+      description: The response from a request to get the list of activities metadata in an account.  This includes the paging object as well as the collection of activities metadata in an account.
+      required:
+      - paging
+      - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/external-activity-metadata'
+          description: Collection of external attendee activities metadata in an account.
     ActivityCommon:
       type: object
       title: Activity Common
@@ -1748,38 +1267,316 @@ components:
           description: ISO 8601 date and time when this record was created.
           readOnly: true
           example: '2019-08-24T14:15:22Z'
-    ExternalActivityAdditionalFieldsMetadata:
-      title: ExternalActivityAdditionalFieldsMetadata
-      description: Additional fields metadata for an external activity.
+    SessionQuestionActivity:
       type: object
-      required:
-      - name
+      title: session.questionActivity
+      description: This denotes the question asked in the session.
+      allOf:
+      - $ref: '#/components/schemas/SessionActivity'
       properties:
-        name:
-          type: string
-          description: The name of the additional field.
-          minLength: 1
-          maxLength: 100
-          example: facebook_social.media
-        description:
-          type: string
-          description: Description of the additional field.
-          maxLength: 250
-          example: Contains data for facebook social media activity.
-    BaseQuestion:
-      title: BaseQuestion
+        question:
+          $ref: '#/components/schemas/QuestionDetail'
+        platform:
+          $ref: '#/components/schemas/UserPlatform'
+        votes:
+          type: integer
+          description: The number of votes for a question.
+          example: 0
+    attendee-activities-paginated-response:
+      title: AttendeeActivitiesPaginatedResponse
+      description: The response from a request to get the list of attendee activities. This includes the paging object as well as the collection of attendee activities.
+      required:
+      - paging
+      - data
       type: object
-      description: The question that was answered.
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttendeeActivity'
+          description: Collection of attendee activities.
+    ExhibitorWeblinkOpened:
+      title: exhibitor.weblinkOpened
+      description: An exhibitor weblink-opened activity.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/ActivityExhibitorBase'
+      properties:
+        weblink:
+          $ref: '#/components/schemas/ActivityExhibitorWeblink'
+    AttendeeStatus:
+      title: AttendeeStatus
+      enum:
+      - No Response
+      - Accepted
+      - Declined
+      - Visited
+      - Waitlisted
+      - Cancelled
+      - Pending Approval
+      - Denied Approval
+      type: string
+      description: This is used to denote the status of an attendee.
+      example: Accepted
+    Speaker1:
+      type: object
+      title: Speaker
+      description: An activity speaker.
       properties:
         id:
           type: string
           format: uuid
-          description: The unique identifier of the question.
-          example: 861b51ec-aa7e-475f-b38d-4c8e35c47d63
-        text:
+          description: The unique identifier of the speaker.
+        name:
           type: string
-          description: Question text.
-          example: How would you rate this session?
+          description: Name of the speaker.
+          example: Henry Ford
+    EventAdClicked:
+      type: object
+      title: event.adClicked
+      description: Clicked an Event Ad.
+      allOf:
+      - $ref: '#/components/schemas/EventActivity'
+      properties:
+        platform:
+          type: string
+          description: The platform used by the user.
+          example: UserPlatform
+        ad:
+          $ref: '#/components/schemas/ActivityAd'
+    QuestionResponse:
+      title: QuestionResponse
+      description: A Question response.
+      type: object
+      properties:
+        question:
+          $ref: '#/components/schemas/Question2'
+        answers:
+          type: array
+          description: List of answers.
+          items:
+            $ref: '#/components/schemas/Answer2'
+    ExhibitorDocumentOpened:
+      title: exhibitor.documentOpened
+      description: An exhibitor document-opened activity.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/ActivityExhibitorBase'
+      properties:
+        document:
+          $ref: '#/components/schemas/ActivityExhibitorDocument'
+    Question2:
+      title: Question
+      type: object
+      description: The question that was answered.
+      allOf:
+      - $ref: '#/components/schemas/BaseQuestion'
+      properties:
+        code:
+          type: string
+          description: Question code.
+          example: CODE_A
+    EmailActivity:
+      type: object
+      title: EmailActivity
+      description: An email activity.
+      properties:
+        type:
+          type: string
+          description: Type of the email.
+          example: Invitation Reminder
+    EventCheckedOut:
+      type: object
+      title: event.checkedOut
+      description: An email-checked-out activity.
+      allOf:
+      - $ref: '#/components/schemas/EventActivity'
+      properties:
+        checkOut:
+          type: string
+          format: date-time
+          description: ISO 8601 date and time when an attendee checked out from an event.
+          example: '2020-02-03T13:00:00.000Z'
+    SessionActivity:
+      title: Session Activity
+      description: A session activity.
+      type: object
+      properties:
+        session:
+          type: object
+          title: SessionActivity
+          description: The activity session.
+          properties:
+            id:
+              $ref: '#/components/schemas/UUIDProperty'
+            title:
+              type: string
+              description: The title of the session.
+              example: tech_session
+            code:
+              type: string
+              description: The code of the session.
+              example: XRNGB4YY3CX
+              readOnly: true
+    external-activity-metadata:
+      title: ActivityMetadata
+      description: Metadata for an activity.
+      type: object
+      required:
+      - type
+      - name
+      allOf:
+      - $ref: '#/components/schemas/Audit'
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The identifier of external attendee activity metadata.
+          example: 9463c74e-18c6-401a-a710-ae0f485bf059
+          readOnly: true
+        type:
+          $ref: '#/components/schemas/ExternalActivityType'
+        name:
+          type: string
+          description: Name of an external attendee activity.
+          example: social.media
+          minLength: 1
+          maxLength: 100
+        description:
+          type: string
+          description: Description of an external attendee activity.
+          example: This external activity contains data of social activities for an attendee.
+          maxLength: 500
+        fields:
+          description: Metadata for the fields.
+          type: array
+          items:
+            $ref: '#/components/schemas/ExternalActivityAdditionalFieldsMetadata'
+    AppointmentCheckedIn:
+      type: object
+      title: appointment.checkedIn
+      description: Appointment checked-in activity.
+      allOf:
+      - $ref: '#/components/schemas/AppointmentActivity'
+      properties:
+        checkedIn:
+          type: string
+          format: date-time
+          description: ISO 8601 date and time when an attendee checked in to the appointment.
+          example: '2020-02-03T13:00:00.000Z'
+    LeadInboundCreated:
+      title: lead.inboundCreated
+      description: A lead inbound-created activity.
+      type: object
+      properties:
+        exhibitor:
+          $ref: '#/components/schemas/ActivityExhibitor'
+        lead:
+          $ref: '#/components/schemas/LeadObject'
+    EmailClicked:
+      type: object
+      title: email.clicked
+      description: An email-clicked activity.
+      allOf:
+      - $ref: '#/components/schemas/EmailActivity'
+      properties:
+        clicked:
+          type: string
+          format: date-time
+          description: ISO 8601 date and time when an email link was clicked.
+          example: '2020-02-03T13:00:00.000Z'
+        url:
+          type: string
+          description: The URL clicked in the email.
+          example: http://www.cvent.com
+        urlText:
+          type: string
+          description: The URL text of the link.
+          example: Click Here
+    ExhibitorViewed:
+      title: exhibitor.viewed
+      description: An exhibitor viewed activity.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/ActivityExhibitorBase'
+      properties:
+        sponsorshipLevel:
+          $ref: '#/components/schemas/ActivityExhibitorSponsorshipLevel'
+        navigationSource:
+          $ref: '#/components/schemas/ActivityExhibitorNavigationSource'
+    ErrorResponseBase1:
+      title: ErrorResponseBase
+      type: object
+      description: Represents an error response with no additional details.
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          description: The HTTP status code representing the error.
+          example: 400
+        message:
+          type: string
+          description: A brief description of the error.
+          example: Bad Request
+        target:
+          type: string
+          description: The target resource of the error.
+          example: example target
+    UUIDProperty:
+      title: UUID Property
+      description: A string that has to be a format matching the industry standard uuid
+      type: string
+      format: uuid
+      example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+    UserPlatform:
+      title: UserPlatform
+      description: The platform used by the user.
+      type: string
+      example: Attendee Hub
+    ActivityContact:
+      title: ActivityContact
+      description: An activity contact.
+      type: object
+      properties:
+        firstName:
+          type: string
+          description: The first name of the attendee.
+          maxLength: 30
+          example: Henry
+        lastName:
+          type: string
+          description: The last name of the attendee.
+          maxLength: 50
+          example: Potterfield
+        email:
+          type: string
+          format: email
+          description: The email address of the attendee.
+          minLength: 6
+          maxLength: 80
+          example: h.potterfield@test.com
+    SurveyResponse:
+      title: SurveyResponse
+      description: A survey response.
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The unique identifier of the survey.
+        responseMethod:
+          type: string
+          description: The method used to capture the survey response.
+          example: sample method
+        responses:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuestionResponse'
+          description: The list of question and answers for a survey.
     ActivityExhibitorNavigationSource:
       type: object
       title: ActivityExhibitorNavigationSource
@@ -1793,6 +1590,109 @@ components:
           type: string
           description: The source name in the attendee hub from where the user navigated to the exhibitor booth.
           example: Session name
+    PollResponse:
+      title: PollResponse
+      description: This is used to denote the poll details.
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the poll.
+          example: Do you like the session?
+        responses:
+          type: array
+          items:
+            $ref: '#/components/schemas/BaseQuestionResponse'
+          description: The list of question and answers for a poll.
+    SessionCheckedOut:
+      title: Session Checked Out
+      description: A session checked-Out activity.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/SessionActivity'
+      properties:
+        checkOut:
+          type: string
+          format: date-time
+          description: ISO 8601 date and time when an attendee checked out from a session.
+          example: '2020-02-03T13:00:00.000Z'
+    AppointmentDenied:
+      title: AppointmentDenied
+      description: Appointment denied activity.
+      type: object
+      properties:
+        appointment:
+          $ref: '#/components/schemas/ActivityBaseAppointment'
+        contact:
+          $ref: '#/components/schemas/ActivityContact'
+    Exhibitor1:
+      type: object
+      title: Exhibitor
+      description: An exhibitor.
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+          description: The unique identifier of the exhibitor.
+        name:
+          type: string
+          description: The Name of an exhibitor.
+          example: AutoExpo
+        featured:
+          type: boolean
+          description: If the exhibitor is featured.
+          example: true
+        eventSponsor:
+          type: boolean
+          description: If the exhibitor is an event sponsor.
+          example: true
+    LeadObject:
+      type: object
+      title: LeadObject
+      description: A Lead
+      properties:
+        id:
+          $ref: '#/components/schemas/UUIDProperty'
+        deviceId:
+          type: string
+          deprecated: true
+          description: The unique identifier of the device.
+          example: ID1
+        deviceName:
+          type: string
+          deprecated: true
+          description: Name of the device.
+          example: Device 1
+        boothStaff:
+          type: object
+          description: Booth staff for the lead.
+          allOf:
+          - $ref: '#/components/schemas/ActivityBoothStaff'
+          deprecated: true
+    QuestionDetail:
+      title: QuestionDetail
+      description: The question asked in a session.
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/UUIDProperty'
+        text:
+          type: string
+          description: Question text.
+          example: Is this a new session?
+    LeadQualifiedQuestionResponse:
+      title: LeadQualifiedQuestionResponse
+      description: A Question response.
+      type: object
+      properties:
+        question:
+          $ref: '#/components/schemas/Question2'
+        answers:
+          type: array
+          description: List of answers.
+          items:
+            $ref: '#/components/schemas/LeadQualifiedAnswer'
     ActivityData:
       title: ActivityData
       description: This is used to denote the type of the attendee activity
@@ -1904,41 +1804,196 @@ components:
       - title: event.adClicked
         allOf:
         - $ref: '#/components/schemas/EventAdClicked'
-    SessionPollResponseSubmitted:
+    AdLocation:
+      title: AdLocation
+      description: The placement of the ad within the specific product.
+      enum:
+      - Home Page
+      - Exhibitor List
+      - Session List
+      type: string
+      example: Home Page
+    AppointmentCreated:
+      title: appointment.created
       type: object
-      title: session.pollResponseSubmitted
-      description: The poll created for a session.
-      allOf:
-      - $ref: '#/components/schemas/SessionActivity'
+      description: Appointment created activity.
       properties:
-        poll:
-          $ref: '#/components/schemas/PollResponse'
-    EventActivityDetail:
-      title: Event Activity Detail
-      description: Details for an event activity.
+        appointment:
+          $ref: '#/components/schemas/ActivityAppointment'
+        contact:
+          $ref: '#/components/schemas/ActivityContact'
+    ActivityLead:
+      type: object
+      title: ActivityLead
+      description: An activity lead.
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Activity Lead ID
+        deviceId:
+          type: string
+          description: The unique identifier of the device.
+          example: '123'
+        deviceName:
+          type: string
+          description: Name of the device.
+          example: Jack's iPhone
+        boothStaff:
+          $ref: '#/components/schemas/ActivityBoothStaff'
+    EventRegistrationAbandoned:
+      title: event.registrationAbandoned
+      description: An event registration-abandoned activity.
+      type: object
+      properties:
+        lastSavedRegistrationPageName:
+          type: string
+          description: The last page where an invitee left during the registration.
+          maxLength: 200
+          example: Personal Information
+        lastActivity:
+          type: string
+          format: date-time
+          description: ISO 8601 date and time when an invitee left the registration process.
+          example: '2020-02-03T13:00:00.000Z'
+        contact:
+          type: object
+          description: Related contact.
+          allOf:
+          - $ref: '#/components/schemas/ActivityContact'
+          deprecated: true
+    UUID:
+      title: UUID
+      description: The reference to the related entity. Contains only the ID of the related entity.
+      required:
+      - id
       type: object
       properties:
         id:
-          description: The identifier of the event.
+          $ref: '#/components/schemas/UUIDProperty'
+    EventCustomCardOpened:
+      type: object
+      title: event.customCardOpened
+      description: This is used to denote the attendee activity fetched when a custom card is opened by an attendee.
+      properties:
+        name:
+          type: string
+          description: The name of the custom card.
+          example: Join our mailing list.
+        url:
+          type: string
+          format: uri
+          description: The URL associated with the custom card.
+          example: https://cvent.com
+        type:
+          type: string
+          description: The type of the custom card. This value can be Link, Video, Appointment etc.
+          example: Video
+        multipleLinks:
+          type: boolean
+          description: True indicates the custom card contains multiple links. An attendee uses only one link at a time in a custom card.
+          example: false
+    EventActivity:
+      type: object
+      title: Event Activity
+      description: An email activity.
+      properties:
+        event:
+          type: object
+          description: The event in which this activity occurred.
+          properties:
+            id:
+              type: string
+              format: uuid
+              description: Event ID.
+    ExternalActivityAdditionalFieldsMetadata:
+      title: ExternalActivityAdditionalFieldsMetadata
+      description: Additional fields metadata for an external activity.
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          description: The name of the additional field.
+          minLength: 1
+          maxLength: 100
+          example: facebook_social.media
+        description:
+          type: string
+          description: Description of the additional field.
+          maxLength: 250
+          example: Contains data for facebook social media activity.
+    ActivityExhibitorWeblink:
+      type: object
+      title: ActivityExhibitorWeblink
+      description: A web-link for an activity exhibitor.
+      properties:
+        id:
           type: string
           format: uuid
-          example: d84855b0-eeda-41c4-8e7a-53e80364cb95
-        title:
+          example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+          description: The unique identifier of the weblink.
+        name:
           type: string
-          description: The title of the event.
-          example: Cvent Connect 2020
-          readOnly: true
-        code:
-          type: string
-          description: The code of the event.
-          example: XRNGB4YY3CX
-          readOnly: true
-        timezone:
-          type: string
-          description: The timezone of the event.
-          example: America/New_York
-          readOnly: true
+          description: The name of the weblink.
+          example: Cvent's website
+  responses:
+    Unauthorized1:
+      description: Bad or expired token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 401
+            message: Unauthorized
+    BadRequest1:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 400
+            message: Bad Request
+    Forbidden1:
+      description: You do not have access to the resource
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 403
+            message: Access Forbidden
+    NotFound1:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 404
+            message: Not found
+    TooManyRequests1:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 429
+            message: Limit Exceeded
   parameters:
+    before:
+      name: before
+      required: false
+      in: query
+      description: Used to query records that have been added or updated before this time point.
+      schema:
+        type: string
+        format: date-time
+        example: '2017-01-02T02:00:00Z'
     token:
       name: token
       in: query
@@ -1952,15 +2007,6 @@ components:
       schema:
         type: string
         example: 0e28af57-511f-47ab-ae46-46cd1ca51a1a
-    before:
-      name: before
-      required: false
-      in: query
-      description: Used to query records that have been added or updated before this time point.
-      schema:
-        type: string
-        format: date-time
-        example: '2017-01-02T02:00:00Z'
     id11:
       in: path
       name: id
@@ -1990,52 +2036,6 @@ components:
         type: integer
         default: 100
         example: 100
-  responses:
-    TooManyRequests1:
-      description: Too many requests
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 429
-            message: Limit Exceeded
-    BadRequest1:
-      description: Bad request
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 400
-            message: Bad Request
-    Unauthorized1:
-      description: Bad or expired token
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 401
-            message: Unauthorized
-    NotFound1:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 404
-            message: Not found
-    Forbidden1:
-      description: You do not have access to the resource
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 403
-            message: Access Forbidden
   securitySchemes:
     OAuth2.authorizationCode:
       type: oauth2

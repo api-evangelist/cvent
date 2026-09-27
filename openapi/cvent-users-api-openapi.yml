@@ -236,38 +236,121 @@ paths:
         '429':
           $ref: '#/components/responses/TooManyRequests1'
 components:
+  parameters:
+    token1:
+      in: query
+      name: token
+      description: 'The pagination token returned from a previous call.
+
+        This will override any other pageable parameters provided.
+
+        '
+      required: false
+      style: form
+      explode: true
+      schema:
+        type: string
+        example: 1a2b3c4d5e6f7g8h9i10j11k
+    userGroupId:
+      in: path
+      name: userGroupId
+      description: 'The User Group''s Id.
+
+        '
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: B089AC31-1212-63FB-AAEA-382037E1BCDF
+    limit:
+      name: limit
+      in: query
+      description: The maximum number of records to return per page.
+      style: form
+      explode: true
+      schema:
+        maximum: 200
+        minimum: 1
+        type: integer
+        default: 100
+        example: 100
+    userId:
+      in: path
+      name: userId
+      description: 'The Account User''s Id.
+
+        '
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: FF8AF134-3505-4D67-AAEA-1975D8E1327C
+  requestBodies:
+    UserGroup:
+      description: A User Group
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AccountUserGroup'
+  responses:
+    Unauthorized1:
+      description: Bad or expired token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 401
+            message: Unauthorized
+    BadRequest1:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 400
+            message: Bad Request
+    Forbidden1:
+      description: You do not have access to the resource
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 403
+            message: Access Forbidden
+    UserGroup:
+      description: A User Group
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AccountUserGroup'
+    NotFound1:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 404
+            message: Not found
+    TooManyRequests1:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 429
+            message: Limit Exceeded
+    UserGroups:
+      description: List of User Groups
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UserGroups'
   schemas:
-    AccountUserGroup:
-      title: Account User Group
-      description: A collection of account users which is used to help manage access and visibility to various other Cvent domain entities like events, surveys, account emails, and more. For example, a user group can be associated to specific events to allow the users within that group to view the events within Cvent's platform.
-      required:
-      - id
-      - name
-      - created
-      - createdBy
-      - lastModified
-      - lastModifiedBy
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/Audit'
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: The unique identifier of the user group.
-          example: EBF2273A-35A5-BD67-A292-397539D13270
-          readOnly: true
-        name:
-          type: string
-          description: The name of the user group.
-          example: MyUserGroup
-          minLength: 1
-          maxLength: 50
-        description:
-          type: string
-          description: The description of the user group.
-          example: MyUserGroupDescription
-          maxLength: 300
     Link:
       title: Link
       required:
@@ -310,55 +393,6 @@ components:
             $ref: '#/components/schemas/AccountUserGroup'
           description: The list of user groups retrieved for the specified page.
           readOnly: true
-    Paging:
-      title: Paging
-      required:
-      - _links
-      type: object
-      description: Represents pagination information for a collection of resources.
-      properties:
-        previousToken:
-          type: string
-          description: The pagination token for the previous page, if one exists. You can use this token to navigate to the previous page of data.
-          example: 1a2b3c4d5e6f7g8h9i10j11k
-        nextToken:
-          type: string
-          description: The pagination token for the next page. If this value is present in the response, there is another page of data you can fetch.
-          example: 1a2b3c4d5e6f7g8h9i10j11k
-        currentToken:
-          type: string
-          description: The pagination token for the current page.
-          example: 1a2b3c4d5e6f7g8h9i10j11k
-        limit:
-          type: integer
-          description: The number of records to return on the page. Not to exceed 200.
-          example: 100
-        totalCount:
-          type: integer
-          description: The total number of records available. This field may return blank, even if there are more records. To confirm if there are more records, check the `nextToken` field.
-          example: 2
-        _links:
-          $ref: '#/components/schemas/PaginationLinks'
-    ErrorResponseBase1:
-      title: ErrorResponseBase
-      type: object
-      description: Represents an error response with no additional details.
-      required:
-      - code
-      - message
-      properties:
-        code:
-          type: integer
-          description: The HTTP status code representing the error.
-          example: 400
-        message:
-          type: string
-          description: A brief description of the error.
-          example: Bad Request
-        target:
-          type: string
-          description: The target resource of the error.
-          example: example target
     PaginationLinks:
       title: PaginationLinks
       type: object
@@ -397,120 +431,86 @@ components:
           description: The identifier of the user that last updated this record.
           readOnly: true
           example: hporter
-  parameters:
-    userId:
-      in: path
-      name: userId
-      description: 'The Account User''s Id.
-
-        '
-      required: true
-      schema:
-        type: string
-        format: uuid
-        example: FF8AF134-3505-4D67-AAEA-1975D8E1327C
-    limit:
-      name: limit
-      in: query
-      description: The maximum number of records to return per page.
-      style: form
-      explode: true
-      schema:
-        maximum: 200
-        minimum: 1
-        type: integer
-        default: 100
-        example: 100
-    userGroupId:
-      in: path
-      name: userGroupId
-      description: 'The User Group''s Id.
-
-        '
-      required: true
-      schema:
-        type: string
-        format: uuid
-        example: B089AC31-1212-63FB-AAEA-382037E1BCDF
-    token1:
-      in: query
-      name: token
-      description: 'The pagination token returned from a previous call.
-
-        This will override any other pageable parameters provided.
-
-        '
-      required: false
-      style: form
-      explode: true
-      schema:
-        type: string
-        example: 1a2b3c4d5e6f7g8h9i10j11k
-  responses:
-    UserGroup:
-      description: A User Group
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/AccountUserGroup'
-    Unauthorized1:
-      description: Bad or expired token
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 401
-            message: Unauthorized
-    NotFound1:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 404
-            message: Not found
-    TooManyRequests1:
-      description: Too many requests
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 429
-            message: Limit Exceeded
-    BadRequest1:
-      description: Bad request
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 400
-            message: Bad Request
-    UserGroups:
-      description: List of User Groups
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/UserGroups'
-    Forbidden1:
-      description: You do not have access to the resource
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 403
-            message: Access Forbidden
-  requestBodies:
-    UserGroup:
-      description: A User Group
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/AccountUserGroup'
+    Paging:
+      title: Paging
+      required:
+      - _links
+      type: object
+      description: Represents pagination information for a collection of resources.
+      properties:
+        previousToken:
+          type: string
+          description: The pagination token for the previous page, if one exists. You can use this token to navigate to the previous page of data.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        nextToken:
+          type: string
+          description: The pagination token for the next page. If this value is present in the response, there is another page of data you can fetch.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        currentToken:
+          type: string
+          description: The pagination token for the current page.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        limit:
+          type: integer
+          description: The number of records to return on the page. Not to exceed 200.
+          example: 100
+        totalCount:
+          type: integer
+          description: The total number of records available. This field may return blank, even if there are more records. To confirm if there are more records, check the `nextToken` field.
+          example: 2
+        _links:
+          $ref: '#/components/schemas/PaginationLinks'
+    AccountUserGroup:
+      title: Account User Group
+      description: A collection of account users which is used to help manage access and visibility to various other Cvent domain entities like events, surveys, account emails, and more. For example, a user group can be associated to specific events to allow the users within that group to view the events within Cvent's platform.
+      required:
+      - id
+      - name
+      - created
+      - createdBy
+      - lastModified
+      - lastModifiedBy
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/Audit'
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The unique identifier of the user group.
+          example: EBF2273A-35A5-BD67-A292-397539D13270
+          readOnly: true
+        name:
+          type: string
+          description: The name of the user group.
+          example: MyUserGroup
+          minLength: 1
+          maxLength: 50
+        description:
+          type: string
+          description: The description of the user group.
+          example: MyUserGroupDescription
+          maxLength: 300
+    ErrorResponseBase1:
+      title: ErrorResponseBase
+      type: object
+      description: Represents an error response with no additional details.
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          description: The HTTP status code representing the error.
+          example: 400
+        message:
+          type: string
+          description: A brief description of the error.
+          example: Bad Request
+        target:
+          type: string
+          description: The target resource of the error.
+          example: example target
   securitySchemes:
     OAuth2.authorizationCode:
       type: oauth2

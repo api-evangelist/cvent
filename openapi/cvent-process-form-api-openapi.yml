@@ -60,70 +60,7 @@ paths:
         description: More about OAuth2 authorization code support for administrators
         url: '#oauth2-auth-code-planner-admin'
 components:
-  responses:
-    Unauthorized1:
-      description: Bad or expired token
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 401
-            message: Unauthorized
-    TooManyRequests1:
-      description: Too many requests
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 429
-            message: Limit Exceeded
-    BadRequest1:
-      description: Bad request
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 400
-            message: Bad Request
-    Forbidden1:
-      description: You do not have access to the resource
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 403
-            message: Access Forbidden
   schemas:
-    Link:
-      title: Link
-      required:
-      - href
-      type: object
-      description: Represents a link to a related resource.
-      properties:
-        href:
-          type: string
-          description: A url provided that can be followed for linking
-          example: ?token=90c5f062-76ad-4ea4-aa53-00eb698d9262
-    ErrorResponse-12:
-      title: ErrorResponse
-      description: Represents an error response with additional details of cascading error messages.
-      allOf:
-      - $ref: '#/components/schemas/ErrorResponseBase1'
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        details:
-          type: array
-          items:
-            $ref: '#/components/schemas/ErrorResponseBase1'
-          description: Additional details of cascading error messages.
     process-form-submission:
       title: ProcessFormSubmission
       description: Represents a process form submission in the context of a specific event.
@@ -160,69 +97,17 @@ components:
           items:
             $ref: '#/components/schemas/ProcessFormSubmissionQuestion'
           description: The list of possible answers to a question.
-    Paging:
-      title: Paging
+    Link:
+      title: Link
       required:
-      - _links
+      - href
       type: object
-      description: Represents pagination information for a collection of resources.
+      description: Represents a link to a related resource.
       properties:
-        previousToken:
+        href:
           type: string
-          description: The pagination token for the previous page, if one exists. You can use this token to navigate to the previous page of data.
-          example: 1a2b3c4d5e6f7g8h9i10j11k
-        nextToken:
-          type: string
-          description: The pagination token for the next page. If this value is present in the response, there is another page of data you can fetch.
-          example: 1a2b3c4d5e6f7g8h9i10j11k
-        currentToken:
-          type: string
-          description: The pagination token for the current page.
-          example: 1a2b3c4d5e6f7g8h9i10j11k
-        limit:
-          type: integer
-          description: The number of records to return on the page. Not to exceed 200.
-          example: 100
-        totalCount:
-          type: integer
-          description: The total number of records available. This field may return blank, even if there are more records. To confirm if there are more records, check the `nextToken` field.
-          example: 2
-        _links:
-          $ref: '#/components/schemas/PaginationLinks'
-    ProcessForm:
-      title: ProcessForm
-      description: 'An object that contains the process form ID.
-
-
-        This is an **expandable** object and if requested will contain the name of a process form object.'
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: The ID of the process form.
-          readOnly: true
-          example: 9c97eb50-9f88-4972-a603-f617fc3258dd
-    ErrorResponseBase1:
-      title: ErrorResponseBase
-      type: object
-      description: Represents an error response with no additional details.
-      required:
-      - code
-      - message
-      properties:
-        code:
-          type: integer
-          description: The HTTP status code representing the error.
-          example: 400
-        message:
-          type: string
-          description: A brief description of the error.
-          example: Bad Request
-        target:
-          type: string
-          description: The target resource of the error.
-          example: example target
+          description: A url provided that can be followed for linking
+          example: ?token=90c5f062-76ad-4ea4-aa53-00eb698d9262
     process-form-submissions-paginated-response:
       title: ProcessFormSubmissionPaginatedResponse
       description: The response from a request to get the list of process form submissions. This includes the paging object as well as the collection of process form submissions.
@@ -238,32 +123,20 @@ components:
           items:
             $ref: '#/components/schemas/process-form-submission'
           description: Collection of process form submission objects.
-    ProcessFormSubmissionQuestion:
-      title: ProcessFormSubmissionQuestion
-      description: A question for a process form submission.
-      required:
-      - id
-      - value
+    ProcessForm:
+      title: ProcessForm
+      description: 'An object that contains the process form ID.
+
+
+        This is an **expandable** object and if requested will contain the name of a process form object.'
+      type: object
       properties:
         id:
           type: string
-          description: The unique ID representing this question.
           format: uuid
-          example: f1ea56cd-6860-4f1a-baf7-973118384384
-        name:
-          type: string
-          description: The actual text of the custom field.
-          example: What is your favorite color?
+          description: The ID of the process form.
           readOnly: true
-        type:
-          $ref: '#/components/schemas/QuestionType-11'
-        value:
-          type: array
-          uniqueItems: true
-          items:
-            type: string
-            example: Green
-          description: The set of answers to the question.
+          example: 9c97eb50-9f88-4972-a603-f617fc3258dd
     QuestionType-11:
       title: QuestionType
       enum:
@@ -282,6 +155,21 @@ components:
       description: Denotes the type of data collected by a question.
       example: FreeText
       readOnly: true
+    ErrorResponse-12:
+      title: ErrorResponse
+      description: Represents an error response with additional details of cascading error messages.
+      allOf:
+      - $ref: '#/components/schemas/ErrorResponseBase1'
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorResponseBase1'
+          description: Additional details of cascading error messages.
     PaginationLinks:
       title: PaginationLinks
       type: object
@@ -320,6 +208,118 @@ components:
           description: The identifier of the user that last updated this record.
           readOnly: true
           example: hporter
+    ProcessFormSubmissionQuestion:
+      title: ProcessFormSubmissionQuestion
+      description: A question for a process form submission.
+      required:
+      - id
+      - value
+      properties:
+        id:
+          type: string
+          description: The unique ID representing this question.
+          format: uuid
+          example: f1ea56cd-6860-4f1a-baf7-973118384384
+        name:
+          type: string
+          description: The actual text of the custom field.
+          example: What is your favorite color?
+          readOnly: true
+        type:
+          $ref: '#/components/schemas/QuestionType-11'
+        value:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            example: Green
+          description: The set of answers to the question.
+    Paging:
+      title: Paging
+      required:
+      - _links
+      type: object
+      description: Represents pagination information for a collection of resources.
+      properties:
+        previousToken:
+          type: string
+          description: The pagination token for the previous page, if one exists. You can use this token to navigate to the previous page of data.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        nextToken:
+          type: string
+          description: The pagination token for the next page. If this value is present in the response, there is another page of data you can fetch.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        currentToken:
+          type: string
+          description: The pagination token for the current page.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        limit:
+          type: integer
+          description: The number of records to return on the page. Not to exceed 200.
+          example: 100
+        totalCount:
+          type: integer
+          description: The total number of records available. This field may return blank, even if there are more records. To confirm if there are more records, check the `nextToken` field.
+          example: 2
+        _links:
+          $ref: '#/components/schemas/PaginationLinks'
+    ErrorResponseBase1:
+      title: ErrorResponseBase
+      type: object
+      description: Represents an error response with no additional details.
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          description: The HTTP status code representing the error.
+          example: 400
+        message:
+          type: string
+          description: A brief description of the error.
+          example: Bad Request
+        target:
+          type: string
+          description: The target resource of the error.
+          example: example target
+  responses:
+    Unauthorized1:
+      description: Bad or expired token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 401
+            message: Unauthorized
+    BadRequest1:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 400
+            message: Bad Request
+    Forbidden1:
+      description: You do not have access to the resource
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 403
+            message: Access Forbidden
+    TooManyRequests1:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 429
+            message: Limit Exceeded
   parameters:
     token:
       name: token
@@ -343,15 +343,6 @@ components:
         type: string
         format: date-time
         example: '2017-01-02T02:00:00Z'
-    before:
-      name: before
-      required: false
-      in: query
-      description: Used to query records that have been added or updated before this time point.
-      schema:
-        type: string
-        format: date-time
-        example: '2017-01-02T02:00:00Z'
     limit4:
       name: limit
       in: query
@@ -363,6 +354,15 @@ components:
         minimum: 1
         type: integer
         default: 10
+    before:
+      name: before
+      required: false
+      in: query
+      description: Used to query records that have been added or updated before this time point.
+      schema:
+        type: string
+        format: date-time
+        example: '2017-01-02T02:00:00Z'
     processFormExpand:
       name: expand
       in: query

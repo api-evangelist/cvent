@@ -226,53 +226,179 @@ paths:
         '429':
           $ref: '#/components/responses/TooManyRequests1'
 components:
+  parameters:
+    venueId:
+      description: Unique Cvent based identifier for a Venue.
+      name: venueId
+      required: true
+      in: path
+      schema:
+        $ref: '#/components/schemas/VenueID'
   schemas:
-    MeasurementUnit:
-      title: MeasurementUnit
-      description: 'Unit of measurement for area or space.
+    DistanceMeasurementUnit:
+      title: Distance Measurement Unit
+      description: 'Unit of measurement for distance.
 
 
         Values:
 
-        - `SQUARE_FEET` — Square Feet
+        - `MILES` — Miles
 
-        - `SQUARE_METERS` — Square Meters'
+        - `KILOMETERS` — Kilometers'
       type: string
       enum:
-      - SQUARE_FEET
-      - SQUARE_METERS
-    LocationType:
-      title: LocationType
-      description: Location classification for the venue.
-      type: string
-      enum:
-      - AIRPORT
-      - INTERSTATE
-      - RESORT
-      - SMALL_METRO_TOWN
-      - SUBURBAN
-      - URBAN
-      example: SUBURBAN
-    EventInsurance:
-      title: Event Insurance
-      description: 'Indicates whether event insurance is required at the venue. Applicable only to venue types: Aquarium/Zoo, Arena/Stadium, Banquet Facility, Bar/Club, Corporate Office Space, Educational Facility, Entertainment Venue, Gallery/Museum, Golf Course, Movie Theatre, and Special Event Venue.
-
-
-        Values:
-
-        - `BLANK` — Indicates no selection, leaves the field blank
-
-        - `REQUIRED` — Required
-
-        - `MAY_BE_REQUIRED` — May Be Required
-
-        - `NOT_REQUIRED` — Not Required'
-      type: string
-      enum:
-      - BLANK
-      - REQUIRED
-      - MAY_BE_REQUIRED
-      - NOT_REQUIRED
+      - MILES
+      - KILOMETERS
+    VenueFacility:
+      title: VenueFacility
+      description: Facility information for a venue. Field applicability varies by venue type; values supplied for fields that do not apply to the venue's type will be rejected.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/Audit'
+      properties:
+        numberOfMeetingRooms:
+          type: integer
+          description: Total number of meeting rooms at the venue.
+          minimum: 0
+          maximum: 10000
+          example: 25
+        space:
+          type: object
+          description: Facility space measurements at the venue.
+          properties:
+            unitOfMeasurement:
+              $ref: '#/components/schemas/MeasurementUnit'
+            totalMeetingRoomSpace:
+              type: integer
+              description: Total meeting room space at the venue.
+              minimum: 0
+              maximum: 99999999
+              example: 50000
+            totalExhibitSpace:
+              type: integer
+              description: Total exhibit space at the venue.
+              minimum: 0
+              maximum: 99999999
+              example: 75000
+        sleeping:
+          type: object
+          description: Sleeping room inventory at the venue.
+          properties:
+            totalRooms:
+              type: integer
+              description: Total number of sleeping rooms at the venue.
+              minimum: 0
+              maximum: 10000
+              example: 350
+            suites:
+              type: integer
+              description: Total number of suites at the venue.
+              minimum: 0
+              maximum: 10000
+              example: 20
+            singleRooms:
+              type: integer
+              description: Total number of single-occupancy rooms at the venue.
+              minimum: 0
+              maximum: 10000
+              example: 200
+            doubleRooms:
+              type: integer
+              description: Total number of double-occupancy rooms at the venue.
+              minimum: 0
+              maximum: 10000
+              example: 130
+        singleRate:
+          type: object
+          description: Published rate range for single-occupancy rooms, expressed in the venue's configured currency.
+          properties:
+            low:
+              type: number
+              description: Lowest published rate for a single-occupancy room.
+              minimum: 0
+              maximum: 999999999
+              example: 129.99
+            high:
+              type: number
+              description: Highest published rate for a single-occupancy room.
+              minimum: 0
+              maximum: 999999999
+              example: 249.99
+        doubleRate:
+          type: object
+          description: Published rate range for double-occupancy rooms, expressed in the venue's configured currency.
+          properties:
+            low:
+              type: number
+              description: Lowest published rate for a double-occupancy room.
+              minimum: 0
+              maximum: 999999999
+              example: 149.99
+            high:
+              type: number
+              description: Highest published rate for a double-occupancy room.
+              minimum: 0
+              maximum: 999999999
+              example: 299.99
+        taxRate:
+          type: number
+          description: Tax rate applied at the venue, expressed as a percentage.
+          minimum: 0
+          maximum: 999999999
+          example: 8.5
+        occupancyRate:
+          type: number
+          description: Occupancy rate at the venue, expressed as a percentage.
+          minimum: 0
+          maximum: 999999999
+          example: 75.5
+        yearBuilt:
+          type: integer
+          description: Four-digit year the venue was built.
+          minimum: 0
+          maximum: 9999
+          example: 1998
+        yearRenovated:
+          type: integer
+          description: Four-digit year the venue was last renovated.
+          minimum: 0
+          maximum: 9999
+          example: 2021
+        proximityFromAirport:
+          type: object
+          description: Distance from the nearest airport. `unit` is required when `distance` is provided.
+          properties:
+            distance:
+              type: number
+              description: Distance from the nearest airport, expressed in `unit`. Up to four digits.
+              minimum: 0
+              maximum: 9999
+              example: 12.5
+            unit:
+              $ref: '#/components/schemas/DistanceMeasurementUnit'
+        restrictions:
+          type: string
+          description: Free-form description of any facility restrictions at the venue.
+          maxLength: 2500
+          example: No outside food or beverage permitted. Music must end by 11 PM.
+        maximumCapacity:
+          type: object
+          description: 'Maximum attendee capacity at the venue. Applicable only to venue types: Aquarium/Zoo, Arena/Stadium, Banquet Facility, Bar/Club, Corporate Office Space, Educational Facility, Entertainment Venue, Gallery/Museum, Golf Course, Movie Theatre, and Special Event Venue.'
+          properties:
+            seated:
+              type: integer
+              description: Maximum seated capacity at the venue.
+              minimum: 0
+              maximum: 10000
+              example: 500
+            standing:
+              type: integer
+              description: Maximum standing capacity at the venue.
+              minimum: 0
+              maximum: 10000
+              example: 800
+        eventInsurance:
+          $ref: '#/components/schemas/EventInsurance'
     ErrorResponse-12:
       title: ErrorResponse
       description: Represents an error response with additional details of cascading error messages.
@@ -288,6 +414,29 @@ components:
           items:
             $ref: '#/components/schemas/ErrorResponseBase1'
           description: Additional details of cascading error messages.
+    existingVenueFacility:
+      title: ExistingVenueFacility
+      description: An existing venue facility model with read-only generated properties.
+      type: object
+      required:
+      - id
+      - name
+      allOf:
+      - $ref: '#/components/schemas/VenueFacility'
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Venue ID.
+          readOnly: true
+          example: e1c05096-e352-4f2e-af1c-a6e022d36b34
+        name:
+          type: string
+          description: Venue name.
+          readOnly: true
+          minLength: 1
+          maxLength: 100
+          example: Vienna Wolf Trap Hotel
     existingVenueDetails:
       title: ExistingVenueDetails
       description: An existing venue details model with read-only generated properties.
@@ -578,307 +727,458 @@ components:
       - ZA
       - ZM
       - ZW
-    AddressInfo:
-      title: AddressInfo
-      description: Venue address information.
+    Audit:
+      title: Audit
+      description: Audit information
       type: object
-      required:
-      - city
-      - country
       properties:
-        streetAddress1:
+        created:
           type: string
-          description: Street address line 1.
-          maxLength: 40
-          example: 1234 Trap Road
-        streetAddress2:
+          format: date-time
+          description: The ISO 8601 zoned date time when this record was created.
+          readOnly: true
+          example: '2017-01-02T02:00:00Z'
+        createdBy:
           type: string
-          description: Street address line 2.
-          maxLength: 40
-          example: Suite 100
-        city:
+          description: The identifier of the user that created this record.
+          readOnly: true
+          example: hporter
+        lastModified:
           type: string
-          description: City.
-          minLength: 1
-          maxLength: 40
-          example: Vienna
-        stateProvince:
-          $ref: '#/components/schemas/StateProvince'
-        zipPostalCode:
+          format: date-time
+          description: The ISO 8601 zoned date time when this record was updated.
+          readOnly: true
+          example: '2019-02-12T03:00:00Z'
+        lastModifiedBy:
           type: string
-          description: ZIP or postal code.
-          maxLength: 25
-          example: '22182'
-        country:
-          $ref: '#/components/schemas/Country'
-        directions:
-          type: string
-          description: Directions or instructions for getting to the venue.
-          maxLength: 2500
-          example: Take I-66 West to Exit 67, then follow signs to Trap Road.
-    Currency:
-      title: Currency
+          description: The identifier of the user that last updated this record.
+          readOnly: true
+          example: hporter
+    MeasurementUnit:
+      title: MeasurementUnit
+      description: 'Unit of measurement for area or space.
+
+
+        Values:
+
+        - `SQUARE_FEET` — Square Feet
+
+        - `SQUARE_METERS` — Square Meters'
       type: string
-      description: The ISO 4217 standard format currency code used for RFPs.
       enum:
-      - USD
-      - CAD
-      - AUD
-      - EUR
-      - GBP
-      - HKD
-      - NZD
-      - AED
-      - NOK
-      - INR
-      - MXN
-      - SEK
-      - DKK
-      - MYR
-      - JPY
-      - SGD
-      - THB
-      - IDR
-      - KRW
-      - CNY
-      - TWD
-      - RUB
-      - CHF
-      - CZK
-      - HUF
-      - QAR
-      - ZAR
-      - RON
-      - HRK
-      - TRY
-      - BRL
-      - PHP
-      - SAR
-      - PLN
-      - ARS
-      - AWG
-      - AZN
-      - BSD
-      - BBD
-      - BMD
-      - CLP
-      - COP
-      - CRC
-      - DOP
-      - XCD
-      - ILS
-      - JMD
-      - LVL
-      - LTL
-      - MDL
-      - ANG
-      - OMR
-      - TTD
-      - UAH
-      - UYU
-      - RSD
-      - AFN
-      - AMD
-      - AOA
-      - BAM
-      - BDT
-      - BGN
-      - BHD
-      - BOB
-      - DZD
-      - EEK
-      - EGP
-      - FJD
-      - GTQ
-      - HNL
-      - ISK
-      - JOD
-      - KYD
-      - KZT
-      - LBP
-      - MAD
-      - NGN
-      - NIO
-      - ESP
-      - FRF
-      - PAB
-      - PEN
-      - PKR
-      - PYG
-      - SVC
-      - SYP
-      - VEF
-      - VND
-      - XPF
-      - GYD
-      - MOP
-      - PGK
-      - XOF
-      - XAF
-      - BZD
-      - BYR
-      - BWP
-      - BND
-      - BIF
-      - KHR
-      - CVE
-      - KMF
-      - CDF
-      - DJF
-      - ERN
-      - FKP
-      - GMD
-      - GEL
-      - GHS
-      - GIP
-      - GNF
-      - HTG
-      - KES
-      - KWD
-      - KGS
-      - LAK
-      - LRD
-      - MKD
-      - MGA
-      - MWK
-      - MVR
-      - MRO
-      - MUR
-      - MNT
-      - MZN
-      - MMK
-      - NAD
-      - NPR
-      - RWF
-      - SHP
-      - WST
-      - STD
-      - SLL
-      - SBD
-      - SOS
-      - LKR
-      - SRD
-      - SZL
-      - TOP
-      - TND
-      - UGX
-      - UZS
-      - VUV
-      - YER
-      - ZMK
-      - ZWD
-      - SR
-      - ETB
-      - GH
-      - GWP
-      - IQD
-      - IRR
-      - KPW
-      - LSL
-      - ROL
-      - SDG
-      - SKK
-      - TJS
-      - TMT
-      - TZS
-      - ALL
-      - BTN
-      - CUP
-      - LD
-      - SCR
-      - ZMW
-      - ZWL
-    venueDetails:
-      title: VenueDetails
-      description: Venue details model.
-      allOf:
-      - $ref: '#/components/schemas/Audit'
+      - SQUARE_FEET
+      - SQUARE_METERS
+    ChainScale:
+      title: Chain Scale
+      description: 'A market segment classification of a venue chain based on Average Daily Rate and other factors.
+
+
+        Values:
+
+        - `BLANK` — Blank
+
+        - `ECONOMYCHAINS` — Economy Chains
+
+        - `INDEPENDENTS` — Independents
+
+        - `LUXURY_CHAINS` — Luxury Chains
+
+        - `MIDSCALE_CHAINS` — Midscale Chains
+
+        - `MIDSCALE_WITH_FB_CHAINS` — Midscale With F&B Chains
+
+        - `MIDSCALE_WITHOUT_FB_CHAINS` — Midscale Without F&B Chains
+
+        - `UPPER_MIDSCALE_CHAINS` — Upper Midscale Chains
+
+        - `UPPER_UPSCALE_CHAINS` — Upper Upscale Chains
+
+        - `UPSCALE_CHAINS` — Upscale Chains'
+      type: string
+      enum:
+      - BLANK
+      - ECONOMYCHAINS
+      - INDEPENDENTS
+      - LUXURY_CHAINS
+      - MIDSCALE_CHAINS
+      - MIDSCALE_WITH_FB_CHAINS
+      - MIDSCALE_WITHOUT_FB_CHAINS
+      - UPPER_MIDSCALE_CHAINS
+      - UPPER_UPSCALE_CHAINS
+      - UPSCALE_CHAINS
+      example: UPSCALE_CHAINS
+    LocationType:
+      title: LocationType
+      description: Location classification for the venue.
+      type: string
+      enum:
+      - AIRPORT
+      - INTERSTATE
+      - RESORT
+      - SMALL_METRO_TOWN
+      - SUBURBAN
+      - URBAN
+      example: SUBURBAN
+    venueDetailsPatch:
+      title: VenueDetailsPatch
+      description: Partial update payload for venue details.
       type: object
-      required:
-      - type
-      - mainPhoneNumber
-      - mainFaxNumber
-      - address
       properties:
         type:
           $ref: '#/components/schemas/VenueType'
         timeZone:
-          type: string
+          type:
+          - string
+          - 'null'
           description: Time zone identifier for the venue. See the supported timezones reference for valid values.
           example: America/New_York
           externalDocs:
             description: Supported Timezones
             url: https://developers.cvent.com/docs/rest-api/reference/api-standards#supported-timezones
         brand:
-          type: string
-          description: Venue brand.
-          maxLength: 100
+          type:
+          - string
+          - 'null'
+          description: Venue brand. Brands vary by venue type.
           example: Quality Hotels
+          maxLength: 100
         chainScale:
-          $ref: '#/components/schemas/ChainScale'
+          type:
+          - string
+          - 'null'
+          allOf:
+          - $ref: '#/components/schemas/ChainScale'
         mainPhoneNumber:
           type: string
           description: Primary phone number for the venue.
+          example: +1-703-555-0100
           minLength: 1
           maxLength: 30
-          example: +1-703-555-0100
         mainFaxNumber:
           type: string
           description: Primary fax number for the venue.
+          example: +1-703-555-0101
           minLength: 1
           maxLength: 30
-          example: +1-703-555-0101
         salesPhoneNumber:
-          type: string
+          type:
+          - string
+          - 'null'
           description: Sales phone number of the venue.
-          maxLength: 30
           example: +1-703-555-0102
+          maxLength: 30
         salesFaxNumber:
-          type: string
+          type:
+          - string
+          - 'null'
           description: Sales fax number of the venue.
-          maxLength: 30
           example: +1-703-555-0103
-        tollFreeNumber:
-          type: string
-          description: Toll-free number of the venue.
           maxLength: 30
+        tollFreeNumber:
+          type:
+          - string
+          - 'null'
+          description: Toll-free number of the venue.
           example: 1-800-555-0100
+          maxLength: 30
         websiteAddress:
-          type: string
+          type:
+          - string
+          - 'null'
           format: uri
           description: Website address.
           maxLength: 300
           example: https://www.example-hotel.com
         currency:
-          $ref: '#/components/schemas/Currency'
+          type:
+          - string
+          - 'null'
+          allOf:
+          - $ref: '#/components/schemas/Currency'
         openingDate:
-          type: string
+          type:
+          - string
+          - 'null'
           description: Venue opening date as free-form text.
-          maxLength: 30
           example: Spring 2025
+          maxLength: 30
         description:
-          type: string
+          type:
+          - string
+          - 'null'
           description: Venue description.
+          example: A premier conference and event venue in the heart of Northern Virginia.
           maxLength: 4000
-          example: A modern conference venue in downtown.
         additionalInformation:
-          type: string
+          type:
+          - string
+          - 'null'
           description: Additional information about the venue.
+          example: Complimentary parking available for all event attendees.
           maxLength: 2500
-          example: Free parking available on-site.
         cancellationPolicy:
-          type: string
+          type:
+          - string
+          - 'null'
           description: Cancellation policy for bookings at the venue.
+          example: 48-hour cancellation policy applies for all event bookings.
           maxLength: 2500
-          example: Full refund if cancelled 48 hours before event.
         locationTypes:
-          type: array
+          type:
+          - array
+          - 'null'
           description: Location classifications.
+          maxItems: 6
           items:
             $ref: '#/components/schemas/LocationType'
-          maxItems: 6
         address:
-          $ref: '#/components/schemas/AddressInfo'
+          type:
+          - object
+          - 'null'
+          description: Venue address information.
+          properties:
+            streetAddress1:
+              type:
+              - string
+              - 'null'
+              description: Street address line 1.
+              example: 1234 Trap Road
+              maxLength: 40
+            streetAddress2:
+              type:
+              - string
+              - 'null'
+              description: Street address line 2.
+              example: Suite 100
+              maxLength: 40
+            city:
+              type: string
+              description: City.
+              minLength: 1
+              maxLength: 40
+              example: Vienna
+            stateProvince:
+              $ref: '#/components/schemas/StateProvince'
+            zipPostalCode:
+              type:
+              - string
+              - 'null'
+              description: ZIP or postal code.
+              example: '22182'
+              maxLength: 25
+            country:
+              $ref: '#/components/schemas/Country'
+            directions:
+              type:
+              - string
+              - 'null'
+              description: Directions or instructions for getting to the venue.
+              example: Take I-66 West to Exit 67, then follow signs to Trap Road.
+              maxLength: 2500
+    VenueID:
+      title: Venue ID
+      description: A unique identifier for a venue
+      type: string
+      format: uuid
+      example: 6bb0e2db-861f-46e3-a923-eb4d959ffa00
+    venueFacilityPatch:
+      title: VenueFacilityPatch
+      description: Partial update payload for venue facility information. Only fields present in the request body are updated; omitted fields remain unchanged. Set leaf fields to `null` to unset them. For grouped objects, update or clear each child field explicitly instead of setting the entire group to `null`. Field applicability varies by venue type; values supplied for fields that do not apply to the venue's type will be rejected.
+      type: object
+      properties:
+        numberOfMeetingRooms:
+          type:
+          - integer
+          - 'null'
+          description: Total number of meeting rooms at the venue.
+          minimum: 0
+          maximum: 10000
+          example: 25
+        space:
+          type: object
+          description: Facility space measurements at the venue.
+          properties:
+            unitOfMeasurement:
+              type:
+              - string
+              - 'null'
+              allOf:
+              - $ref: '#/components/schemas/MeasurementUnit'
+            totalMeetingRoomSpace:
+              type:
+              - integer
+              - 'null'
+              description: Total meeting room space at the venue.
+              minimum: 0
+              maximum: 99999999
+              example: 50000
+            totalExhibitSpace:
+              type:
+              - integer
+              - 'null'
+              description: Total exhibit space at the venue.
+              minimum: 0
+              maximum: 99999999
+              example: 75000
+        sleeping:
+          type: object
+          description: Sleeping room inventory at the venue.
+          properties:
+            totalRooms:
+              type:
+              - integer
+              - 'null'
+              description: Total number of sleeping rooms at the venue.
+              minimum: 0
+              maximum: 10000
+              example: 350
+            suites:
+              type:
+              - integer
+              - 'null'
+              description: Total number of suites at the venue.
+              minimum: 0
+              maximum: 10000
+              example: 20
+            singleRooms:
+              type:
+              - integer
+              - 'null'
+              description: Total number of single-occupancy rooms at the venue.
+              minimum: 0
+              maximum: 10000
+              example: 200
+            doubleRooms:
+              type:
+              - integer
+              - 'null'
+              description: Total number of double-occupancy rooms at the venue.
+              minimum: 0
+              maximum: 10000
+              example: 130
+        singleRate:
+          type: object
+          description: Published rate range for single-occupancy rooms, expressed in the venue's configured currency.
+          properties:
+            low:
+              type:
+              - number
+              - 'null'
+              description: Lowest published rate for a single-occupancy room.
+              minimum: 0
+              maximum: 999999999
+              example: 129.99
+            high:
+              type:
+              - number
+              - 'null'
+              description: Highest published rate for a single-occupancy room.
+              minimum: 0
+              maximum: 999999999
+              example: 249.99
+        doubleRate:
+          type: object
+          description: Published rate range for double-occupancy rooms, expressed in the venue's configured currency.
+          properties:
+            low:
+              type:
+              - number
+              - 'null'
+              description: Lowest published rate for a double-occupancy room.
+              minimum: 0
+              maximum: 999999999
+              example: 149.99
+            high:
+              type:
+              - number
+              - 'null'
+              description: Highest published rate for a double-occupancy room.
+              minimum: 0
+              maximum: 999999999
+              example: 299.99
+        taxRate:
+          type:
+          - number
+          - 'null'
+          description: Tax rate applied at the venue, expressed as a percentage.
+          minimum: 0
+          maximum: 999999999
+          example: 8.5
+        occupancyRate:
+          type:
+          - number
+          - 'null'
+          description: Occupancy rate at the venue, expressed as a percentage.
+          minimum: 0
+          maximum: 999999999
+          example: 75.5
+        yearBuilt:
+          type:
+          - integer
+          - 'null'
+          description: Four-digit year the venue was built.
+          minimum: 0
+          maximum: 9999
+          example: 1998
+        yearRenovated:
+          type:
+          - integer
+          - 'null'
+          description: Four-digit year the venue was last renovated.
+          minimum: 0
+          maximum: 9999
+          example: 2021
+        proximityFromAirport:
+          type: object
+          description: Distance from the nearest airport. `unit` is required when `distance` is provided.
+          properties:
+            distance:
+              type:
+              - number
+              - 'null'
+              description: Distance from the nearest airport, expressed in `unit`. Up to four digits.
+              minimum: 0
+              maximum: 9999
+              example: 12.5
+            unit:
+              type:
+              - string
+              - 'null'
+              allOf:
+              - $ref: '#/components/schemas/DistanceMeasurementUnit'
+        restrictions:
+          type:
+          - string
+          - 'null'
+          description: Free-form description of any facility restrictions at the venue.
+          maxLength: 2500
+          example: No outside food or beverage permitted. Music must end by 11 PM.
+        maximumCapacity:
+          type: object
+          description: 'Maximum attendee capacity at the venue. Applicable only to venue types: Aquarium/Zoo, Arena/Stadium, Banquet Facility, Bar/Club, Corporate Office Space, Educational Facility, Entertainment Venue, Gallery/Museum, Golf Course, Movie Theatre, and Special Event Venue.'
+          properties:
+            seated:
+              type:
+              - integer
+              - 'null'
+              description: Maximum seated capacity at the venue.
+              minimum: 0
+              maximum: 10000
+              example: 500
+            standing:
+              type:
+              - integer
+              - 'null'
+              description: Maximum standing capacity at the venue.
+              minimum: 0
+              maximum: 10000
+              example: 800
+        eventInsurance:
+          type:
+          - string
+          - 'null'
+          allOf:
+          - $ref: '#/components/schemas/EventInsurance'
     StateProvince:
       type: string
       title: StateProvince
@@ -1706,251 +2006,236 @@ components:
       - YOR
       - YT
       - ZET
-    ChainScale:
-      title: Chain Scale
-      description: 'A market segment classification of a venue chain based on Average Daily Rate and other factors.
+    AddressInfo:
+      title: AddressInfo
+      description: Venue address information.
+      type: object
+      required:
+      - city
+      - country
+      properties:
+        streetAddress1:
+          type: string
+          description: Street address line 1.
+          maxLength: 40
+          example: 1234 Trap Road
+        streetAddress2:
+          type: string
+          description: Street address line 2.
+          maxLength: 40
+          example: Suite 100
+        city:
+          type: string
+          description: City.
+          minLength: 1
+          maxLength: 40
+          example: Vienna
+        stateProvince:
+          $ref: '#/components/schemas/StateProvince'
+        zipPostalCode:
+          type: string
+          description: ZIP or postal code.
+          maxLength: 25
+          example: '22182'
+        country:
+          $ref: '#/components/schemas/Country'
+        directions:
+          type: string
+          description: Directions or instructions for getting to the venue.
+          maxLength: 2500
+          example: Take I-66 West to Exit 67, then follow signs to Trap Road.
+    EventInsurance:
+      title: Event Insurance
+      description: 'Indicates whether event insurance is required at the venue. Applicable only to venue types: Aquarium/Zoo, Arena/Stadium, Banquet Facility, Bar/Club, Corporate Office Space, Educational Facility, Entertainment Venue, Gallery/Museum, Golf Course, Movie Theatre, and Special Event Venue.
 
 
         Values:
 
-        - `BLANK` — Blank
+        - `BLANK` — Indicates no selection, leaves the field blank
 
-        - `ECONOMYCHAINS` — Economy Chains
+        - `REQUIRED` — Required
 
-        - `INDEPENDENTS` — Independents
+        - `MAY_BE_REQUIRED` — May Be Required
 
-        - `LUXURY_CHAINS` — Luxury Chains
-
-        - `MIDSCALE_CHAINS` — Midscale Chains
-
-        - `MIDSCALE_WITH_FB_CHAINS` — Midscale With F&B Chains
-
-        - `MIDSCALE_WITHOUT_FB_CHAINS` — Midscale Without F&B Chains
-
-        - `UPPER_MIDSCALE_CHAINS` — Upper Midscale Chains
-
-        - `UPPER_UPSCALE_CHAINS` — Upper Upscale Chains
-
-        - `UPSCALE_CHAINS` — Upscale Chains'
+        - `NOT_REQUIRED` — Not Required'
       type: string
       enum:
       - BLANK
-      - ECONOMYCHAINS
-      - INDEPENDENTS
-      - LUXURY_CHAINS
-      - MIDSCALE_CHAINS
-      - MIDSCALE_WITH_FB_CHAINS
-      - MIDSCALE_WITHOUT_FB_CHAINS
-      - UPPER_MIDSCALE_CHAINS
-      - UPPER_UPSCALE_CHAINS
-      - UPSCALE_CHAINS
-      example: UPSCALE_CHAINS
-    DistanceMeasurementUnit:
-      title: Distance Measurement Unit
-      description: 'Unit of measurement for distance.
-
-
-        Values:
-
-        - `MILES` — Miles
-
-        - `KILOMETERS` — Kilometers'
+      - REQUIRED
+      - MAY_BE_REQUIRED
+      - NOT_REQUIRED
+    Currency:
+      title: Currency
       type: string
+      description: The ISO 4217 standard format currency code used for RFPs.
       enum:
-      - MILES
-      - KILOMETERS
-    venueDetailsOverview:
-      title: Venue Details Overview
-      description: An overview of venue details containing key identifiers and display properties.
-      type: object
-      required:
-      - id
-      - name
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: Venue ID.
-          readOnly: true
-          example: b2c3d4e5-f6a7-8901-bcde-f12345678901
-        name:
-          type: string
-          description: Venue name.
-          maxLength: 100
-          example: Vienna Wolf Trap Hotel
-    existingVenueFacility:
-      title: ExistingVenueFacility
-      description: An existing venue facility model with read-only generated properties.
-      type: object
-      required:
-      - id
-      - name
-      allOf:
-      - $ref: '#/components/schemas/VenueFacility'
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: Venue ID.
-          readOnly: true
-          example: e1c05096-e352-4f2e-af1c-a6e022d36b34
-        name:
-          type: string
-          description: Venue name.
-          readOnly: true
-          minLength: 1
-          maxLength: 100
-          example: Vienna Wolf Trap Hotel
-    VenueFacility:
-      title: VenueFacility
-      description: Facility information for a venue. Field applicability varies by venue type; values supplied for fields that do not apply to the venue's type will be rejected.
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/Audit'
-      properties:
-        numberOfMeetingRooms:
-          type: integer
-          description: Total number of meeting rooms at the venue.
-          minimum: 0
-          maximum: 10000
-          example: 25
-        space:
-          type: object
-          description: Facility space measurements at the venue.
-          properties:
-            unitOfMeasurement:
-              $ref: '#/components/schemas/MeasurementUnit'
-            totalMeetingRoomSpace:
-              type: integer
-              description: Total meeting room space at the venue.
-              minimum: 0
-              maximum: 99999999
-              example: 50000
-            totalExhibitSpace:
-              type: integer
-              description: Total exhibit space at the venue.
-              minimum: 0
-              maximum: 99999999
-              example: 75000
-        sleeping:
-          type: object
-          description: Sleeping room inventory at the venue.
-          properties:
-            totalRooms:
-              type: integer
-              description: Total number of sleeping rooms at the venue.
-              minimum: 0
-              maximum: 10000
-              example: 350
-            suites:
-              type: integer
-              description: Total number of suites at the venue.
-              minimum: 0
-              maximum: 10000
-              example: 20
-            singleRooms:
-              type: integer
-              description: Total number of single-occupancy rooms at the venue.
-              minimum: 0
-              maximum: 10000
-              example: 200
-            doubleRooms:
-              type: integer
-              description: Total number of double-occupancy rooms at the venue.
-              minimum: 0
-              maximum: 10000
-              example: 130
-        singleRate:
-          type: object
-          description: Published rate range for single-occupancy rooms, expressed in the venue's configured currency.
-          properties:
-            low:
-              type: number
-              description: Lowest published rate for a single-occupancy room.
-              minimum: 0
-              maximum: 999999999
-              example: 129.99
-            high:
-              type: number
-              description: Highest published rate for a single-occupancy room.
-              minimum: 0
-              maximum: 999999999
-              example: 249.99
-        doubleRate:
-          type: object
-          description: Published rate range for double-occupancy rooms, expressed in the venue's configured currency.
-          properties:
-            low:
-              type: number
-              description: Lowest published rate for a double-occupancy room.
-              minimum: 0
-              maximum: 999999999
-              example: 149.99
-            high:
-              type: number
-              description: Highest published rate for a double-occupancy room.
-              minimum: 0
-              maximum: 999999999
-              example: 299.99
-        taxRate:
-          type: number
-          description: Tax rate applied at the venue, expressed as a percentage.
-          minimum: 0
-          maximum: 999999999
-          example: 8.5
-        occupancyRate:
-          type: number
-          description: Occupancy rate at the venue, expressed as a percentage.
-          minimum: 0
-          maximum: 999999999
-          example: 75.5
-        yearBuilt:
-          type: integer
-          description: Four-digit year the venue was built.
-          minimum: 0
-          maximum: 9999
-          example: 1998
-        yearRenovated:
-          type: integer
-          description: Four-digit year the venue was last renovated.
-          minimum: 0
-          maximum: 9999
-          example: 2021
-        proximityFromAirport:
-          type: object
-          description: Distance from the nearest airport. `unit` is required when `distance` is provided.
-          properties:
-            distance:
-              type: number
-              description: Distance from the nearest airport, expressed in `unit`. Up to four digits.
-              minimum: 0
-              maximum: 9999
-              example: 12.5
-            unit:
-              $ref: '#/components/schemas/DistanceMeasurementUnit'
-        restrictions:
-          type: string
-          description: Free-form description of any facility restrictions at the venue.
-          maxLength: 2500
-          example: No outside food or beverage permitted. Music must end by 11 PM.
-        maximumCapacity:
-          type: object
-          description: 'Maximum attendee capacity at the venue. Applicable only to venue types: Aquarium/Zoo, Arena/Stadium, Banquet Facility, Bar/Club, Corporate Office Space, Educational Facility, Entertainment Venue, Gallery/Museum, Golf Course, Movie Theatre, and Special Event Venue.'
-          properties:
-            seated:
-              type: integer
-              description: Maximum seated capacity at the venue.
-              minimum: 0
-              maximum: 10000
-              example: 500
-            standing:
-              type: integer
-              description: Maximum standing capacity at the venue.
-              minimum: 0
-              maximum: 10000
-              example: 800
-        eventInsurance:
-          $ref: '#/components/schemas/EventInsurance'
+      - USD
+      - CAD
+      - AUD
+      - EUR
+      - GBP
+      - HKD
+      - NZD
+      - AED
+      - NOK
+      - INR
+      - MXN
+      - SEK
+      - DKK
+      - MYR
+      - JPY
+      - SGD
+      - THB
+      - IDR
+      - KRW
+      - CNY
+      - TWD
+      - RUB
+      - CHF
+      - CZK
+      - HUF
+      - QAR
+      - ZAR
+      - RON
+      - HRK
+      - TRY
+      - BRL
+      - PHP
+      - SAR
+      - PLN
+      - ARS
+      - AWG
+      - AZN
+      - BSD
+      - BBD
+      - BMD
+      - CLP
+      - COP
+      - CRC
+      - DOP
+      - XCD
+      - ILS
+      - JMD
+      - LVL
+      - LTL
+      - MDL
+      - ANG
+      - OMR
+      - TTD
+      - UAH
+      - UYU
+      - RSD
+      - AFN
+      - AMD
+      - AOA
+      - BAM
+      - BDT
+      - BGN
+      - BHD
+      - BOB
+      - DZD
+      - EEK
+      - EGP
+      - FJD
+      - GTQ
+      - HNL
+      - ISK
+      - JOD
+      - KYD
+      - KZT
+      - LBP
+      - MAD
+      - NGN
+      - NIO
+      - ESP
+      - FRF
+      - PAB
+      - PEN
+      - PKR
+      - PYG
+      - SVC
+      - SYP
+      - VEF
+      - VND
+      - XPF
+      - GYD
+      - MOP
+      - PGK
+      - XOF
+      - XAF
+      - BZD
+      - BYR
+      - BWP
+      - BND
+      - BIF
+      - KHR
+      - CVE
+      - KMF
+      - CDF
+      - DJF
+      - ERN
+      - FKP
+      - GMD
+      - GEL
+      - GHS
+      - GIP
+      - GNF
+      - HTG
+      - KES
+      - KWD
+      - KGS
+      - LAK
+      - LRD
+      - MKD
+      - MGA
+      - MWK
+      - MVR
+      - MRO
+      - MUR
+      - MNT
+      - MZN
+      - MMK
+      - NAD
+      - NPR
+      - RWF
+      - SHP
+      - WST
+      - STD
+      - SLL
+      - SBD
+      - SOS
+      - LKR
+      - SRD
+      - SZL
+      - TOP
+      - TND
+      - UGX
+      - UZS
+      - VUV
+      - YER
+      - ZMK
+      - ZWD
+      - SR
+      - ETB
+      - GH
+      - GWP
+      - IQD
+      - IRR
+      - KPW
+      - LSL
+      - ROL
+      - SDG
+      - SKK
+      - TJS
+      - TMT
+      - TZS
+      - ALL
+      - BTN
+      - CUP
+      - LD
+      - SCR
+      - ZMW
+      - ZWL
     ErrorResponseBase1:
       title: ErrorResponseBase
       type: object
@@ -1971,162 +2256,25 @@ components:
           type: string
           description: The target resource of the error.
           example: example target
-    venueDetailsPatch:
-      title: VenueDetailsPatch
-      description: Partial update payload for venue details.
+    venueDetailsOverview:
+      title: Venue Details Overview
+      description: An overview of venue details containing key identifiers and display properties.
       type: object
+      required:
+      - id
+      - name
       properties:
-        type:
-          $ref: '#/components/schemas/VenueType'
-        timeZone:
-          type:
-          - string
-          - 'null'
-          description: Time zone identifier for the venue. See the supported timezones reference for valid values.
-          example: America/New_York
-          externalDocs:
-            description: Supported Timezones
-            url: https://developers.cvent.com/docs/rest-api/reference/api-standards#supported-timezones
-        brand:
-          type:
-          - string
-          - 'null'
-          description: Venue brand. Brands vary by venue type.
-          example: Quality Hotels
+        id:
+          type: string
+          format: uuid
+          description: Venue ID.
+          readOnly: true
+          example: b2c3d4e5-f6a7-8901-bcde-f12345678901
+        name:
+          type: string
+          description: Venue name.
           maxLength: 100
-        chainScale:
-          type:
-          - string
-          - 'null'
-          allOf:
-          - $ref: '#/components/schemas/ChainScale'
-        mainPhoneNumber:
-          type: string
-          description: Primary phone number for the venue.
-          example: +1-703-555-0100
-          minLength: 1
-          maxLength: 30
-        mainFaxNumber:
-          type: string
-          description: Primary fax number for the venue.
-          example: +1-703-555-0101
-          minLength: 1
-          maxLength: 30
-        salesPhoneNumber:
-          type:
-          - string
-          - 'null'
-          description: Sales phone number of the venue.
-          example: +1-703-555-0102
-          maxLength: 30
-        salesFaxNumber:
-          type:
-          - string
-          - 'null'
-          description: Sales fax number of the venue.
-          example: +1-703-555-0103
-          maxLength: 30
-        tollFreeNumber:
-          type:
-          - string
-          - 'null'
-          description: Toll-free number of the venue.
-          example: 1-800-555-0100
-          maxLength: 30
-        websiteAddress:
-          type:
-          - string
-          - 'null'
-          format: uri
-          description: Website address.
-          maxLength: 300
-          example: https://www.example-hotel.com
-        currency:
-          type:
-          - string
-          - 'null'
-          allOf:
-          - $ref: '#/components/schemas/Currency'
-        openingDate:
-          type:
-          - string
-          - 'null'
-          description: Venue opening date as free-form text.
-          example: Spring 2025
-          maxLength: 30
-        description:
-          type:
-          - string
-          - 'null'
-          description: Venue description.
-          example: A premier conference and event venue in the heart of Northern Virginia.
-          maxLength: 4000
-        additionalInformation:
-          type:
-          - string
-          - 'null'
-          description: Additional information about the venue.
-          example: Complimentary parking available for all event attendees.
-          maxLength: 2500
-        cancellationPolicy:
-          type:
-          - string
-          - 'null'
-          description: Cancellation policy for bookings at the venue.
-          example: 48-hour cancellation policy applies for all event bookings.
-          maxLength: 2500
-        locationTypes:
-          type:
-          - array
-          - 'null'
-          description: Location classifications.
-          maxItems: 6
-          items:
-            $ref: '#/components/schemas/LocationType'
-        address:
-          type:
-          - object
-          - 'null'
-          description: Venue address information.
-          properties:
-            streetAddress1:
-              type:
-              - string
-              - 'null'
-              description: Street address line 1.
-              example: 1234 Trap Road
-              maxLength: 40
-            streetAddress2:
-              type:
-              - string
-              - 'null'
-              description: Street address line 2.
-              example: Suite 100
-              maxLength: 40
-            city:
-              type: string
-              description: City.
-              minLength: 1
-              maxLength: 40
-              example: Vienna
-            stateProvince:
-              $ref: '#/components/schemas/StateProvince'
-            zipPostalCode:
-              type:
-              - string
-              - 'null'
-              description: ZIP or postal code.
-              example: '22182'
-              maxLength: 25
-            country:
-              $ref: '#/components/schemas/Country'
-            directions:
-              type:
-              - string
-              - 'null'
-              description: Directions or instructions for getting to the venue.
-              example: Take I-66 West to Exit 67, then follow signs to Trap Road.
-              maxLength: 2500
+          example: Vienna Wolf Trap Hotel
     VenueType:
       title: Venue Type
       description: 'Type of venue.
@@ -2205,237 +2353,97 @@ components:
       - RESTAURANT
       - SPECIAL_EVENT_VENUE
       example: HOTEL
-    VenueID:
-      title: Venue ID
-      description: A unique identifier for a venue
-      type: string
-      format: uuid
-      example: 6bb0e2db-861f-46e3-a923-eb4d959ffa00
-    venueFacilityPatch:
-      title: VenueFacilityPatch
-      description: Partial update payload for venue facility information. Only fields present in the request body are updated; omitted fields remain unchanged. Set leaf fields to `null` to unset them. For grouped objects, update or clear each child field explicitly instead of setting the entire group to `null`. Field applicability varies by venue type; values supplied for fields that do not apply to the venue's type will be rejected.
+    venueDetails:
+      title: VenueDetails
+      description: Venue details model.
+      allOf:
+      - $ref: '#/components/schemas/Audit'
       type: object
+      required:
+      - type
+      - mainPhoneNumber
+      - mainFaxNumber
+      - address
       properties:
-        numberOfMeetingRooms:
-          type:
-          - integer
-          - 'null'
-          description: Total number of meeting rooms at the venue.
-          minimum: 0
-          maximum: 10000
-          example: 25
-        space:
-          type: object
-          description: Facility space measurements at the venue.
-          properties:
-            unitOfMeasurement:
-              type:
-              - string
-              - 'null'
-              allOf:
-              - $ref: '#/components/schemas/MeasurementUnit'
-            totalMeetingRoomSpace:
-              type:
-              - integer
-              - 'null'
-              description: Total meeting room space at the venue.
-              minimum: 0
-              maximum: 99999999
-              example: 50000
-            totalExhibitSpace:
-              type:
-              - integer
-              - 'null'
-              description: Total exhibit space at the venue.
-              minimum: 0
-              maximum: 99999999
-              example: 75000
-        sleeping:
-          type: object
-          description: Sleeping room inventory at the venue.
-          properties:
-            totalRooms:
-              type:
-              - integer
-              - 'null'
-              description: Total number of sleeping rooms at the venue.
-              minimum: 0
-              maximum: 10000
-              example: 350
-            suites:
-              type:
-              - integer
-              - 'null'
-              description: Total number of suites at the venue.
-              minimum: 0
-              maximum: 10000
-              example: 20
-            singleRooms:
-              type:
-              - integer
-              - 'null'
-              description: Total number of single-occupancy rooms at the venue.
-              minimum: 0
-              maximum: 10000
-              example: 200
-            doubleRooms:
-              type:
-              - integer
-              - 'null'
-              description: Total number of double-occupancy rooms at the venue.
-              minimum: 0
-              maximum: 10000
-              example: 130
-        singleRate:
-          type: object
-          description: Published rate range for single-occupancy rooms, expressed in the venue's configured currency.
-          properties:
-            low:
-              type:
-              - number
-              - 'null'
-              description: Lowest published rate for a single-occupancy room.
-              minimum: 0
-              maximum: 999999999
-              example: 129.99
-            high:
-              type:
-              - number
-              - 'null'
-              description: Highest published rate for a single-occupancy room.
-              minimum: 0
-              maximum: 999999999
-              example: 249.99
-        doubleRate:
-          type: object
-          description: Published rate range for double-occupancy rooms, expressed in the venue's configured currency.
-          properties:
-            low:
-              type:
-              - number
-              - 'null'
-              description: Lowest published rate for a double-occupancy room.
-              minimum: 0
-              maximum: 999999999
-              example: 149.99
-            high:
-              type:
-              - number
-              - 'null'
-              description: Highest published rate for a double-occupancy room.
-              minimum: 0
-              maximum: 999999999
-              example: 299.99
-        taxRate:
-          type:
-          - number
-          - 'null'
-          description: Tax rate applied at the venue, expressed as a percentage.
-          minimum: 0
-          maximum: 999999999
-          example: 8.5
-        occupancyRate:
-          type:
-          - number
-          - 'null'
-          description: Occupancy rate at the venue, expressed as a percentage.
-          minimum: 0
-          maximum: 999999999
-          example: 75.5
-        yearBuilt:
-          type:
-          - integer
-          - 'null'
-          description: Four-digit year the venue was built.
-          minimum: 0
-          maximum: 9999
-          example: 1998
-        yearRenovated:
-          type:
-          - integer
-          - 'null'
-          description: Four-digit year the venue was last renovated.
-          minimum: 0
-          maximum: 9999
-          example: 2021
-        proximityFromAirport:
-          type: object
-          description: Distance from the nearest airport. `unit` is required when `distance` is provided.
-          properties:
-            distance:
-              type:
-              - number
-              - 'null'
-              description: Distance from the nearest airport, expressed in `unit`. Up to four digits.
-              minimum: 0
-              maximum: 9999
-              example: 12.5
-            unit:
-              type:
-              - string
-              - 'null'
-              allOf:
-              - $ref: '#/components/schemas/DistanceMeasurementUnit'
-        restrictions:
-          type:
-          - string
-          - 'null'
-          description: Free-form description of any facility restrictions at the venue.
+        type:
+          $ref: '#/components/schemas/VenueType'
+        timeZone:
+          type: string
+          description: Time zone identifier for the venue. See the supported timezones reference for valid values.
+          example: America/New_York
+          externalDocs:
+            description: Supported Timezones
+            url: https://developers.cvent.com/docs/rest-api/reference/api-standards#supported-timezones
+        brand:
+          type: string
+          description: Venue brand.
+          maxLength: 100
+          example: Quality Hotels
+        chainScale:
+          $ref: '#/components/schemas/ChainScale'
+        mainPhoneNumber:
+          type: string
+          description: Primary phone number for the venue.
+          minLength: 1
+          maxLength: 30
+          example: +1-703-555-0100
+        mainFaxNumber:
+          type: string
+          description: Primary fax number for the venue.
+          minLength: 1
+          maxLength: 30
+          example: +1-703-555-0101
+        salesPhoneNumber:
+          type: string
+          description: Sales phone number of the venue.
+          maxLength: 30
+          example: +1-703-555-0102
+        salesFaxNumber:
+          type: string
+          description: Sales fax number of the venue.
+          maxLength: 30
+          example: +1-703-555-0103
+        tollFreeNumber:
+          type: string
+          description: Toll-free number of the venue.
+          maxLength: 30
+          example: 1-800-555-0100
+        websiteAddress:
+          type: string
+          format: uri
+          description: Website address.
+          maxLength: 300
+          example: https://www.example-hotel.com
+        currency:
+          $ref: '#/components/schemas/Currency'
+        openingDate:
+          type: string
+          description: Venue opening date as free-form text.
+          maxLength: 30
+          example: Spring 2025
+        description:
+          type: string
+          description: Venue description.
+          maxLength: 4000
+          example: A modern conference venue in downtown.
+        additionalInformation:
+          type: string
+          description: Additional information about the venue.
           maxLength: 2500
-          example: No outside food or beverage permitted. Music must end by 11 PM.
-        maximumCapacity:
-          type: object
-          description: 'Maximum attendee capacity at the venue. Applicable only to venue types: Aquarium/Zoo, Arena/Stadium, Banquet Facility, Bar/Club, Corporate Office Space, Educational Facility, Entertainment Venue, Gallery/Museum, Golf Course, Movie Theatre, and Special Event Venue.'
-          properties:
-            seated:
-              type:
-              - integer
-              - 'null'
-              description: Maximum seated capacity at the venue.
-              minimum: 0
-              maximum: 10000
-              example: 500
-            standing:
-              type:
-              - integer
-              - 'null'
-              description: Maximum standing capacity at the venue.
-              minimum: 0
-              maximum: 10000
-              example: 800
-        eventInsurance:
-          type:
-          - string
-          - 'null'
-          allOf:
-          - $ref: '#/components/schemas/EventInsurance'
-    Audit:
-      title: Audit
-      description: Audit information
-      type: object
-      properties:
-        created:
+          example: Free parking available on-site.
+        cancellationPolicy:
           type: string
-          format: date-time
-          description: The ISO 8601 zoned date time when this record was created.
-          readOnly: true
-          example: '2017-01-02T02:00:00Z'
-        createdBy:
-          type: string
-          description: The identifier of the user that created this record.
-          readOnly: true
-          example: hporter
-        lastModified:
-          type: string
-          format: date-time
-          description: The ISO 8601 zoned date time when this record was updated.
-          readOnly: true
-          example: '2019-02-12T03:00:00Z'
-        lastModifiedBy:
-          type: string
-          description: The identifier of the user that last updated this record.
-          readOnly: true
-          example: hporter
+          description: Cancellation policy for bookings at the venue.
+          maxLength: 2500
+          example: Full refund if cancelled 48 hours before event.
+        locationTypes:
+          type: array
+          description: Location classifications.
+          items:
+            $ref: '#/components/schemas/LocationType'
+          maxItems: 6
+        address:
+          $ref: '#/components/schemas/AddressInfo'
   responses:
     Unauthorized1:
       description: Bad or expired token
@@ -2446,24 +2454,6 @@ components:
           example:
             code: 401
             message: Unauthorized
-    NotFound1:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 404
-            message: Not found
-    TooManyRequests1:
-      description: Too many requests
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 429
-            message: Limit Exceeded
     BadRequest1:
       description: Bad request
       content:
@@ -2482,14 +2472,24 @@ components:
           example:
             code: 403
             message: Access Forbidden
-  parameters:
-    venueId:
-      description: Unique Cvent based identifier for a Venue.
-      name: venueId
-      required: true
-      in: path
-      schema:
-        $ref: '#/components/schemas/VenueID'
+    NotFound1:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 404
+            message: Not found
+    TooManyRequests1:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 429
+            message: Limit Exceeded
   securitySchemes:
     OAuth2.authorizationCode:
       type: oauth2

@@ -146,100 +146,130 @@ paths:
         url: '#oauth2-auth-code-planner-admin'
 components:
   schemas:
-    send-email-status.json:
-      title: Send Email Status
-      enum:
-      - Sent
-      - In-Progress
-      - Error
-      - Opted-Out
-      type: string
-      description: It is used to denote the status of the sent email.
-      example: Accepted
-    bounce-details.json:
-      title: Bounce details
+    send-email-event-response:
+      title: Send Event Email Response
+      description: Response object containing a request ID and a list of all email responses sent to attendees.
       type: object
-      description: Email bounce details.
-      properties:
-        recipient:
-          $ref: '#/components/schemas/recipient.json'
-        bounceReason:
-          type: string
-          description: Reason of bounce.
-          example: 5.7.1 (delivery not authorized)
-        bounceDateTime:
-          type: string
-          format: date-time
-          description: ISO 8601 formatted date time (in UTC) when the email bounced or there was an error.
-          example: '2023-01-02T02:00:00Z'
-        smtpCode:
-          type: integer
-          description: SMTP code returned by the server in response to an email, indicating the status of the message.
-          example: 500
-        dsnDiagnostics:
-          type: string
-          description: Delivery Status Notification (DSN) diagnostic details for the email.
-          example: smtp;500 5.7.1 (delivery not authorized)
-        optOut:
-          type: boolean
-          description: True indicates the recipient has requested not to be sent emails.
-          example: true
-        subject:
-          type: string
-          description: Subject of email.
-          example: Invitation to the event
-        productLine:
-          $ref: '#/components/schemas/product-line.json'
-        productId:
-          type: string
-          format: uuid
-          description: Unique ID of the product.
-          example: 2A941E55-3367-4C50-B21B-B6A7613DFB23
-        emailType:
-          $ref: '#/components/schemas/email-type.json'
-        emailId:
-          type: string
-          format: uuid
-          description: Unique ID of the email.
-          example: 2A941E55-3367-4C50-B21B-B6A7613DFB23
-        created:
-          type: string
-          format: date-time
-          description: The ISO 8601 formatted date time (in UTC) when the email was sent.
-          example: '2023-01-01T02:00:00Z'
-    email-status.json:
-      title: EmailStatus
-      enum:
-      - Sent
-      - Failed
-      type: string
-      description: This is used to denote the status of the email sending
-      example: Sent
-    paging-no-total-count.json:
-      title: Paging
+      allOf:
+      - title: Send Email Response
+        description: Response object containing details of email send.
+        type: object
+        allOf:
+        - title: Audit
+          description: Audit information
+          type: object
+          properties:
+            created:
+              type: string
+              format: date-time
+              description: The ISO 8601 zoned date time when this record was created.
+              readOnly: true
+              example: '2017-01-02T02:00:00Z'
+            createdBy:
+              type: string
+              description: The identifier of the user that created this record.
+              readOnly: true
+              example: hporter
+            lastModified:
+              type: string
+              format: date-time
+              description: The ISO 8601 zoned date time when this record was updated.
+              readOnly: true
+              example: '2019-02-12T03:00:00Z'
+            lastModifiedBy:
+              type: string
+              description: The identifier of the user that last updated this record.
+              readOnly: true
+              example: hporter
+        required:
+        - requestId
+        properties:
+          requestId:
+            type: string
+            format: uuid
+            description: The request ID for the email send request.
+            example: 3A541E55-3367-4C50-B21B-B6A7613DFB23
+          status:
+            $ref: '#/components/schemas/send-email-request-status.json'
+          description:
+            type: string
+            description: The description of the response. If the `status` is `ERROR`, this field contains the reason for the failure.
+            example: Cannot send an email from deleted event.
       required:
-      - _links
-      type: object
-      description: Represents pagination information for a collection of resources.
+      - event
+      - email
+      - resendToPreviousRecipients
+      - attendeeResponse
       properties:
-        previousToken:
+        event:
+          $ref: '#/components/schemas/event.json3'
+        email:
+          $ref: '#/components/schemas/email.json'
+        resendToPreviousRecipients:
+          type: boolean
+          description: True indicates this email should be resent to attendees who had already received this email previously.
+          example: true
+        attendeeResponses:
+          type: array
+          minItems: 1
+          maxItems: 200
+          items:
+            $ref: '#/components/schemas/attendee-response.json'
+          description: List of responses specifying the status of email request for each attendee.
+    uuid-property:
+      title: UUID Property
+      description: A string that has to be a format matching the industry standard uuid
+      type: string
+      format: uuid
+      example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+    link.json:
+      title: Link
+      required:
+      - href
+      type: object
+      description: Represents a link to a related resource.
+      properties:
+        href:
           type: string
-          description: The pagination token for the previous page, if one exists. You can use this token to navigate to the previous page of data.
-          example: 1a2b3c4d5e6f7g8h9i10j11k
-        nextToken:
-          type: string
-          description: The pagination token for the next page. If this value is present in the response, there is another page of data you can fetch.
-          example: 1a2b3c4d5e6f7g8h9i10j11k
-        currentToken:
-          type: string
-          description: The pagination token for the current page.
-          example: 1a2b3c4d5e6f7g8h9i10j11k
-        limit:
-          type: integer
-          description: The number of records to return on the page. Not to exceed 200.
-          example: 100
-        _links:
-          $ref: '#/components/schemas/pagination-links.json'
+          description: A url provided that can be followed for linking
+          example: ?token=90c5f062-76ad-4ea4-aa53-00eb698d9262
+    product-line.json:
+      title: ProductLine
+      enum:
+      - ABSTRACT_MANAGEMENT
+      - ADMIN
+      - API_PLATFORM
+      - APPOINTMENTS
+      - AUTO_BLOCK
+      - BOOK
+      - CHANNEL_PUBLISHER
+      - CONTACT
+      - CROWD_COMPASS
+      - CSN
+      - DASHBOARD
+      - DEFAULT
+      - E_MARKETING
+      - ENGAGEMENTS_AND_PROJECTS
+      - EVENT
+      - LEGACY_SURVEY
+      - MEMBERSHIP
+      - OPT_IN
+      - ORGANIZATION
+      - OSS
+      - PORTAL
+      - RATE_INTEGRITY
+      - RES_DESK
+      - REVERSE_AUCTION
+      - RFP
+      - RFP_ALERTS
+      - RFP_PUBLISHER
+      - STARGATE
+      - SURVEY
+      - USER_ADMINISTRATION
+      - VAULT_MAIL
+      type: string
+      description: Cvent product lines or additional features.
+      example: EVENT
     ErrorResponse-12:
       title: ErrorResponse
       description: Represents an error response with additional details of cascading error messages.
@@ -255,6 +285,24 @@ components:
           items:
             $ref: '#/components/schemas/ErrorResponseBase1'
           description: Additional details of cascading error messages.
+    email-status.json:
+      title: EmailStatus
+      enum:
+      - Sent
+      - Failed
+      type: string
+      description: This is used to denote the status of the email sending
+      example: Sent
+    send-email-status.json:
+      title: Send Email Status
+      enum:
+      - Sent
+      - In-Progress
+      - Error
+      - Opted-Out
+      type: string
+      description: It is used to denote the status of the sent email.
+      example: Accepted
     email-history.json:
       title: Email History
       type: object
@@ -337,21 +385,111 @@ components:
           type: boolean
           description: Flag to indicate if the email was bounced.
           example: false
-    bounce-details-response:
-      title: Paginated Bounce Details
-      description: The response from a request to get the bounce details of an email. This includes paging object
-      required:
-      - paging
-      - data
+    bounce-details.json:
+      title: Bounce details
       type: object
+      description: Email bounce details.
       properties:
-        paging:
-          $ref: '#/components/schemas/paging-no-total-count.json'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/bounce-details.json'
-          description: Bounce details.
+        recipient:
+          $ref: '#/components/schemas/recipient.json'
+        bounceReason:
+          type: string
+          description: Reason of bounce.
+          example: 5.7.1 (delivery not authorized)
+        bounceDateTime:
+          type: string
+          format: date-time
+          description: ISO 8601 formatted date time (in UTC) when the email bounced or there was an error.
+          example: '2023-01-02T02:00:00Z'
+        smtpCode:
+          type: integer
+          description: SMTP code returned by the server in response to an email, indicating the status of the message.
+          example: 500
+        dsnDiagnostics:
+          type: string
+          description: Delivery Status Notification (DSN) diagnostic details for the email.
+          example: smtp;500 5.7.1 (delivery not authorized)
+        optOut:
+          type: boolean
+          description: True indicates the recipient has requested not to be sent emails.
+          example: true
+        subject:
+          type: string
+          description: Subject of email.
+          example: Invitation to the event
+        productLine:
+          $ref: '#/components/schemas/product-line.json'
+        productId:
+          type: string
+          format: uuid
+          description: Unique ID of the product.
+          example: 2A941E55-3367-4C50-B21B-B6A7613DFB23
+        emailType:
+          $ref: '#/components/schemas/email-type.json'
+        emailId:
+          type: string
+          format: uuid
+          description: Unique ID of the email.
+          example: 2A941E55-3367-4C50-B21B-B6A7613DFB23
+        created:
+          type: string
+          format: date-time
+          description: The ISO 8601 formatted date time (in UTC) when the email was sent.
+          example: '2023-01-01T02:00:00Z'
+    paging-no-total-count.json:
+      title: Paging
+      required:
+      - _links
+      type: object
+      description: Represents pagination information for a collection of resources.
+      properties:
+        previousToken:
+          type: string
+          description: The pagination token for the previous page, if one exists. You can use this token to navigate to the previous page of data.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        nextToken:
+          type: string
+          description: The pagination token for the next page. If this value is present in the response, there is another page of data you can fetch.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        currentToken:
+          type: string
+          description: The pagination token for the current page.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        limit:
+          type: integer
+          description: The number of records to return on the page. Not to exceed 200.
+          example: 100
+        _links:
+          $ref: '#/components/schemas/pagination-links.json'
+    paging.json:
+      title: Paging
+      required:
+      - _links
+      type: object
+      description: Represents pagination information for a collection of resources.
+      properties:
+        previousToken:
+          type: string
+          description: The pagination token for the previous page, if one exists. You can use this token to navigate to the previous page of data.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        nextToken:
+          type: string
+          description: The pagination token for the next page. If this value is present in the response, there is another page of data you can fetch.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        currentToken:
+          type: string
+          description: The pagination token for the current page.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        limit:
+          type: integer
+          description: The number of records to return on the page. Not to exceed 200.
+          example: 100
+        totalCount:
+          type: integer
+          description: The total number of records available. This field may return blank, even if there are more records. To confirm if there are more records, check the `nextToken` field.
+          example: 2
+        _links:
+          $ref: '#/components/schemas/pagination-links.json'
     email-history-paginated-response:
       title: Email History Paginated Response
       description: The response from a request to get the list of email history. This includes the paging object as well as the collection of email history.
@@ -367,17 +505,6 @@ components:
           items:
             $ref: '#/components/schemas/email-history.json'
           description: Collection of emails history data.
-    pagination-links.json:
-      title: PaginationLinks
-      type: object
-      description: Represents pagination links for navigating between pages of data.
-      properties:
-        next:
-          $ref: '#/components/schemas/link.json'
-        self:
-          $ref: '#/components/schemas/link.json'
-        prev:
-          $ref: '#/components/schemas/link.json'
     recipient.json:
       title: Recipient
       type: object
@@ -400,23 +527,38 @@ components:
           type: string
           description: Email address of the recipient.
           example: brett.lawler@example.com
-    link.json:
-      title: Link
+    email-send-status:
+      title: Email send status
+      description: The response from a request to get the list of recipients with email status.
       required:
-      - href
+      - emailRequestId
+      - requestedDate
+      - requestedBy
+      - recipientStatus
       type: object
-      description: Represents a link to a related resource.
       properties:
-        href:
+        emailRequestId:
           type: string
-          description: A url provided that can be followed for linking
-          example: ?token=90c5f062-76ad-4ea4-aa53-00eb698d9262
-    uuid-property:
-      title: UUID Property
-      description: A string that has to be a format matching the industry standard uuid
-      type: string
-      format: uuid
-      example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+          format: uuid
+          description: ID of the send email request.
+          example: 3A541E55-3367-4C50-B21B-B6A7613DFB23
+        requestedDate:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date time (in UTC) when this request was made.
+          readOnly: true
+          example: '2017-01-02T02:00:00Z'
+        requestedBy:
+          type: string
+          description: The identifier of the user that requested this record.
+          readOnly: true
+          example: Requester
+        recipientStatus:
+          type: array
+          items:
+            $ref: '#/components/schemas/recipients-data.json'
+          maxItems: 200
+          description: A list of recipients to whom emails were tried to send.
     email-type.json:
       title: EmailType
       enum:
@@ -485,35 +627,48 @@ components:
       type: string
       description: Denotes the type of the email.
       example: Invitation
-    paging.json:
-      title: Paging
-      required:
-      - _links
+    pagination-links.json:
+      title: PaginationLinks
       type: object
-      description: Represents pagination information for a collection of resources.
+      description: Represents pagination links for navigating between pages of data.
       properties:
-        previousToken:
+        next:
+          $ref: '#/components/schemas/link.json'
+        self:
+          $ref: '#/components/schemas/link.json'
+        prev:
+          $ref: '#/components/schemas/link.json'
+    bounce-details-response:
+      title: Paginated Bounce Details
+      description: The response from a request to get the bounce details of an email. This includes paging object
+      required:
+      - paging
+      - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/paging-no-total-count.json'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/bounce-details.json'
+          description: Bounce details.
+    recipients-data.json:
+      title: Recipients Data
+      description: Recipient data contains the recipient's details like ID, name and status of email sent to that recipient.
+      type: object
+      properties:
+        recipientId:
           type: string
-          description: The pagination token for the previous page, if one exists. You can use this token to navigate to the previous page of data.
-          example: 1a2b3c4d5e6f7g8h9i10j11k
-        nextToken:
+          format: uuid
+          description: Unique ID of a recipient.
+          example: 2A941E55-3367-4C50-B21B-B6A7613DFB23
+        recipientName:
           type: string
-          description: The pagination token for the next page. If this value is present in the response, there is another page of data you can fetch.
-          example: 1a2b3c4d5e6f7g8h9i10j11k
-        currentToken:
-          type: string
-          description: The pagination token for the current page.
-          example: 1a2b3c4d5e6f7g8h9i10j11k
-        limit:
-          type: integer
-          description: The number of records to return on the page. Not to exceed 200.
-          example: 100
-        totalCount:
-          type: integer
-          description: The total number of records available. This field may return blank, even if there are more records. To confirm if there are more records, check the `nextToken` field.
-          example: 2
-        _links:
-          $ref: '#/components/schemas/pagination-links.json'
+          description: Name of the recipient.
+          example: User
+        status:
+          $ref: '#/components/schemas/send-email-status.json'
     ErrorResponseBase1:
       title: ErrorResponseBase
       type: object
@@ -534,230 +689,6 @@ components:
           type: string
           description: The target resource of the error.
           example: example target
-    send-email-event-response:
-      title: Send Event Email Response
-      description: Response object containing a request ID and a list of all email responses sent to attendees.
-      type: object
-      allOf:
-      - title: Send Email Response
-        description: Response object containing details of email send.
-        type: object
-        allOf:
-        - title: Audit
-          description: Audit information
-          type: object
-          properties:
-            created:
-              type: string
-              format: date-time
-              description: The ISO 8601 zoned date time when this record was created.
-              readOnly: true
-              example: '2017-01-02T02:00:00Z'
-            createdBy:
-              type: string
-              description: The identifier of the user that created this record.
-              readOnly: true
-              example: hporter
-            lastModified:
-              type: string
-              format: date-time
-              description: The ISO 8601 zoned date time when this record was updated.
-              readOnly: true
-              example: '2019-02-12T03:00:00Z'
-            lastModifiedBy:
-              type: string
-              description: The identifier of the user that last updated this record.
-              readOnly: true
-              example: hporter
-        required:
-        - requestId
-        properties:
-          requestId:
-            type: string
-            format: uuid
-            description: The request ID for the email send request.
-            example: 3A541E55-3367-4C50-B21B-B6A7613DFB23
-          status:
-            $ref: '#/components/schemas/send-email-request-status.json'
-          description:
-            type: string
-            description: The description of the response. If the `status` is `ERROR`, this field contains the reason for the failure.
-            example: Cannot send an email from deleted event.
-      required:
-      - event
-      - email
-      - resendToPreviousRecipients
-      - attendeeResponse
-      properties:
-        event:
-          $ref: '#/components/schemas/event.json3'
-        email:
-          $ref: '#/components/schemas/email.json'
-        resendToPreviousRecipients:
-          type: boolean
-          description: True indicates this email should be resent to attendees who had already received this email previously.
-          example: true
-        attendeeResponses:
-          type: array
-          minItems: 1
-          maxItems: 200
-          items:
-            $ref: '#/components/schemas/attendee-response.json'
-          description: List of responses specifying the status of email request for each attendee.
-    recipients-data.json:
-      title: Recipients Data
-      description: Recipient data contains the recipient's details like ID, name and status of email sent to that recipient.
-      type: object
-      properties:
-        recipientId:
-          type: string
-          format: uuid
-          description: Unique ID of a recipient.
-          example: 2A941E55-3367-4C50-B21B-B6A7613DFB23
-        recipientName:
-          type: string
-          description: Name of the recipient.
-          example: User
-        status:
-          $ref: '#/components/schemas/send-email-status.json'
-    email-send-status:
-      title: Email send status
-      description: The response from a request to get the list of recipients with email status.
-      required:
-      - emailRequestId
-      - requestedDate
-      - requestedBy
-      - recipientStatus
-      type: object
-      properties:
-        emailRequestId:
-          type: string
-          format: uuid
-          description: ID of the send email request.
-          example: 3A541E55-3367-4C50-B21B-B6A7613DFB23
-        requestedDate:
-          type: string
-          format: date-time
-          description: The ISO 8601 zoned date time (in UTC) when this request was made.
-          readOnly: true
-          example: '2017-01-02T02:00:00Z'
-        requestedBy:
-          type: string
-          description: The identifier of the user that requested this record.
-          readOnly: true
-          example: Requester
-        recipientStatus:
-          type: array
-          items:
-            $ref: '#/components/schemas/recipients-data.json'
-          maxItems: 200
-          description: A list of recipients to whom emails were tried to send.
-    product-line.json:
-      title: ProductLine
-      enum:
-      - ABSTRACT_MANAGEMENT
-      - ADMIN
-      - API_PLATFORM
-      - APPOINTMENTS
-      - AUTO_BLOCK
-      - BOOK
-      - CHANNEL_PUBLISHER
-      - CONTACT
-      - CROWD_COMPASS
-      - CSN
-      - DASHBOARD
-      - DEFAULT
-      - E_MARKETING
-      - ENGAGEMENTS_AND_PROJECTS
-      - EVENT
-      - LEGACY_SURVEY
-      - MEMBERSHIP
-      - OPT_IN
-      - ORGANIZATION
-      - OSS
-      - PORTAL
-      - RATE_INTEGRITY
-      - RES_DESK
-      - REVERSE_AUCTION
-      - RFP
-      - RFP_ALERTS
-      - RFP_PUBLISHER
-      - STARGATE
-      - SURVEY
-      - USER_ADMINISTRATION
-      - VAULT_MAIL
-      type: string
-      description: Cvent product lines or additional features.
-      example: EVENT
-  parameters:
-    limit:
-      name: limit
-      in: query
-      description: The maximum number of records to return per page.
-      style: form
-      explode: true
-      schema:
-        maximum: 200
-        minimum: 1
-        type: integer
-        default: 100
-        example: 100
-    before1:
-      in: query
-      name: before
-      description: Used to query records that have been created before this time point. Defaults to current time.
-      required: false
-      schema:
-        type: string
-        example: '2021-03-25T02:30:00Z'
-    token:
-      name: token
-      in: query
-      description: 'The continuation token returned from a previous class. This must be a valid UUID v4 if provided.
-
-        This will override any other pageable parameters provided.
-
-        '
-      style: form
-      explode: true
-      schema:
-        type: string
-        example: 0e28af57-511f-47ab-ae46-46cd1ca51a1a
-    commonSpecAfter:
-      name: after
-      required: false
-      description: Used to query records that have been added or updated after this time point. Default to the beginning of time of the data store.
-      in: query
-      schema:
-        type: string
-        format: date-time
-        example: '2017-01-02T02:00:00Z'
-    emailRequestId:
-      in: path
-      name: emailRequestId
-      description: Used to get status of emails which were sent with this email request ID.
-      required: true
-      schema:
-        type: string
-        format: uuid,
-        example: 2A941E55-3367-4C50-B21B-B6A7613DFB23
-    after1:
-      in: query
-      name: after
-      description: Used to query records that have been created after this time point. Defaults to 6 months back from current time.
-      required: false
-      schema:
-        type: string
-        example: '2021-03-26T02:30:00Z'
-    commonSpecBefore:
-      name: before
-      required: false
-      in: query
-      description: Used to query records that have been added or updated before this time point.
-      schema:
-        type: string
-        format: date-time
-        example: '2017-01-02T02:00:00Z'
   responses:
     Unauthorized1:
       description: Bad or expired token
@@ -768,24 +699,6 @@ components:
           example:
             code: 401
             message: Unauthorized
-    NotFound1:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 404
-            message: Not found
-    TooManyRequests1:
-      description: Too many requests
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 429
-            message: Limit Exceeded
     BadRequest1:
       description: Bad request
       content:
@@ -804,6 +717,93 @@ components:
           example:
             code: 403
             message: Access Forbidden
+    NotFound1:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 404
+            message: Not found
+    TooManyRequests1:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 429
+            message: Limit Exceeded
+  parameters:
+    emailRequestId:
+      in: path
+      name: emailRequestId
+      description: Used to get status of emails which were sent with this email request ID.
+      required: true
+      schema:
+        type: string
+        format: uuid,
+        example: 2A941E55-3367-4C50-B21B-B6A7613DFB23
+    commonSpecAfter:
+      name: after
+      required: false
+      description: Used to query records that have been added or updated after this time point. Default to the beginning of time of the data store.
+      in: query
+      schema:
+        type: string
+        format: date-time
+        example: '2017-01-02T02:00:00Z'
+    token:
+      name: token
+      in: query
+      description: 'The continuation token returned from a previous class. This must be a valid UUID v4 if provided.
+
+        This will override any other pageable parameters provided.
+
+        '
+      style: form
+      explode: true
+      schema:
+        type: string
+        example: 0e28af57-511f-47ab-ae46-46cd1ca51a1a
+    commonSpecBefore:
+      name: before
+      required: false
+      in: query
+      description: Used to query records that have been added or updated before this time point.
+      schema:
+        type: string
+        format: date-time
+        example: '2017-01-02T02:00:00Z'
+    limit:
+      name: limit
+      in: query
+      description: The maximum number of records to return per page.
+      style: form
+      explode: true
+      schema:
+        maximum: 200
+        minimum: 1
+        type: integer
+        default: 100
+        example: 100
+    after1:
+      in: query
+      name: after
+      description: Used to query records that have been created after this time point. Defaults to 6 months back from current time.
+      required: false
+      schema:
+        type: string
+        example: '2021-03-26T02:30:00Z'
+    before1:
+      in: query
+      name: before
+      description: Used to query records that have been created before this time point. Defaults to current time.
+      required: false
+      schema:
+        type: string
+        example: '2021-03-25T02:30:00Z'
   securitySchemes:
     OAuth2.authorizationCode:
       type: oauth2

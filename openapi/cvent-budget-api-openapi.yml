@@ -1307,9 +1307,29 @@ paths:
         url: '#oauth2-auth-code-planner-admin'
 components:
   schemas:
-    account-budget-items-paginated-response:
-      title: AccountBudgetItemsPaginatedResponse
-      description: The response from a request to retrieve a paginated list of budget items across all events linked to the account.
+    currency-conversion-rate-request:
+      title: CurrencyConversionRateRequest
+      description: Currency conversion rate request for a currency in an account.
+      required:
+      - id
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/currency-conversion-rate'
+      properties:
+        id:
+          type: string
+          description: The unique ID for this defined conversion rate.
+          format: uuid
+          example: 9463c74e-18c6-401a-a710-ae0f485bf959
+    uuid-property:
+      title: UUID Property
+      description: A string that has to be a format matching the industry standard uuid
+      type: string
+      format: uuid
+      example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+    budget-vendors-paginated-response:
+      title: Budget Vendors Paginated Response
+      description: The response from a request to get the list of vendors.
       required:
       - paging
       - data
@@ -1319,10 +1339,92 @@ components:
           $ref: '#/components/schemas/Paging'
         data:
           type: array
-          maxItems: 200
+          description: Collection of budget vendor entities.
           items:
-            $ref: '#/components/schemas/AccountBudgetItemListResponse'
-          description: Collection of budget items.
+            $ref: '#/components/schemas/BudgetVendorResponse'
+    BudgetCategory:
+      title: BudgetCategory
+      description: Denotes the category assigned to the budget item.
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          type: integer
+          description: Unique identifier of the budget category.
+          example: 3
+        name:
+          type: string
+          description: Name of the budget category assigned to the budget item.
+          example: Travel
+          readOnly: true
+    BudgetAssociatedRegistrant:
+      title: BudgetAssociatedRegistrant
+      description: Contains information about a registrant associated with a budget.
+      type: object
+      properties:
+        firstName:
+          type: string
+          description: First name of associated registrant.
+          example: Amit
+          readOnly: true
+        lastName:
+          type: string
+          description: Last name of associated registrant.
+          example: Kumar
+          readOnly: true
+        hcpStatus:
+          type: boolean
+          description: True indicates the associated registrant is a HCP (Health Care Practitioner).
+          example: true
+          readOnly: true
+        inviteeId:
+          type: string
+          description: Unique identifier for the invitee associated with the budget.
+          example: 7cc5304a-9323-452f-8ae8-111cae0047b0
+          format: uuid
+        contactId:
+          type: string
+          description: Unique identifier for the contact associated with the budget.
+          example: 0c478ddc-cf11-4026-a8e5-e6a59ae1c902
+          format: uuid
+    Link:
+      title: Link
+      required:
+      - href
+      type: object
+      description: Represents a link to a related resource.
+      properties:
+        href:
+          type: string
+          description: A url provided that can be followed for linking
+          example: ?token=90c5f062-76ad-4ea4-aa53-00eb698d9262
+    AllocationCategory:
+      title: AllocationCategory
+      description: Allocation category in which budget item cost is allocated.
+      type: object
+      properties:
+        id:
+          description: Identifier of a particular category.
+          type: string
+          format: uuid
+          example: e9ee2669-65db-46f8-872c-dbafbf9b0e92
+    BudgetGratuity:
+      title: BudgetGratuity
+      description: Budget item gratuity details.
+      type: object
+      required:
+      - gratuity
+      properties:
+        gratuity:
+          type: number
+          description: Gratuity applied to the budget item. This value can be a percentage of the cost or a flat dollar amount.
+          example: 5.2
+        appliedGratuityValue:
+          type: number
+          description: Calculated gratuity amount based on gratuity field.
+          example: 25.2
+          readOnly: true
     BudgetItem:
       title: BudgetItem
       description: Budget item associated with an event.
@@ -1436,555 +1538,6 @@ components:
           description: Identifies the session associated with the budget item.
           format: uuid
           example: 9463c74e-18c6-401a-a710-ae0f485bf959
-    TransactionReconciliation:
-      title: Transaction Reconciliation
-      description: A transaction reconciliation record.
-      type: object
-      properties:
-        budgetItem:
-          type: object
-          properties:
-            id:
-              type: string
-              description: The budget item ID.
-              format: uuid
-          description: The identifier of reconciled budget item.
-        status:
-          $ref: '#/components/schemas/ReconciliationStatus'
-        amount:
-          type: number
-          description: Reconciliation amount.
-          example: 100.5
-        reconciledBy:
-          type: string
-          description: Reconciled by user.
-          example: Test User
-        reconciledDate:
-          type: string
-          format: date-time
-          description: The ISO 8601 zoned date and time for Reconciled date.
-          example: '2020-02-07T09:37:50Z'
-    BudgetAllocationsPaginatedResponse:
-      title: BudgetAllocationsPaginatedResponse
-      description: Information about an allocation.
-      type: object
-      properties:
-        budgetVersion:
-          type: object
-          properties:
-            id:
-              type: string
-              description: Identifier of a particular budget version.
-              format: uuid
-              example: 3d808ee8-94f8-4f3a-9ad1-6b23f4e4c329
-          description: This is the budget version where this allocation was made.
-        budgetItem:
-          $ref: '#/components/schemas/AllocationBudgetItemId'
-        category:
-          $ref: '#/components/schemas/AllocationCategory'
-        subcategory:
-          $ref: '#/components/schemas/AllocationSubCategory'
-        generalLedger:
-          $ref: '#/components/schemas/AllocationGeneralLedger'
-        method:
-          $ref: '#/components/schemas/AllocateBy'
-        value:
-          type: number
-          description: 'Amount from the actual budget allocated to this category/subcategory or general ledger. Note: The sum of amounts for all allocations should equal the total actual amount for that budget item.'
-          example: 200.5
-        note:
-          type: string
-          description: Remark by an allocator for an allocation.
-          example: This will be handled by manager.
-    currency-conversion-rate-paginated-response:
-      title: Currency Conversion Rate Paginated Response
-      description: The response from a request to get the list of conversions rate for a currency.
-      required:
-      - paging
-      - data
-      type: object
-      properties:
-        paging:
-          $ref: '#/components/schemas/Paging'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/CurrencyConversionRateListResponse'
-          description: Collection of conversion rate for a currency in an account.
-    budget-allocations-paginated-list-response:
-      title: BudgetAllocationsPaginatedListResponse
-      description: The response from a request to get the list of budget allocations for the event.
-      required:
-      - paging
-      - data
-      type: object
-      properties:
-        paging:
-          $ref: '#/components/schemas/Paging'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/BudgetAllocationsPaginatedResponse'
-          description: Collection of budget allocations.
-    BudgetTaxGratuityType:
-      title: BudgetTaxGratuityType
-      enum:
-      - AMOUNT
-      - PERCENTAGE
-      type: string
-      description: Denotes the type of tax or gratuity.
-      example: PERCENTAGE
-    budget-vendors-paginated-response:
-      title: Budget Vendors Paginated Response
-      description: The response from a request to get the list of vendors.
-      required:
-      - paging
-      - data
-      type: object
-      properties:
-        paging:
-          $ref: '#/components/schemas/Paging'
-        data:
-          type: array
-          description: Collection of budget vendor entities.
-          items:
-            $ref: '#/components/schemas/BudgetVendorResponse'
-    BudgetStatus:
-      title: BudgetStatus
-      enum:
-      - ESTIMATED
-      - REQUESTED
-      - PENDING
-      - CONFIRMED
-      - INVOICED
-      - PAID
-      type: string
-      description: Denotes the status assigned to a budget item.
-      example: ESTIMATED
-    custom-field:
-      title: CustomField
-      description: A Custom Field
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/CustomFieldBase'
-      properties:
-        type:
-          description: The type of data collected by a custom field.
-          type: string
-          allOf:
-          - $ref: '#/components/schemas/CustomFieldType'
-          - readOnly: true
-            example: MultiSelect
-    BudgetSubCategory:
-      title: BudgetSubCategory
-      type: object
-      description: This is used to denote the sub category for a budget.
-      properties:
-        id:
-          $ref: '#/components/schemas/uuid-property'
-        name:
-          type: string
-          description: Name of the budget subcategory assigned to the budget item.
-          readOnly: true
-          example: utilities
-    BudgetVendor:
-      title: BudgetVendor
-      description: List of details for a vendor assigned to a budget item.
-      type: object
-      properties:
-        id:
-          description: The vendor's unique ID. If the `type` field is `CSN`, this vendor ID correlates to a venueID in the [CSN APIs](https://developers.cvent.com/docs/legacy-api/csn/planner-guide/venue-objects).
-          type: string
-          format: uuid
-          example: d64380fd-3631-43e9-aac7-bd6bb6eccf6b
-        name:
-          type: string
-          description: Vendor name.
-          example: Best Rest Hotels
-          readOnly: true
-        type:
-          type: string
-          enum:
-          - NOT_SPECIFIED
-          - VENDOR
-          - CSN
-          - REPOSITE
-          description: Indicates how the vendor was added to your account. CSN indicates the vendor was sourced from the Cvent Supplier Network. VENDOR indicates a user added the vendor information to your account. REPOSITE indicates the vendor was sourced from the Reposite.
-          example: CSN
-          readOnly: true
-    BudgetCostAvoidance:
-      title: BudgetCostAvoidance
-      description: Budget cost avoidance information.
-      type: object
-      properties:
-        amount:
-          type: number
-          description: Cost avoidance amount.
-          example: 99.5
-        description:
-          type: string
-          maxLength: 5000
-          description: Cost avoidance description.
-          example: Discounted Cost
-    Audit:
-      title: Audit
-      description: Audit information
-      type: object
-      properties:
-        created:
-          type: string
-          format: date-time
-          description: The ISO 8601 zoned date time when this record was created.
-          readOnly: true
-          example: '2017-01-02T02:00:00Z'
-        createdBy:
-          type: string
-          description: The identifier of the user that created this record.
-          readOnly: true
-          example: hporter
-        lastModified:
-          type: string
-          format: date-time
-          description: The ISO 8601 zoned date time when this record was updated.
-          readOnly: true
-          example: '2019-02-12T03:00:00Z'
-        lastModifiedBy:
-          type: string
-          description: The identifier of the user that last updated this record.
-          readOnly: true
-          example: hporter
-    currency-conversion-rate-response:
-      title: CurrencyConversionRateResponse
-      description: Currency conversion rate response for a currency in an account.
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/currency-conversion-rate-request'
-      properties:
-        baseCurrency:
-          type: string
-          description: The ISO 4217 standard format currency code for account base currency.
-          maxLength: 3
-          example: USD
-        currency:
-          type: string
-          description: The ISO 4217 standard format currency code of currency for which conversion rate is defined.
-          maxLength: 3
-          example: EUR
-        lastModified:
-          type: string
-          format: date-time
-          description: The ISO 8601 zoned date and time when the conversion rate was last modified.
-          example: '2020-02-07T00:00:00.000Z'
-          readOnly: true
-    BudgetAllocation:
-      title: BudgetAllocation
-      description: Budget allocations within a budget item for an event.
-      type: object
-      required:
-      - value
-      properties:
-        category:
-          $ref: '#/components/schemas/AllocationCategory'
-        subcategory:
-          $ref: '#/components/schemas/AllocationSubCategory'
-        generalLedger:
-          $ref: '#/components/schemas/AllocationGeneralLedger'
-        value:
-          type: number
-          description: 'Amount from the actual budget allocated to this category or subcategory. Note: The sum of amounts for all allocations should equal the total actual amount for that budget item.'
-          example: 200.5
-        note:
-          type: string
-          description: Remark by an allocator for an allocation.
-          example: This will be handled by manager.
-    BudgetGratuity:
-      title: BudgetGratuity
-      description: Budget item gratuity details.
-      type: object
-      required:
-      - gratuity
-      properties:
-        gratuity:
-          type: number
-          description: Gratuity applied to the budget item. This value can be a percentage of the cost or a flat dollar amount.
-          example: 5.2
-        appliedGratuityValue:
-          type: number
-          description: Calculated gratuity amount based on gratuity field.
-          example: 25.2
-          readOnly: true
-    budget-items-paginated-response:
-      title: BudgetItemsPaginatedResponse
-      description: The response from a request to get the list of budget items for the event.
-      required:
-      - paging
-      - data
-      type: object
-      properties:
-        paging:
-          $ref: '#/components/schemas/Paging'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/BudgetItemListResponse'
-          description: Collection of budget items.
-    ContactInformation:
-      title: ContactInformation
-      description: Primary contact details associated with the entity.
-      type: object
-      properties:
-        firstName:
-          type: string
-          minLength: 1
-          maxLength: 50
-          description: First name of the contact person.
-          example: Rahul
-        lastName:
-          type: string
-          minLength: 1
-          maxLength: 50
-          description: Last name of the contact person.
-          example: Sharma
-        title:
-          type: string
-          maxLength: 50
-          description: Professional title or designation of the contact person.
-          example: Operations Manager
-        phone:
-          type: string
-          maxLength: 30
-          description: Primary phone number of the contact person, including country and area code if applicable.
-          example: +91-9876543210
-        fax:
-          type: string
-          maxLength: 30
-          description: Fax number of the contact person, if available.
-          example: +91-11-23456789
-        emailAddress:
-          type: string
-          format: email
-          maxLength: 80
-          description: Email address of the contact person.
-          example: rahul.sharma@example.com
-        additionalInformation:
-          type: string
-          maxLength: 1000
-          description: Any additional contact-related notes or instructions.
-          example: Available only during business hours (9 AM – 6 PM IST).
-    invoice-file:
-      title: InvoiceFile
-      required:
-      - file
-      - href
-      description: An invoice attached to the payment.
-      properties:
-        file:
-          properties:
-            id:
-              type: string
-              format: uuid
-              description: The ID of the invoice.
-        href:
-          format: uri
-          type: string
-          description: URL of the attached invoice.
-          readOnly: true
-          example: https://custom.cvent.com/a5154f85f71a4cf2464e037feb75b308/00000000000000000000000000000000/files/universal-file/tmp/e209d73d845746b7a6deda4da9d91b2c.png
-    budget-item-response:
-      title: BudgetItemResponse
-      description: Customized budget item associated with an event.
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/BudgetItem'
-      properties:
-        budgetVersion:
-          $ref: '#/components/schemas/budget-version-id'
-        customFields:
-          type: array
-          items:
-            $ref: '#/components/schemas/BudgetItemCustomField'
-          description: List of budget item custom fields.
-    CustomFieldBase:
-      title: CustomFieldBase
-      description: Base schema for Custom Field - allows type to be customized by extending schemas
-      required:
-      - id
-      - value
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique ID representing this custom field.
-          format: uuid
-        name:
-          type: string
-          description: The actual text of the custom field.
-          example: What is your favorite color?
-          readOnly: true
-        value:
-          type: array
-          uniqueItems: true
-          items:
-            type: string
-            description: A question answer value
-            maxLength: 16000
-          description: The set of answers or possible answers to a question.
-          example:
-          - Choice C
-          - Choice A
-        order:
-          type: integer
-          description: The order of this question in the bigger list of questions.
-          example: 1
-          readOnly: true
-    AccountBudgetItemListResponse:
-      title: AccountBudgetItemListResponse
-      description: The response from a request to retrieve list of budget items across all events linked to the account.
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/Audit'
-      properties:
-        event:
-          $ref: '#/components/schemas/budget-version-id'
-        rfp:
-          $ref: '#/components/schemas/budget-version-id'
-        budgetVersion:
-          $ref: '#/components/schemas/budget-version-id'
-        id:
-          type: string
-          description: The identifier of the budget item.
-          format: uuid
-          example: 9463c74e-18c6-401a-a710-ae0f485bf959
-          readOnly: true
-        name:
-          type: string
-          minLength: 1
-          maxLength: 100
-          description: Name of the budget item.
-          example: Airport Transportation
-        code:
-          type: string
-          maxLength: 30
-          description: User defined code of the budget item.
-          example: AIRTRP
-        category:
-          $ref: '#/components/schemas/BudgetCategory'
-        subCategory:
-          $ref: '#/components/schemas/BudgetSubCategory'
-        deleted:
-          type: boolean
-          description: True indicates the event budget item is deleted.
-          example: false
-    payment:
-      title: Payment
-      description: Payment for a budget item in an event.
-      required:
-      - name
-      - date
-      - amount
-      - currency
-      type: object
-      properties:
-        name:
-          type: string
-          minLength: 1
-          maxLength: 100
-          description: Name of the payment.
-          example: Check Payment
-        referenceNumber:
-          type: string
-          maxLength: 30
-          description: Reference number for the payment. Assists the user in reconciling the payment with their bank statement.
-          example: abc12bde
-        currency:
-          type: string
-          description: The ISO 4217 standard format currency code used of payment currency.
-          maxLength: 3
-          example: USD
-        amount:
-          type: number
-          description: Payment amount.
-          example: 5.2
-        date:
-          type: string
-          format: date
-          description: The ISO 8601 zoned date assigned to the payment, typically denotes the date of payment.
-          example: '2020-02-07'
-        note:
-          type: string
-          maxLength: 300
-          description: Note for the payment done.
-          example: This payment is for admission.
-        type:
-          $ref: '#/components/schemas/PaymentType1'
-        lastModified:
-          type: string
-          format: date-time
-          description: The ISO 8601 zoned date and time when the budget item was last modified.
-          example: '2020-02-07T00:00:00.000Z'
-          readOnly: true
-    budget-item:
-      title: CreateUpdateBudgetItem
-      description: Budget item updates associated with an event.
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/BudgetItem'
-    GeneralLedger1:
-      title: GeneralLedger
-      type: object
-      description: This is used to denote the general ledger code associated with budget.
-      properties:
-        id:
-          $ref: '#/components/schemas/uuid-property'
-        code:
-          type: string
-          description: General Ledger Code.
-          maxLength: 30
-          example: MU
-          readOnly: true
-        name:
-          type: string
-          description: Name of the General Ledger.
-          maxLength: 30
-          example: Meet up
-          readOnly: true
-    BudgetTax:
-      title: BudgetTax
-      description: Budget item tax details.
-      type: object
-      required:
-      - id
-      - taxType
-      - tax
-      properties:
-        id:
-          $ref: '#/components/schemas/uuid-property'
-        name:
-          type: string
-          description: Tax name.
-          example: Applicable Tax
-          readOnly: true
-        taxType:
-          $ref: '#/components/schemas/BudgetTaxGratuityType'
-        tax:
-          type: number
-          description: Tax applied to the budget item. This value can be a percentage of the cost or a flat dollar amount.
-          example: 5.2
-        appliedTaxValue:
-          type: number
-          description: Calculated tax amount based on tax field.
-          example: 5.2
-          readOnly: true
-    AllocationGeneralLedger:
-      title: AllocationGeneralLedger
-      description: General Ledger to which the budget of a budget item is allocated.
-      type: object
-      properties:
-        id:
-          description: Identifier of a particular general ledger.
-          type: string
-          format: uuid
-          example: ff28f935-3670-43d2-98f6-5247a18f686c
     PaymentType1:
       title: PaymentType
       enum:
@@ -2038,6 +1591,125 @@ components:
       type: string
       description: Denotes the method of payment.
       example: Visa
+    EventId2:
+      title: EventId
+      description: Event ID Information.
+      type: object
+      properties:
+        event:
+          type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/uuid-property'
+          description: The identifier of the Event.
+          readOnly: true
+    card-details-paginated-response:
+      title: CardDetailsPaginatedResponse
+      description: The response from a request to get the list of Card Details for the event.
+      required:
+      - paging
+      - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CardDetails'
+          description: Collection of Card Details.
+    CardType1:
+      title: CardType
+      enum:
+      - Virtual
+      - Plastic
+      type: string
+      description: This is used to denote the card type for a card.
+      example: Virtual
+    BudgetSubCategory:
+      title: BudgetSubCategory
+      type: object
+      description: This is used to denote the sub category for a budget.
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid-property'
+        name:
+          type: string
+          description: Name of the budget subcategory assigned to the budget item.
+          readOnly: true
+          example: utilities
+    currency-conversion-rate:
+      title: CurrencyConversionRate
+      description: Currency conversion rate for a currency based on dates in an account.
+      required:
+      - conversionRate
+      - startDate
+      type: object
+      properties:
+        conversionRate:
+          type: number
+          description: Currency conversion rate from accounts base currency to the other defined currency in this conversion rate.
+          example: 5.2
+        startDate:
+          type: string
+          format: date
+          description: The ISO 8601 date format assigned for the currency conversion, typically denotes start date from when defined conversion rate is applicable.
+          example: '2020-02-07'
+        endDate:
+          type: string
+          format: date
+          description: The ISO 8601 date format for the currency conversion, typically denotes end date till when defined conversion rate is applicable.
+          example: '2020-02-08'
+    BudgetTaxGratuityType:
+      title: BudgetTaxGratuityType
+      enum:
+      - AMOUNT
+      - PERCENTAGE
+      type: string
+      description: Denotes the type of tax or gratuity.
+      example: PERCENTAGE
+    TransactionReconciliation:
+      title: Transaction Reconciliation
+      description: A transaction reconciliation record.
+      type: object
+      properties:
+        budgetItem:
+          type: object
+          properties:
+            id:
+              type: string
+              description: The budget item ID.
+              format: uuid
+          description: The identifier of reconciled budget item.
+        status:
+          $ref: '#/components/schemas/ReconciliationStatus'
+        amount:
+          type: number
+          description: Reconciliation amount.
+          example: 100.5
+        reconciledBy:
+          type: string
+          description: Reconciled by user.
+          example: Test User
+        reconciledDate:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date and time for Reconciled date.
+          example: '2020-02-07T09:37:50Z'
+    budget-item-response:
+      title: BudgetItemResponse
+      description: Customized budget item associated with an event.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/BudgetItem'
+      properties:
+        budgetVersion:
+          $ref: '#/components/schemas/budget-version-id'
+        customFields:
+          type: array
+          items:
+            $ref: '#/components/schemas/BudgetItemCustomField'
+          description: List of budget item custom fields.
     BudgetCostType:
       title: BudgetCostType
       enum:
@@ -2046,12 +1718,478 @@ components:
       type: string
       description: Denotes the cost type of a budget item. FIXED costs stay the same regardless of quantity. VARIABLE costs are based on a quantity.
       example: FIXED
+    GeneralLedger1:
+      title: GeneralLedger
+      type: object
+      description: This is used to denote the general ledger code associated with budget.
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid-property'
+        code:
+          type: string
+          description: General Ledger Code.
+          maxLength: 30
+          example: MU
+          readOnly: true
+        name:
+          type: string
+          description: Name of the General Ledger.
+          maxLength: 30
+          example: Meet up
+          readOnly: true
+    event-budget-paginated-response:
+      title: Event Budget Paginated Response
+      description: The response from a request to get the list of event budget totals.
+      required:
+      - paging
+      - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/EventBudgetTotals'
+          description: Collection of Event Budget Totals Information.
+    BudgetTax:
+      title: BudgetTax
+      description: Budget item tax details.
+      type: object
+      required:
+      - id
+      - taxType
+      - tax
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid-property'
+        name:
+          type: string
+          description: Tax name.
+          example: Applicable Tax
+          readOnly: true
+        taxType:
+          $ref: '#/components/schemas/BudgetTaxGratuityType'
+        tax:
+          type: number
+          description: Tax applied to the budget item. This value can be a percentage of the cost or a flat dollar amount.
+          example: 5.2
+        appliedTaxValue:
+          type: number
+          description: Calculated tax amount based on tax field.
+          example: 5.2
+          readOnly: true
+    BudgetRFP:
+      title: BudgetRFP
+      description: RFP associated with a budget item.
+      readOnly: true
+      type: object
+      properties:
+        id:
+          type: string
+          description: The identifier of the related RFP. If an ID is present, the budget item originates from an RFP. You can use this ID to get more details on the related RFP via the [CSN APIs](https://developers.cvent.com/docs/legacy-api/csn/planner-guide/rfp-objects).
+          format: uuid
+          example: 79b975b9-07e2-4d78-b7bc-941eb1bf894b
+    CustomFieldType:
+      title: CustomFieldType
+      enum:
+      - AutoIncrement
+      - ConsentQuestion
+      - Currency
+      - Decimal
+      - Date
+      - DateTime
+      - Email
+      - FileUpload
+      - FreeText
+      - General
+      - MultiChoice
+      - MultiSelect
+      - Number
+      - OpenEndedDateTime
+      - OpenEndedText
+      - SingleChoice
+      - SingleSelect
+      - USPhoneNumber
+      - Unknown
+      type: string
+      description: The type of data collected by a custom field.
+      example: General
+    CurrencyConversionRateListResponse:
+      title: CurrencyConversionRateListResponse
+      description: Currency conversion rate list response for a currency in an account.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/currency-conversion-rate-response'
+      properties:
+        currentConversionRate:
+          type: boolean
+          description: True indicates this conversion rate is current applicable.
+          example: true
     BudgetCostName:
       title: BudgetCostName
       type: string
       description: Denotes the name of the budget column associated to this cost.
       example: Budgeted
       readOnly: true
+    ErrorResponse-12:
+      title: ErrorResponse
+      description: Represents an error response with additional details of cascading error messages.
+      allOf:
+      - $ref: '#/components/schemas/ErrorResponseBase1'
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorResponseBase1'
+          description: Additional details of cascading error messages.
+    BudgetItemListResponse:
+      title: BudgetItemListResponse
+      description: The response from a request to get the budget items for the event.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/budget-item-response'
+      properties:
+        deleted:
+          type: boolean
+          description: True indicates the event budget item is deleted.
+          example: false
+    card-transaction-create-response:
+      title: CardTransactionPostResponse
+      type: object
+      description: Create card transaction response details.
+      allOf:
+      - $ref: '#/components/schemas/card-transaction-create'
+    PaginationLinks:
+      title: PaginationLinks
+      type: object
+      description: Represents pagination links for navigating between pages of data.
+      properties:
+        next:
+          $ref: '#/components/schemas/Link'
+        self:
+          $ref: '#/components/schemas/Link'
+        prev:
+          $ref: '#/components/schemas/Link'
+    payment-paginated-response:
+      title: Budget Payment Paginated Response
+      description: The response from a request to get the list of payments for event.
+      required:
+      - paging
+      - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/payment-response'
+          description: Collection of payments for budget items for an event.
+    Audit:
+      title: Audit
+      description: Audit information
+      type: object
+      properties:
+        created:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date time when this record was created.
+          readOnly: true
+          example: '2017-01-02T02:00:00Z'
+        createdBy:
+          type: string
+          description: The identifier of the user that created this record.
+          readOnly: true
+          example: hporter
+        lastModified:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date time when this record was updated.
+          readOnly: true
+          example: '2019-02-12T03:00:00Z'
+        lastModifiedBy:
+          type: string
+          description: The identifier of the user that last updated this record.
+          readOnly: true
+          example: hporter
+    CardStatus:
+      title: CardStatus
+      enum:
+      - Pending
+      - Active
+      - Inactive
+      - Expired
+      - Cancelled
+      type: string
+      description: This is used to denote the card status for a card.
+      example: Pending
+    BudgetAllocation:
+      title: BudgetAllocation
+      description: Budget allocations within a budget item for an event.
+      type: object
+      required:
+      - value
+      properties:
+        category:
+          $ref: '#/components/schemas/AllocationCategory'
+        subcategory:
+          $ref: '#/components/schemas/AllocationSubCategory'
+        generalLedger:
+          $ref: '#/components/schemas/AllocationGeneralLedger'
+        value:
+          type: number
+          description: 'Amount from the actual budget allocated to this category or subcategory. Note: The sum of amounts for all allocations should equal the total actual amount for that budget item.'
+          example: 200.5
+        note:
+          type: string
+          description: Remark by an allocator for an allocation.
+          example: This will be handled by manager.
+    EventBudgetTotals:
+      title: Event Budget Totals
+      description: Budget Totals for a Event.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/EventId2'
+      properties:
+        version:
+          type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/uuid-property'
+            name:
+              type: string
+              description: Name of the budget version.
+              example: Budget Version 2
+            default:
+              type: boolean
+              description: True indicates the associated budget is the default budget version of the event.
+              example: true
+          description: The identifier of the Budget version for an event.
+        lastModifiedDate:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date and time for budget version last modified date.
+          example: '2020-02-07T00:00:00.000Z'
+        currency:
+          type: string
+          description: The ISO 4217 standard format currency code used of transaction currency.
+          maxLength: 3
+          example: USD
+        totalHighLevelEstimate:
+          type: object
+          description: Total High-level estimation details.
+          properties:
+            amount:
+              type: number
+              description: The total amount of high level estimate of the event.
+              example: 5001.99
+        costDetail:
+          type: array
+          items:
+            $ref: '#/components/schemas/BudgetCostDetail'
+          description: The list of cost details.
+    card-transaction-paginated-response:
+      title: CardTransactionsPaginatedResponse
+      description: The response from a request to get the list of transaction for the event.
+      required:
+      - paging
+      - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CardTransaction'
+          description: Collection of virtual card transaction.
+    invoice-file:
+      title: InvoiceFile
+      required:
+      - file
+      - href
+      description: An invoice attached to the payment.
+      properties:
+        file:
+          properties:
+            id:
+              type: string
+              format: uuid
+              description: The ID of the invoice.
+        href:
+          format: uri
+          type: string
+          description: URL of the attached invoice.
+          readOnly: true
+          example: https://custom.cvent.com/a5154f85f71a4cf2464e037feb75b308/00000000000000000000000000000000/files/universal-file/tmp/e209d73d845746b7a6deda4da9d91b2c.png
+    BudgetCostDetail-1:
+      title: BudgetCostDetail
+      description: Budget item cost details.
+      type: object
+      required:
+      - id
+      - units
+      - cost
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid-property'
+        name:
+          $ref: '#/components/schemas/BudgetCostName'
+        units:
+          type: number
+          description: The number of units associated with a budget item. This field can be any number if the budget item is a Variable cost type. If the budget item uses a Fixed cost type, set this field to 1.
+          example: 5.2
+        cost:
+          type: number
+          description: Budget item cost amount.
+          example: 100.5
+        gratuityDetail:
+          $ref: '#/components/schemas/BudgetGratuity'
+        taxDetail:
+          type: array
+          items:
+            $ref: '#/components/schemas/BudgetTax'
+          description: Collection of tax related information.
+        totalCost:
+          type: number
+          description: Total cost of budget item including applicable tax and gratuity.
+          example: 100.5
+          readOnly: true
+    budget-version-id:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Identifier of a particular budget version.
+          format: uuid
+          example: 3d808ee8-94f8-4f3a-9ad1-6b23f4e4c329
+      description: Budget Version ID Information.
+    account-budget-items-paginated-response:
+      title: AccountBudgetItemsPaginatedResponse
+      description: The response from a request to retrieve a paginated list of budget items across all events linked to the account.
+      required:
+      - paging
+      - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          type: array
+          maxItems: 200
+          items:
+            $ref: '#/components/schemas/AccountBudgetItemListResponse'
+          description: Collection of budget items.
+    CustomFieldBase:
+      title: CustomFieldBase
+      description: Base schema for Custom Field - allows type to be customized by extending schemas
+      required:
+      - id
+      - value
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique ID representing this custom field.
+          format: uuid
+        name:
+          type: string
+          description: The actual text of the custom field.
+          example: What is your favorite color?
+          readOnly: true
+        value:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            description: A question answer value
+            maxLength: 16000
+          description: The set of answers or possible answers to a question.
+          example:
+          - Choice C
+          - Choice A
+        order:
+          type: integer
+          description: The order of this question in the bigger list of questions.
+          example: 1
+          readOnly: true
+    ContactInformation:
+      title: ContactInformation
+      description: Primary contact details associated with the entity.
+      type: object
+      properties:
+        firstName:
+          type: string
+          minLength: 1
+          maxLength: 50
+          description: First name of the contact person.
+          example: Rahul
+        lastName:
+          type: string
+          minLength: 1
+          maxLength: 50
+          description: Last name of the contact person.
+          example: Sharma
+        title:
+          type: string
+          maxLength: 50
+          description: Professional title or designation of the contact person.
+          example: Operations Manager
+        phone:
+          type: string
+          maxLength: 30
+          description: Primary phone number of the contact person, including country and area code if applicable.
+          example: +91-9876543210
+        fax:
+          type: string
+          maxLength: 30
+          description: Fax number of the contact person, if available.
+          example: +91-11-23456789
+        emailAddress:
+          type: string
+          format: email
+          maxLength: 80
+          description: Email address of the contact person.
+          example: rahul.sharma@example.com
+        additionalInformation:
+          type: string
+          maxLength: 1000
+          description: Any additional contact-related notes or instructions.
+          example: Available only during business hours (9 AM – 6 PM IST).
+    Paging:
+      title: Paging
+      required:
+      - _links
+      type: object
+      description: Represents pagination information for a collection of resources.
+      properties:
+        previousToken:
+          type: string
+          description: The pagination token for the previous page, if one exists. You can use this token to navigate to the previous page of data.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        nextToken:
+          type: string
+          description: The pagination token for the next page. If this value is present in the response, there is another page of data you can fetch.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        currentToken:
+          type: string
+          description: The pagination token for the current page.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        limit:
+          type: integer
+          description: The number of records to return on the page. Not to exceed 200.
+          example: 100
+        totalCount:
+          type: integer
+          description: The total number of records available. This field may return blank, even if there are more records. To confirm if there are more records, check the `nextToken` field.
+          example: 2
+        _links:
+          $ref: '#/components/schemas/PaginationLinks'
     CardDetails:
       title: CardDetails
       description: Card details associated with an event.
@@ -2144,6 +2282,239 @@ components:
           description: 'Card''s last seven digits. DEPRECATED: This field will return ''0000000'' for American Express (Amex) cards and will not be present for other card types. Use the last 4 digits from the last4 field instead.'
           example: '0000000'
           deprecated: true
+    AllocateBy:
+      title: AllocateBy
+      enum:
+      - PERCENTAGE
+      - AMOUNT
+      type: string
+      description: Specifies the method of budget allocation. Select "AMOUNT" to allocate a fixed amount (e.g., $700 from a $1000 budget), or "PERCENTAGE" to allocate based on a percentage (e.g., 70% of a $1000 budget).
+      example: AMOUNT
+    payment:
+      title: Payment
+      description: Payment for a budget item in an event.
+      required:
+      - name
+      - date
+      - amount
+      - currency
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+          description: Name of the payment.
+          example: Check Payment
+        referenceNumber:
+          type: string
+          maxLength: 30
+          description: Reference number for the payment. Assists the user in reconciling the payment with their bank statement.
+          example: abc12bde
+        currency:
+          type: string
+          description: The ISO 4217 standard format currency code used of payment currency.
+          maxLength: 3
+          example: USD
+        amount:
+          type: number
+          description: Payment amount.
+          example: 5.2
+        date:
+          type: string
+          format: date
+          description: The ISO 8601 zoned date assigned to the payment, typically denotes the date of payment.
+          example: '2020-02-07'
+        note:
+          type: string
+          maxLength: 300
+          description: Note for the payment done.
+          example: This payment is for admission.
+        type:
+          $ref: '#/components/schemas/PaymentType1'
+        lastModified:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date and time when the budget item was last modified.
+          example: '2020-02-07T00:00:00.000Z'
+          readOnly: true
+    custom-field:
+      title: CustomField
+      description: A Custom Field
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/CustomFieldBase'
+      properties:
+        type:
+          description: The type of data collected by a custom field.
+          type: string
+          allOf:
+          - $ref: '#/components/schemas/CustomFieldType'
+          - readOnly: true
+            example: MultiSelect
+    BudgetVendor:
+      title: BudgetVendor
+      description: List of details for a vendor assigned to a budget item.
+      type: object
+      properties:
+        id:
+          description: The vendor's unique ID. If the `type` field is `CSN`, this vendor ID correlates to a venueID in the [CSN APIs](https://developers.cvent.com/docs/legacy-api/csn/planner-guide/venue-objects).
+          type: string
+          format: uuid
+          example: d64380fd-3631-43e9-aac7-bd6bb6eccf6b
+        name:
+          type: string
+          description: Vendor name.
+          example: Best Rest Hotels
+          readOnly: true
+        type:
+          type: string
+          enum:
+          - NOT_SPECIFIED
+          - VENDOR
+          - CSN
+          - REPOSITE
+          description: Indicates how the vendor was added to your account. CSN indicates the vendor was sourced from the Cvent Supplier Network. VENDOR indicates a user added the vendor information to your account. REPOSITE indicates the vendor was sourced from the Reposite.
+          example: CSN
+          readOnly: true
+    BudgetAllocationsPaginatedResponse:
+      title: BudgetAllocationsPaginatedResponse
+      description: Information about an allocation.
+      type: object
+      properties:
+        budgetVersion:
+          type: object
+          properties:
+            id:
+              type: string
+              description: Identifier of a particular budget version.
+              format: uuid
+              example: 3d808ee8-94f8-4f3a-9ad1-6b23f4e4c329
+          description: This is the budget version where this allocation was made.
+        budgetItem:
+          $ref: '#/components/schemas/AllocationBudgetItemId'
+        category:
+          $ref: '#/components/schemas/AllocationCategory'
+        subcategory:
+          $ref: '#/components/schemas/AllocationSubCategory'
+        generalLedger:
+          $ref: '#/components/schemas/AllocationGeneralLedger'
+        method:
+          $ref: '#/components/schemas/AllocateBy'
+        value:
+          type: number
+          description: 'Amount from the actual budget allocated to this category/subcategory or general ledger. Note: The sum of amounts for all allocations should equal the total actual amount for that budget item.'
+          example: 200.5
+        note:
+          type: string
+          description: Remark by an allocator for an allocation.
+          example: This will be handled by manager.
+    card-transaction-create:
+      title: CardTransactionPost
+      type: object
+      description: The transaction you're posting and its associated details.
+      properties:
+        id:
+          type: string
+          description: A unique ID assigned to the transaction, typically generated by the payment processor or gateway. Must be a unique value.
+          example: 1VCAPITRAN18012023
+        eventId:
+          type: string
+          description: Unique ID of the event where the transaction will be posted.
+          format: uuid
+          example: 9463c74e-18c6-401a-a710-ae0f485bf959
+        cardDescription:
+          type: string
+          description: Description of the card associated with the transaction.
+          example: API Card Transaction
+        transactionAmount:
+          type: number
+          description: The transaction amount.
+          example: 1000.87
+        transactionDate:
+          type: string
+          description: ISO 8601 date and time of the transaction (in UTC).
+          format: date-time
+          example: '2020-02-07T00:00:00.000Z'
+        transactionCurrency:
+          type: string
+          description: ISO 4217 currency code of the transaction currency.
+          maxLength: 3
+          example: USD
+        transactionMerchant:
+          type: string
+          description: Name of the merchant used in the transaction.
+          example: API Merchant
+    budget-allocations-list:
+      title: BudgetAllocationsList
+      description: Request body  for creating or updating the budget allocations for the event. The soft limit for the maximum number of allocations is 100.
+      type: object
+      required:
+      - allocateBy
+      - allocations
+      properties:
+        allocateBy:
+          $ref: '#/components/schemas/AllocateBy'
+        allocations:
+          type: array
+          maxItems: 120
+          items:
+            $ref: '#/components/schemas/BudgetAllocation'
+          description: List of budget allocations.
+    BudgetStatus:
+      title: BudgetStatus
+      enum:
+      - ESTIMATED
+      - REQUESTED
+      - PENDING
+      - CONFIRMED
+      - INVOICED
+      - PAID
+      type: string
+      description: Denotes the status assigned to a budget item.
+      example: ESTIMATED
+    TransactionType1:
+      title: TransactionType
+      enum:
+      - Payments
+      - Refunds
+      - Authorized
+      - Approved
+      - Declined
+      type: string
+      description: This is used to denote the transaction type for a transaction.
+      example: Approved
+    payment-response:
+      title: Payment
+      description: Payment for a budget item in an event.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/payment-request'
+      properties:
+        budgetVersion:
+          type: object
+          properties:
+            id:
+              type: string
+              description: The ID of the budget version where this payment was made.
+              format: uuid
+              example: 9463c74e-18c6-401a-a710-ae0f485bf959
+          description: This is the budget version where this payment was made.
+        budgetItem:
+          type: object
+          properties:
+            id:
+              type: string
+              description: The ID of the budget item where this payment was made.
+              format: uuid
+              example: 9463c74e-18c6-401a-a710-ae0f485bf959
+          description: This is the budget item where this payment was made.
+    budget-item:
+      title: CreateUpdateBudgetItem
+      description: Budget item updates associated with an event.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/BudgetItem'
     BaseAddress:
       title: Base Address
       description: Base Address Model
@@ -2180,6 +2551,82 @@ components:
           maxLength: 25
           description: Postal code (also known as zipcode) of the address.
           example: '78727'
+    budget-items-paginated-response:
+      title: BudgetItemsPaginatedResponse
+      description: The response from a request to get the list of budget items for the event.
+      required:
+      - paging
+      - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/BudgetItemListResponse'
+          description: Collection of budget items.
+    CardTransaction:
+      title: CardTransaction
+      description: Card transaction associated with an event.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/EventId2'
+      properties:
+        card:
+          type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/uuid-property'
+          description: The identifier of the Card.
+        id:
+          type: string
+          description: Card transaction ID.
+          example: '1000000012'
+        transactionDate:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date and time for Card transaction date.
+          example: '2020-02-07T09:37:50Z'
+        type:
+          $ref: '#/components/schemas/TransactionType1'
+        amount:
+          type: number
+          description: Transaction amount.
+          example: 100.5
+        currency:
+          type: string
+          description: The ISO 4217 standard format currency code used of transaction currency.
+          maxLength: 3
+          example: USD
+        merchant:
+          type: string
+          description: Merchant name.
+          example: Test Merchant
+        reconciliation:
+          type: object
+          allOf:
+          - $ref: '#/components/schemas/TransactionReconciliation'
+          - deprecated: true
+            description: This property is deprecated to support more then one items. Use 'reconciliations'.
+        reconciliations:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransactionReconciliation'
+          description: The list of reconciled item.
+        descriptions:
+          type: array
+          maxItems: 5
+          minItems: 0
+          items:
+            type: string
+          example:
+          - Electricity bill
+          - Event ticket
+          - Miscellaneous charge
+          - Purchase car
+          - Accommodation charge
+          description: The list of transaction description.
     VirtualCardReportingFieldAndValue:
       title: Virtual card reporting field and value.
       description: Reporting fields and values for a virtual card.
@@ -2195,15 +2642,37 @@ components:
           description: The reporting field value.
           example: '12'
           readOnly: true
-    card-transaction-create-response:
-      title: CardTransactionPostResponse
+    ErrorResponseBase1:
+      title: ErrorResponseBase
       type: object
-      description: Create card transaction response details.
-      allOf:
-      - $ref: '#/components/schemas/card-transaction-create'
-    card-transaction-paginated-response:
-      title: CardTransactionsPaginatedResponse
-      description: The response from a request to get the list of transaction for the event.
+      description: Represents an error response with no additional details.
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          description: The HTTP status code representing the error.
+          example: 400
+        message:
+          type: string
+          description: A brief description of the error.
+          example: Bad Request
+        target:
+          type: string
+          description: The target resource of the error.
+          example: example target
+    ReconciliationStatus:
+      title: ReconciliationStatus
+      enum:
+      - Reconciled
+      - Not Reconciled
+      type: string
+      description: This is used to denote the reconciliation status for a transaction.
+      example: Reconciled
+    budget-allocations-paginated-list-response:
+      title: BudgetAllocationsPaginatedListResponse
+      description: The response from a request to get the list of budget allocations for the event.
       required:
       - paging
       - data
@@ -2214,8 +2683,32 @@ components:
         data:
           type: array
           items:
-            $ref: '#/components/schemas/CardTransaction'
-          description: Collection of virtual card transaction.
+            $ref: '#/components/schemas/BudgetAllocationsPaginatedResponse'
+          description: Collection of budget allocations.
+    AllocationSubCategory:
+      title: AllocationSubCategory
+      description: Allocation subcategory in which budget item cost is allocated.
+      type: object
+      properties:
+        id:
+          description: Identifier of a particular subcategory.
+          type: string
+          format: uuid
+          example: b2f194bd-a62c-4e27-a713-48b08196b8a7
+    payment-request:
+      title: PaymentRequest
+      description: Payment request for a budget item in an event.
+      required:
+      - id
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/payment'
+      properties:
+        id:
+          type: string
+          description: The ID of the payment.
+          format: uuid
+          example: 9463c74e-18c6-401a-a710-ae0f485bf959
     BudgetItemCustomField:
       title: BudgetItemCustomField
       description: A Budget Item Custom Field
@@ -2255,246 +2748,6 @@ components:
           description: The order of this question in the bigger list of questions.
           example: 1
           readOnly: true
-    CardType1:
-      title: CardType
-      enum:
-      - Virtual
-      - Plastic
-      type: string
-      description: This is used to denote the card type for a card.
-      example: Virtual
-    currency-conversion-rate:
-      title: CurrencyConversionRate
-      description: Currency conversion rate for a currency based on dates in an account.
-      required:
-      - conversionRate
-      - startDate
-      type: object
-      properties:
-        conversionRate:
-          type: number
-          description: Currency conversion rate from accounts base currency to the other defined currency in this conversion rate.
-          example: 5.2
-        startDate:
-          type: string
-          format: date
-          description: The ISO 8601 date format assigned for the currency conversion, typically denotes start date from when defined conversion rate is applicable.
-          example: '2020-02-07'
-        endDate:
-          type: string
-          format: date
-          description: The ISO 8601 date format for the currency conversion, typically denotes end date till when defined conversion rate is applicable.
-          example: '2020-02-08'
-    BudgetCostDetail:
-      title: Budget Cost Detail
-      description: Event Budget cost detail information.
-      type: object
-      properties:
-        id:
-          $ref: '#/components/schemas/uuid-property'
-        name:
-          $ref: '#/components/schemas/BudgetCostName'
-        totalCostValue:
-          type: number
-          description: The total cost amount of the budget version in an event.
-          example: 5500.5
-        totalAppliedTax:
-          type: number
-          description: The total tax amount of the budget version in an event for the cost column.
-          example: 500
-        totalAppliedGratuity:
-          type: number
-          description: The total gratuity amount of the budget version in an event for the cost column.
-          example: 100.5
-    TransactionType1:
-      title: TransactionType
-      enum:
-      - Payments
-      - Refunds
-      - Authorized
-      - Approved
-      - Declined
-      type: string
-      description: This is used to denote the transaction type for a transaction.
-      example: Approved
-    currency-conversion-rate-request:
-      title: CurrencyConversionRateRequest
-      description: Currency conversion rate request for a currency in an account.
-      required:
-      - id
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/currency-conversion-rate'
-      properties:
-        id:
-          type: string
-          description: The unique ID for this defined conversion rate.
-          format: uuid
-          example: 9463c74e-18c6-401a-a710-ae0f485bf959
-    CurrencyConversionRateListResponse:
-      title: CurrencyConversionRateListResponse
-      description: Currency conversion rate list response for a currency in an account.
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/currency-conversion-rate-response'
-      properties:
-        currentConversionRate:
-          type: boolean
-          description: True indicates this conversion rate is current applicable.
-          example: true
-    ReconciliationStatus:
-      title: ReconciliationStatus
-      enum:
-      - Reconciled
-      - Not Reconciled
-      type: string
-      description: This is used to denote the reconciliation status for a transaction.
-      example: Reconciled
-    uuid-property:
-      title: UUID Property
-      description: A string that has to be a format matching the industry standard uuid
-      type: string
-      format: uuid
-      example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
-    BudgetSavings:
-      title: BudgetSavings
-      description: Budget savings detail information.
-      type: object
-      properties:
-        id:
-          type: integer
-          description: Budget savings detail ID.
-          readOnly: true
-          example: 1
-        name:
-          type: string
-          description: Denotes a mathematical formula to calculate savings. For example, Budgeted Amount - Actual amount = Savings.
-          example: Budgeted - Actual
-          readOnly: true
-        value:
-          type: number
-          description: Calculated value based on the savings formula.
-          example: 15.8
-          readOnly: true
-    payment-request:
-      title: PaymentRequest
-      description: Payment request for a budget item in an event.
-      required:
-      - id
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/payment'
-      properties:
-        id:
-          type: string
-          description: The ID of the payment.
-          format: uuid
-          example: 9463c74e-18c6-401a-a710-ae0f485bf959
-    AllocationCategory:
-      title: AllocationCategory
-      description: Allocation category in which budget item cost is allocated.
-      type: object
-      properties:
-        id:
-          description: Identifier of a particular category.
-          type: string
-          format: uuid
-          example: e9ee2669-65db-46f8-872c-dbafbf9b0e92
-    card-details-paginated-response:
-      title: CardDetailsPaginatedResponse
-      description: The response from a request to get the list of Card Details for the event.
-      required:
-      - paging
-      - data
-      type: object
-      properties:
-        paging:
-          $ref: '#/components/schemas/Paging'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/CardDetails'
-          description: Collection of Card Details.
-    CustomFieldType:
-      title: CustomFieldType
-      enum:
-      - AutoIncrement
-      - ConsentQuestion
-      - Currency
-      - Decimal
-      - Date
-      - DateTime
-      - Email
-      - FileUpload
-      - FreeText
-      - General
-      - MultiChoice
-      - MultiSelect
-      - Number
-      - OpenEndedDateTime
-      - OpenEndedText
-      - SingleChoice
-      - SingleSelect
-      - USPhoneNumber
-      - Unknown
-      type: string
-      description: The type of data collected by a custom field.
-      example: General
-    BudgetCostDetail-1:
-      title: BudgetCostDetail
-      description: Budget item cost details.
-      type: object
-      required:
-      - id
-      - units
-      - cost
-      properties:
-        id:
-          $ref: '#/components/schemas/uuid-property'
-        name:
-          $ref: '#/components/schemas/BudgetCostName'
-        units:
-          type: number
-          description: The number of units associated with a budget item. This field can be any number if the budget item is a Variable cost type. If the budget item uses a Fixed cost type, set this field to 1.
-          example: 5.2
-        cost:
-          type: number
-          description: Budget item cost amount.
-          example: 100.5
-        gratuityDetail:
-          $ref: '#/components/schemas/BudgetGratuity'
-        taxDetail:
-          type: array
-          items:
-            $ref: '#/components/schemas/BudgetTax'
-          description: Collection of tax related information.
-        totalCost:
-          type: number
-          description: Total cost of budget item including applicable tax and gratuity.
-          example: 100.5
-          readOnly: true
-    PaginationLinks:
-      title: PaginationLinks
-      type: object
-      description: Represents pagination links for navigating between pages of data.
-      properties:
-        next:
-          $ref: '#/components/schemas/Link'
-        self:
-          $ref: '#/components/schemas/Link'
-        prev:
-          $ref: '#/components/schemas/Link'
-    BudgetItemListResponse:
-      title: BudgetItemListResponse
-      description: The response from a request to get the budget items for the event.
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/budget-item-response'
-      properties:
-        deleted:
-          type: boolean
-          description: True indicates the event budget item is deleted.
-          example: false
     BudgetVendorResponse:
       title: BudgetVendorResponse
       description: Represents an account-level budget vendor configured in Admin > Budget > Vendors.
@@ -2562,406 +2815,80 @@ components:
           description: User who last modified the vendor record.
           example: jane.smith@cvent.com
           readOnly: true
-    event-budget-paginated-response:
-      title: Event Budget Paginated Response
-      description: The response from a request to get the list of event budget totals.
-      required:
-      - paging
-      - data
-      type: object
-      properties:
-        paging:
-          $ref: '#/components/schemas/Paging'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/EventBudgetTotals'
-          description: Collection of Event Budget Totals Information.
-    Link:
-      title: Link
-      required:
-      - href
-      type: object
-      description: Represents a link to a related resource.
-      properties:
-        href:
-          type: string
-          description: A url provided that can be followed for linking
-          example: ?token=90c5f062-76ad-4ea4-aa53-00eb698d9262
-    ErrorResponse-12:
-      title: ErrorResponse
-      description: Represents an error response with additional details of cascading error messages.
-      allOf:
-      - $ref: '#/components/schemas/ErrorResponseBase1'
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        details:
-          type: array
-          items:
-            $ref: '#/components/schemas/ErrorResponseBase1'
-          description: Additional details of cascading error messages.
-    CardTransaction:
-      title: CardTransaction
-      description: Card transaction associated with an event.
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/EventId2'
-      properties:
-        card:
-          type: object
-          properties:
-            id:
-              $ref: '#/components/schemas/uuid-property'
-          description: The identifier of the Card.
-        id:
-          type: string
-          description: Card transaction ID.
-          example: '1000000012'
-        transactionDate:
-          type: string
-          format: date-time
-          description: The ISO 8601 zoned date and time for Card transaction date.
-          example: '2020-02-07T09:37:50Z'
-        type:
-          $ref: '#/components/schemas/TransactionType1'
-        amount:
-          type: number
-          description: Transaction amount.
-          example: 100.5
-        currency:
-          type: string
-          description: The ISO 4217 standard format currency code used of transaction currency.
-          maxLength: 3
-          example: USD
-        merchant:
-          type: string
-          description: Merchant name.
-          example: Test Merchant
-        reconciliation:
-          type: object
-          allOf:
-          - $ref: '#/components/schemas/TransactionReconciliation'
-          - deprecated: true
-            description: This property is deprecated to support more then one items. Use 'reconciliations'.
-        reconciliations:
-          type: array
-          items:
-            $ref: '#/components/schemas/TransactionReconciliation'
-          description: The list of reconciled item.
-        descriptions:
-          type: array
-          maxItems: 5
-          minItems: 0
-          items:
-            type: string
-          example:
-          - Electricity bill
-          - Event ticket
-          - Miscellaneous charge
-          - Purchase car
-          - Accommodation charge
-          description: The list of transaction description.
-    AllocationSubCategory:
-      title: AllocationSubCategory
-      description: Allocation subcategory in which budget item cost is allocated.
+    AllocationGeneralLedger:
+      title: AllocationGeneralLedger
+      description: General Ledger to which the budget of a budget item is allocated.
       type: object
       properties:
         id:
-          description: Identifier of a particular subcategory.
+          description: Identifier of a particular general ledger.
           type: string
           format: uuid
-          example: b2f194bd-a62c-4e27-a713-48b08196b8a7
-    BudgetCategory:
-      title: BudgetCategory
-      description: Denotes the category assigned to the budget item.
-      type: object
-      required:
-      - id
-      properties:
-        id:
-          type: integer
-          description: Unique identifier of the budget category.
-          example: 3
-        name:
-          type: string
-          description: Name of the budget category assigned to the budget item.
-          example: Travel
-          readOnly: true
-    AllocateBy:
-      title: AllocateBy
-      enum:
-      - PERCENTAGE
-      - AMOUNT
-      type: string
-      description: Specifies the method of budget allocation. Select "AMOUNT" to allocate a fixed amount (e.g., $700 from a $1000 budget), or "PERCENTAGE" to allocate based on a percentage (e.g., 70% of a $1000 budget).
-      example: AMOUNT
-    budget-version-id:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Identifier of a particular budget version.
-          format: uuid
-          example: 3d808ee8-94f8-4f3a-9ad1-6b23f4e4c329
-      description: Budget Version ID Information.
-    Paging:
-      title: Paging
-      required:
-      - _links
-      type: object
-      description: Represents pagination information for a collection of resources.
-      properties:
-        previousToken:
-          type: string
-          description: The pagination token for the previous page, if one exists. You can use this token to navigate to the previous page of data.
-          example: 1a2b3c4d5e6f7g8h9i10j11k
-        nextToken:
-          type: string
-          description: The pagination token for the next page. If this value is present in the response, there is another page of data you can fetch.
-          example: 1a2b3c4d5e6f7g8h9i10j11k
-        currentToken:
-          type: string
-          description: The pagination token for the current page.
-          example: 1a2b3c4d5e6f7g8h9i10j11k
-        limit:
-          type: integer
-          description: The number of records to return on the page. Not to exceed 200.
-          example: 100
-        totalCount:
-          type: integer
-          description: The total number of records available. This field may return blank, even if there are more records. To confirm if there are more records, check the `nextToken` field.
-          example: 2
-        _links:
-          $ref: '#/components/schemas/PaginationLinks'
-    budget-allocations-list:
-      title: BudgetAllocationsList
-      description: Request body  for creating or updating the budget allocations for the event. The soft limit for the maximum number of allocations is 100.
-      type: object
-      required:
-      - allocateBy
-      - allocations
-      properties:
-        allocateBy:
-          $ref: '#/components/schemas/AllocateBy'
-        allocations:
-          type: array
-          maxItems: 120
-          items:
-            $ref: '#/components/schemas/BudgetAllocation'
-          description: List of budget allocations.
-    payment-paginated-response:
-      title: Budget Payment Paginated Response
-      description: The response from a request to get the list of payments for event.
-      required:
-      - paging
-      - data
-      type: object
-      properties:
-        paging:
-          $ref: '#/components/schemas/Paging'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/payment-response'
-          description: Collection of payments for budget items for an event.
-    BudgetAssociatedRegistrant:
-      title: BudgetAssociatedRegistrant
-      description: Contains information about a registrant associated with a budget.
-      type: object
-      properties:
-        firstName:
-          type: string
-          description: First name of associated registrant.
-          example: Amit
-          readOnly: true
-        lastName:
-          type: string
-          description: Last name of associated registrant.
-          example: Kumar
-          readOnly: true
-        hcpStatus:
-          type: boolean
-          description: True indicates the associated registrant is a HCP (Health Care Practitioner).
-          example: true
-          readOnly: true
-        inviteeId:
-          type: string
-          description: Unique identifier for the invitee associated with the budget.
-          example: 7cc5304a-9323-452f-8ae8-111cae0047b0
-          format: uuid
-        contactId:
-          type: string
-          description: Unique identifier for the contact associated with the budget.
-          example: 0c478ddc-cf11-4026-a8e5-e6a59ae1c902
-          format: uuid
-    ErrorResponseBase1:
-      title: ErrorResponseBase
-      type: object
-      description: Represents an error response with no additional details.
-      required:
-      - code
-      - message
-      properties:
-        code:
-          type: integer
-          description: The HTTP status code representing the error.
-          example: 400
-        message:
-          type: string
-          description: A brief description of the error.
-          example: Bad Request
-        target:
-          type: string
-          description: The target resource of the error.
-          example: example target
-    EventBudgetTotals:
-      title: Event Budget Totals
-      description: Budget Totals for a Event.
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/EventId2'
-      properties:
-        version:
-          type: object
-          properties:
-            id:
-              $ref: '#/components/schemas/uuid-property'
-            name:
-              type: string
-              description: Name of the budget version.
-              example: Budget Version 2
-            default:
-              type: boolean
-              description: True indicates the associated budget is the default budget version of the event.
-              example: true
-          description: The identifier of the Budget version for an event.
-        lastModifiedDate:
-          type: string
-          format: date-time
-          description: The ISO 8601 zoned date and time for budget version last modified date.
-          example: '2020-02-07T00:00:00.000Z'
-        currency:
-          type: string
-          description: The ISO 4217 standard format currency code used of transaction currency.
-          maxLength: 3
-          example: USD
-        totalHighLevelEstimate:
-          type: object
-          description: Total High-level estimation details.
-          properties:
-            amount:
-              type: number
-              description: The total amount of high level estimate of the event.
-              example: 5001.99
-        costDetail:
-          type: array
-          items:
-            $ref: '#/components/schemas/BudgetCostDetail'
-          description: The list of cost details.
+          example: ff28f935-3670-43d2-98f6-5247a18f686c
     card-transaction-update:
       title: CardTransactionUpdate
       type: object
       description: The transaction you're updating and its associated details.
       allOf:
       - $ref: '#/components/schemas/card-transaction-create'
-    CardStatus:
-      title: CardStatus
-      enum:
-      - Pending
-      - Active
-      - Inactive
-      - Expired
-      - Cancelled
-      type: string
-      description: This is used to denote the card status for a card.
-      example: Pending
-    payment-response:
-      title: Payment
-      description: Payment for a budget item in an event.
+    currency-conversion-rate-paginated-response:
+      title: Currency Conversion Rate Paginated Response
+      description: The response from a request to get the list of conversions rate for a currency.
+      required:
+      - paging
+      - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CurrencyConversionRateListResponse'
+          description: Collection of conversion rate for a currency in an account.
+    currency-conversion-rate-response:
+      title: CurrencyConversionRateResponse
+      description: Currency conversion rate response for a currency in an account.
       type: object
       allOf:
-      - $ref: '#/components/schemas/payment-request'
+      - $ref: '#/components/schemas/currency-conversion-rate-request'
       properties:
-        budgetVersion:
-          type: object
-          properties:
-            id:
-              type: string
-              description: The ID of the budget version where this payment was made.
-              format: uuid
-              example: 9463c74e-18c6-401a-a710-ae0f485bf959
-          description: This is the budget version where this payment was made.
-        budgetItem:
-          type: object
-          properties:
-            id:
-              type: string
-              description: The ID of the budget item where this payment was made.
-              format: uuid
-              example: 9463c74e-18c6-401a-a710-ae0f485bf959
-          description: This is the budget item where this payment was made.
-    EventId2:
-      title: EventId
-      description: Event ID Information.
-      type: object
-      properties:
-        event:
-          type: object
-          properties:
-            id:
-              $ref: '#/components/schemas/uuid-property'
-          description: The identifier of the Event.
-          readOnly: true
-    BudgetRFP:
-      title: BudgetRFP
-      description: RFP associated with a budget item.
-      readOnly: true
-      type: object
-      properties:
-        id:
+        baseCurrency:
           type: string
-          description: The identifier of the related RFP. If an ID is present, the budget item originates from an RFP. You can use this ID to get more details on the related RFP via the [CSN APIs](https://developers.cvent.com/docs/legacy-api/csn/planner-guide/rfp-objects).
-          format: uuid
-          example: 79b975b9-07e2-4d78-b7bc-941eb1bf894b
-    card-transaction-create:
-      title: CardTransactionPost
-      type: object
-      description: The transaction you're posting and its associated details.
-      properties:
-        id:
-          type: string
-          description: A unique ID assigned to the transaction, typically generated by the payment processor or gateway. Must be a unique value.
-          example: 1VCAPITRAN18012023
-        eventId:
-          type: string
-          description: Unique ID of the event where the transaction will be posted.
-          format: uuid
-          example: 9463c74e-18c6-401a-a710-ae0f485bf959
-        cardDescription:
-          type: string
-          description: Description of the card associated with the transaction.
-          example: API Card Transaction
-        transactionAmount:
-          type: number
-          description: The transaction amount.
-          example: 1000.87
-        transactionDate:
-          type: string
-          description: ISO 8601 date and time of the transaction (in UTC).
-          format: date-time
-          example: '2020-02-07T00:00:00.000Z'
-        transactionCurrency:
-          type: string
-          description: ISO 4217 currency code of the transaction currency.
+          description: The ISO 4217 standard format currency code for account base currency.
           maxLength: 3
           example: USD
-        transactionMerchant:
+        currency:
           type: string
-          description: Name of the merchant used in the transaction.
-          example: API Merchant
+          description: The ISO 4217 standard format currency code of currency for which conversion rate is defined.
+          maxLength: 3
+          example: EUR
+        lastModified:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date and time when the conversion rate was last modified.
+          example: '2020-02-07T00:00:00.000Z'
+          readOnly: true
+    BudgetSavings:
+      title: BudgetSavings
+      description: Budget savings detail information.
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Budget savings detail ID.
+          readOnly: true
+          example: 1
+        name:
+          type: string
+          description: Denotes a mathematical formula to calculate savings. For example, Budgeted Amount - Actual amount = Savings.
+          example: Budgeted - Actual
+          readOnly: true
+        value:
+          type: number
+          description: Calculated value based on the savings formula.
+          example: 15.8
+          readOnly: true
     AllocationBudgetItemId:
       title: AllocationBudgetItemId
       description: Represents the budget item where the allocation was made.
@@ -2972,7 +2899,151 @@ components:
           description: Identifier of a particular budget item.
           format: uuid
           example: 49037583-aec5-4ca7-8f2a-0afd499b10da
+    BudgetCostAvoidance:
+      title: BudgetCostAvoidance
+      description: Budget cost avoidance information.
+      type: object
+      properties:
+        amount:
+          type: number
+          description: Cost avoidance amount.
+          example: 99.5
+        description:
+          type: string
+          maxLength: 5000
+          description: Cost avoidance description.
+          example: Discounted Cost
+    BudgetCostDetail:
+      title: Budget Cost Detail
+      description: Event Budget cost detail information.
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid-property'
+        name:
+          $ref: '#/components/schemas/BudgetCostName'
+        totalCostValue:
+          type: number
+          description: The total cost amount of the budget version in an event.
+          example: 5500.5
+        totalAppliedTax:
+          type: number
+          description: The total tax amount of the budget version in an event for the cost column.
+          example: 500
+        totalAppliedGratuity:
+          type: number
+          description: The total gratuity amount of the budget version in an event for the cost column.
+          example: 100.5
+    AccountBudgetItemListResponse:
+      title: AccountBudgetItemListResponse
+      description: The response from a request to retrieve list of budget items across all events linked to the account.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/Audit'
+      properties:
+        event:
+          $ref: '#/components/schemas/budget-version-id'
+        rfp:
+          $ref: '#/components/schemas/budget-version-id'
+        budgetVersion:
+          $ref: '#/components/schemas/budget-version-id'
+        id:
+          type: string
+          description: The identifier of the budget item.
+          format: uuid
+          example: 9463c74e-18c6-401a-a710-ae0f485bf959
+          readOnly: true
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+          description: Name of the budget item.
+          example: Airport Transportation
+        code:
+          type: string
+          maxLength: 30
+          description: User defined code of the budget item.
+          example: AIRTRP
+        category:
+          $ref: '#/components/schemas/BudgetCategory'
+        subCategory:
+          $ref: '#/components/schemas/BudgetSubCategory'
+        deleted:
+          type: boolean
+          description: True indicates the event budget item is deleted.
+          example: false
+  responses:
+    Unauthorized1:
+      description: Bad or expired token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 401
+            message: Unauthorized
+    Conflict1:
+      description: The request conflicts with current state of the target resource
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 409
+            message: Conflict
+    BadRequest1:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 400
+            message: Bad Request
+    Forbidden1:
+      description: You do not have access to the resource
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 403
+            message: Access Forbidden
+    NotFound1:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 404
+            message: Not found
+    TooManyRequests1:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 429
+            message: Limit Exceeded
   parameters:
+    id4:
+      in: path
+      name: id
+      description: Unique ID of an event.
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid-property'
+    before:
+      name: before
+      required: false
+      in: query
+      description: Used to query records that have been added or updated before this time point.
+      schema:
+        type: string
+        format: date-time
+        example: '2017-01-02T02:00:00Z'
     token:
       name: token
       in: query
@@ -2986,24 +3057,6 @@ components:
       schema:
         type: string
         example: 0e28af57-511f-47ab-ae46-46cd1ca51a1a
-    before:
-      name: before
-      required: false
-      in: query
-      description: Used to query records that have been added or updated before this time point.
-      schema:
-        type: string
-        format: date-time
-        example: '2017-01-02T02:00:00Z'
-    beforeRequired:
-      name: before
-      required: true
-      description: Used to query records that have been modified before this point
-      in: query
-      schema:
-        type: string
-        format: date-time
-        example: '2017-01-02T02:00:00Z'
     afterRequired:
       name: after
       required: true
@@ -3027,48 +3080,6 @@ components:
       required: true
       schema:
         $ref: '#/components/schemas/uuid-property'
-    customFieldId3:
-      in: path
-      name: customFieldId
-      description: Unique ID of the custom field.
-      required: true
-      schema:
-        $ref: '#/components/schemas/uuid-property'
-    budgetItemId:
-      in: path
-      name: budgetItemId
-      description: Unique ID of a budget item.
-      required: true
-      schema:
-        $ref: '#/components/schemas/uuid-property'
-    after:
-      name: after
-      required: false
-      description: Used to query records that have been added or updated after this time point. Default to the beginning of time of the data store.
-      in: query
-      schema:
-        type: string
-        format: date-time
-        example: '2017-01-02T02:00:00Z'
-    invoiceId:
-      in: path
-      name: invoiceId
-      description: Unique ID of an invoice.
-      required: true
-      schema:
-        $ref: '#/components/schemas/uuid-property'
-    limit:
-      name: limit
-      in: query
-      description: The maximum number of records to return per page.
-      style: form
-      explode: true
-      schema:
-        maximum: 200
-        minimum: 1
-        type: integer
-        default: 100
-        example: 100
     transactionIdPathParam:
       in: path
       name: transactionId
@@ -3078,10 +3089,17 @@ components:
       schema:
         type: string
         format: transactionId
-    id4:
+    customFieldId3:
       in: path
-      name: id
-      description: Unique ID of an event.
+      name: customFieldId
+      description: Unique ID of the custom field.
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid-property'
+    invoiceId:
+      in: path
+      name: invoiceId
+      description: Unique ID of an invoice.
       required: true
       schema:
         $ref: '#/components/schemas/uuid-property'
@@ -3094,61 +3112,43 @@ components:
       schema:
         type: string
         pattern: ^[A-Z]{3}$
-  responses:
-    TooManyRequests1:
-      description: Too many requests
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 429
-            message: Limit Exceeded
-    BadRequest1:
-      description: Bad request
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 400
-            message: Bad Request
-    Conflict1:
-      description: The request conflicts with current state of the target resource
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 409
-            message: Conflict
-    Unauthorized1:
-      description: Bad or expired token
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 401
-            message: Unauthorized
-    NotFound1:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 404
-            message: Not found
-    Forbidden1:
-      description: You do not have access to the resource
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 403
-            message: Access Forbidden
+    after:
+      name: after
+      required: false
+      description: Used to query records that have been added or updated after this time point. Default to the beginning of time of the data store.
+      in: query
+      schema:
+        type: string
+        format: date-time
+        example: '2017-01-02T02:00:00Z'
+    limit:
+      name: limit
+      in: query
+      description: The maximum number of records to return per page.
+      style: form
+      explode: true
+      schema:
+        maximum: 200
+        minimum: 1
+        type: integer
+        default: 100
+        example: 100
+    budgetItemId:
+      in: path
+      name: budgetItemId
+      description: Unique ID of a budget item.
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid-property'
+    beforeRequired:
+      name: before
+      required: true
+      description: Used to query records that have been modified before this point
+      in: query
+      schema:
+        type: string
+        format: date-time
+        example: '2017-01-02T02:00:00Z'
   securitySchemes:
     OAuth2.authorizationCode:
       type: oauth2

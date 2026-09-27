@@ -45,6 +45,54 @@ paths:
         '429':
           $ref: '#/components/responses/TooManyRequests1'
 components:
+  responses:
+    Forbidden1:
+      description: You do not have access to the resource
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 403
+            message: Access Forbidden
+    NotFound1:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 404
+            message: Not found
+    Unauthorized1:
+      description: Bad or expired token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 401
+            message: Unauthorized
+    TooManyRequests1:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 429
+            message: Limit Exceeded
+  parameters:
+    rfpId:
+      name: rfpId
+      description: The unique identifier of the RFP we are requesting
+      style: simple
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
   schemas:
     RfpPastEvent:
       type: object
@@ -60,32 +108,6 @@ components:
           format: uuid
           description: Unique ID for the event detail.
           example: db6a6dd9-3284-4936-bd7d-5242494acb03
-    RfpPastEvents:
-      title: RFP Past Events
-      description: List of past RFP events.
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/RfpPastEvent'
-          maxItems: 3
-          description: List of past events saved on RFP by planner.
-    ErrorResponse-12:
-      title: ErrorResponse
-      description: Represents an error response with additional details of cascading error messages.
-      allOf:
-      - $ref: '#/components/schemas/ErrorResponseBase1'
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        details:
-          type: array
-          items:
-            $ref: '#/components/schemas/ErrorResponseBase1'
-          description: Additional details of cascading error messages.
     ErrorResponseBase1:
       title: ErrorResponseBase
       type: object
@@ -106,6 +128,17 @@ components:
           type: string
           description: The target resource of the error.
           example: example target
+    RfpPastEvents:
+      title: RFP Past Events
+      description: List of past RFP events.
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/RfpPastEvent'
+          maxItems: 3
+          description: List of past events saved on RFP by planner.
     RfpPastEventRequest:
       type: object
       title: RfpPastEventRequest
@@ -158,54 +191,21 @@ components:
           description: Any other information about the event.
           maxLength: 2500
           example: This was the 25th event hosted by Alpha Planners.
-  parameters:
-    rfpId:
-      name: rfpId
-      description: The unique identifier of the RFP we are requesting
-      style: simple
-      in: path
-      required: true
-      schema:
-        type: string
-        format: uuid
-      example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
-  responses:
-    TooManyRequests1:
-      description: Too many requests
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 429
-            message: Limit Exceeded
-    Unauthorized1:
-      description: Bad or expired token
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 401
-            message: Unauthorized
-    Forbidden1:
-      description: You do not have access to the resource
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 403
-            message: Access Forbidden
-    NotFound1:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 404
-            message: Not found
+    ErrorResponse-12:
+      title: ErrorResponse
+      description: Represents an error response with additional details of cascading error messages.
+      allOf:
+      - $ref: '#/components/schemas/ErrorResponseBase1'
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorResponseBase1'
+          description: Additional details of cascading error messages.
   securitySchemes:
     OAuth2.authorizationCode:
       type: oauth2

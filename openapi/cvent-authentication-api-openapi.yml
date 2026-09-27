@@ -191,24 +191,6 @@ paths:
         url: '#oauth2-auth-code-planner-admin'
 components:
   responses:
-    TooManyRequests1:
-      description: Too many requests
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 429
-            message: Limit Exceeded
-    BadRequest1:
-      description: Bad request
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 400
-            message: Bad Request
     Forbidden1:
       description: You do not have access to the resource
       content:
@@ -218,6 +200,22 @@ components:
           example:
             code: 403
             message: Access Forbidden
+    ValidToken:
+      description: A confirmation message that the token is valid
+      headers: {}
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ValidToken'
+    BadRequest1:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 400
+            message: Bad Request
     Unauthorized1:
       description: Bad or expired token
       content:
@@ -227,13 +225,15 @@ components:
           example:
             code: 401
             message: Unauthorized
-    ValidToken:
-      description: A confirmation message that the token is valid
-      headers: {}
+    TooManyRequests1:
+      description: Too many requests
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ValidToken'
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 429
+            message: Limit Exceeded
   schemas:
     ValidToken:
       title: Valid Token
@@ -248,6 +248,50 @@ components:
           type: integer
           description: Supplementary status code. Typically will be 200 for a success case.
           example: 200
+    ErrorResponseBase1:
+      title: ErrorResponseBase
+      type: object
+      description: Represents an error response with no additional details.
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          description: The HTTP status code representing the error.
+          example: 400
+        message:
+          type: string
+          description: A brief description of the error.
+          example: Bad Request
+        target:
+          type: string
+          description: The target resource of the error.
+          example: example target
+    Oauth2TokenPostResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+          description: The access token contains scopes and groups and is used to grant access to authorized resources.
+          example: eyJz9sdfsdfsdfsd
+        refresh_token:
+          type: string
+          description: The refresh token contains the information necessary to obtain a new access token.
+          example: dn43ud8uj32nk2je
+        token_type:
+          type: string
+          description: The OAuth2 token type. Always `Bearer`.
+          example: Bearer
+        expires_in:
+          type: integer
+          description: The lifetime in seconds of the access token.
+          default: 3600
+          example: 3600
+      required:
+      - access_token
+      - token_type
+      - expires_in
     Oauth2TokenPostResponse-0:
       type: object
       properties:
@@ -371,50 +415,6 @@ components:
           items:
             $ref: '#/components/schemas/ErrorResponseBase1'
           description: Additional details of cascading error messages.
-    ErrorResponseBase1:
-      title: ErrorResponseBase
-      type: object
-      description: Represents an error response with no additional details.
-      required:
-      - code
-      - message
-      properties:
-        code:
-          type: integer
-          description: The HTTP status code representing the error.
-          example: 400
-        message:
-          type: string
-          description: A brief description of the error.
-          example: Bad Request
-        target:
-          type: string
-          description: The target resource of the error.
-          example: example target
-    Oauth2TokenPostResponse:
-      type: object
-      properties:
-        access_token:
-          type: string
-          description: The access token contains scopes and groups and is used to grant access to authorized resources.
-          example: eyJz9sdfsdfsdfsd
-        refresh_token:
-          type: string
-          description: The refresh token contains the information necessary to obtain a new access token.
-          example: dn43ud8uj32nk2je
-        token_type:
-          type: string
-          description: The OAuth2 token type. Always `Bearer`.
-          example: Bearer
-        expires_in:
-          type: integer
-          description: The lifetime in seconds of the access token.
-          default: 3600
-          example: 3600
-      required:
-      - access_token
-      - token_type
-      - expires_in
   securitySchemes:
     OAuth2.authorizationCode:
       type: oauth2
