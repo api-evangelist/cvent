@@ -331,31 +331,33 @@ paths:
         '429':
           $ref: '#/components/responses/TooManyRequests1'
 components:
-  parameters:
-    venueId:
-      description: Unique Cvent based identifier for a Venue.
-      name: venueId
-      required: true
-      in: path
-      schema:
-        $ref: '#/components/schemas/VenueID'
-    imageId1:
-      description: Unique identifier of a venue image.
-      name: imageId
-      required: true
-      in: path
-      schema:
-        type: string
-        format: uuid
-    meetingRoomId:
-      description: Unique identifier for a meeting room.
-      name: meetingRoomId
-      required: true
-      in: path
-      schema:
-        type: string
-        format: uuid
   schemas:
+    existingMeetingRoom:
+      title: Existing Meeting Room
+      description: An existing venue meeting room with read-only generated properties.
+      required:
+      - id
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/meetingRoom'
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The unique identifier for the meeting room.
+          readOnly: true
+          example: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+    meetingRoomImagesResponse:
+      title: Meeting Room Images Response
+      type: object
+      description: The images associated with a meeting room. Each meeting room has at most one image.
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/meetingRoomImage'
+          maxItems: 1
+          description: The images for a meeting room. Contains at most one item.
     patchMeetingRoom:
       title: MeetingRoomPatch
       description: Partial update payload for a venue meeting room.
@@ -444,214 +446,23 @@ components:
           type: boolean
           description: True indicates the meeting room is hidden on the venue profile.
           example: false
-    AreaMeasurement:
-      title: Area Measurement
-      description: Measurement of area in square feet or square meters.
+    MeetingRoomRate:
+      title: Meeting Room Rate
+      description: Meeting room rate with a value and application type.
       type: object
       properties:
         value:
           type: number
-          description: The numeric value of the area measurement.
-          minimum: 1
-          maximum: 9999999
-          example: 1500
-        unit:
-          type: string
-          description: The unit of measurement for the area.
-          enum:
-          - SQUARE_FEET
-          - SQUARE_METERS
-          example: SQUARE_FEET
-      required:
-      - value
-      - unit
-    Dimension:
-      title: Dimension
-      description: A dimension measurement in feet or meters.
-      type: object
-      properties:
-        value:
-          type: number
-          description: The numeric value of the dimension.
+          description: The monetary value of the rate.
           minimum: 0
-          maximum: 99999.99
-          example: 12.5
-        unit:
-          type: string
-          description: The unit of measurement for the dimension.
-          enum:
-          - FEET
-          - METERS
-          example: FEET
+          maximum: 999999
+          multipleOf: 0.01
+          example: 500
+        applicationType:
+          $ref: '#/components/schemas/RateApplicationType'
       required:
       - value
-      - unit
-    Link:
-      title: Link
-      required:
-      - href
-      type: object
-      description: Represents a link to a related resource.
-      properties:
-        href:
-          type: string
-          description: A url provided that can be followed for linking
-          example: ?token=90c5f062-76ad-4ea4-aa53-00eb698d9262
-    meetingRoomsOverviewResponse:
-      title: Meeting Rooms Overview Response
-      description: Paginated overview of meeting rooms for a venue.
-      type: object
-      required:
-      - data
-      properties:
-        paging:
-          $ref: '#/components/schemas/Paging'
-        data:
-          type: array
-          description: Overview of meeting rooms.
-          minItems: 0
-          maxItems: 200
-          items:
-            $ref: '#/components/schemas/meetingRoomOverview'
-    ExhibitLayoutType:
-      title: Exhibit Layout Type
-      description: The exhibit setup type for a meeting room. Values represent standard exhibit booth and display configurations.
-      type: string
-      enum:
-      - BOOTH_10x10
-      - BOOTH_8x10
-      - ISLAND_EXHIBIT
-      - PENINSULA_EXHIBIT
-      - PERIMETER_EXHIBIT
-      - TABLETOP_EXHIBIT
-      example: BOOTH_10x10
-    ErrorResponse-12:
-      title: ErrorResponse
-      description: Represents an error response with additional details of cascading error messages.
-      allOf:
-      - $ref: '#/components/schemas/ErrorResponseBase1'
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        details:
-          type: array
-          items:
-            $ref: '#/components/schemas/ErrorResponseBase1'
-          description: Additional details of cascading error messages.
-    meetingRoomImageAssociationRequest:
-      title: Meeting Room Image Association Request
-      description: Request body for associating an uploaded image file with a meeting room.
-      type: object
-      required:
-      - file
-      properties:
-        file:
-          type: object
-          description: The previously uploaded image file to associate with the meeting room.
-          required:
-          - id
-          properties:
-            id:
-              type: string
-              format: uuid
-              description: The unique identifier of a previously uploaded image file.
-              example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
-    MeetingRoomAmenity:
-      title: Meeting Room Amenity
-      description: Available amenities for a meeting room.
-      type: string
-      example: PROJECTOR
-      enum:
-      - AUDIO_RECORDING
-      - BACKGROUND_MUSIC
-      - BLACKBOARD
-      - BUILT_IN_SCREEN
-      - CLOSED_CIRCUIT_VIDEO
-      - DRY_ERASE_BOARD
-      - DVD_PLAYER
-      - EASEL
-      - ELECTRIC_POINTER
-      - FLIPCHART_MARKERS
-      - INTERNET
-      - LECTERN
-      - MICROPHONE
-      - MONITOR_CART
-      - OUTDOOR_SPACE
-      - PERSONAL_COMPUTER
-      - POWERED_SPEAKER
-      - PRIVATE_SPACE
-      - PROJECTION_STAND
-      - PROJECTOR
-      - SEMI_PRIVATE_SPACE
-      - TELEVISION
-      - VHS_PLAYER
-      - VIDEO_CAMERA
-      - VIDEO_MONITOR
-      - VIDEO_RECORDING
-      - WHEELCHAIR_ACCESSIBLE
-    PaginationLinks:
-      title: PaginationLinks
-      type: object
-      description: Represents pagination links for navigating between pages of data.
-      properties:
-        next:
-          $ref: '#/components/schemas/Link'
-        self:
-          $ref: '#/components/schemas/Link'
-        prev:
-          $ref: '#/components/schemas/Link'
-    MeetingRoomCapacities:
-      title: Meeting Room Capacities
-      description: Capacity information for a meeting room, grouped by category.
-      type: object
-      properties:
-        exhibits:
-          type: array
-          description: Maximum number of exhibits per room setup.
-          maxItems: 6
-          items:
-            $ref: '#/components/schemas/MeetingRoomExhibitCapacity'
-        seating:
-          type: array
-          description: Maximum number of attendees per seating style.
-          maxItems: 14
-          items:
-            $ref: '#/components/schemas/MeetingRoomSeatingCapacity'
-    RateApplicationType:
-      title: Rate Application Type
-      description: 'How the rate is applied to the meeting room booking.
-
-
-        Values:
-
-        - `COMPLIMENTARY` — Complimentary
-
-        - `INCLUDED` — Included
-
-        - `ONETIME_FEE` — One-Time Fee
-
-        - `PER_DAY` — Per Day
-
-        - `PER_HOUR` — Per Hour
-
-        - `PER_SQ_FT` — Per Square Foot
-
-        - `PER_SQ_MTR` — Per Square Meter
-
-        - `TOTAL` — Total'
-      type: string
-      enum:
-      - COMPLIMENTARY
-      - INCLUDED
-      - ONETIME_FEE
-      - PER_DAY
-      - PER_HOUR
-      - PER_SQ_FT
-      - PER_SQ_MTR
-      - TOTAL
-      example: PER_DAY
+      - applicationType
     Audit:
       title: Audit
       description: Audit information
@@ -679,32 +490,6 @@ components:
           description: The identifier of the user that last updated this record.
           readOnly: true
           example: hporter
-    existingMeetingRoom:
-      title: Existing Meeting Room
-      description: An existing venue meeting room with read-only generated properties.
-      required:
-      - id
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/meetingRoom'
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: The unique identifier for the meeting room.
-          readOnly: true
-          example: a1b2c3d4-e5f6-7890-abcd-ef1234567890
-    meetingRoomImagesResponse:
-      title: Meeting Room Images Response
-      type: object
-      description: The images associated with a meeting room. Each meeting room has at most one image.
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/meetingRoomImage'
-          maxItems: 1
-          description: The images for a meeting room. Contains at most one item.
     MeetingRoomSeatingCapacity:
       title: Meeting Room Seating Capacity
       description: Maximum number of attendees for a specific seating style in a meeting room.
@@ -721,6 +506,27 @@ components:
       required:
       - layoutType
       - maxAttendees
+    meetingRoomImageAssociationResponse:
+      title: Meeting Room Image Association Response
+      description: Response body after successfully associating an image with a meeting room.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/meetingRoomImage'
+      - required:
+        - file
+        properties:
+          file:
+            type: object
+            description: The file uploaded to be associated with the meeting room.
+            readOnly: true
+            required:
+            - id
+            properties:
+              id:
+                type: string
+                format: uuid
+                description: The ID of the uploaded image file.
+                example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
     VenueID:
       title: Venue ID
       description: A unique identifier for a venue
@@ -783,6 +589,256 @@ components:
           example: 2
         _links:
           $ref: '#/components/schemas/PaginationLinks'
+    Dimension:
+      title: Dimension
+      description: A dimension measurement in feet or meters.
+      type: object
+      properties:
+        value:
+          type: number
+          description: The numeric value of the dimension.
+          minimum: 0
+          maximum: 99999.99
+          example: 12.5
+        unit:
+          type: string
+          description: The unit of measurement for the dimension.
+          enum:
+          - FEET
+          - METERS
+          example: FEET
+      required:
+      - value
+      - unit
+    PaginationLinks:
+      title: PaginationLinks
+      type: object
+      description: Represents pagination links for navigating between pages of data.
+      properties:
+        next:
+          $ref: '#/components/schemas/Link'
+        self:
+          $ref: '#/components/schemas/Link'
+        prev:
+          $ref: '#/components/schemas/Link'
+    MeetingRoomCapacities:
+      title: Meeting Room Capacities
+      description: Capacity information for a meeting room, grouped by category.
+      type: object
+      properties:
+        exhibits:
+          type: array
+          description: Maximum number of exhibits per room setup.
+          maxItems: 6
+          items:
+            $ref: '#/components/schemas/MeetingRoomExhibitCapacity'
+        seating:
+          type: array
+          description: Maximum number of attendees per seating style.
+          maxItems: 14
+          items:
+            $ref: '#/components/schemas/MeetingRoomSeatingCapacity'
+    SeatingLayoutType:
+      title: Seating Layout Type
+      description: The seating arrangement style for a meeting room. Values represent standard event industry seating configurations.
+      type: string
+      enum:
+      - BANQUET
+      - CLASSROOM
+      - COCKTAIL_ROUNDS
+      - CONFERENCE
+      - CRESCENT_ROUNDS
+      - E_SHAPE
+      - HOLLOW_SQUARE
+      - MAXIMUM_CAPACITY
+      - PERIMETER_SEATING
+      - ROYAL_CONFERENCE
+      - TALK_SHOW
+      - THEATER
+      - T_SHAPE
+      - U_SHAPE
+      example: THEATER
+    MeetingRoomAmenity:
+      title: Meeting Room Amenity
+      description: Available amenities for a meeting room.
+      type: string
+      example: PROJECTOR
+      enum:
+      - AUDIO_RECORDING
+      - BACKGROUND_MUSIC
+      - BLACKBOARD
+      - BUILT_IN_SCREEN
+      - CLOSED_CIRCUIT_VIDEO
+      - DRY_ERASE_BOARD
+      - DVD_PLAYER
+      - EASEL
+      - ELECTRIC_POINTER
+      - FLIPCHART_MARKERS
+      - INTERNET
+      - LECTERN
+      - MICROPHONE
+      - MONITOR_CART
+      - OUTDOOR_SPACE
+      - PERSONAL_COMPUTER
+      - POWERED_SPEAKER
+      - PRIVATE_SPACE
+      - PROJECTION_STAND
+      - PROJECTOR
+      - SEMI_PRIVATE_SPACE
+      - TELEVISION
+      - VHS_PLAYER
+      - VIDEO_CAMERA
+      - VIDEO_MONITOR
+      - VIDEO_RECORDING
+      - WHEELCHAIR_ACCESSIBLE
+    meetingRoomImage:
+      title: Meeting Room Image
+      description: The image associated with a meeting room.
+      type: object
+      required:
+      - id
+      - href
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+          description: The ID of the associated meeting room image.
+          example: 286e2866-b443-4d09-ab0f-0fac45cc026f
+        href:
+          type: string
+          format: uri
+          readOnly: true
+          description: URL of the meeting room image.
+          example: https://images.cvent.com/production/csn/3c7be8c9-cddb-4eaf-93a8-27da3250ed4f/images/83142ebfecbb42d2ac3be0433a180829_extrasmall!_!5b5c517134afb758b6fbbefb0e94d819.jpg
+    AreaMeasurement:
+      title: Area Measurement
+      description: Measurement of area in square feet or square meters.
+      type: object
+      properties:
+        value:
+          type: number
+          description: The numeric value of the area measurement.
+          minimum: 1
+          maximum: 9999999
+          example: 1500
+        unit:
+          type: string
+          description: The unit of measurement for the area.
+          enum:
+          - SQUARE_FEET
+          - SQUARE_METERS
+          example: SQUARE_FEET
+      required:
+      - value
+      - unit
+    ErrorResponse-12:
+      title: ErrorResponse
+      description: Represents an error response with additional details of cascading error messages.
+      allOf:
+      - $ref: '#/components/schemas/ErrorResponseBase1'
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorResponseBase1'
+          description: Additional details of cascading error messages.
+    ErrorResponseBase1:
+      title: ErrorResponseBase
+      type: object
+      description: Represents an error response with no additional details.
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          description: The HTTP status code representing the error.
+          example: 400
+        message:
+          type: string
+          description: A brief description of the error.
+          example: Bad Request
+        target:
+          type: string
+          description: The target resource of the error.
+          example: example target
+    meetingRoomsOverviewResponse:
+      title: Meeting Rooms Overview Response
+      description: Paginated overview of meeting rooms for a venue.
+      type: object
+      required:
+      - data
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          type: array
+          description: Overview of meeting rooms.
+          minItems: 0
+          maxItems: 200
+          items:
+            $ref: '#/components/schemas/meetingRoomOverview'
+    Link:
+      title: Link
+      required:
+      - href
+      type: object
+      description: Represents a link to a related resource.
+      properties:
+        href:
+          type: string
+          description: A url provided that can be followed for linking
+          example: ?token=90c5f062-76ad-4ea4-aa53-00eb698d9262
+    ExhibitLayoutType:
+      title: Exhibit Layout Type
+      description: The exhibit setup type for a meeting room. Values represent standard exhibit booth and display configurations.
+      type: string
+      enum:
+      - BOOTH_10x10
+      - BOOTH_8x10
+      - ISLAND_EXHIBIT
+      - PENINSULA_EXHIBIT
+      - PERIMETER_EXHIBIT
+      - TABLETOP_EXHIBIT
+      example: BOOTH_10x10
+    RateApplicationType:
+      title: Rate Application Type
+      description: 'How the rate is applied to the meeting room booking.
+
+
+        Values:
+
+        - `COMPLIMENTARY` — Complimentary
+
+        - `INCLUDED` — Included
+
+        - `ONETIME_FEE` — One-Time Fee
+
+        - `PER_DAY` — Per Day
+
+        - `PER_HOUR` — Per Hour
+
+        - `PER_SQ_FT` — Per Square Foot
+
+        - `PER_SQ_MTR` — Per Square Meter
+
+        - `TOTAL` — Total'
+      type: string
+      enum:
+      - COMPLIMENTARY
+      - INCLUDED
+      - ONETIME_FEE
+      - PER_DAY
+      - PER_HOUR
+      - PER_SQ_FT
+      - PER_SQ_MTR
+      - TOTAL
+      example: PER_DAY
     meetingRoom:
       title: Meeting Room
       description: A venue meeting room.
@@ -851,46 +907,24 @@ components:
           description: True indicates the meeting room is hidden on the venue profile.
           default: false
           example: false
-    meetingRoomImage:
-      title: Meeting Room Image
-      description: The image associated with a meeting room.
+    meetingRoomImageAssociationRequest:
+      title: Meeting Room Image Association Request
+      description: Request body for associating an uploaded image file with a meeting room.
       type: object
       required:
-      - id
-      - href
+      - file
       properties:
-        id:
-          type: string
-          format: uuid
-          readOnly: true
-          description: The ID of the associated meeting room image.
-          example: 286e2866-b443-4d09-ab0f-0fac45cc026f
-        href:
-          type: string
-          format: uri
-          readOnly: true
-          description: URL of the meeting room image.
-          example: https://images.cvent.com/production/csn/3c7be8c9-cddb-4eaf-93a8-27da3250ed4f/images/83142ebfecbb42d2ac3be0433a180829_extrasmall!_!5b5c517134afb758b6fbbefb0e94d819.jpg
-    SeatingLayoutType:
-      title: Seating Layout Type
-      description: The seating arrangement style for a meeting room. Values represent standard event industry seating configurations.
-      type: string
-      enum:
-      - BANQUET
-      - CLASSROOM
-      - COCKTAIL_ROUNDS
-      - CONFERENCE
-      - CRESCENT_ROUNDS
-      - E_SHAPE
-      - HOLLOW_SQUARE
-      - MAXIMUM_CAPACITY
-      - PERIMETER_SEATING
-      - ROYAL_CONFERENCE
-      - TALK_SHOW
-      - THEATER
-      - T_SHAPE
-      - U_SHAPE
-      example: THEATER
+        file:
+          type: object
+          description: The previously uploaded image file to associate with the meeting room.
+          required:
+          - id
+          properties:
+            id:
+              type: string
+              format: uuid
+              description: The unique identifier of a previously uploaded image file.
+              example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
     MeetingRoomExhibitCapacity:
       title: Meeting Room Exhibit Capacity
       description: Maximum number of exhibits for a specific exhibit layout type in a meeting room.
@@ -907,65 +941,49 @@ components:
       required:
       - layoutType
       - maxExhibits
-    ErrorResponseBase1:
-      title: ErrorResponseBase
-      type: object
-      description: Represents an error response with no additional details.
-      required:
-      - code
-      - message
-      properties:
-        code:
-          type: integer
-          description: The HTTP status code representing the error.
-          example: 400
-        message:
-          type: string
-          description: A brief description of the error.
-          example: Bad Request
-        target:
-          type: string
-          description: The target resource of the error.
-          example: example target
-    meetingRoomImageAssociationResponse:
-      title: Meeting Room Image Association Response
-      description: Response body after successfully associating an image with a meeting room.
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/meetingRoomImage'
-      - required:
-        - file
-        properties:
-          file:
-            type: object
-            description: The file uploaded to be associated with the meeting room.
-            readOnly: true
-            required:
-            - id
-            properties:
-              id:
-                type: string
-                format: uuid
-                description: The ID of the uploaded image file.
-                example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
-    MeetingRoomRate:
-      title: Meeting Room Rate
-      description: Meeting room rate with a value and application type.
-      type: object
-      properties:
-        value:
-          type: number
-          description: The monetary value of the rate.
-          minimum: 0
-          maximum: 999999
-          multipleOf: 0.01
-          example: 500
-        applicationType:
-          $ref: '#/components/schemas/RateApplicationType'
-      required:
-      - value
-      - applicationType
+  parameters:
+    imageId1:
+      description: Unique identifier of a venue image.
+      name: imageId
+      required: true
+      in: path
+      schema:
+        type: string
+        format: uuid
+    venueId:
+      description: Unique Cvent based identifier for a Venue.
+      name: venueId
+      required: true
+      in: path
+      schema:
+        $ref: '#/components/schemas/VenueID'
+    meetingRoomId:
+      description: Unique identifier for a meeting room.
+      name: meetingRoomId
+      required: true
+      in: path
+      schema:
+        type: string
+        format: uuid
   responses:
+    Forbidden1:
+      description: You do not have access to the resource
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 403
+            message: Access Forbidden
+    TooManyRequests1:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 429
+            message: Limit Exceeded
     Unauthorized1:
       description: Bad or expired token
       content:
@@ -984,15 +1002,6 @@ components:
           example:
             code: 400
             message: Bad Request
-    Forbidden1:
-      description: You do not have access to the resource
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 403
-            message: Access Forbidden
     NotFound1:
       description: Resource not found
       content:
@@ -1002,15 +1011,6 @@ components:
           example:
             code: 404
             message: Not found
-    TooManyRequests1:
-      description: Too many requests
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 429
-            message: Limit Exceeded
   securitySchemes:
     OAuth2.authorizationCode:
       type: oauth2

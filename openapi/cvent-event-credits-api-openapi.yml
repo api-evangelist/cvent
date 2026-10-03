@@ -64,40 +64,21 @@ paths:
         url: '#oauth2-auth-code-planner-admin'
 components:
   schemas:
-    link.json:
-      title: Link
+    attendeeCreditsPaginatedResponse:
+      title: Credits information
+      description: Response containing attendee credits information.
       required:
-      - href
+      - paging
+      - data
       type: object
-      description: Represents a link to a related resource.
       properties:
-        href:
-          type: string
-          description: A url provided that can be followed for linking
-          example: ?token=90c5f062-76ad-4ea4-aa53-00eb698d9262
-    ErrorResponse-12:
-      title: ErrorResponse
-      description: Represents an error response with additional details of cascading error messages.
-      allOf:
-      - $ref: '#/components/schemas/ErrorResponseBase1'
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        details:
+        paging:
+          $ref: '#/components/schemas/paging.json'
+        data:
           type: array
           items:
-            $ref: '#/components/schemas/ErrorResponseBase1'
-          description: Additional details of cascading error messages.
-    attendee-credit-type.json:
-      title: AttendeeCreditType
-      description: 'Represents the entity that granted the credit. Event: This credit was granted by an event. Session: This credit was granted by a session.'
-      type: string
-      enum:
-      - Event
-      - Session
-      example: Session
+            $ref: '#/components/schemas/attendee-credit.json'
+          description: Collection of credits assigned to attendees.
     attendee-credit.json:
       title: AttendeeCredit
       description: Credit details for an attendee.
@@ -152,6 +133,17 @@ components:
           description: The ISO 8601 zoned date time when this record was last modified.
           example: '2024-01-07T02:00:00Z'
           format: date-time
+    pagination-links.json:
+      title: PaginationLinks
+      type: object
+      description: Represents pagination links for navigating between pages of data.
+      properties:
+        next:
+          $ref: '#/components/schemas/link.json'
+        self:
+          $ref: '#/components/schemas/link.json'
+        prev:
+          $ref: '#/components/schemas/link.json'
     paging.json:
       title: Paging
       required:
@@ -181,17 +173,53 @@ components:
           example: 2
         _links:
           $ref: '#/components/schemas/pagination-links.json'
-    pagination-links.json:
-      title: PaginationLinks
+    expandable-credit-type.json:
+      title: ExpandableCreditType
+      description: 'An object that contains the associated credit type ID.
+
+
+        This is an **expandable** object and if requested will contain the name of a credit type object.'
       type: object
-      description: Represents pagination links for navigating between pages of data.
       properties:
-        next:
-          $ref: '#/components/schemas/link.json'
-        self:
-          $ref: '#/components/schemas/link.json'
-        prev:
-          $ref: '#/components/schemas/link.json'
+        id:
+          type: string
+          format: uuid
+          example: c15d600b-1363-413e-b00a-87d946903fe1
+          description: A unique identifier of the credit type.
+    link.json:
+      title: Link
+      required:
+      - href
+      type: object
+      description: Represents a link to a related resource.
+      properties:
+        href:
+          type: string
+          description: A url provided that can be followed for linking
+          example: ?token=90c5f062-76ad-4ea4-aa53-00eb698d9262
+    attendee-credit-type.json:
+      title: AttendeeCreditType
+      description: 'Represents the entity that granted the credit. Event: This credit was granted by an event. Session: This credit was granted by a session.'
+      type: string
+      enum:
+      - Event
+      - Session
+      example: Session
+    ErrorResponse-12:
+      title: ErrorResponse
+      description: Represents an error response with additional details of cascading error messages.
+      allOf:
+      - $ref: '#/components/schemas/ErrorResponseBase1'
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorResponseBase1'
+          description: Additional details of cascading error messages.
     ErrorResponseBase1:
       title: ErrorResponseBase
       type: object
@@ -212,35 +240,25 @@ components:
           type: string
           description: The target resource of the error.
           example: example target
-    expandable-credit-type.json:
-      title: ExpandableCreditType
-      description: 'An object that contains the associated credit type ID.
-
-
-        This is an **expandable** object and if requested will contain the name of a credit type object.'
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          example: c15d600b-1363-413e-b00a-87d946903fe1
-          description: A unique identifier of the credit type.
-    attendeeCreditsPaginatedResponse:
-      title: Credits information
-      description: Response containing attendee credits information.
-      required:
-      - paging
-      - data
-      type: object
-      properties:
-        paging:
-          $ref: '#/components/schemas/paging.json'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/attendee-credit.json'
-          description: Collection of credits assigned to attendees.
   responses:
+    Forbidden1:
+      description: You do not have access to the resource
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 403
+            message: Access Forbidden
+    TooManyRequests1:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 429
+            message: Limit Exceeded
     Unauthorized1:
       description: Bad or expired token
       content:
@@ -259,15 +277,6 @@ components:
           example:
             code: 400
             message: Bad Request
-    Forbidden1:
-      description: You do not have access to the resource
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 403
-            message: Access Forbidden
     NotFound1:
       description: Resource not found
       content:
@@ -277,16 +286,28 @@ components:
           example:
             code: 404
             message: Not found
-    TooManyRequests1:
-      description: Too many requests
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 429
-            message: Limit Exceeded
   parameters:
+    attendeeCreditLimit:
+      name: limit
+      in: query
+      description: The maximum number of records to return per page.
+      style: form
+      explode: true
+      schema:
+        maximum: 200
+        minimum: 1
+        type: integer
+        default: 100
+        example: 100
+    after:
+      name: after
+      required: false
+      description: Used to query records that have been added or updated after this time point. Default to the beginning of time of the data store.
+      in: query
+      schema:
+        type: string
+        format: date-time
+        example: '2017-01-02T02:00:00Z'
     token:
       name: token
       in: query
@@ -300,11 +321,11 @@ components:
       schema:
         type: string
         example: 0e28af57-511f-47ab-ae46-46cd1ca51a1a
-    after:
-      name: after
+    before:
+      name: before
       required: false
-      description: Used to query records that have been added or updated after this time point. Default to the beginning of time of the data store.
       in: query
+      description: Used to query records that have been added or updated before this time point.
       schema:
         type: string
         format: date-time
@@ -317,15 +338,6 @@ components:
       schema:
         example: lastModified:DESC
         type: string
-    before:
-      name: before
-      required: false
-      in: query
-      description: Used to query records that have been added or updated before this time point.
-      schema:
-        type: string
-        format: date-time
-        example: '2017-01-02T02:00:00Z'
     expand1:
       name: expand
       in: query
@@ -340,18 +352,6 @@ components:
           type: string
           enum:
           - creditType
-    attendeeCreditLimit:
-      name: limit
-      in: query
-      description: The maximum number of records to return per page.
-      style: form
-      explode: true
-      schema:
-        maximum: 200
-        minimum: 1
-        type: integer
-        default: 100
-        example: 100
   securitySchemes:
     OAuth2.authorizationCode:
       type: oauth2

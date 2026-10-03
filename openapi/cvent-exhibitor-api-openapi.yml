@@ -1140,165 +1140,16 @@ paths:
         url: '#oauth2-auth-code-planner-admin'
 components:
   schemas:
-    uuid-property:
-      title: UUID Property
-      description: A string that has to be a format matching the industry standard uuid
-      type: string
-      format: uuid
-      example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
-    ExhibitorAnswer:
-      title: Exhibitor Answer
-      description: A JSON Schema representation of an exhibitor answer entity.
+    ExhibitorCategoryId:
+      title: ExhibitorCategoryId
       type: object
-      allOf:
-      - $ref: '#/components/schemas/Audit'
-      required:
-      - question
-      - exhibitor
-      - event
-      - answers
+      description: Schema for Exhibitor Category ID.
       properties:
-        question:
-          $ref: '#/components/schemas/UUID'
-        event:
-          $ref: '#/components/schemas/Event4'
-        exhibitor:
-          $ref: '#/components/schemas/Exhibitor'
-        answers:
-          description: List of answers
-          type: array
-          items:
-            $ref: '#/components/schemas/Answer-2'
-    Address5:
-      title: Address
-      type: object
-      description: An object representing an address with various properties.
-      properties:
-        address1:
+        id:
           type: string
-          description: The first line of an address
-          example: Cvent Inc.
-        address2:
-          type: string
-          description: The second line of an address
-          example: 4001 West Parmer Lane
-        city:
-          type: string
-          description: The name of the city.
-          example: Austin
-        region:
-          type: string
-          description: The name of the state/province/region of the address.
-          example: Texas
-        postalCode:
-          type: string
-          description: postal code (also known as zipcode) of the address
-          example: '78727'
-        country:
-          type: string
-          description: Name of the country for example, 'United States'
-          example: United States of America
-    exhibitor-banner-logo-file:
-      title: Exhibitor Banner/Logo File
-      type: object
-      description: JSON Schema for Exhibitor Banner/Logo File
-      properties:
-        file:
-          type: object
-          description: File object containing UUID
-          properties:
-            id:
-              $ref: '#/components/schemas/uuid-property'
-        href:
-          format: uri
-          type: string
-          description: URL of a exhibitor banner/logo image
-          readOnly: true
-          example: https://images.cvent.com/pt/production/account_123/event_123/ExhibitorLogo.png
-    Capacity:
-      title: Capacity
-      type: object
-      required:
-      - registrationType
-      - reservedCapacity
-      properties:
-        registrationType:
-          type: object
-          description: Registration type information
-          required:
-          - id
-          properties:
-            id:
-              type: string
-              format: uuid
-              example: 923d5629-3cac-40c2-8237-34937dd93475
-              description: Registration type id
-        reservedCapacity:
-          minimum: 1
-          type: integer
-          description: Reserved capacity of the registration type for an exhibitor
-          example: 5
-      description: Registration capacity object containing registration type and reserved capacity
-    exhibitor-question-type:
-      type: string
-      description: 'Enumeration indicating the type of data collected by an exhibitor question. ''MultiChoice'': Respondents select multiple options from a list. ''SingleChoice'': restricts respondents to a single option from a list, often displayed as a dropdown or radio button. ''OpenEndedTextOneLine'': brief text responses, such as names or short answers. ''OpenEndedTextCommentBox'': longer text responses for detailed feedback. ''OpenEndedDateTime'': captures date and time information from respondents.'
-      enum:
-      - MultiChoice
-      - SingleChoice
-      - OpenEndedTextOneLine
-      - OpenEndedTextCommentBox
-      - OpenEndedDateTime
-      example: SingleChoice
-    AdditionalChoice1:
-      title: Additional Choice
-      description: Contains text of additional choice
-      type: object
-      properties:
-        text:
-          type: string
-          description: Text Value of additional choice
-          example: Not Applicable or Other
-    Link:
-      title: Link
-      required:
-      - href
-      type: object
-      description: Represents a link to a related resource.
-      properties:
-        href:
-          type: string
-          description: A url provided that can be followed for linking
-          example: ?token=90c5f062-76ad-4ea4-aa53-00eb698d9262
-    error-response:
-      title: ErrorResponse
-      description: Represents an error response with additional details of cascading error messages.
-      allOf:
-      - $ref: '#/components/schemas/ErrorResponseBase1'
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        details:
-          type: array
-          items:
-            $ref: '#/components/schemas/ErrorResponseBase1'
-          description: Additional details of cascading error messages.
-    ErrorResponse-12:
-      title: ErrorResponse
-      description: Represents an error response with additional details of cascading error messages.
-      allOf:
-      - $ref: '#/components/schemas/ErrorResponseBase1'
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        details:
-          type: array
-          items:
-            $ref: '#/components/schemas/ErrorResponseBase1'
-          description: Additional details of cascading error messages.
+          format: uuid
+          example: 534a465b-b4cb-471d-9498-4bf3917ad8bf
+          description: ID of exhibitor category.
     ContactLinks1:
       title: ContactLinks
       type: object
@@ -1312,29 +1163,168 @@ components:
           $ref: '#/components/schemas/Link'
         instagramUrl:
           $ref: '#/components/schemas/Link'
-    PaginationLinks:
-      title: PaginationLinks
+    exhibitor-answer-format:
+      type: string
+      description: Specifies the format for displaying answers based on the question type. For SingleChoice questions, choose between 'Dropdown' or 'RadioButton'. For OpenEndedTextOneLine questions, select 'General', 'EmailAddress', or 'PhoneNumber'. For OpenEndedDateTime questions, use 'DateAndTime' or 'Date'.
+      enum:
+      - Date
+      - DateAndTime
+      - Dropdown
+      - EmailAddress
+      - General
+      - PhoneNumber
+      - RadioButton
+      example: RadioButton
+    Answer-2:
+      title: Answer
       type: object
-      description: Represents pagination links for navigating between pages of data.
+      description: A JSON schema representing an answer object.
+      required:
+      - type
       properties:
-        next:
-          $ref: '#/components/schemas/Link'
-        self:
-          $ref: '#/components/schemas/Link'
-        prev:
-          $ref: '#/components/schemas/Link'
-    exhibitor-categories-paginated-response:
-      title: Exhibitor Categories List Response
-      description: The response object containing the paginated list of exhibitor categories.
+        type:
+          $ref: '#/components/schemas/AnswerType-1'
+        value:
+          type: string
+          description: 'Answered value like: Choice text, text answer input etc.'
+          example: Choice A
+        choice:
+          description: The choice that was selected.
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+              description: The ID of the choice that was selected.
+    ExhibitorAnswerLimits:
+      title: Exhibitor Answer Limits
+      description: Defines the limits for answers to exhibitor questions.
       type: object
       properties:
-        paging:
-          $ref: '#/components/schemas/Paging'
+        minLength:
+          type: integer
+          description: Minimum length of the answer for OpenEndedTextCommentBox questions. It must be less than or equal to maxLength.
+          default: 1
+          minimum: 1
+          maximum: 2000
+          example: 1
+        maxLength:
+          type: integer
+          description: Maximum length of the answer for OpenEndedTextCommentBox questions.
+          default: 2000
+          minimum: 1
+          maximum: 2000
+          example: 2000
+        minSelections:
+          type: integer
+          description: Minimum number of choices required for MultiChoice questions. It must be less than or equal to maxSelections.
+          minimum: 1
+          maximum: 100
+          example: 1
+        maxSelections:
+          type: integer
+          description: Maximum number of choices allowed for MultiChoice questions. It cannot exceed the total number of available choices.
+          minimum: 1
+          maximum: 100
+          example: 10
+    SponsorshipLevel:
+      title: Sponsorship level
+      description: Associated sponsorship level for an exhibitor
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 3db28cfc-db22-11eb-8d19-0242ac130003
+          description: Sponsorship Level Id
+    exhibitor-registration-pack-list-response:
+      title: Exhibitor Registration Pack List Response
+      type: object
+      description: The registration pack associated with an exhibitor. Each exhibitor has at most one registration pack per event.
+      properties:
         data:
           type: array
           items:
-            $ref: '#/components/schemas/exhibitor-category-response'
-          description: Paginated list of all exhibitor categories for an event.
+            $ref: '#/components/schemas/registration-pack-response'
+          maxItems: 1
+          description: The registration pack for an exhibitor. Contains at most one item.
+    Exhibitor:
+      description: The Associated Exhibitor.
+      title: Exhibitor
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 4888db54-db22-11eb-8d19-0242ac130003
+          description: Exhibitor id
+    exhibitor-questions-response:
+      title: Exhibitor Questions List Response
+      type: object
+      description: A response containing a list of all questions for exhibitors.
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/existing-exhibitor-question'
+          description: List of all questions for exhibitors.
+    Audit:
+      title: Audit
+      description: Audit information
+      type: object
+      properties:
+        created:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date time when this record was created.
+          readOnly: true
+          example: '2017-01-02T02:00:00Z'
+        createdBy:
+          type: string
+          description: The identifier of the user that created this record.
+          readOnly: true
+          example: hporter
+        lastModified:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date time when this record was updated.
+          readOnly: true
+          example: '2019-02-12T03:00:00Z'
+        lastModifiedBy:
+          type: string
+          description: The identifier of the user that last updated this record.
+          readOnly: true
+          example: hporter
+    exhibitor-question-type:
+      type: string
+      description: 'Enumeration indicating the type of data collected by an exhibitor question. ''MultiChoice'': Respondents select multiple options from a list. ''SingleChoice'': restricts respondents to a single option from a list, often displayed as a dropdown or radio button. ''OpenEndedTextOneLine'': brief text responses, such as names or short answers. ''OpenEndedTextCommentBox'': longer text responses for detailed feedback. ''OpenEndedDateTime'': captures date and time information from respondents.'
+      enum:
+      - MultiChoice
+      - SingleChoice
+      - OpenEndedTextOneLine
+      - OpenEndedTextCommentBox
+      - OpenEndedDateTime
+      example: SingleChoice
+    SponsorshipLevel-1:
+      title: Sponsorship level
+      type: object
+      description: A file representing the sponsorship level
+      required:
+      - event
+      - name
+      allOf:
+      - $ref: '#/components/schemas/Audit'
+      properties:
+        event:
+          $ref: '#/components/schemas/Event4'
+        name:
+          type: string
+          description: Name of the sponsorship level
+          example: Silver
     registration-pack-request:
       title: RegistrationPack
       type: object
@@ -1354,6 +1344,83 @@ components:
           items:
             $ref: '#/components/schemas/Capacity'
           description: An array of capacities for the registration pack.
+    exhibitor-question:
+      title: Exhibitor Question
+      description: A representation of an exhibitor question for an event.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/Audit'
+      required:
+      - event
+      - type
+      - text
+      - required
+      properties:
+        event:
+          $ref: '#/components/schemas/Event4'
+        text:
+          type: string
+          description: The actual text of the exhibitor question.
+          example: Is there a business need?
+        code:
+          type: string
+          minLength: 4
+          maxLength: 10
+          example: A001
+          description: System or User defined event level unique exhibitor question code.
+        type:
+          $ref: '#/components/schemas/exhibitor-question-type'
+        required:
+          type: boolean
+          description: A boolean indicating whether the question is mandatory or not
+          example: true
+        choices:
+          type: array
+          description: An array of choices for the exhibitor question.
+          items:
+            $ref: '#/components/schemas/BaseChoice'
+          minItems: 1
+          maxItems: 100
+        notApplicableAnswer:
+          $ref: '#/components/schemas/AdditionalChoice1'
+        otherAnswer:
+          $ref: '#/components/schemas/AdditionalChoice1'
+        answerFormat:
+          $ref: '#/components/schemas/exhibitor-answer-format'
+        answerLimits:
+          $ref: '#/components/schemas/ExhibitorAnswerLimits'
+        defaultToCurrentDate:
+          type: boolean
+          description: True indicates the current date and time is automatically set as the default value for OpenEndedDateTime questions.
+          example: true
+    sponsorship-level-list-response:
+      title: Sponsorship level List Response
+      type: object
+      description: This schema describes the response for a list of sponsorship levels.
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/existing-sponsorship-level'
+          description: List of sponsorship level.
+    existing-sponsorship-level:
+      title: Sponsorship Level
+      type: object
+      description: Existing sponsorship level model
+      allOf:
+      - $ref: '#/components/schemas/SponsorshipLevel-1'
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 1765848c-2a7f-48d2-85a2-6668b8e64ffb
+          description: ID of event sponsorship level.
+          readOnly: true
+        rank:
+          type: integer
+          description: Represents the order sponsors appear in a list.
+          example: 3
+          minimum: 0
     exhibitor-request:
       title: Exhibitor
       type: object
@@ -1445,381 +1512,46 @@ components:
           items:
             $ref: '#/components/schemas/exhibitor-response'
           description: Paginated list of exhibitors for an event.
-    exhibitor-question:
-      title: Exhibitor Question
-      description: A representation of an exhibitor question for an event.
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/Audit'
+    Paging:
+      title: Paging
       required:
-      - event
-      - type
-      - text
-      - required
-      properties:
-        event:
-          $ref: '#/components/schemas/Event4'
-        text:
-          type: string
-          description: The actual text of the exhibitor question.
-          example: Is there a business need?
-        code:
-          type: string
-          minLength: 4
-          maxLength: 10
-          example: A001
-          description: System or User defined event level unique exhibitor question code.
-        type:
-          $ref: '#/components/schemas/exhibitor-question-type'
-        required:
-          type: boolean
-          description: A boolean indicating whether the question is mandatory or not
-          example: true
-        choices:
-          type: array
-          description: An array of choices for the exhibitor question.
-          items:
-            $ref: '#/components/schemas/BaseChoice'
-          minItems: 1
-          maxItems: 100
-        notApplicableAnswer:
-          $ref: '#/components/schemas/AdditionalChoice1'
-        otherAnswer:
-          $ref: '#/components/schemas/AdditionalChoice1'
-        answerFormat:
-          $ref: '#/components/schemas/exhibitor-answer-format'
-        answerLimits:
-          $ref: '#/components/schemas/ExhibitorAnswerLimits'
-        defaultToCurrentDate:
-          type: boolean
-          description: True indicates the current date and time is automatically set as the default value for OpenEndedDateTime questions.
-          example: true
-    BaseChoice:
-      title: BaseChoice
+      - _links
       type: object
-      description: A JSON schema representing a base choice object
+      description: Represents pagination information for a collection of resources.
       properties:
-        id:
-          readOnly: true
+        previousToken:
           type: string
-          format: uuid
-          description: Unique identifier for the choice
-        text:
+          description: The pagination token for the previous page, if one exists. You can use this token to navigate to the previous page of data.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        nextToken:
           type: string
-          description: Text value of the field
-          example: Choice 1
-    Audit:
-      title: Audit
-      description: Audit information
-      type: object
-      properties:
-        created:
+          description: The pagination token for the next page. If this value is present in the response, there is another page of data you can fetch.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        currentToken:
           type: string
-          format: date-time
-          description: The ISO 8601 zoned date time when this record was created.
-          readOnly: true
-          example: '2017-01-02T02:00:00Z'
-        createdBy:
-          type: string
-          description: The identifier of the user that created this record.
-          readOnly: true
-          example: hporter
-        lastModified:
-          type: string
-          format: date-time
-          description: The ISO 8601 zoned date time when this record was updated.
-          readOnly: true
-          example: '2019-02-12T03:00:00Z'
-        lastModifiedBy:
-          type: string
-          description: The identifier of the user that last updated this record.
-          readOnly: true
-          example: hporter
-    exhibitor-registration-pack-list-response:
-      title: Exhibitor Registration Pack List Response
-      type: object
-      description: The registration pack associated with an exhibitor. Each exhibitor has at most one registration pack per event.
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/registration-pack-response'
-          maxItems: 1
-          description: The registration pack for an exhibitor. Contains at most one item.
-    sponsorship-level-list-response:
-      title: Sponsorship level List Response
-      type: object
-      description: This schema describes the response for a list of sponsorship levels.
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/existing-sponsorship-level'
-          description: List of sponsorship level.
-    registration-pack-response:
-      title: ExistingRegistrationPack
-      type: object
-      required:
-      - id
-      - event
-      - exhibitor
-      - capacities
-      description: Schema for existing registration pack object
-      properties:
-        id:
-          type: string
-          format: uuid
-          example: 50f4f0df-0c2d-4e6b-8e68-e1413b6917f5
-          description: Registration pack id
-        event:
-          $ref: '#/components/schemas/Event4'
-        exhibitor:
-          $ref: '#/components/schemas/Exhibitor'
-        capacities:
-          type: array
-          items:
-            $ref: '#/components/schemas/ExistingCapacity'
-          description: Capacities allocated per registration type for this exhibitor's registration pack.
-    SponsorshipLevel-1:
-      title: Sponsorship level
-      type: object
-      description: A file representing the sponsorship level
-      required:
-      - event
-      - name
-      allOf:
-      - $ref: '#/components/schemas/Audit'
-      properties:
-        event:
-          $ref: '#/components/schemas/Event4'
-        name:
-          type: string
-          description: Name of the sponsorship level
-          example: Silver
-    exhibitor-category-banner-file:
-      title: Exhibitor Category Banner File
-      type: object
-      description: A JSON schema for the exhibitor category banner file.
-      properties:
-        file:
-          type: object
-          description: File properties for the exhibitor category banner file.
-          properties:
-            id:
-              $ref: '#/components/schemas/uuid-property'
-        href:
-          format: uri
-          type: string
-          description: URL of a exhibitor category banner image
-          readOnly: true
-          example: https://images.cvent.com/pt/production/account_123/event_123/CategoryImage.png
-    Answer-2:
-      title: Answer
-      type: object
-      description: A JSON schema representing an answer object.
-      required:
-      - type
-      properties:
-        type:
-          $ref: '#/components/schemas/AnswerType-1'
-        value:
-          type: string
-          description: 'Answered value like: Choice text, text answer input etc.'
-          example: Choice A
-        choice:
-          description: The choice that was selected.
-          type: object
-          properties:
-            id:
-              type: string
-              format: uuid
-              description: The ID of the choice that was selected.
-    exhibitor-category-request:
-      title: Exhibitor Category
-      type: object
-      required:
-      - event
-      - name
-      - order
-      - type
-      allOf:
-      - $ref: '#/components/schemas/Audit'
-      properties:
-        event:
-          $ref: '#/components/schemas/Event4'
-        name:
-          type: string
-          description: Name of the exhibitor category
-          maxLength: 50
-          example: Automobile
-        description:
-          description: Exhibitor Category description
-          type: string
-          maxLength: 180
-          example: everything related to automobiles
-        order:
-          description: order for exhibitor category
+          description: The pagination token for the current page.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        limit:
           type: integer
-          example: 3
-          minimum: 1
-        type:
-          description: Type of exhibitor category
-          enum:
-          - BANNER
-          - LOGO
-          type: string
-          example: LOGO
-      description: JSON schema representing an Exhibitor Category object
-    Exhibitor:
-      description: The Associated Exhibitor.
-      title: Exhibitor
-      type: object
-      required:
-      - id
-      properties:
-        id:
-          type: string
-          format: uuid
-          example: 4888db54-db22-11eb-8d19-0242ac130003
-          description: Exhibitor id
-    ExhibitorCategoryId:
-      title: ExhibitorCategoryId
-      type: object
-      description: Schema for Exhibitor Category ID.
-      properties:
-        id:
-          type: string
-          format: uuid
-          example: 534a465b-b4cb-471d-9498-4bf3917ad8bf
-          description: ID of exhibitor category.
-    existing-sponsorship-level:
-      title: Sponsorship Level
-      type: object
-      description: Existing sponsorship level model
-      allOf:
-      - $ref: '#/components/schemas/SponsorshipLevel-1'
-      properties:
-        id:
-          type: string
-          format: uuid
-          example: 1765848c-2a7f-48d2-85a2-6668b8e64ffb
-          description: ID of event sponsorship level.
-          readOnly: true
-        rank:
+          description: The number of records to return on the page. Not to exceed 200.
+          example: 100
+        totalCount:
           type: integer
-          description: Represents the order sponsors appear in a list.
-          example: 3
-          minimum: 0
-    Choice1:
-      title: Choice
-      description: A schema representing a choice object
+          description: The total number of records available. This field may return blank, even if there are more records. To confirm if there are more records, check the `nextToken` field.
+          example: 2
+        _links:
+          $ref: '#/components/schemas/PaginationLinks'
+    PaginationLinks:
+      title: PaginationLinks
       type: object
-      allOf:
-      - $ref: '#/components/schemas/BaseChoice'
+      description: Represents pagination links for navigating between pages of data.
       properties:
-        label:
-          type: string
-          description: Label of choice
-          example: Choice A
-    exhibitor-category-id-list-response:
-      title: ExhibitorCategoryIdPaginatedResponse
-      type: object
-      description: A paginated response containing a list of exhibitor category Ids.
-      properties:
-        paging:
-          $ref: '#/components/schemas/Paging'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/ExhibitorCategoryId'
-          description: Paginated list of exhibitor category Ids for an exhibitor.
-    exhibitor-category-response:
-      title: Existing Exhibitor Category
-      description: A description of the Existing Exhibitor Category JSON schema
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/exhibitor-category-request'
-      properties:
-        id:
-          type: string
-          format: uuid
-          example: 534a465b-b4cb-471d-9498-4bf3917ad8bf
-          description: ID of exhibitor category.
-          readOnly: true
-        bannerId:
-          description: File ID for exhibitor category banner.
-          format: uuid
-          type: string
-          example: 22ca5ab1-0dc3-487b-953e-41d6dacde3e6
-          readOnly: true
-        bannerUrl:
-          description: URL for exhibitor category banner.
-          format: uri
-          type: string
-          example: https://images.cvent.com/pt/fileLocation/url_456
-          readOnly: true
-    exhibitor-answers-request:
-      title: Exhibitor Answers Request
-      description: An object representing the request for exhibitor answers.
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/ExistingExhibitorAnswer'
-          description: List of answers for all exhibitor questions.
-    ExhibitorAnswerLimits:
-      title: Exhibitor Answer Limits
-      description: Defines the limits for answers to exhibitor questions.
-      type: object
-      properties:
-        minLength:
-          type: integer
-          description: Minimum length of the answer for OpenEndedTextCommentBox questions. It must be less than or equal to maxLength.
-          default: 1
-          minimum: 1
-          maximum: 2000
-          example: 1
-        maxLength:
-          type: integer
-          description: Maximum length of the answer for OpenEndedTextCommentBox questions.
-          default: 2000
-          minimum: 1
-          maximum: 2000
-          example: 2000
-        minSelections:
-          type: integer
-          description: Minimum number of choices required for MultiChoice questions. It must be less than or equal to maxSelections.
-          minimum: 1
-          maximum: 100
-          example: 1
-        maxSelections:
-          type: integer
-          description: Maximum number of choices allowed for MultiChoice questions. It cannot exceed the total number of available choices.
-          minimum: 1
-          maximum: 100
-          example: 10
-    Event4:
-      description: The Associated Event.
-      title: Event
-      type: object
-      required:
-      - id
-      properties:
-        id:
-          type: string
-          format: uuid
-          example: 3db28cfc-db22-11eb-8d19-0242ac130003
-          description: Event id
-    UUID:
-      title: UUID
-      description: The reference to the related entity. Contains only the ID of the related entity.
-      required:
-      - id
-      type: object
-      properties:
-        id:
-          $ref: '#/components/schemas/UUIDProperty'
+        next:
+          $ref: '#/components/schemas/Link'
+        self:
+          $ref: '#/components/schemas/Link'
+        prev:
+          $ref: '#/components/schemas/Link'
     exhibitor-response:
       title: Exhibitor
       description: JSON schema for the exhibitor object
@@ -1866,45 +1598,6 @@ components:
           description: The approval status of an exhibitor. When absent, the exhibitor is considered approved.
           example: PENDING
           readOnly: true
-    Paging:
-      title: Paging
-      required:
-      - _links
-      type: object
-      description: Represents pagination information for a collection of resources.
-      properties:
-        previousToken:
-          type: string
-          description: The pagination token for the previous page, if one exists. You can use this token to navigate to the previous page of data.
-          example: 1a2b3c4d5e6f7g8h9i10j11k
-        nextToken:
-          type: string
-          description: The pagination token for the next page. If this value is present in the response, there is another page of data you can fetch.
-          example: 1a2b3c4d5e6f7g8h9i10j11k
-        currentToken:
-          type: string
-          description: The pagination token for the current page.
-          example: 1a2b3c4d5e6f7g8h9i10j11k
-        limit:
-          type: integer
-          description: The number of records to return on the page. Not to exceed 200.
-          example: 100
-        totalCount:
-          type: integer
-          description: The total number of records available. This field may return blank, even if there are more records. To confirm if there are more records, check the `nextToken` field.
-          example: 2
-        _links:
-          $ref: '#/components/schemas/PaginationLinks'
-    lead-qualification-questions-list-response:
-      title: Lead Qualification Questions List Response
-      type: object
-      description: A response containing a list of lead qualification questions.
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/LeadQualificationQuestion'
-          description: Collection of lead qualification questions.
     exhibitor-answers-response:
       title: Exhibitor Answers List Response
       type: object
@@ -1915,16 +1608,9 @@ components:
           items:
             $ref: '#/components/schemas/ExistingExhibitorAnswer'
           description: List of answers for all exhibitor questions.
-    ExhibitorId:
-      title: ExhibitorId
-      description: A JSON Schema representation of an exhibitor ID.
-      type: object
-      properties:
-        id:
-          $ref: '#/components/schemas/uuid-property'
-    SponsorshipLevel:
-      title: Sponsorship level
-      description: Associated sponsorship level for an exhibitor
+    Event4:
+      description: The Associated Event.
+      title: Event
       type: object
       required:
       - id
@@ -1933,7 +1619,158 @@ components:
           type: string
           format: uuid
           example: 3db28cfc-db22-11eb-8d19-0242ac130003
-          description: Sponsorship Level Id
+          description: Event id
+    ExhibitorAnswer:
+      title: Exhibitor Answer
+      description: A JSON Schema representation of an exhibitor answer entity.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/Audit'
+      required:
+      - question
+      - exhibitor
+      - event
+      - answers
+      properties:
+        question:
+          $ref: '#/components/schemas/UUID'
+        event:
+          $ref: '#/components/schemas/Event4'
+        exhibitor:
+          $ref: '#/components/schemas/Exhibitor'
+        answers:
+          description: List of answers
+          type: array
+          items:
+            $ref: '#/components/schemas/Answer-2'
+    UUIDProperty:
+      title: UUID Property
+      description: A string that has to be a format matching the industry standard uuid
+      type: string
+      format: uuid
+      example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+    exhibitor-categories-paginated-response:
+      title: Exhibitor Categories List Response
+      description: The response object containing the paginated list of exhibitor categories.
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/exhibitor-category-response'
+          description: Paginated list of all exhibitor categories for an event.
+    Choice1:
+      title: Choice
+      description: A schema representing a choice object
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/BaseChoice'
+      properties:
+        label:
+          type: string
+          description: Label of choice
+          example: Choice A
+    exhibitor-category-response:
+      title: Existing Exhibitor Category
+      description: A description of the Existing Exhibitor Category JSON schema
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/exhibitor-category-request'
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 534a465b-b4cb-471d-9498-4bf3917ad8bf
+          description: ID of exhibitor category.
+          readOnly: true
+        bannerId:
+          description: File ID for exhibitor category banner.
+          format: uuid
+          type: string
+          example: 22ca5ab1-0dc3-487b-953e-41d6dacde3e6
+          readOnly: true
+        bannerUrl:
+          description: URL for exhibitor category banner.
+          format: uri
+          type: string
+          example: https://images.cvent.com/pt/fileLocation/url_456
+          readOnly: true
+    exhibitor-category-banner-file:
+      title: Exhibitor Category Banner File
+      type: object
+      description: A JSON schema for the exhibitor category banner file.
+      properties:
+        file:
+          type: object
+          description: File properties for the exhibitor category banner file.
+          properties:
+            id:
+              $ref: '#/components/schemas/uuid-property'
+        href:
+          format: uri
+          type: string
+          description: URL of a exhibitor category banner image
+          readOnly: true
+          example: https://images.cvent.com/pt/production/account_123/event_123/CategoryImage.png
+    lead-qualification-questions-list-response:
+      title: Lead Qualification Questions List Response
+      type: object
+      description: A response containing a list of lead qualification questions.
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/LeadQualificationQuestion'
+          description: Collection of lead qualification questions.
+    uuid-property:
+      title: UUID Property
+      description: A string that has to be a format matching the industry standard uuid
+      type: string
+      format: uuid
+      example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+    ExistingExhibitorAnswer:
+      title: Existing Exhibitor Answer
+      type: object
+      description: Existing Exhibitor Answer schema
+      allOf:
+      - $ref: '#/components/schemas/ExhibitorAnswer'
+      required:
+      - id
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+          example: 06d2bfce-1793-11ec-9621-0242ac130002
+          description: Exhibitor Answer id
+    exhibitor-id-list-response:
+      title: ExhibitorIdPaginatedResponse
+      type: object
+      description: Exhibitor Id Paginated Response schema
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExhibitorId'
+          description: Paginated list of exhibitor Ids for an exhibitor category.
+    BaseChoice:
+      title: BaseChoice
+      type: object
+      description: A JSON schema representing a base choice object
+      properties:
+        id:
+          readOnly: true
+          type: string
+          format: uuid
+          description: Unique identifier for the choice
+        text:
+          type: string
+          description: Text value of the field
+          example: Choice 1
     existing-exhibitor-question:
       title: Existing Exhibitor Question
       type: object
@@ -1956,48 +1793,34 @@ components:
           readOnly: true
           default: 1
           minimum: 1
-    AnswerType-1:
-      title: AnswerType
-      enum:
-      - Choice
-      - Text
-      - Other
-      - NA
-      type: string
-      description: Type of answer
-      example: Choice
-    ErrorResponseBase1:
-      title: ErrorResponseBase
+    ErrorResponse-12:
+      title: ErrorResponse
+      description: Represents an error response with additional details of cascading error messages.
+      allOf:
+      - $ref: '#/components/schemas/ErrorResponseBase1'
       type: object
-      description: Represents an error response with no additional details.
       required:
       - code
       - message
       properties:
-        code:
-          type: integer
-          description: The HTTP status code representing the error.
-          example: 400
-        message:
-          type: string
-          description: A brief description of the error.
-          example: Bad Request
-        target:
-          type: string
-          description: The target resource of the error.
-          example: example target
-    exhibitor-id-list-response:
-      title: ExhibitorIdPaginatedResponse
-      type: object
-      description: Exhibitor Id Paginated Response schema
-      properties:
-        paging:
-          $ref: '#/components/schemas/Paging'
-        data:
+        details:
           type: array
           items:
-            $ref: '#/components/schemas/ExhibitorId'
-          description: Paginated list of exhibitor Ids for an exhibitor category.
+            $ref: '#/components/schemas/ErrorResponseBase1'
+          description: Additional details of cascading error messages.
+    ExistingCapacity:
+      title: ExistingCapacity
+      type: object
+      description: Represents the existing capacity of the registration type for an exhibitor
+      allOf:
+      - $ref: '#/components/schemas/Capacity'
+      required:
+      - availableCapacity
+      properties:
+        availableCapacity:
+          type: integer
+          description: Available capacity of the registration type for an exhibitor
+          example: 4
     LeadQualificationQuestion:
       title: Lead Qualification Question
       type: object
@@ -2045,63 +1868,276 @@ components:
           type: string
           description: text of the question
           example: Is there a business need?
-    ExistingCapacity:
-      title: ExistingCapacity
+    exhibitor-banner-logo-file:
+      title: Exhibitor Banner/Logo File
       type: object
-      description: Represents the existing capacity of the registration type for an exhibitor
-      allOf:
-      - $ref: '#/components/schemas/Capacity'
-      required:
-      - availableCapacity
+      description: JSON Schema for Exhibitor Banner/Logo File
       properties:
-        availableCapacity:
-          type: integer
-          description: Available capacity of the registration type for an exhibitor
-          example: 4
-    exhibitor-questions-response:
-      title: Exhibitor Questions List Response
+        file:
+          type: object
+          description: File object containing UUID
+          properties:
+            id:
+              $ref: '#/components/schemas/uuid-property'
+        href:
+          format: uri
+          type: string
+          description: URL of a exhibitor banner/logo image
+          readOnly: true
+          example: https://images.cvent.com/pt/production/account_123/event_123/ExhibitorLogo.png
+    ErrorResponseBase1:
+      title: ErrorResponseBase
       type: object
-      description: A response containing a list of all questions for exhibitors.
+      description: Represents an error response with no additional details.
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          description: The HTTP status code representing the error.
+          example: 400
+        message:
+          type: string
+          description: A brief description of the error.
+          example: Bad Request
+        target:
+          type: string
+          description: The target resource of the error.
+          example: example target
+    exhibitor-answers-request:
+      title: Exhibitor Answers Request
+      description: An object representing the request for exhibitor answers.
+      type: object
       properties:
         data:
           type: array
           items:
-            $ref: '#/components/schemas/existing-exhibitor-question'
-          description: List of all questions for exhibitors.
-    ExistingExhibitorAnswer:
-      title: Existing Exhibitor Answer
+            $ref: '#/components/schemas/ExistingExhibitorAnswer'
+          description: List of answers for all exhibitor questions.
+    exhibitor-category-request:
+      title: Exhibitor Category
       type: object
-      description: Existing Exhibitor Answer schema
+      required:
+      - event
+      - name
+      - order
+      - type
       allOf:
-      - $ref: '#/components/schemas/ExhibitorAnswer'
+      - $ref: '#/components/schemas/Audit'
+      properties:
+        event:
+          $ref: '#/components/schemas/Event4'
+        name:
+          type: string
+          description: Name of the exhibitor category
+          maxLength: 50
+          example: Automobile
+        description:
+          description: Exhibitor Category description
+          type: string
+          maxLength: 180
+          example: everything related to automobiles
+        order:
+          description: order for exhibitor category
+          type: integer
+          example: 3
+          minimum: 1
+        type:
+          description: Type of exhibitor category
+          enum:
+          - BANNER
+          - LOGO
+          type: string
+          example: LOGO
+      description: JSON schema representing an Exhibitor Category object
+    UUID:
+      title: UUID
+      description: The reference to the related entity. Contains only the ID of the related entity.
       required:
       - id
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/UUIDProperty'
+    Address5:
+      title: Address
+      type: object
+      description: An object representing an address with various properties.
+      properties:
+        address1:
+          type: string
+          description: The first line of an address
+          example: Cvent Inc.
+        address2:
+          type: string
+          description: The second line of an address
+          example: 4001 West Parmer Lane
+        city:
+          type: string
+          description: The name of the city.
+          example: Austin
+        region:
+          type: string
+          description: The name of the state/province/region of the address.
+          example: Texas
+        postalCode:
+          type: string
+          description: postal code (also known as zipcode) of the address
+          example: '78727'
+        country:
+          type: string
+          description: Name of the country for example, 'United States'
+          example: United States of America
+    Capacity:
+      title: Capacity
+      type: object
+      required:
+      - registrationType
+      - reservedCapacity
+      properties:
+        registrationType:
+          type: object
+          description: Registration type information
+          required:
+          - id
+          properties:
+            id:
+              type: string
+              format: uuid
+              example: 923d5629-3cac-40c2-8237-34937dd93475
+              description: Registration type id
+        reservedCapacity:
+          minimum: 1
+          type: integer
+          description: Reserved capacity of the registration type for an exhibitor
+          example: 5
+      description: Registration capacity object containing registration type and reserved capacity
+    exhibitor-category-id-list-response:
+      title: ExhibitorCategoryIdPaginatedResponse
+      type: object
+      description: A paginated response containing a list of exhibitor category Ids.
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExhibitorCategoryId'
+          description: Paginated list of exhibitor category Ids for an exhibitor.
+    Link:
+      title: Link
+      required:
+      - href
+      type: object
+      description: Represents a link to a related resource.
+      properties:
+        href:
+          type: string
+          description: A url provided that can be followed for linking
+          example: ?token=90c5f062-76ad-4ea4-aa53-00eb698d9262
+    AdditionalChoice1:
+      title: Additional Choice
+      description: Contains text of additional choice
+      type: object
+      properties:
+        text:
+          type: string
+          description: Text Value of additional choice
+          example: Not Applicable or Other
+    AnswerType-1:
+      title: AnswerType
+      enum:
+      - Choice
+      - Text
+      - Other
+      - NA
+      type: string
+      description: Type of answer
+      example: Choice
+    registration-pack-response:
+      title: ExistingRegistrationPack
+      type: object
+      required:
+      - id
+      - event
+      - exhibitor
+      - capacities
+      description: Schema for existing registration pack object
       properties:
         id:
           type: string
           format: uuid
-          readOnly: true
-          example: 06d2bfce-1793-11ec-9621-0242ac130002
-          description: Exhibitor Answer id
-    UUIDProperty:
-      title: UUID Property
-      description: A string that has to be a format matching the industry standard uuid
-      type: string
-      format: uuid
-      example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
-    exhibitor-answer-format:
-      type: string
-      description: Specifies the format for displaying answers based on the question type. For SingleChoice questions, choose between 'Dropdown' or 'RadioButton'. For OpenEndedTextOneLine questions, select 'General', 'EmailAddress', or 'PhoneNumber'. For OpenEndedDateTime questions, use 'DateAndTime' or 'Date'.
-      enum:
-      - Date
-      - DateAndTime
-      - Dropdown
-      - EmailAddress
-      - General
-      - PhoneNumber
-      - RadioButton
-      example: RadioButton
+          example: 50f4f0df-0c2d-4e6b-8e68-e1413b6917f5
+          description: Registration pack id
+        event:
+          $ref: '#/components/schemas/Event4'
+        exhibitor:
+          $ref: '#/components/schemas/Exhibitor'
+        capacities:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExistingCapacity'
+          description: Capacities allocated per registration type for this exhibitor's registration pack.
+    ExhibitorId:
+      title: ExhibitorId
+      description: A JSON Schema representation of an exhibitor ID.
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid-property'
+    error-response:
+      title: ErrorResponse
+      description: Represents an error response with additional details of cascading error messages.
+      allOf:
+      - $ref: '#/components/schemas/ErrorResponseBase1'
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorResponseBase1'
+          description: Additional details of cascading error messages.
   parameters:
+    exhibitorId:
+      in: path
+      name: exhibitorId
+      description: ID of an exhibitor.
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: 4888db54-db22-11eb-8d19-0242ac130003
+    sponsorshipLevelId:
+      in: path
+      name: sponsorshipLevelId
+      description: ID of sponsorship level.
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: 1765848c-2a7f-48d2-85a2-6668b8e64ffb
+    after:
+      name: after
+      required: false
+      description: Used to query records that have been added or updated after this time point. Default to the beginning of time of the data store.
+      in: query
+      schema:
+        type: string
+        format: date-time
+        example: '2017-01-02T02:00:00Z'
+    id6:
+      in: path
+      name: id
+      description: ID of an event.
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: 3db28cfc-db22-11eb-8d19-0242ac130003
     registrationPackId:
       in: path
       name: registrationPackId
@@ -2111,15 +2147,6 @@ components:
         type: string
         format: uuid
         example: 50f4f0df-0c2d-4e6b-8e68-e1413b6917f5
-    exhibitorCategoryId:
-      in: path
-      name: exhibitorCategoryId
-      description: ID of an exhibitor category.
-      required: true
-      schema:
-        type: string
-        format: uuid
-        example: 534a465b-b4cb-471d-9498-4bf3917ad8bf
     token:
       name: token
       in: query
@@ -2133,15 +2160,24 @@ components:
       schema:
         type: string
         example: 0e28af57-511f-47ab-ae46-46cd1ca51a1a
-    after:
-      name: after
+    before:
+      name: before
       required: false
-      description: Used to query records that have been added or updated after this time point. Default to the beginning of time of the data store.
       in: query
+      description: Used to query records that have been added or updated before this time point.
       schema:
         type: string
         format: date-time
         example: '2017-01-02T02:00:00Z'
+    exhibitorCategoryId:
+      in: path
+      name: exhibitorCategoryId
+      description: ID of an exhibitor category.
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: 534a465b-b4cb-471d-9498-4bf3917ad8bf
     limit:
       name: limit
       in: query
@@ -2154,24 +2190,6 @@ components:
         type: integer
         default: 100
         example: 100
-    id6:
-      in: path
-      name: id
-      description: ID of an event.
-      required: true
-      schema:
-        type: string
-        format: uuid
-        example: 3db28cfc-db22-11eb-8d19-0242ac130003
-    exhibitorId:
-      in: path
-      name: exhibitorId
-      description: ID of an exhibitor.
-      required: true
-      schema:
-        type: string
-        format: uuid
-        example: 4888db54-db22-11eb-8d19-0242ac130003
     fileId1:
       in: path
       name: fileId
@@ -2179,25 +2197,25 @@ components:
       required: true
       schema:
         $ref: '#/components/schemas/uuid-property'
-    before:
-      name: before
-      required: false
-      in: query
-      description: Used to query records that have been added or updated before this time point.
-      schema:
-        type: string
-        format: date-time
-        example: '2017-01-02T02:00:00Z'
-    sponsorshipLevelId:
-      in: path
-      name: sponsorshipLevelId
-      description: ID of sponsorship level.
-      required: true
-      schema:
-        type: string
-        format: uuid
-        example: 1765848c-2a7f-48d2-85a2-6668b8e64ffb
   responses:
+    Forbidden1:
+      description: You do not have access to the resource
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 403
+            message: Access Forbidden
+    TooManyRequests1:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 429
+            message: Limit Exceeded
     Unauthorized1:
       description: Bad or expired token
       content:
@@ -2225,24 +2243,6 @@ components:
           example:
             code: 404
             message: Not found
-    TooManyRequests1:
-      description: Too many requests
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 429
-            message: Limit Exceeded
-    Forbidden1:
-      description: You do not have access to the resource
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 403
-            message: Access Forbidden
   securitySchemes:
     OAuth2.authorizationCode:
       type: oauth2

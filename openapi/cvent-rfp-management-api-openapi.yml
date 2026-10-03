@@ -108,227 +108,36 @@ paths:
           $ref: '#/components/responses/TooManyRequests1'
 components:
   schemas:
-    BillingDetails-1:
-      title: BillingDetails
-      description: Billing details for RFP.
-      type: object
-      properties:
-        additionalInformation:
-          type: string
-          description: Information regarding billing.
-          minLength: 0
-          maxLength: 2500
-          example: Guest rooms will be a mix of IPO and RM&TX to master. Will submit rooming list with billing specified. Credit card will be provided as guarantee.
-        concessionsContractualInfo:
-          type: string
-          description: Concessions and contractual information.
-          minLength: 0
-          maxLength: 2500
-          example: Request use of LOI or Express Agreement.
-        rebateType:
-          $ref: '#/components/schemas/RebateType'
-        acceptingRebatesAndIncentives:
-          type: boolean
-          description: True indicates that rebates and incentives are accepted, applicable only for citywide RFPs.
-          default: true
-        rebateValue:
-          type: number
-          description: The value of the rebate. The impact of this value on the price is determined by `RebateType`.
-          minimum: 0
-          maximum: 999999
-          example: 10
-    CancelledReason-1:
-      title: CancelledReason
-      description: Reason for cancelling the RFP.
-      type: string
-      enum:
-      - BOOKED_ANOTHER_VENUE_OR_DESTINATION
-      - CLIENT_BOOKED_DIRECTLY
-      - EPIDEMIC_OR_PANDEMIC
-      - EVENT_CANCELLED
-      - EVENT_POSTPONED
-      - MEDICAL_EMERGENCY
-      - NATURAL_DISASTER
-      - OTHER
-      - POLITICAL_OR_CIVIL_UNREST
-      - REQUIREMENTS_CHANGED
-    ContactMethods:
-      title: ContactMethods
-      description: Medium for contacting the person.
-      type: string
-      enum:
-      - CVENT
-      - EMAIL
-      - FAX
-      - MOBILE
-      - PHONE
-    DateRequirements-1:
-      title: DateRequirements
-      description: Date requirements for the event.
-      required:
-      - mode
-      type: object
-      properties:
-        mode:
-          $ref: '#/components/schemas/RfpDateMode'
-        alternateDates:
-          type: array
-          minItems: 1
-          maxItems: 12
-          description: List of dates for the event. Can be used to provide set of alternate event dates when mode is ALTERNATE_DATE.
-          items:
-            $ref: '#/components/schemas/Dates-1'
-        pattern:
-          $ref: '#/components/schemas/DatePattern-1'
-        availabilityRangeRequired:
-          type: boolean
-          description: True indicates that the event requires a range of availability dates.
-          default: false
-    RebateType:
-      title: RebateType
-      description: Rebate type for specifying the rebate value on citywide RFPs. If rebateType is `BY_AMOUNT`, the rebate value will be in decimal format. If rebateType is `BY_PERCENTAGE`, the rebate value will represent a percentage.
-      type: string
-      enum:
-      - BY_AMOUNT
-      - BY_PERCENTAGE
-    VenueIntegrationPreference:
-      title: VenueIntegrationPreference
-      description: Venue integration preference for an RFP.
+    EventOrganization-1:
+      title: EventOrganization
+      description: Details of organization which is hosting the event.
       type: object
       required:
+      - name
       - type
-      - optIn
       properties:
+        organization:
+          $ref: '#/components/schemas/Organization'
+        confidentialProfile:
+          type: boolean
+          description: True indicates organization profile has to be kept confidential.
+        industry:
+          $ref: '#/components/schemas/Industry-1'
+        name:
+          type: string
+          description: Name of the organization hosting the event.
+          maxLength: 100
+          example: Cvent Inc.
         type:
-          $ref: '#/components/schemas/VenueIntegrationType'
-        optIn:
-          type: boolean
-          description: True indicates the planner opted to share their preference for venues equipped with the specified integration with suppliers.
-          example: true
-    RfpType-1:
-      title: RfpType
-      description: RFP types based on event requirements.
-      type: string
-      enum:
-      - MEETING_SPACE_AND_GUEST_ROOMS
-      - MEETING_SPACE_ONLY
-      - GUEST_ROOMS_ONLY
-      - RESTAURANT_RFP
-      - SERVICE_PROVIDER
-    Industry-1:
-      title: Industry
-      description: Industry
-      type: string
-      enum:
-      - AGRICULTURE_AND_MINING
-      - BUSINESS_SERVICES
-      - COMPUTERS_AND_ELECTRONICS
-      - CONSUMER_SERVICES
-      - EDUCATION
-      - ENERGY_AND_UTILITIES
-      - FINANCIAL_SERVICES
-      - GOVERNMENT
-      - HEALTHCARE_PHARMACEUTICALS_AND_BIOTECH
-      - MANUFACTURING
-      - MEDIA_AND_ENTERTAINMENT
-      - OTHER
-      - REAL_ESTATE_AND_CONSTRUCTION
-      - RETAIL
-      - SOFTWARE_AND_INTERNET
-      - TELECOMMUNICATIONS
-      - TRANSPORTATION_AND_STORAGE
-      - TRAVEL_RECREATION_AND_LEISURE
-      - WHOLESALE_AND_DISTRIBUTION
-    Dates-1:
-      title: Dates
-      description: Dates on which event will occur.
-      type: object
-      properties:
-        preferred:
-          type: boolean
-          description: True indicates these are preferred dates.
-          example: true
-        id:
-          type: string
-          format: uuid
-          description: Unique identifier for dates.
-          example: 50dc08af-24a9-4d01-84be-3d43133dc945
-        endDate:
-          type: string
-          format: date
-          description: The ISO 8601 end date of the event.
-          example: '2016-10-13'
-        startDate:
-          type: string
-          format: date
-          description: The ISO 8601 start date of the event.
-          example: '2016-10-15'
-        note:
-          type: string
-          minLength: 0
-          maxLength: 2500
-          description: A note detailing the requirements for the dates.
-          example: Flexible dates
-    Contact-1:
-      title: Contact
-      description: Contact details of planner.
-      type: object
-      required:
-      - firstName
-      - lastName
-      - email
-      - phone
-      - organizationName
-      properties:
-        firstName:
-          type: string
-          maxLength: 50
-          description: The first name of the planner.
-          example: James
-        lastName:
-          type: string
-          maxLength: 50
-          description: The last name of the planner.
-          example: West
-        email:
-          type: string
-          format: email
-          maxLength: 80
-          description: Email address of the planner.
-          example: jwest@example.com
+          $ref: '#/components/schemas/OrganizationType-1'
         address:
           $ref: '#/components/schemas/Address-1'
-        commissionRate:
-          type: number
-          description: Rate of commission chargeable by the planner. Precision up to 2 decimal places is accepted.
+        eventsPerYear:
+          type: integer
+          description: Number of events per year.
           minimum: 0
-          maximum: 100
-          example: 10.75
-        commissionable:
-          type: boolean
-          description: True indicates commission is to be charged from supplier.
-        phone:
-          type: string
-          description: Phone number of the planner.
-          maxLength: 30
-          example: 555-555-5555
-        organizationName:
-          type: string
-          maxLength: 100
-          description: Name of the organization.
-          example: Five Star Planners Inc.
-        thirdPartyPlanner:
-          type: boolean
-          description: True indicates planner is a third party planner.
-        preferredContactMethods:
-          type: array
-          description: List of preferred contact methods for the planner.
-          minItems: 1
-          maxItems: 5
-          items:
-            $ref: '#/components/schemas/ContactMethods'
-          example:
-          - CVENT
+          maximum: 999999
+          example: 450
     VenueIntegrationType:
       title: VenueIntegrationType
       description: The type of venue integration a planner prefers when sourcing venues through an RFP. PASSKEY represents Passkey room-block management. CED represents Cvent Event Diagramming (3D diagramming / Interactive Floor Plans).
@@ -337,44 +146,27 @@ components:
       - CED
       - PASSKEY
       example: PASSKEY
-    ErrorResponse-12:
-      title: ErrorResponse
-      description: Represents an error response with additional details of cascading error messages.
-      allOf:
-      - $ref: '#/components/schemas/ErrorResponseBase1'
+    Address-1:
       type: object
+      title: Address
+      description: Address details.
       required:
-      - code
-      - message
+      - city
+      - countryCode
       properties:
-        details:
-          type: array
-          items:
-            $ref: '#/components/schemas/ErrorResponseBase1'
-          description: Additional details of cascading error messages.
-    Organization:
-      title: Organization
-      description: Organization details.
-      type: object
-      properties:
-        id:
+        countryCode:
           type: string
-          format: uuid
-          description: Unique identifier for the organization.
-          example: 50dc08af-24a9-4d01-84be-3d43133dc945
-    RfpStatus-1:
-      title: RfpStatus
-      readOnly: true
-      description: Represents state of the RFP.
-      type: string
-      enum:
-      - PENDING
-      - ACTIVE
-      - AWARDED
-      - DRAFT
-      - HISTORIC
-      - CANCELLED
-      - DELETED
+          description: ISO 3166 code for the country.
+          example: US
+        city:
+          type: string
+          maxLength: 100
+          description: The name of the city.
+          example: Austin
+        regionCode:
+          type: string
+          description: ISO 3166-2 code for the state/province/region.
+          example: US-AL
     RfpEvent:
       title: RfpEvent
       description: RFP event details.
@@ -471,76 +263,18 @@ components:
           maximum: 999999999
           description: Budget for food and beverage.
           example: 1000
-    Event-1:
-      title: Event
-      description: Event details.
+    LeadSource:
+      title: LeadSource
+      description: Lead source details.
       type: object
       properties:
         id:
           type: string
           format: uuid
-          description: Unique identifier for the event linked with the RFP, if any.
+          description: Unique identifier for source generating the RFP. Details about this lead source can be fetched using <a href="#tag/RFP-Management/operation/getRfpLeadSource">lead source API.</a>
           example: 50dc08af-24a9-4d01-84be-3d43133dc945
-    Address-1:
-      type: object
-      title: Address
-      description: Address details.
-      required:
-      - city
-      - countryCode
-      properties:
-        countryCode:
-          type: string
-          description: ISO 3166 code for the country.
-          example: US
-        city:
-          type: string
-          maxLength: 100
-          description: The name of the city.
-          example: Austin
-        regionCode:
-          type: string
-          description: ISO 3166-2 code for the state/province/region.
-          example: US-AL
-    RfpLeadSourceSection:
-      type: object
-      title: RfpLeadSourceSection
-      description: Lead source section of the RFP.
-      properties:
-        id:
-          type: string
-          format: uuid
-          readOnly: true
-          description: The unique identifier of the lead source section.
-          example: f56a51a4-84b0-46c9-a612-716dc95a1c96
-        name:
-          type: string
-          description: Name of the lead source section.
-          maxLength: 200
-          example: Cvent Supplier Network
-    PackagePricingPreference:
-      title: PackagePricingPreference
-      description: Represents different preferences by planner for pricing packages response that supplier has to provide. NO_PREFERENCE means no pricing package information is need, OPTIONAL means it's not mandatory to provide pricing preference, and REQUIRED means package information is mandatory to be provided by supplier.
-      type: string
-      enum:
-      - NO_PREFERENCE
-      - OPTIONAL
-      - REQUIRED
-      example: OPTIONAL
-      default: NO_PREFERENCE
-    WeddingPartner:
-      title: WeddingPartner
-      description: Represents wedding partner.
-      type: object
-      properties:
-        type:
-          $ref: '#/components/schemas/BrideGroomType'
-        name:
-          type: string
-          description: Name of the partner of the wedding couple.
-          minLength: 0
-          maxLength: 300
-          example: John Doe
+        section:
+          $ref: '#/components/schemas/LeadSourceSection'
     Audit:
       title: Audit
       description: Audit information
@@ -568,27 +302,168 @@ components:
           description: The identifier of the user that last updated this record.
           readOnly: true
           example: hporter
-    MeasurementUnit:
-      title: MeasurementUnit
-      description: 'Unit of measurement for area or space.
-
-
-        Values:
-
-        - `SQUARE_FEET` — Square Feet
-
-        - `SQUARE_METERS` — Square Meters'
+    RfpType-1:
+      title: RfpType
+      description: RFP types based on event requirements.
       type: string
       enum:
-      - SQUARE_FEET
-      - SQUARE_METERS
-    BrideGroomType:
-      title: BrideGroomType
-      description: BrideGroomType
+      - MEETING_SPACE_AND_GUEST_ROOMS
+      - MEETING_SPACE_ONLY
+      - GUEST_ROOMS_ONLY
+      - RESTAURANT_RFP
+      - SERVICE_PROVIDER
+    Organization:
+      title: Organization
+      description: Organization details.
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the organization.
+          example: 50dc08af-24a9-4d01-84be-3d43133dc945
+    RfpDateMode:
+      title: RfpDateMode
+      description: RfpDateMode
       type: string
       enum:
-      - BRIDE
-      - GROOM
+      - ALTERNATE_DATE
+      - DATE_PATTERN
+    LeadSourceSection:
+      title: LeadSourceSection
+      description: Represents lead source section details, which is a sub area of source generating the RFP.
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for sub area of source generating the RFP. Details about this lead source section can be fetched using <a href="#tag/RFP-Management/operation/getRfpLeadSourceSection">lead source section API.</a>
+          example: 40dc08af-24a9-4d01-84be-3d43133dc945
+    Contact-1:
+      title: Contact
+      description: Contact details of planner.
+      type: object
+      required:
+      - firstName
+      - lastName
+      - email
+      - phone
+      - organizationName
+      properties:
+        firstName:
+          type: string
+          maxLength: 50
+          description: The first name of the planner.
+          example: James
+        lastName:
+          type: string
+          maxLength: 50
+          description: The last name of the planner.
+          example: West
+        email:
+          type: string
+          format: email
+          maxLength: 80
+          description: Email address of the planner.
+          example: jwest@example.com
+        address:
+          $ref: '#/components/schemas/Address-1'
+        commissionRate:
+          type: number
+          description: Rate of commission chargeable by the planner. Precision up to 2 decimal places is accepted.
+          minimum: 0
+          maximum: 100
+          example: 10.75
+        commissionable:
+          type: boolean
+          description: True indicates commission is to be charged from supplier.
+        phone:
+          type: string
+          description: Phone number of the planner.
+          maxLength: 30
+          example: 555-555-5555
+        organizationName:
+          type: string
+          maxLength: 100
+          description: Name of the organization.
+          example: Five Star Planners Inc.
+        thirdPartyPlanner:
+          type: boolean
+          description: True indicates planner is a third party planner.
+        preferredContactMethods:
+          type: array
+          description: List of preferred contact methods for the planner.
+          minItems: 1
+          maxItems: 5
+          items:
+            $ref: '#/components/schemas/ContactMethods'
+          example:
+          - CVENT
+    Event-1:
+      title: Event
+      description: Event details.
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the event linked with the RFP, if any.
+          example: 50dc08af-24a9-4d01-84be-3d43133dc945
+    PackagePricingPreference:
+      title: PackagePricingPreference
+      description: Represents different preferences by planner for pricing packages response that supplier has to provide. NO_PREFERENCE means no pricing package information is need, OPTIONAL means it's not mandatory to provide pricing preference, and REQUIRED means package information is mandatory to be provided by supplier.
+      type: string
+      enum:
+      - NO_PREFERENCE
+      - OPTIONAL
+      - REQUIRED
+      example: OPTIONAL
+      default: NO_PREFERENCE
+    WeddingDetails-1:
+      title: Wedding Details
+      description: Wedding details.
+      type: object
+      properties:
+        firstPartner:
+          $ref: '#/components/schemas/WeddingPartner'
+        secondPartner:
+          $ref: '#/components/schemas/WeddingPartner'
+        ceremony:
+          type: boolean
+          description: True indicates ceremony is planned.
+        reception:
+          type: boolean
+          description: True indicates reception is planned.
+        farewellBrunch:
+          type: boolean
+          description: True indicates farewell brunch is planned.
+        rehearsalDinner:
+          type: boolean
+          description: True indicates rehearsal dinner is planned.
+    RfpLeadSourceSection:
+      type: object
+      title: RfpLeadSourceSection
+      description: Lead source section of the RFP.
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+          description: The unique identifier of the lead source section.
+          example: f56a51a4-84b0-46c9-a612-716dc95a1c96
+        name:
+          type: string
+          description: Name of the lead source section.
+          maxLength: 200
+          example: Cvent Supplier Network
+    RecipientType:
+      title: Recipient Type
+      description: Type of Recipient
+      type: string
+      enum:
+      - EMAIL
+      - ACCOUNT_USER
+      - ACCOUNT_USER_GROUP
     EventFormatType:
       title: EventFormatType
       description: Event format type.
@@ -597,107 +472,86 @@ components:
       - IN_PERSON
       - HYBRID
       - VIRTUAL
-    OrganizationType-1:
-      title: OrganizationType
-      description: Organization type.
+    VenueIntegrationPreference:
+      title: VenueIntegrationPreference
+      description: Venue integration preference for an RFP.
+      type: object
+      required:
+      - type
+      - optIn
+      properties:
+        type:
+          $ref: '#/components/schemas/VenueIntegrationType'
+        optIn:
+          type: boolean
+          description: True indicates the planner opted to share their preference for venues equipped with the specified integration with suppliers.
+          example: true
+    RebateType:
+      title: RebateType
+      description: Rebate type for specifying the rebate value on citywide RFPs. If rebateType is `BY_AMOUNT`, the rebate value will be in decimal format. If rebateType is `BY_PERCENTAGE`, the rebate value will represent a percentage.
       type: string
       enum:
-      - CORPORATE
-      - ASSOCIATION
-      - EDUCATION
-      - GOVERNMENT
-      - SOCIAL_LEISURE
-      - RELIGIOUS
-      - MILITARY
-      - OTHER
-      - NON_PROFIT
-    DatePattern-1:
-      title: DatePattern
-      description: Date pattern for days on which event can occur. Used when dateMode is DATE_PATTERN.
-      required:
-      - durationDays
-      - startDays
-      - startDate
-      - endDate
+      - BY_AMOUNT
+      - BY_PERCENTAGE
+    RfpLeadSource:
+      type: object
+      title: RfpLeadSource
+      description: Lead source of the RFP.
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+          description: The unique identifier of the lead source.
+          example: f56a51a4-84b0-46c9-a612-716dc95a1c96
+        name:
+          type: string
+          description: Name of the lead source.
+          maxLength: 100
+          example: Cvent Supplier Network
+    Dates-1:
+      title: Dates
+      description: Dates on which event will occur.
       type: object
       properties:
-        note:
+        preferred:
+          type: boolean
+          description: True indicates these are preferred dates.
+          example: true
+        id:
           type: string
-          minLength: 0
-          maxLength: 2500
-          description: Note along with date pattern requirements.
-          example: Flexible dates on weekends.
+          format: uuid
+          description: Unique identifier for dates.
+          example: 50dc08af-24a9-4d01-84be-3d43133dc945
         endDate:
           type: string
           format: date
           description: The ISO 8601 end date of the event.
-          example: '2016-10-15'
+          example: '2016-10-13'
         startDate:
           type: string
           format: date
           description: The ISO 8601 start date of the event.
-          example: '2016-10-13'
-        durationDays:
-          type: integer
-          description: Number of days the event will go on.
-          example: 3
-        startDays:
-          type: array
-          description: Days of the week when event can start.
-          items:
-            $ref: '#/components/schemas/DayOfWeek'
-        generatedDates:
-          type: array
-          maxItems: 200
-          description: List of dates generated based on the date pattern.
-          readOnly: true
-          items:
-            $ref: '#/components/schemas/Dates-1'
-    RecipientInfo:
-      title: RecipientInfo
-      description: Represents the details of the RFP recipient.
-      type: object
-      properties:
-        order:
-          type: integer
-          description: The position at which this recipient will be displayed.
-          maximum: 3
-          minimum: 1
-          example: 2
-        type:
-          $ref: '#/components/schemas/RecipientType'
-        value:
+          example: '2016-10-15'
+        note:
           type: string
-          maxLength: 100
-          description: If the recipient is ACCOUNT_USER or ACCOUNT_USER_GROUP, this field holds their unique ID. If the recipient is EMAIL, this field holds the email provided by the user.
-          example: janeDoe@example.com
-    EventType-1:
-      title: EventType
-      description: Event type.
+          minLength: 0
+          maxLength: 2500
+          description: A note detailing the requirements for the dates.
+          example: Flexible dates
+    RfpStatus-1:
+      title: RfpStatus
+      readOnly: true
+      description: Represents state of the RFP.
       type: string
       enum:
-      - ANNIVERSARY_BIRTHDAY
-      - BACHELOR_BACHELORETTE_PARTY
-      - BAR_BAT_MITZVAH
-      - BUSINESS_MEETING
-      - CONFERENCE_CONVENTION
-      - CORPORATE_EVENT
-      - CUSTOMER_EVENT
-      - EDUCATIONAL_SEMINAR
-      - FRATERNITY_SORORITY_GROUP
-      - FUNDRAISER_CHARITY_EVENT
-      - RECEPTION_HOLIDAY_PARTY
-      - INCENTIVE_TRAVEL
-      - REUNION
-      - SHAREHOLDERS_MEETING
-      - SPECIAL_EVENT
-      - SPORTS_EVENT
-      - TEAM_BUILDING_EVENT
-      - TOUR_GROUP_VACATION
-      - TRADE_SHOW_CONSUMER_SHOW
-      - TRAINING
-      - WEDDING
-      - OTHER
+      - PENDING
+      - ACTIVE
+      - AWARDED
+      - DRAFT
+      - HISTORIC
+      - CANCELLED
+      - DELETED
     RfpRequest:
       title: RfpRequest
       description: Request body for creating or updating an RFP.
@@ -855,23 +709,51 @@ components:
             $ref: '#/components/schemas/VenueIntegrationType'
         venueIntegrationPreference:
           $ref: '#/components/schemas/VenueIntegrationPreference'
-    RfpDateMode:
-      title: RfpDateMode
-      description: RfpDateMode
+    EventType-1:
+      title: EventType
+      description: Event type.
       type: string
       enum:
-      - ALTERNATE_DATE
-      - DATE_PATTERN
-    LeadSourceSection:
-      title: LeadSourceSection
-      description: Represents lead source section details, which is a sub area of source generating the RFP.
+      - ANNIVERSARY_BIRTHDAY
+      - BACHELOR_BACHELORETTE_PARTY
+      - BAR_BAT_MITZVAH
+      - BUSINESS_MEETING
+      - CONFERENCE_CONVENTION
+      - CORPORATE_EVENT
+      - CUSTOMER_EVENT
+      - EDUCATIONAL_SEMINAR
+      - FRATERNITY_SORORITY_GROUP
+      - FUNDRAISER_CHARITY_EVENT
+      - RECEPTION_HOLIDAY_PARTY
+      - INCENTIVE_TRAVEL
+      - REUNION
+      - SHAREHOLDERS_MEETING
+      - SPECIAL_EVENT
+      - SPORTS_EVENT
+      - TEAM_BUILDING_EVENT
+      - TOUR_GROUP_VACATION
+      - TRADE_SHOW_CONSUMER_SHOW
+      - TRAINING
+      - WEDDING
+      - OTHER
+    RecipientInfo:
+      title: RecipientInfo
+      description: Represents the details of the RFP recipient.
       type: object
       properties:
-        id:
+        order:
+          type: integer
+          description: The position at which this recipient will be displayed.
+          maximum: 3
+          minimum: 1
+          example: 2
+        type:
+          $ref: '#/components/schemas/RecipientType'
+        value:
           type: string
-          format: uuid
-          description: Unique identifier for sub area of source generating the RFP. Details about this lead source section can be fetched using <a href="#tag/RFP-Management/operation/getRfpLeadSourceSection">lead source section API.</a>
-          example: 40dc08af-24a9-4d01-84be-3d43133dc945
+          maxLength: 100
+          description: If the recipient is ACCOUNT_USER or ACCOUNT_USER_GROUP, this field holds their unique ID. If the recipient is EMAIL, this field holds the email provided by the user.
+          example: janeDoe@example.com
     SpaceArea:
       title: SpaceArea
       description: Space area divisons.
@@ -951,44 +833,176 @@ components:
       - NINE_THOUSAND_SQ_MTR
       - TEN_THOUSAND_SQ_MTR
       - GREATER_THAN_TEN_THOUSAND_SQ_MTR
-    RecipientType:
-      title: Recipient Type
-      description: Type of Recipient
+    MeasurementUnit:
+      title: MeasurementUnit
+      description: 'Unit of measurement for area or space.
+
+
+        Values:
+
+        - `SQUARE_FEET` — Square Feet
+
+        - `SQUARE_METERS` — Square Meters'
       type: string
       enum:
-      - EMAIL
-      - ACCOUNT_USER
-      - ACCOUNT_USER_GROUP
-    EventOrganization-1:
-      title: EventOrganization
-      description: Details of organization which is hosting the event.
+      - SQUARE_FEET
+      - SQUARE_METERS
+    BrideGroomType:
+      title: BrideGroomType
+      description: BrideGroomType
+      type: string
+      enum:
+      - BRIDE
+      - GROOM
+    ErrorResponse-12:
+      title: ErrorResponse
+      description: Represents an error response with additional details of cascading error messages.
+      allOf:
+      - $ref: '#/components/schemas/ErrorResponseBase1'
       type: object
       required:
-      - name
-      - type
+      - code
+      - message
       properties:
-        organization:
-          $ref: '#/components/schemas/Organization'
-        confidentialProfile:
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorResponseBase1'
+          description: Additional details of cascading error messages.
+    DateRequirements-1:
+      title: DateRequirements
+      description: Date requirements for the event.
+      required:
+      - mode
+      type: object
+      properties:
+        mode:
+          $ref: '#/components/schemas/RfpDateMode'
+        alternateDates:
+          type: array
+          minItems: 1
+          maxItems: 12
+          description: List of dates for the event. Can be used to provide set of alternate event dates when mode is ALTERNATE_DATE.
+          items:
+            $ref: '#/components/schemas/Dates-1'
+        pattern:
+          $ref: '#/components/schemas/DatePattern-1'
+        availabilityRangeRequired:
           type: boolean
-          description: True indicates organization profile has to be kept confidential.
-        industry:
-          $ref: '#/components/schemas/Industry-1'
-        name:
-          type: string
-          description: Name of the organization hosting the event.
-          maxLength: 100
-          example: Cvent Inc.
-        type:
-          $ref: '#/components/schemas/OrganizationType-1'
-        address:
-          $ref: '#/components/schemas/Address-1'
-        eventsPerYear:
+          description: True indicates that the event requires a range of availability dates.
+          default: false
+    ErrorResponseBase1:
+      title: ErrorResponseBase
+      type: object
+      description: Represents an error response with no additional details.
+      required:
+      - code
+      - message
+      properties:
+        code:
           type: integer
-          description: Number of events per year.
+          description: The HTTP status code representing the error.
+          example: 400
+        message:
+          type: string
+          description: A brief description of the error.
+          example: Bad Request
+        target:
+          type: string
+          description: The target resource of the error.
+          example: example target
+    DayOfWeek:
+      title: DayOfWeek
+      description: DayOfWeek
+      type: string
+      enum:
+      - SUNDAY
+      - MONDAY
+      - TUESDAY
+      - WEDNESDAY
+      - THURSDAY
+      - FRIDAY
+      - SATURDAY
+    Industry-1:
+      title: Industry
+      description: Industry
+      type: string
+      enum:
+      - AGRICULTURE_AND_MINING
+      - BUSINESS_SERVICES
+      - COMPUTERS_AND_ELECTRONICS
+      - CONSUMER_SERVICES
+      - EDUCATION
+      - ENERGY_AND_UTILITIES
+      - FINANCIAL_SERVICES
+      - GOVERNMENT
+      - HEALTHCARE_PHARMACEUTICALS_AND_BIOTECH
+      - MANUFACTURING
+      - MEDIA_AND_ENTERTAINMENT
+      - OTHER
+      - REAL_ESTATE_AND_CONSTRUCTION
+      - RETAIL
+      - SOFTWARE_AND_INTERNET
+      - TELECOMMUNICATIONS
+      - TRANSPORTATION_AND_STORAGE
+      - TRAVEL_RECREATION_AND_LEISURE
+      - WHOLESALE_AND_DISTRIBUTION
+    OrganizationType-1:
+      title: OrganizationType
+      description: Organization type.
+      type: string
+      enum:
+      - CORPORATE
+      - ASSOCIATION
+      - EDUCATION
+      - GOVERNMENT
+      - SOCIAL_LEISURE
+      - RELIGIOUS
+      - MILITARY
+      - OTHER
+      - NON_PROFIT
+    BillingDetails-1:
+      title: BillingDetails
+      description: Billing details for RFP.
+      type: object
+      properties:
+        additionalInformation:
+          type: string
+          description: Information regarding billing.
+          minLength: 0
+          maxLength: 2500
+          example: Guest rooms will be a mix of IPO and RM&TX to master. Will submit rooming list with billing specified. Credit card will be provided as guarantee.
+        concessionsContractualInfo:
+          type: string
+          description: Concessions and contractual information.
+          minLength: 0
+          maxLength: 2500
+          example: Request use of LOI or Express Agreement.
+        rebateType:
+          $ref: '#/components/schemas/RebateType'
+        acceptingRebatesAndIncentives:
+          type: boolean
+          description: True indicates that rebates and incentives are accepted, applicable only for citywide RFPs.
+          default: true
+        rebateValue:
+          type: number
+          description: The value of the rebate. The impact of this value on the price is determined by `RebateType`.
           minimum: 0
           maximum: 999999
-          example: 450
+          example: 10
+    WeddingPartner:
+      title: WeddingPartner
+      description: Represents wedding partner.
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/BrideGroomType'
+        name:
+          type: string
+          description: Name of the partner of the wedding couple.
+          minLength: 0
+          maxLength: 300
+          example: John Doe
     OfferingCostType-1:
       title: OfferingCostType
       description: Cost type associated with organizing and hosting events and meetings.
@@ -1143,59 +1157,63 @@ components:
           readOnly: true
           description: Represents the AI generation source for the RFP. This field is set during RFP creation and cannot be modified afterwards.
           example: MCP-Visual Studio Code/1.107.1
-    ErrorResponseBase1:
-      title: ErrorResponseBase
-      type: object
-      description: Represents an error response with no additional details.
+    CancelledReason-1:
+      title: CancelledReason
+      description: Reason for cancelling the RFP.
+      type: string
+      enum:
+      - BOOKED_ANOTHER_VENUE_OR_DESTINATION
+      - CLIENT_BOOKED_DIRECTLY
+      - EPIDEMIC_OR_PANDEMIC
+      - EVENT_CANCELLED
+      - EVENT_POSTPONED
+      - MEDICAL_EMERGENCY
+      - NATURAL_DISASTER
+      - OTHER
+      - POLITICAL_OR_CIVIL_UNREST
+      - REQUIREMENTS_CHANGED
+    DatePattern-1:
+      title: DatePattern
+      description: Date pattern for days on which event can occur. Used when dateMode is DATE_PATTERN.
       required:
-      - code
-      - message
+      - durationDays
+      - startDays
+      - startDate
+      - endDate
+      type: object
       properties:
-        code:
+        note:
+          type: string
+          minLength: 0
+          maxLength: 2500
+          description: Note along with date pattern requirements.
+          example: Flexible dates on weekends.
+        endDate:
+          type: string
+          format: date
+          description: The ISO 8601 end date of the event.
+          example: '2016-10-15'
+        startDate:
+          type: string
+          format: date
+          description: The ISO 8601 start date of the event.
+          example: '2016-10-13'
+        durationDays:
           type: integer
-          description: The HTTP status code representing the error.
-          example: 400
-        message:
-          type: string
-          description: A brief description of the error.
-          example: Bad Request
-        target:
-          type: string
-          description: The target resource of the error.
-          example: example target
-    LeadSource:
-      title: LeadSource
-      description: Lead source details.
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: Unique identifier for source generating the RFP. Details about this lead source can be fetched using <a href="#tag/RFP-Management/operation/getRfpLeadSource">lead source API.</a>
-          example: 50dc08af-24a9-4d01-84be-3d43133dc945
-        section:
-          $ref: '#/components/schemas/LeadSourceSection'
-    WeddingDetails-1:
-      title: Wedding Details
-      description: Wedding details.
-      type: object
-      properties:
-        firstPartner:
-          $ref: '#/components/schemas/WeddingPartner'
-        secondPartner:
-          $ref: '#/components/schemas/WeddingPartner'
-        ceremony:
-          type: boolean
-          description: True indicates ceremony is planned.
-        reception:
-          type: boolean
-          description: True indicates reception is planned.
-        farewellBrunch:
-          type: boolean
-          description: True indicates farewell brunch is planned.
-        rehearsalDinner:
-          type: boolean
-          description: True indicates rehearsal dinner is planned.
+          description: Number of days the event will go on.
+          example: 3
+        startDays:
+          type: array
+          description: Days of the week when event can start.
+          items:
+            $ref: '#/components/schemas/DayOfWeek'
+        generatedDates:
+          type: array
+          maxItems: 200
+          description: List of dates generated based on the date pattern.
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/Dates-1'
     CancellationDetails:
       title: CancellationDetails
       description: Information about cancellation of RFP.
@@ -1214,82 +1232,35 @@ components:
           minLength: 0
           maxLength: 300
           example: I am cancelling my event, postponing to Q4.
-    DayOfWeek:
-      title: DayOfWeek
-      description: DayOfWeek
+    ContactMethods:
+      title: ContactMethods
+      description: Medium for contacting the person.
       type: string
       enum:
-      - SUNDAY
-      - MONDAY
-      - TUESDAY
-      - WEDNESDAY
-      - THURSDAY
-      - FRIDAY
-      - SATURDAY
-    RfpLeadSource:
-      type: object
-      title: RfpLeadSource
-      description: Lead source of the RFP.
-      properties:
-        id:
-          type: string
-          format: uuid
-          readOnly: true
-          description: The unique identifier of the lead source.
-          example: f56a51a4-84b0-46c9-a612-716dc95a1c96
-        name:
-          type: string
-          description: Name of the lead source.
-          maxLength: 100
-          example: Cvent Supplier Network
-  parameters:
-    rfpId:
-      name: rfpId
-      description: The unique identifier of the RFP we are requesting
-      style: simple
-      in: path
-      required: true
-      schema:
-        type: string
-        format: uuid
-      example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
-    leadSourceExpand:
-      name: expand
-      in: query
-      explode: false
-      required: false
-      description: "This endpoint allows you to request additional information as an expanded response using the expand query parameter. The expanded entity is retrieved and displayed inline for each specified expand value.\n\nAn object contains the ID of a related object in its response properties. You can expand these objects in-line using the expand query parameter.\n\nYou can expand multiple objects at the same time by identifying multiple items in the expand array.\n\nThe respective scopes for each expansion are required.\n\nThe following fields are expandable:\n  * leadSource\n    * **Scope**: rfp/rfp-lead-sources:read\n    * **Reference**: <a href=\"#tag/RFP-Management/operation/getRfpLeadSource\">Get RFP Lead Source</a>\n  * leadSource.section\n    * **Scope**: rfp/rfp-lead-sources:read\n    * **Reference**: <a href=\"#tag/RFP-Management/operation/getRfpLeadSourceSection\">Get RFP Lead Source Section</a>\n"
-      example:
-      - leadSource
-      - leadSource.section
-      schema:
-        type: array
-        items:
-          type: string
-          enum:
-          - leadSource
-          - leadSource.section
-    leadSourceSectionId:
-      name: leadSourceSectionId
-      description: The unique identifier of the lead source section.
-      style: simple
-      in: path
-      required: true
-      schema:
-        type: string
-        format: uuid
-      example: 779934d2-f6eb-4815-bcfa-a2dd8655c164
-    leadSourceId:
-      name: leadSourceId
-      description: The unique identifier of the lead source.
-      style: simple
-      in: path
-      required: true
-      schema:
-        type: string
-        format: uuid
-      example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+      - CVENT
+      - EMAIL
+      - FAX
+      - MOBILE
+      - PHONE
   responses:
+    Forbidden1:
+      description: You do not have access to the resource
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 403
+            message: Access Forbidden
+    TooManyRequests1:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 429
+            message: Limit Exceeded
     Unauthorized1:
       description: Bad or expired token
       content:
@@ -1308,15 +1279,6 @@ components:
           example:
             code: 400
             message: Bad Request
-    Forbidden1:
-      description: You do not have access to the resource
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 403
-            message: Access Forbidden
     NotFound1:
       description: Resource not found
       content:
@@ -1326,15 +1288,53 @@ components:
           example:
             code: 404
             message: Not found
-    TooManyRequests1:
-      description: Too many requests
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 429
-            message: Limit Exceeded
+  parameters:
+    leadSourceExpand:
+      name: expand
+      in: query
+      explode: false
+      required: false
+      description: "This endpoint allows you to request additional information as an expanded response using the expand query parameter. The expanded entity is retrieved and displayed inline for each specified expand value.\n\nAn object contains the ID of a related object in its response properties. You can expand these objects in-line using the expand query parameter.\n\nYou can expand multiple objects at the same time by identifying multiple items in the expand array.\n\nThe respective scopes for each expansion are required.\n\nThe following fields are expandable:\n  * leadSource\n    * **Scope**: rfp/rfp-lead-sources:read\n    * **Reference**: <a href=\"#tag/RFP-Management/operation/getRfpLeadSource\">Get RFP Lead Source</a>\n  * leadSource.section\n    * **Scope**: rfp/rfp-lead-sources:read\n    * **Reference**: <a href=\"#tag/RFP-Management/operation/getRfpLeadSourceSection\">Get RFP Lead Source Section</a>\n"
+      example:
+      - leadSource
+      - leadSource.section
+      schema:
+        type: array
+        items:
+          type: string
+          enum:
+          - leadSource
+          - leadSource.section
+    rfpId:
+      name: rfpId
+      description: The unique identifier of the RFP we are requesting
+      style: simple
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+    leadSourceId:
+      name: leadSourceId
+      description: The unique identifier of the lead source.
+      style: simple
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+    leadSourceSectionId:
+      name: leadSourceSectionId
+      description: The unique identifier of the lead source section.
+      style: simple
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      example: 779934d2-f6eb-4815-bcfa-a2dd8655c164
   securitySchemes:
     OAuth2.authorizationCode:
       type: oauth2

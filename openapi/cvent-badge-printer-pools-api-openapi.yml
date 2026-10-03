@@ -112,49 +112,38 @@ paths:
         url: '#oauth2-auth-code-planner-admin'
 components:
   schemas:
-    uuid-property:
+    badge-printer-pool:
+      title: BadgePrinterPool
+      description: Badge Printer Pool.
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          description: The name of the badge printer pool.
+          minLength: 1
+          maxLength: 50
+          example: Main Entrance
+    badge-printer-pools-paginated-response:
+      title: BadgePrinterPoolsPaginatedResponse
+      description: Page of Badge Printer Pools.
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/existing-badge-printer-pool'
+          description: Collection of badge printer pools.
+    UUIDProperty1:
       title: UUID Property
       description: A string that has to be a format matching the industry standard uuid
       type: string
       format: uuid
+      readOnly: true
       example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
-    Link:
-      title: Link
-      required:
-      - href
-      type: object
-      description: Represents a link to a related resource.
-      properties:
-        href:
-          type: string
-          description: A url provided that can be followed for linking
-          example: ?token=90c5f062-76ad-4ea4-aa53-00eb698d9262
-    ErrorResponse-12:
-      title: ErrorResponse
-      description: Represents an error response with additional details of cascading error messages.
-      allOf:
-      - $ref: '#/components/schemas/ErrorResponseBase1'
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        details:
-          type: array
-          items:
-            $ref: '#/components/schemas/ErrorResponseBase1'
-          description: Additional details of cascading error messages.
-    PaginationLinks:
-      title: PaginationLinks
-      type: object
-      description: Represents pagination links for navigating between pages of data.
-      properties:
-        next:
-          $ref: '#/components/schemas/Link'
-        self:
-          $ref: '#/components/schemas/Link'
-        prev:
-          $ref: '#/components/schemas/Link'
     existing-badge-printer-pool:
       title: ExistingBadgePrinterPool
       description: Badge Printer Pool.
@@ -172,25 +161,6 @@ components:
           type: boolean
           description: A flag to indicate if the pool is disabled.
           example: false
-    UUIDProperty1:
-      title: UUID Property
-      description: A string that has to be a format matching the industry standard uuid
-      type: string
-      format: uuid
-      readOnly: true
-      example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
-    badge-printer-pools-paginated-response:
-      title: BadgePrinterPoolsPaginatedResponse
-      description: Page of Badge Printer Pools.
-      type: object
-      properties:
-        paging:
-          $ref: '#/components/schemas/Paging'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/existing-badge-printer-pool'
-          description: Collection of badge printer pools.
     Paging:
       title: Paging
       required:
@@ -220,19 +190,38 @@ components:
           example: 2
         _links:
           $ref: '#/components/schemas/PaginationLinks'
-    badge-printer-pool:
-      title: BadgePrinterPool
-      description: Badge Printer Pool.
+    PaginationLinks:
+      title: PaginationLinks
+      type: object
+      description: Represents pagination links for navigating between pages of data.
+      properties:
+        next:
+          $ref: '#/components/schemas/Link'
+        self:
+          $ref: '#/components/schemas/Link'
+        prev:
+          $ref: '#/components/schemas/Link'
+    uuid-property:
+      title: UUID Property
+      description: A string that has to be a format matching the industry standard uuid
+      type: string
+      format: uuid
+      example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+    ErrorResponse-12:
+      title: ErrorResponse
+      description: Represents an error response with additional details of cascading error messages.
+      allOf:
+      - $ref: '#/components/schemas/ErrorResponseBase1'
       type: object
       required:
-      - name
+      - code
+      - message
       properties:
-        name:
-          type: string
-          description: The name of the badge printer pool.
-          minLength: 1
-          maxLength: 50
-          example: Main Entrance
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorResponseBase1'
+          description: Additional details of cascading error messages.
     ErrorResponseBase1:
       title: ErrorResponseBase
       type: object
@@ -253,7 +242,76 @@ components:
           type: string
           description: The target resource of the error.
           example: example target
+    Link:
+      title: Link
+      required:
+      - href
+      type: object
+      description: Represents a link to a related resource.
+      properties:
+        href:
+          type: string
+          description: A url provided that can be followed for linking
+          example: ?token=90c5f062-76ad-4ea4-aa53-00eb698d9262
+  parameters:
+    eventId:
+      in: path
+      name: eventId
+      description: Id of an event
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid-property'
+    token:
+      name: token
+      in: query
+      description: 'The continuation token returned from a previous class. This must be a valid UUID v4 if provided.
+
+        This will override any other pageable parameters provided.
+
+        '
+      style: form
+      explode: true
+      schema:
+        type: string
+        example: 0e28af57-511f-47ab-ae46-46cd1ca51a1a
+    poolId:
+      name: poolId
+      in: path
+      description: Id of a badge printer pool
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid-property'
+    limit:
+      name: limit
+      in: query
+      description: The maximum number of records to return per page.
+      style: form
+      explode: true
+      schema:
+        maximum: 200
+        minimum: 1
+        type: integer
+        default: 100
+        example: 100
   responses:
+    Forbidden1:
+      description: You do not have access to the resource
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 403
+            message: Access Forbidden
+    TooManyRequests1:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 429
+            message: Limit Exceeded
     Unauthorized1:
       description: Bad or expired token
       content:
@@ -272,15 +330,6 @@ components:
           example:
             code: 400
             message: Bad Request
-    Forbidden1:
-      description: You do not have access to the resource
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 403
-            message: Access Forbidden
     NotFound1:
       description: Resource not found
       content:
@@ -290,55 +339,6 @@ components:
           example:
             code: 404
             message: Not found
-    TooManyRequests1:
-      description: Too many requests
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 429
-            message: Limit Exceeded
-  parameters:
-    token:
-      name: token
-      in: query
-      description: 'The continuation token returned from a previous class. This must be a valid UUID v4 if provided.
-
-        This will override any other pageable parameters provided.
-
-        '
-      style: form
-      explode: true
-      schema:
-        type: string
-        example: 0e28af57-511f-47ab-ae46-46cd1ca51a1a
-    eventId:
-      in: path
-      name: eventId
-      description: Id of an event
-      required: true
-      schema:
-        $ref: '#/components/schemas/uuid-property'
-    limit:
-      name: limit
-      in: query
-      description: The maximum number of records to return per page.
-      style: form
-      explode: true
-      schema:
-        maximum: 200
-        minimum: 1
-        type: integer
-        default: 100
-        example: 100
-    poolId:
-      name: poolId
-      in: path
-      description: Id of a badge printer pool
-      required: true
-      schema:
-        $ref: '#/components/schemas/uuid-property'
   securitySchemes:
     OAuth2.authorizationCode:
       type: oauth2

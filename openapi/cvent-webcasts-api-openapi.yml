@@ -565,6 +565,20 @@ paths:
         url: '#oauth2-auth-code-planner-admin'
 components:
   schemas:
+    Region1:
+      title: Region
+      enum:
+      - Oregon
+      - Virginia
+      - Tokyo
+      - Singapore
+      - Sydney
+      - Mumbai
+      - Frankfurt
+      - Ireland
+      type: string
+      description: Region where the live stream originates. Although, the value is consumed for IVS livestreams the requested origin is actually ignored due to IVS' global data plane.
+      example: Oregon
     WebcastLink:
       title: WebcastLink
       description: Link details for a webcast.
@@ -580,35 +594,45 @@ components:
           description: Access code of webcast link.
           maxLength: 100
           example: 1456ZS78
-    WebcastHostLink:
-      title: WebcastHostLink
-      description: Link details for a webcast host.
+    Audit:
+      title: Audit
+      description: Audit information
       type: object
       properties:
-        href:
+        created:
           type: string
-          description: A url to the webcast.
-          maxLength: 2000
-          example: https://cvent.zoom.us/j/7566652259
-        code:
+          format: date-time
+          description: The ISO 8601 zoned date time when this record was created.
+          readOnly: true
+          example: '2017-01-02T02:00:00Z'
+        createdBy:
           type: string
-          description: Access code of webcast link.
-          maxLength: 100
-          example: 1456ZS78
-        key:
+          description: The identifier of the user that created this record.
+          readOnly: true
+          example: hporter
+        lastModified:
           type: string
-          description: Host key for the webcast.
-          maxLength: 100
-          example: abcd1234
-    LiveStreamSession:
-      title: LiveStreamSession
+          format: date-time
+          description: The ISO 8601 zoned date time when this record was updated.
+          readOnly: true
+          example: '2019-02-12T03:00:00Z'
+        lastModifiedBy:
+          type: string
+          description: The identifier of the user that last updated this record.
+          readOnly: true
+          example: hporter
+    existing-webcast:
+      title: ExistingWebcast
+      description: An existing webcast.
       type: object
+      allOf:
+      - $ref: '#/components/schemas/webcast'
       properties:
         id:
           type: string
-          description: An identifier for the current streaming session
-          example: st-1A2b3c4D5e6F78ghij9Klmn
-      description: Provides information about the livestream's current streaming session
+          format: uuid
+          description: Webcast ID
+          readOnly: true
     webcast:
       title: Webcast
       description: A webcast
@@ -686,41 +710,62 @@ components:
               description: The unique identifier of the video.
               example: 35b43fce-e87f-4a52-8685-2ba09fb53f53
               readOnly: true
-    Link:
-      title: Link
-      required:
-      - href
+    LiveStreamRecording:
+      title: LiveStreamRecording
       type: object
-      description: Represents a link to a related resource.
       properties:
-        href:
+        id:
           type: string
-          description: A url provided that can be followed for linking
-          example: ?token=90c5f062-76ad-4ea4-aa53-00eb698d9262
-    ScheduleAction:
-      title: ScheduleAction
+          description: Unique ID of the live stream recording job.
+          example: 62989518f9294e19b2f7e184e8141d72
+        status:
+          $ref: '#/components/schemas/LiveStreamRecordingStatus'
+      description: Provides information about the livestream's recording
+    Format:
+      title: Format
       enum:
-      - provision
-      - activate
-      - deactivate
-      - archive
+      - Live
+      - Pre-recorded
       type: string
-      description: This is used to denote the action to perform with the scheduled task
-      example: activate
-      readOnly: true
-    webcast-links:
-      title: WebcastLinks
-      description: webcast link references
+      default: Live
+      description: This is used to denote the format of a webcast
+      example: Pre-recorded
+    BulkResponseItem:
+      title: BulkResponseItem
+      description: Represents a single item that is returned as part of a Bulk request call.
       type: object
+      required:
+      - status
+      - data
       properties:
-        join:
-          $ref: '#/components/schemas/WebcastLink'
-        speaker:
-          $ref: '#/components/schemas/WebcastLink'
-        host:
-          $ref: '#/components/schemas/WebcastHostLink'
-        recording:
-          $ref: '#/components/schemas/WebcastLink'
+        data:
+          type: object
+          description: The data returned for a single item in the bulk request call.
+          example:
+            event_id: 1234
+            attendee_count: 50
+          additionalProperties: true
+        status:
+          type: integer
+          description: http status code representing processing status of a single item
+          example: 400
+        message:
+          type: string
+          description: Quick description of what happened with processing
+          example: Example error message.
+        request:
+          type: object
+          description: The processed request tied to this response. This field is only sent when processing fails.
+          example:
+            operation: PUT
+            headers:
+              header1: header1Value
+              header2: header2Value
+            queryParams:
+              param1: param1Value
+              param2: param2Value
+          additionalProperties: true
+      additionalProperties: false
     WebcastStatus:
       title: WebcastStatus
       enum:
@@ -731,6 +776,69 @@ components:
       type: string
       description: This is used to denote the status of a webcast
       example: Started
+    AttendeeLinkBulkResponseItem:
+      title: AttendeeLinkBulkResponseItem
+      description: This entity is used to represent a single item that is returned as part of a bulk request call.
+      allOf:
+      - $ref: '#/components/schemas/BulkResponseItem'
+      properties:
+        data:
+          anyOf:
+          - $ref: '#/components/schemas/existing-attendee-link'
+          - $ref: '#/components/schemas/ErrorResponse-12'
+    LiveStreamStatus:
+      title: LiveStreamStatus
+      enum:
+      - Error
+      - Standby
+      - Waiting
+      - Processing
+      - Disconnected
+      - Cancelling
+      - Finishing
+      - Cancelled
+      - Finished
+      - Failed
+      - Scheduled
+      - Starving
+      type: string
+      description: This is used to denote the status of the stream
+      example: Standby
+    bulk-attendee-link:
+      title: AttendeeLinkBulk
+      description: Collection of attendee links.
+      type: array
+      items:
+        $ref: '#/components/schemas/attendee-link'
+    Paging:
+      title: Paging
+      required:
+      - _links
+      type: object
+      description: Represents pagination information for a collection of resources.
+      properties:
+        previousToken:
+          type: string
+          description: The pagination token for the previous page, if one exists. You can use this token to navigate to the previous page of data.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        nextToken:
+          type: string
+          description: The pagination token for the next page. If this value is present in the response, there is another page of data you can fetch.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        currentToken:
+          type: string
+          description: The pagination token for the current page.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        limit:
+          type: integer
+          description: The number of records to return on the page. Not to exceed 200.
+          example: 100
+        totalCount:
+          type: integer
+          description: The total number of records available. This field may return blank, even if there are more records. To confirm if there are more records, check the `nextToken` field.
+          example: 2
+        _links:
+          $ref: '#/components/schemas/PaginationLinks'
     player:
       title: Player
       description: A Webcast player details.
@@ -770,12 +878,94 @@ components:
           type: integer
           description: Offset (seconds) to determine start date for simulated live video.
           example: 300
-    bulk-attendee-link:
-      title: AttendeeLinkBulk
-      description: Collection of attendee links.
+    ScheduleAction:
+      title: ScheduleAction
+      enum:
+      - provision
+      - activate
+      - deactivate
+      - archive
+      type: string
+      description: This is used to denote the action to perform with the scheduled task
+      example: activate
+      readOnly: true
+    PaginationLinks:
+      title: PaginationLinks
+      type: object
+      description: Represents pagination links for navigating between pages of data.
+      properties:
+        next:
+          $ref: '#/components/schemas/Link'
+        self:
+          $ref: '#/components/schemas/Link'
+        prev:
+          $ref: '#/components/schemas/Link'
+    bulk-existing-attendee-link:
+      title: ExistingAttendeeLinkBulk
+      description: Collection of existing attendee links.
       type: array
       items:
-        $ref: '#/components/schemas/attendee-link'
+        $ref: '#/components/schemas/existing-attendee-link'
+    existing-player:
+      title: ExistingPlayer
+      description: An existing webcast player.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/player'
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Player ID
+          readOnly: true
+    UUIDProperty:
+      title: UUID Property
+      description: A string that has to be a format matching the industry standard uuid
+      type: string
+      format: uuid
+      example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+    PlayerTypeProvider:
+      title: PlayerTypeProvider
+      enum:
+      - Amazon IVS
+      - Cvent VOD
+      type: string
+      description: This is used to denote the type of a video player used for the Cvent Video Player
+      example: Amazon IVS
+      readOnly: true
+    PlayerType:
+      title: PlayerType
+      enum:
+      - Cvent Video Player
+      - Brightcove
+      - Vimeo
+      - Weblink
+      type: string
+      description: This is used to denote the type of a video player
+      example: Cvent Video Player
+    existing-attendee-link:
+      title: ExistingAttendeeLink
+      description: An existing attendee link.
+      type: object
+      required:
+      - id
+      allOf:
+      - $ref: '#/components/schemas/attendee-link'
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Attendee-link ID
+          readOnly: true
+    LiveStreamSession:
+      title: LiveStreamSession
+      type: object
+      properties:
+        id:
+          type: string
+          description: An identifier for the current streaming session
+          example: st-1A2b3c4D5e6F78ghij9Klmn
+      description: Provides information about the livestream's current streaming session
     ErrorResponse-12:
       title: ErrorResponse
       description: Represents an error response with additional details of cascading error messages.
@@ -791,134 +981,21 @@ components:
           items:
             $ref: '#/components/schemas/ErrorResponseBase1'
           description: Additional details of cascading error messages.
-    WebcastProvider:
-      title: WebcastProvider
-      enum:
-      - Adobe Connect
-      - Amazon Chime
-      - BlueJeans
-      - Brightcove
-      - Cisco Webex
-      - Facebook Live
-      - GlobalMeet
-      - GoToMeeting
-      - GoToWebinar
-      - Goldcast
-      - Intrado
-      - Microsoft Teams
-      - None
-      - ON24
-      - Other
-      - Vimeo
-      - YouTube Live
-      - Zoom
-      type: string
-      description: Name of the webcast provider.
-      example: Zoom
-    PaginationLinks:
-      title: PaginationLinks
-      type: object
-      description: Represents pagination links for navigating between pages of data.
-      properties:
-        next:
-          $ref: '#/components/schemas/Link'
-        self:
-          $ref: '#/components/schemas/Link'
-        prev:
-          $ref: '#/components/schemas/Link'
-    Region1:
-      title: Region
-      enum:
-      - Oregon
-      - Virginia
-      - Tokyo
-      - Singapore
-      - Sydney
-      - Mumbai
-      - Frankfurt
-      - Ireland
-      type: string
-      description: Region where the live stream originates. Although, the value is consumed for IVS livestreams the requested origin is actually ignored due to IVS' global data plane.
-      example: Oregon
-    Format:
-      title: Format
-      enum:
-      - Live
-      - Pre-recorded
-      type: string
-      default: Live
-      description: This is used to denote the format of a webcast
-      example: Pre-recorded
-    attendee-link:
-      title: AttendeeLink
-      description: An attendee link.
-      type: object
+    attendee-link-paginated-response:
+      title: AttendeeLinkPaginatedResponse
+      description: The response from a request to get the list of attendee links. This includes the paging object as well as the collection of attendee links.
       required:
-      - webcast
-      - attendee
-      allOf:
-      - $ref: '#/components/schemas/Audit'
-      properties:
-        webcast:
-          $ref: '#/components/schemas/UUID'
-        event:
-          $ref: '#/components/schemas/UUID'
-        session:
-          $ref: '#/components/schemas/UUID'
-        attendee:
-          $ref: '#/components/schemas/UUID'
-        sourceId:
-          type: string
-          description: Source Id of the webcast provider
-          maxLength: 50
-          example: kBBBAAcccdddd8U==
-        join:
-          $ref: '#/components/schemas/WebcastLink'
-    BulkResponseItem:
-      title: BulkResponseItem
-      description: Represents a single item that is returned as part of a Bulk request call.
-      type: object
-      required:
-      - status
+      - paging
       - data
+      type: object
       properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
         data:
-          type: object
-          description: The data returned for a single item in the bulk request call.
-          example:
-            event_id: 1234
-            attendee_count: 50
-          additionalProperties: true
-        status:
-          type: integer
-          description: http status code representing processing status of a single item
-          example: 400
-        message:
-          type: string
-          description: Quick description of what happened with processing
-          example: Example error message.
-        request:
-          type: object
-          description: The processed request tied to this response. This field is only sent when processing fails.
-          example:
-            operation: PUT
-            headers:
-              header1: header1Value
-              header2: header2Value
-            queryParams:
-              param1: param1Value
-              param2: param2Value
-          additionalProperties: true
-      additionalProperties: false
-    WebcastType:
-      title: WebcastType
-      enum:
-      - Meeting
-      - Webinar
-      - Presentation
-      type: string
-      description: This is used to denote the type of a webcast
-      example: Meeting
+          type: array
+          items:
+            $ref: '#/components/schemas/existing-attendee-link'
+          description: Collection of webcast attendee links.
     webcast-paginated-response:
       title: WebcastPaginatedResponse
       description: The response from a request to get the list of webcasts.  This includes the paging object as well as the collection of webcasts.
@@ -934,108 +1011,46 @@ components:
           items:
             $ref: '#/components/schemas/existing-webcast'
           description: Collection of webcasts.
-    Audit:
-      title: Audit
-      description: Audit information
+    WebcastHostLink:
+      title: WebcastHostLink
+      description: Link details for a webcast host.
       type: object
       properties:
-        created:
+        href:
           type: string
-          format: date-time
-          description: The ISO 8601 zoned date time when this record was created.
-          readOnly: true
-          example: '2017-01-02T02:00:00Z'
-        createdBy:
+          description: A url to the webcast.
+          maxLength: 2000
+          example: https://cvent.zoom.us/j/7566652259
+        code:
           type: string
-          description: The identifier of the user that created this record.
-          readOnly: true
-          example: hporter
-        lastModified:
+          description: Access code of webcast link.
+          maxLength: 100
+          example: 1456ZS78
+        key:
           type: string
-          format: date-time
-          description: The ISO 8601 zoned date time when this record was updated.
-          readOnly: true
-          example: '2019-02-12T03:00:00Z'
-        lastModifiedBy:
-          type: string
-          description: The identifier of the user that last updated this record.
-          readOnly: true
-          example: hporter
-    LiveStreamRecording:
-      title: LiveStreamRecording
+          description: Host key for the webcast.
+          maxLength: 100
+          example: abcd1234
+    ErrorResponseBase1:
+      title: ErrorResponseBase
       type: object
+      description: Represents an error response with no additional details.
+      required:
+      - code
+      - message
       properties:
-        id:
+        code:
+          type: integer
+          description: The HTTP status code representing the error.
+          example: 400
+        message:
           type: string
-          description: Unique ID of the live stream recording job.
-          example: 62989518f9294e19b2f7e184e8141d72
-        status:
-          $ref: '#/components/schemas/LiveStreamRecordingStatus'
-      description: Provides information about the livestream's recording
-    AttendeeLinkBulkResponseItem:
-      title: AttendeeLinkBulkResponseItem
-      description: This entity is used to represent a single item that is returned as part of a bulk request call.
-      allOf:
-      - $ref: '#/components/schemas/BulkResponseItem'
-      properties:
-        data:
-          anyOf:
-          - $ref: '#/components/schemas/existing-attendee-link'
-          - $ref: '#/components/schemas/ErrorResponse-12'
-    PlayerTypeProvider:
-      title: PlayerTypeProvider
-      enum:
-      - Amazon IVS
-      - Cvent VOD
-      type: string
-      description: This is used to denote the type of a video player used for the Cvent Video Player
-      example: Amazon IVS
-      readOnly: true
-    attendee-link-bulk-response:
-      title: AttendeeLinkBulkResponse
-      description: Collection of attendee linking responses.
-      type: array
-      items:
-        $ref: '#/components/schemas/AttendeeLinkBulkResponseItem'
-    Schedule:
-      title: Schedule
-      description: A scheduled action.
-      type: object
-      properties:
-        id:
+          description: A brief description of the error.
+          example: Bad Request
+        target:
           type: string
-          format: uuid
-          description: Unique ID of the scheduled task.
-        scheduledExecution:
-          type: string
-          format: date-time
-          description: 'The ISO 8601 zoned date time when the session will be moved to the next stage: provisioning, activation, deactivation or archival'
-          example: '2024-03-05T09:00:00Z'
-          readOnly: true
-        action:
-          $ref: '#/components/schemas/ScheduleAction'
-    existing-webcast:
-      title: ExistingWebcast
-      description: An existing webcast.
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/webcast'
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: Webcast ID
-          readOnly: true
-    PlayerType:
-      title: PlayerType
-      enum:
-      - Cvent Video Player
-      - Brightcove
-      - Vimeo
-      - Weblink
-      type: string
-      description: This is used to denote the type of a video player
-      example: Cvent Video Player
+          description: The target resource of the error.
+          example: example target
     SolutionType:
       title: SolutionType
       enum:
@@ -1058,35 +1073,64 @@ components:
       properties:
         id:
           $ref: '#/components/schemas/UUIDProperty'
-    Paging:
-      title: Paging
+    player-paginated-response:
+      title: PlayerPaginatedResponse
+      description: The response from a request to get the list of players.  This includes the paging object as well as the collection of players.
       required:
-      - _links
+      - paging
+      - data
       type: object
-      description: Represents pagination information for a collection of resources.
       properties:
-        previousToken:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/existing-player'
+          description: Collection of players.
+    Schedule:
+      title: Schedule
+      description: A scheduled action.
+      type: object
+      properties:
+        id:
           type: string
-          description: The pagination token for the previous page, if one exists. You can use this token to navigate to the previous page of data.
-          example: 1a2b3c4d5e6f7g8h9i10j11k
-        nextToken:
+          format: uuid
+          description: Unique ID of the scheduled task.
+        scheduledExecution:
           type: string
-          description: The pagination token for the next page. If this value is present in the response, there is another page of data you can fetch.
-          example: 1a2b3c4d5e6f7g8h9i10j11k
-        currentToken:
+          format: date-time
+          description: 'The ISO 8601 zoned date time when the session will be moved to the next stage: provisioning, activation, deactivation or archival'
+          example: '2024-03-05T09:00:00Z'
+          readOnly: true
+        action:
+          $ref: '#/components/schemas/ScheduleAction'
+    attendee-link-bulk-response:
+      title: AttendeeLinkBulkResponse
+      description: Collection of attendee linking responses.
+      type: array
+      items:
+        $ref: '#/components/schemas/AttendeeLinkBulkResponseItem'
+    Link:
+      title: Link
+      required:
+      - href
+      type: object
+      description: Represents a link to a related resource.
+      properties:
+        href:
           type: string
-          description: The pagination token for the current page.
-          example: 1a2b3c4d5e6f7g8h9i10j11k
-        limit:
-          type: integer
-          description: The number of records to return on the page. Not to exceed 200.
-          example: 100
-        totalCount:
-          type: integer
-          description: The total number of records available. This field may return blank, even if there are more records. To confirm if there are more records, check the `nextToken` field.
-          example: 2
-        _links:
-          $ref: '#/components/schemas/PaginationLinks'
+          description: A url provided that can be followed for linking
+          example: ?token=90c5f062-76ad-4ea4-aa53-00eb698d9262
+    WebcastType:
+      title: WebcastType
+      enum:
+      - Meeting
+      - Webinar
+      - Presentation
+      type: string
+      description: This is used to denote the type of a webcast
+      example: Meeting
     live-stream:
       title: LiveStream
       description: A webcast Live Stream.
@@ -1115,106 +1159,31 @@ components:
           example: https://cvent.zoom.aspx/j/7566652259
         recording:
           $ref: '#/components/schemas/LiveStreamRecording'
-    LiveStreamStatus:
-      title: LiveStreamStatus
-      enum:
-      - Error
-      - Standby
-      - Waiting
-      - Processing
-      - Disconnected
-      - Cancelling
-      - Finishing
-      - Cancelled
-      - Finished
-      - Failed
-      - Scheduled
-      - Starving
-      type: string
-      description: This is used to denote the status of the stream
-      example: Standby
-    player-paginated-response:
-      title: PlayerPaginatedResponse
-      description: The response from a request to get the list of players.  This includes the paging object as well as the collection of players.
+    attendee-link:
+      title: AttendeeLink
+      description: An attendee link.
+      type: object
       required:
-      - paging
-      - data
-      type: object
-      properties:
-        paging:
-          $ref: '#/components/schemas/Paging'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/existing-player'
-          description: Collection of players.
-    existing-player:
-      title: ExistingPlayer
-      description: An existing webcast player.
-      type: object
+      - webcast
+      - attendee
       allOf:
-      - $ref: '#/components/schemas/player'
+      - $ref: '#/components/schemas/Audit'
       properties:
-        id:
+        webcast:
+          $ref: '#/components/schemas/UUID'
+        event:
+          $ref: '#/components/schemas/UUID'
+        session:
+          $ref: '#/components/schemas/UUID'
+        attendee:
+          $ref: '#/components/schemas/UUID'
+        sourceId:
           type: string
-          format: uuid
-          description: Player ID
-          readOnly: true
-    existing-attendee-link:
-      title: ExistingAttendeeLink
-      description: An existing attendee link.
-      type: object
-      required:
-      - id
-      allOf:
-      - $ref: '#/components/schemas/attendee-link'
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: Attendee-link ID
-          readOnly: true
-    ErrorResponseBase1:
-      title: ErrorResponseBase
-      type: object
-      description: Represents an error response with no additional details.
-      required:
-      - code
-      - message
-      properties:
-        code:
-          type: integer
-          description: The HTTP status code representing the error.
-          example: 400
-        message:
-          type: string
-          description: A brief description of the error.
-          example: Bad Request
-        target:
-          type: string
-          description: The target resource of the error.
-          example: example target
-    bulk-existing-attendee-link:
-      title: ExistingAttendeeLinkBulk
-      description: Collection of existing attendee links.
-      type: array
-      items:
-        $ref: '#/components/schemas/existing-attendee-link'
-    attendee-link-paginated-response:
-      title: AttendeeLinkPaginatedResponse
-      description: The response from a request to get the list of attendee links. This includes the paging object as well as the collection of attendee links.
-      required:
-      - paging
-      - data
-      type: object
-      properties:
-        paging:
-          $ref: '#/components/schemas/Paging'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/existing-attendee-link'
-          description: Collection of webcast attendee links.
+          description: Source Id of the webcast provider
+          maxLength: 50
+          example: kBBBAAcccdddd8U==
+        join:
+          $ref: '#/components/schemas/WebcastLink'
     LiveStreamRecordingStatus:
       title: LiveStreamRecordingStatus
       enum:
@@ -1231,13 +1200,71 @@ components:
       description: This is used to denote the status of the live stream recording job
       example: finished
       readOnly: true
-    UUIDProperty:
-      title: UUID Property
-      description: A string that has to be a format matching the industry standard uuid
+    WebcastProvider:
+      title: WebcastProvider
+      enum:
+      - Adobe Connect
+      - Amazon Chime
+      - BlueJeans
+      - Brightcove
+      - Cisco Webex
+      - Facebook Live
+      - GlobalMeet
+      - GoToMeeting
+      - GoToWebinar
+      - Goldcast
+      - Intrado
+      - Microsoft Teams
+      - None
+      - ON24
+      - Other
+      - Vimeo
+      - YouTube Live
+      - Zoom
       type: string
-      format: uuid
-      example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+      description: Name of the webcast provider.
+      example: Zoom
+    webcast-links:
+      title: WebcastLinks
+      description: webcast link references
+      type: object
+      properties:
+        join:
+          $ref: '#/components/schemas/WebcastLink'
+        speaker:
+          $ref: '#/components/schemas/WebcastLink'
+        host:
+          $ref: '#/components/schemas/WebcastHostLink'
+        recording:
+          $ref: '#/components/schemas/WebcastLink'
   responses:
+    Forbidden1:
+      description: You do not have access to the resource
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 403
+            message: Access Forbidden
+    Conflict1:
+      description: The request conflicts with current state of the target resource
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 409
+            message: Conflict
+    TooManyRequests1:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 429
+            message: Limit Exceeded
     Unauthorized1:
       description: Bad or expired token
       content:
@@ -1256,24 +1283,6 @@ components:
           example:
             code: 400
             message: Bad Request
-    Conflict1:
-      description: The request conflicts with current state of the target resource
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 409
-            message: Conflict
-    Forbidden1:
-      description: You do not have access to the resource
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 403
-            message: Access Forbidden
     NotFound1:
       description: Resource not found
       content:
@@ -1283,15 +1292,6 @@ components:
           example:
             code: 404
             message: Not found
-    TooManyRequests1:
-      description: Too many requests
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 429
-            message: Limit Exceeded
   parameters:
     attendeeLinkId:
       in: path
@@ -1300,6 +1300,22 @@ components:
       required: true
       schema:
         $ref: '#/components/schemas/UUIDProperty'
+    id13:
+      in: path
+      name: id
+      description: The identifier of the webcast.
+      required: true
+      schema:
+        $ref: '#/components/schemas/UUIDProperty'
+    after:
+      name: after
+      required: false
+      description: Used to query records that have been added or updated after this time point. Default to the beginning of time of the data store.
+      in: query
+      schema:
+        type: string
+        format: date-time
+        example: '2017-01-02T02:00:00Z'
     token:
       name: token
       in: query
@@ -1313,11 +1329,11 @@ components:
       schema:
         type: string
         example: 0e28af57-511f-47ab-ae46-46cd1ca51a1a
-    after:
-      name: after
+    before:
+      name: before
       required: false
-      description: Used to query records that have been added or updated after this time point. Default to the beginning of time of the data store.
       in: query
+      description: Used to query records that have been added or updated before this time point.
       schema:
         type: string
         format: date-time
@@ -1334,22 +1350,6 @@ components:
         type: integer
         default: 100
         example: 100
-    before:
-      name: before
-      required: false
-      in: query
-      description: Used to query records that have been added or updated before this time point.
-      schema:
-        type: string
-        format: date-time
-        example: '2017-01-02T02:00:00Z'
-    id13:
-      in: path
-      name: id
-      description: The identifier of the webcast.
-      required: true
-      schema:
-        $ref: '#/components/schemas/UUIDProperty'
   securitySchemes:
     OAuth2.authorizationCode:
       type: oauth2
