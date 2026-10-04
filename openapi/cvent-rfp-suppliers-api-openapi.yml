@@ -124,33 +124,83 @@ paths:
           $ref: '#/components/responses/TooManyRequests1'
 components:
   schemas:
-    PaginatedRfpRecipientsHistory:
-      title: PaginatedRfpRecipientsHistory
-      description: Paginated response containing logs of all the recipients that were copied on an RFP.
-      type: object
-      required:
-      - paging
-      - data
-      properties:
-        paging:
-          $ref: '#/components/schemas/Paging'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/RfpRecipientLogEntry'
-          description: List of RFP recipient logs.
-    LeadSource:
-      title: LeadSource
-      description: Lead source details.
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: Unique identifier for source generating the RFP. Details about this lead source can be fetched using <a href="#tag/RFP-Management/operation/getRfpLeadSource">lead source API.</a>
-          example: 50dc08af-24a9-4d01-84be-3d43133dc945
-        section:
-          $ref: '#/components/schemas/LeadSourceSection'
+    SupplierId:
+      title: SupplierId
+      type: string
+      format: uuid
+      description: The unique identifier of a supplier.
+      example: 50dc08af-24a9-4d01-84be-3d43133dc945
+    TargetType:
+      title: TargetType
+      description: The target type can either refer to the type of recipient or the type of action that made the recipient a participant in the RFP process.
+      type: string
+      enum:
+      - ASSIGNEE
+      - BILLING_CONTACT
+      - FORWARDING_NSO
+      - FORWARDING_SUPPLIER
+      - HYATT_ENVISION
+      - IN_PROGRESS
+      - MARRIOTT_SIEBEL
+      - MEETING_BROKER
+      - OPERA
+      - PLANNER
+      - PRIVATE_NSO
+      - PROPOSAL_CC
+      - PROPOSAL
+      - PUBLIC_NSO
+      - RECEIPT_CONFIRMED
+      - RFP_CC_RECIPIENT
+      - SUPPLIER
+      - TURN_DOWN
+      example: PUBLIC_NSO
+    RfpResponseReason:
+      title: RfpResponseReason
+      description: Reason given for a response to an RFP.
+      type: string
+      enum:
+      - BOOKED_ANOTHER_VENUE_OR_DESTINATION
+      - CLIENT_BOOKED_DIRECTLY
+      - COMPETITOR_CONTRACT_AGREEMENT
+      - DATES_OR_PATTERN
+      - DECISION_DATE_PASSED
+      - DID_NOT_MEET_REQUIREMENTS
+      - EPIDEMIC_OR_PANDEMIC
+      - EVENT_CANCELLED
+      - EVENT_POSTPONED
+      - FOOD_AND_BEVERAGE_MINIMUM_TOO_HIGH
+      - FOOD_AND_BEVERAGE_TOO_LOW
+      - INCOMPLETE_RFP
+      - LATE_RESPONSE
+      - LOW_BUDGET
+      - MEDICAL_EMERGENCY
+      - MEETING_ROOM_RENTAL_TOO_HIGH
+      - MEETING_SPACE_CEILING_HEIGHT
+      - MEETING_SPACE_NO_LONGER_AVAILABLE
+      - MEETING_SPACE_UNAVAILABLE
+      - NATURAL_DISASTER
+      - NO_FOOD_AND_BEVERAGE
+      - OTHER
+      - POLITICAL_OR_CIVIL_UNREST
+      - PREFERRED_OR_ALTERNATE_DATES_UNAVAILABLE
+      - PROPERTY_AMENITIES_OR_SERVICES
+      - PROPERTY_LOCATION
+      - RENOVATIONS
+      - REQUESTED_ROOM_RATE_TOO_LOW
+      - REQUIREMENTS_CHANGED
+      - ROOMS_TO_SPACE_RATIO
+      - SELECTED_OTHER_CITY
+      - SELECTED_OTHER_HOTEL_OR_VENUE
+      - SIZE_OF_MEETING_SPACE
+      - GUEST_ROOM_RATE_TOO_HIGH
+      - GUEST_ROOMS_NO_LONGER_AVAILABLE
+      - GUEST_ROOMS_UNAVAILABLE
+      - SUITE_AVAILABILITY
+      - TOO_SPACE_INTENSIVE
+      - VENUE_PERMANENTLY_CLOSED
+      - VENUE_TEMPORARILY_CLOSED
+      - VENUE_TOO_SMALL
+      example: GUEST_ROOMS_NO_LONGER_AVAILABLE
     Audit:
       title: Audit
       description: Audit information
@@ -178,33 +228,45 @@ components:
           description: The identifier of the user that last updated this record.
           readOnly: true
           example: hporter
-    SupplierResponse:
-      title: SupplierResponse
-      description: Contains response from supplier on an RFP.
+    SupplierAssociatedAds:
+      title: SupplierAssociatedAds
+      description: Ads clicked by planner while adding supplier on RFP.
       type: object
       properties:
-        dateTime:
-          type: string
-          format: date-time
-          description: The ISO 8601 date time (in UTC) when the response was sent by supplier.
-          example: '2017-02-02T03:19:19.991Z'
-        reason:
-          $ref: '#/components/schemas/RfpResponseReason'
-        comment:
-          type: string
-          description: Comment for the response reason.
-          maxLength: 2500
-          example: We are unable to accommodate the request on the required dates. Please let us know if we can help with any other dates.
-    LeadSourceSection:
-      title: LeadSourceSection
-      description: Represents lead source section details, which is a sub area of source generating the RFP.
+        firstClicked:
+          type: object
+          allOf:
+          - description: First advertisement for the supplier which planner clicked.
+          - $ref: '#/components/schemas/SupplierAd'
+        lastClicked:
+          type: object
+          allOf:
+          - description: Last advertisement for the supplier which planner clicked.
+          - $ref: '#/components/schemas/SupplierAd'
+    PaginatedRfpRecipientsHistory:
+      title: PaginatedRfpRecipientsHistory
+      description: Paginated response containing logs of all the recipients that were copied on an RFP.
       type: object
+      required:
+      - paging
+      - data
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/RfpRecipientLogEntry'
+          description: List of RFP recipient logs.
+    ReferenceToRFP:
+      type: object
+      title: Reference to RFP
+      description: Reference to an RFP (Request For Proposal) by its ID.
+      required:
+      - id
       properties:
         id:
-          type: string
-          format: uuid
-          description: Unique identifier for sub area of source generating the RFP. Details about this lead source section can be fetched using <a href="#tag/RFP-Management/operation/getRfpLeadSourceSection">lead source section API.</a>
-          example: 40dc08af-24a9-4d01-84be-3d43133dc945
+          $ref: '#/components/schemas/RFPID'
     RfpSupplier:
       type: object
       title: RfpSupplier
@@ -362,91 +424,6 @@ components:
           description: True indicates the RFP was sent to NSO (National Sales Office) associated with supplier.
           example: false
           readOnly: true
-    Paging:
-      title: Paging
-      required:
-      - _links
-      type: object
-      description: Represents pagination information for a collection of resources.
-      properties:
-        previousToken:
-          type: string
-          description: The pagination token for the previous page, if one exists. You can use this token to navigate to the previous page of data.
-          example: 1a2b3c4d5e6f7g8h9i10j11k
-        nextToken:
-          type: string
-          description: The pagination token for the next page. If this value is present in the response, there is another page of data you can fetch.
-          example: 1a2b3c4d5e6f7g8h9i10j11k
-        currentToken:
-          type: string
-          description: The pagination token for the current page.
-          example: 1a2b3c4d5e6f7g8h9i10j11k
-        limit:
-          type: integer
-          description: The number of records to return on the page. Not to exceed 200.
-          example: 100
-        totalCount:
-          type: integer
-          description: The total number of records available. This field may return blank, even if there are more records. To confirm if there are more records, check the `nextToken` field.
-          example: 2
-        _links:
-          $ref: '#/components/schemas/PaginationLinks'
-    SupplierAssociatedAds:
-      title: SupplierAssociatedAds
-      description: Ads clicked by planner while adding supplier on RFP.
-      type: object
-      properties:
-        firstClicked:
-          type: object
-          allOf:
-          - description: First advertisement for the supplier which planner clicked.
-          - $ref: '#/components/schemas/SupplierAd'
-        lastClicked:
-          type: object
-          allOf:
-          - description: Last advertisement for the supplier which planner clicked.
-          - $ref: '#/components/schemas/SupplierAd'
-    PaginationLinks:
-      title: PaginationLinks
-      type: object
-      description: Represents pagination links for navigating between pages of data.
-      properties:
-        next:
-          $ref: '#/components/schemas/Link'
-        self:
-          $ref: '#/components/schemas/Link'
-        prev:
-          $ref: '#/components/schemas/Link'
-    PaginatedRfpSuppliers:
-      title: PaginatedRfpSuppliers
-      description: Paginated response containing suppliers associated with an RFP.
-      type: object
-      required:
-      - paging
-      - data
-      properties:
-        paging:
-          $ref: '#/components/schemas/Paging'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/RfpSupplier'
-          description: List of RFP suppliers.
-    RFPID:
-      title: RFP ID
-      description: A unique identifier for an RFP
-      type: string
-      format: uuid
-      example: a0f3116a-4dd8-4923-b778-188cbe00a68f
-    ReferenceToSupplier:
-      type: object
-      title: Reference to Supplier
-      description: Reference to a supplier by its ID.
-      required:
-      - id
-      properties:
-        id:
-          $ref: '#/components/schemas/SupplierId'
     RfpRecipientLogEntry:
       type: object
       title: RfpRecipientLogEntry
@@ -490,6 +467,68 @@ components:
               format: uuid
               description: The unique identifier of the message.
               example: a1c776ab-51ee-44a7-8720-b3dfc44d689b
+    RFPID:
+      title: RFP ID
+      description: A unique identifier for an RFP
+      type: string
+      format: uuid
+      example: a0f3116a-4dd8-4923-b778-188cbe00a68f
+    ErrorResponse-12:
+      title: ErrorResponse
+      description: Represents an error response with additional details of cascading error messages.
+      allOf:
+      - $ref: '#/components/schemas/ErrorResponseBase1'
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorResponseBase1'
+          description: Additional details of cascading error messages.
+    PaginationLinks:
+      title: PaginationLinks
+      type: object
+      description: Represents pagination links for navigating between pages of data.
+      properties:
+        next:
+          $ref: '#/components/schemas/Link'
+        self:
+          $ref: '#/components/schemas/Link'
+        prev:
+          $ref: '#/components/schemas/Link'
+    SupplierAd:
+      title: SupplierAd
+      description: Supplier Advertisement.
+      type: object
+      properties:
+        code:
+          type: string
+          maxLength: 30
+          description: Unique code generated for the supplier advertisement.
+          example: RXBMLPSP
+    ReferenceToSupplier:
+      type: object
+      title: Reference to Supplier
+      description: Reference to a supplier by its ID.
+      required:
+      - id
+      properties:
+        id:
+          $ref: '#/components/schemas/SupplierId'
+    Link:
+      title: Link
+      required:
+      - href
+      type: object
+      description: Represents a link to a related resource.
+      properties:
+        href:
+          type: string
+          description: A url provided that can be followed for linking
+          example: ?token=90c5f062-76ad-4ea4-aa53-00eb698d9262
     RfpSupplierStatus:
       title: RfpSupplierStatus
       description: The RFP's current status with respect to the supplier.
@@ -507,30 +546,16 @@ components:
       - TURNED_DOWN
       - WITHDRAWN
       example: AWAITING_PROPOSAL
-    ReferenceToRFP:
+    LeadSourceSection:
+      title: LeadSourceSection
+      description: Represents lead source section details, which is a sub area of source generating the RFP.
       type: object
-      title: Reference to RFP
-      description: Reference to an RFP (Request For Proposal) by its ID.
-      required:
-      - id
       properties:
         id:
-          $ref: '#/components/schemas/RFPID'
-    ErrorResponse-12:
-      title: ErrorResponse
-      description: Represents an error response with additional details of cascading error messages.
-      allOf:
-      - $ref: '#/components/schemas/ErrorResponseBase1'
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        details:
-          type: array
-          items:
-            $ref: '#/components/schemas/ErrorResponseBase1'
-          description: Additional details of cascading error messages.
+          type: string
+          format: uuid
+          description: Unique identifier for sub area of source generating the RFP. Details about this lead source section can be fetched using <a href="#tag/RFP-Management/operation/getRfpLeadSourceSection">lead source section API.</a>
+          example: 40dc08af-24a9-4d01-84be-3d43133dc945
     ErrorResponseBase1:
       title: ErrorResponseBase
       type: object
@@ -551,132 +576,80 @@ components:
           type: string
           description: The target resource of the error.
           example: example target
-    RfpResponseReason:
-      title: RfpResponseReason
-      description: Reason given for a response to an RFP.
-      type: string
-      enum:
-      - BOOKED_ANOTHER_VENUE_OR_DESTINATION
-      - CLIENT_BOOKED_DIRECTLY
-      - COMPETITOR_CONTRACT_AGREEMENT
-      - DATES_OR_PATTERN
-      - DECISION_DATE_PASSED
-      - DID_NOT_MEET_REQUIREMENTS
-      - EPIDEMIC_OR_PANDEMIC
-      - EVENT_CANCELLED
-      - EVENT_POSTPONED
-      - FOOD_AND_BEVERAGE_MINIMUM_TOO_HIGH
-      - FOOD_AND_BEVERAGE_TOO_LOW
-      - INCOMPLETE_RFP
-      - LATE_RESPONSE
-      - LOW_BUDGET
-      - MEDICAL_EMERGENCY
-      - MEETING_ROOM_RENTAL_TOO_HIGH
-      - MEETING_SPACE_CEILING_HEIGHT
-      - MEETING_SPACE_NO_LONGER_AVAILABLE
-      - MEETING_SPACE_UNAVAILABLE
-      - NATURAL_DISASTER
-      - NO_FOOD_AND_BEVERAGE
-      - OTHER
-      - POLITICAL_OR_CIVIL_UNREST
-      - PREFERRED_OR_ALTERNATE_DATES_UNAVAILABLE
-      - PROPERTY_AMENITIES_OR_SERVICES
-      - PROPERTY_LOCATION
-      - RENOVATIONS
-      - REQUESTED_ROOM_RATE_TOO_LOW
-      - REQUIREMENTS_CHANGED
-      - ROOMS_TO_SPACE_RATIO
-      - SELECTED_OTHER_CITY
-      - SELECTED_OTHER_HOTEL_OR_VENUE
-      - SIZE_OF_MEETING_SPACE
-      - GUEST_ROOM_RATE_TOO_HIGH
-      - GUEST_ROOMS_NO_LONGER_AVAILABLE
-      - GUEST_ROOMS_UNAVAILABLE
-      - SUITE_AVAILABILITY
-      - TOO_SPACE_INTENSIVE
-      - VENUE_PERMANENTLY_CLOSED
-      - VENUE_TEMPORARILY_CLOSED
-      - VENUE_TOO_SMALL
-      example: GUEST_ROOMS_NO_LONGER_AVAILABLE
-    Link:
-      title: Link
+    SupplierResponse:
+      title: SupplierResponse
+      description: Contains response from supplier on an RFP.
+      type: object
+      properties:
+        dateTime:
+          type: string
+          format: date-time
+          description: The ISO 8601 date time (in UTC) when the response was sent by supplier.
+          example: '2017-02-02T03:19:19.991Z'
+        reason:
+          $ref: '#/components/schemas/RfpResponseReason'
+        comment:
+          type: string
+          description: Comment for the response reason.
+          maxLength: 2500
+          example: We are unable to accommodate the request on the required dates. Please let us know if we can help with any other dates.
+    Paging:
+      title: Paging
       required:
-      - href
+      - _links
       type: object
-      description: Represents a link to a related resource.
+      description: Represents pagination information for a collection of resources.
       properties:
-        href:
+        previousToken:
           type: string
-          description: A url provided that can be followed for linking
-          example: ?token=90c5f062-76ad-4ea4-aa53-00eb698d9262
-    SupplierId:
-      title: SupplierId
-      type: string
-      format: uuid
-      description: The unique identifier of a supplier.
-      example: 50dc08af-24a9-4d01-84be-3d43133dc945
-    TargetType:
-      title: TargetType
-      description: The target type can either refer to the type of recipient or the type of action that made the recipient a participant in the RFP process.
-      type: string
-      enum:
-      - ASSIGNEE
-      - BILLING_CONTACT
-      - FORWARDING_NSO
-      - FORWARDING_SUPPLIER
-      - HYATT_ENVISION
-      - IN_PROGRESS
-      - MARRIOTT_SIEBEL
-      - MEETING_BROKER
-      - OPERA
-      - PLANNER
-      - PRIVATE_NSO
-      - PROPOSAL_CC
-      - PROPOSAL
-      - PUBLIC_NSO
-      - RECEIPT_CONFIRMED
-      - RFP_CC_RECIPIENT
-      - SUPPLIER
-      - TURN_DOWN
-      example: PUBLIC_NSO
-    SupplierAd:
-      title: SupplierAd
-      description: Supplier Advertisement.
+          description: The pagination token for the previous page, if one exists. You can use this token to navigate to the previous page of data.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        nextToken:
+          type: string
+          description: The pagination token for the next page. If this value is present in the response, there is another page of data you can fetch.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        currentToken:
+          type: string
+          description: The pagination token for the current page.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        limit:
+          type: integer
+          description: The number of records to return on the page. Not to exceed 200.
+          example: 100
+        totalCount:
+          type: integer
+          description: The total number of records available. This field may return blank, even if there are more records. To confirm if there are more records, check the `nextToken` field.
+          example: 2
+        _links:
+          $ref: '#/components/schemas/PaginationLinks'
+    LeadSource:
+      title: LeadSource
+      description: Lead source details.
       type: object
       properties:
-        code:
+        id:
           type: string
-          maxLength: 30
-          description: Unique code generated for the supplier advertisement.
-          example: RXBMLPSP
+          format: uuid
+          description: Unique identifier for source generating the RFP. Details about this lead source can be fetched using <a href="#tag/RFP-Management/operation/getRfpLeadSource">lead source API.</a>
+          example: 50dc08af-24a9-4d01-84be-3d43133dc945
+        section:
+          $ref: '#/components/schemas/LeadSourceSection'
+    PaginatedRfpSuppliers:
+      title: PaginatedRfpSuppliers
+      description: Paginated response containing suppliers associated with an RFP.
+      type: object
+      required:
+      - paging
+      - data
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/RfpSupplier'
+          description: List of RFP suppliers.
   responses:
-    Forbidden1:
-      description: You do not have access to the resource
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 403
-            message: Access Forbidden
-    TooManyRequests1:
-      description: Too many requests
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 429
-            message: Limit Exceeded
-    Unauthorized1:
-      description: Bad or expired token
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 401
-            message: Unauthorized
     BadRequest1:
       description: Bad request
       content:
@@ -686,6 +659,15 @@ components:
           example:
             code: 400
             message: Bad Request
+    TooManyRequests1:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 429
+            message: Limit Exceeded
     NotFound1:
       description: Resource not found
       content:
@@ -695,6 +677,24 @@ components:
           example:
             code: 404
             message: Not found
+    Unauthorized1:
+      description: Bad or expired token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 401
+            message: Unauthorized
+    Forbidden1:
+      description: You do not have access to the resource
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 403
+            message: Access Forbidden
   parameters:
     leadSourceExpand:
       name: expand
@@ -712,6 +712,28 @@ components:
           enum:
           - leadSource
           - leadSource.section
+    limit:
+      name: limit
+      in: query
+      description: The maximum number of records to return per page.
+      style: form
+      explode: true
+      schema:
+        maximum: 200
+        minimum: 1
+        type: integer
+        default: 100
+        example: 100
+    rfpId:
+      name: rfpId
+      description: The unique identifier of the RFP we are requesting
+      style: simple
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
     token:
       name: token
       in: query
@@ -725,28 +747,6 @@ components:
       schema:
         type: string
         example: 0e28af57-511f-47ab-ae46-46cd1ca51a1a
-    rfpId:
-      name: rfpId
-      description: The unique identifier of the RFP we are requesting
-      style: simple
-      in: path
-      required: true
-      schema:
-        type: string
-        format: uuid
-      example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
-    limit:
-      name: limit
-      in: query
-      description: The maximum number of records to return per page.
-      style: form
-      explode: true
-      schema:
-        maximum: 200
-        minimum: 1
-        type: integer
-        default: 100
-        example: 100
   securitySchemes:
     OAuth2.authorizationCode:
       type: oauth2

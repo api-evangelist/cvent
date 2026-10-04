@@ -48,78 +48,6 @@ paths:
           $ref: '#/components/responses/TooManyRequests1'
 components:
   schemas:
-    credit-card-type.json:
-      title: Credit Card Type
-      type:
-      - string
-      - 'null'
-      description: Credit Card Type
-      enum:
-      - AMERICAN_EXPRESS
-      - CHINA_UNIONPAY
-      - DANKORT
-      - DINERS_CLUB_CARTEBLANCHE
-      - DINERS_CLUB_ENROUTE
-      - DINERS_CLUB_INTERNATIONAL
-      - DISCOVER
-      - INSTA_PAYMENT
-      - JCB
-      - MAESTRO
-      - MASTERCARD
-      - UATP
-      - VISA
-      - UNKNOWN
-      readOnly: true
-      example: VISA
-    ErrorResponse-12:
-      title: ErrorResponse
-      description: Represents an error response with additional details of cascading error messages.
-      allOf:
-      - $ref: '#/components/schemas/ErrorResponseBase1'
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        details:
-          type: array
-          items:
-            $ref: '#/components/schemas/ErrorResponseBase1'
-          description: Additional details of cascading error messages.
-    cardTokenResponse:
-      title: Existing Card Token Resource
-      description: Card token resource created in response to generating a card token for a credit card.
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: A token that can be used to reference the credit card for a transaction.
-          example: 00000000-0000-0000-0000-000000000000
-        creditCard:
-          $ref: '#/components/schemas/credit-card-response.json'
-    cardTokenRequest:
-      title: Card Token Resource
-      description: Generate a card token for a credit card.
-      type: object
-      required:
-      - creditCard
-      properties:
-        creditCard:
-          $ref: '#/components/schemas/credit-card-request.json'
-    credit-card-response.json:
-      title: Credit Card Response Object
-      type: object
-      description: Credit Card Response Object
-      allOf:
-      - $ref: '#/components/schemas/credit-card.json'
-      properties:
-        number:
-          type: string
-          description: Masked credit card number.
-          minLength: 10
-          maxLength: 100
-          example: '************1111'
     credit-card.json:
       title: Credit Card
       type: object
@@ -253,6 +181,57 @@ components:
           maxLength: 320
           writeOnly: true
           example: jdoe@example.com
+    credit-card-response.json:
+      title: Credit Card Response Object
+      type: object
+      description: Credit Card Response Object
+      allOf:
+      - $ref: '#/components/schemas/credit-card.json'
+      properties:
+        number:
+          type: string
+          description: Masked credit card number.
+          minLength: 10
+          maxLength: 100
+          example: '************1111'
+    ErrorResponse-12:
+      title: ErrorResponse
+      description: Represents an error response with additional details of cascading error messages.
+      allOf:
+      - $ref: '#/components/schemas/ErrorResponseBase1'
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorResponseBase1'
+          description: Additional details of cascading error messages.
+    credit-card-type.json:
+      title: Credit Card Type
+      type:
+      - string
+      - 'null'
+      description: Credit Card Type
+      enum:
+      - AMERICAN_EXPRESS
+      - CHINA_UNIONPAY
+      - DANKORT
+      - DINERS_CLUB_CARTEBLANCHE
+      - DINERS_CLUB_ENROUTE
+      - DINERS_CLUB_INTERNATIONAL
+      - DISCOVER
+      - INSTA_PAYMENT
+      - JCB
+      - MAESTRO
+      - MASTERCARD
+      - UATP
+      - VISA
+      - UNKNOWN
+      readOnly: true
+      example: VISA
     credit-card-request.json:
       title: Credit Card Request Object
       type: object
@@ -271,6 +250,27 @@ components:
           minLength: 10
           maxLength: 100
           example: '4111111111111111'
+    cardTokenRequest:
+      title: Card Token Resource
+      description: Generate a card token for a credit card.
+      type: object
+      required:
+      - creditCard
+      properties:
+        creditCard:
+          $ref: '#/components/schemas/credit-card-request.json'
+    cardTokenResponse:
+      title: Existing Card Token Resource
+      description: Card token resource created in response to generating a card token for a credit card.
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: A token that can be used to reference the credit card for a transaction.
+          example: 00000000-0000-0000-0000-000000000000
+        creditCard:
+          $ref: '#/components/schemas/credit-card-response.json'
     ErrorResponseBase1:
       title: ErrorResponseBase
       type: object
@@ -292,6 +292,24 @@ components:
           description: The target resource of the error.
           example: example target
   responses:
+    Unauthorized1:
+      description: Bad or expired token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 401
+            message: Unauthorized
+    Forbidden1:
+      description: You do not have access to the resource
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 403
+            message: Access Forbidden
     TooManyRequests1:
       description: Too many requests
       content:
@@ -316,24 +334,6 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/cardTokenResponse'
-    Forbidden1:
-      description: You do not have access to the resource
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 403
-            message: Access Forbidden
-    Unauthorized1:
-      description: Bad or expired token
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 401
-            message: Unauthorized
   securitySchemes:
     OAuth2.authorizationCode:
       type: oauth2

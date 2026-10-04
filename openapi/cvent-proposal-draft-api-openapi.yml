@@ -51,1050 +51,6 @@ paths:
           $ref: '#/components/responses/TooManyRequests1'
 components:
   schemas:
-    Item:
-      type: object
-      title: Item
-      description: An item that has cost information.
-      properties:
-        itemId:
-          type: string
-          description: Unique ID for the item.
-          example: AC-127-3B
-        name:
-          type: string
-          description: The name of the item.
-          example: Earphones
-        quantity:
-          type: integer
-          description: The number of items.
-          example: 20
-        totalCost:
-          type: number
-          description: Total cost of the item(s).
-          example: 10000.99
-        notes:
-          type: string
-          maxLength: 2500
-          description: Notes associated with the item.
-          example: This item is very popular.
-    AgendaItemType1:
-      type: string
-      title: AgendaItemType
-      description: The type of Agenda
-      enum:
-      - BLANK
-      - BREAK
-      - BREAKOUT
-      - GENERAL_SESSION
-      - MEETING
-      - RECEPTION
-      - REGISTRATION
-      - SETUP
-      - TEARDOWN
-      - EXHIBIT
-      - BREAKFAST
-      - LUNCH
-      - DINNER
-      - SNACK
-      - OTHER
-      - OFFICE
-      - STORAGE_ROOM
-      - HOSPITALITY_DESK
-      - HOSPITALITY_SUITE
-      - SPEAKER_ROOM
-    ProposalType:
-      type: string
-      title: ProposalType
-      description: The type of the proposal.
-      enum:
-      - VENUE
-      default: VENUE
-    ProposalDate:
-      type: object
-      title: ProposalDate
-      description: The proposal date.
-      properties:
-        dateType:
-          $ref: '#/components/schemas/DateType1'
-        startDate:
-          type: string
-          format: date
-          description: The start date of the event.
-          example: '2021-01-13'
-        endDate:
-          type: string
-          format: date
-          description: The end date of the event.
-          example: '2021-01-13'
-    SupplierType1:
-      title: SupplierType
-      description: 'The supplier''s type. VENUE: A hotel, convention and visitors bureau (CVB), or other location for an event.'
-      type: string
-      enum:
-      - VENUE
-      default: VENUE
-    Audit:
-      title: Audit
-      description: Audit information
-      type: object
-      properties:
-        created:
-          type: string
-          format: date-time
-          description: The ISO 8601 zoned date time when this record was created.
-          readOnly: true
-          example: '2017-01-02T02:00:00Z'
-        createdBy:
-          type: string
-          description: The identifier of the user that created this record.
-          readOnly: true
-          example: hporter
-        lastModified:
-          type: string
-          format: date-time
-          description: The ISO 8601 zoned date time when this record was updated.
-          readOnly: true
-          example: '2019-02-12T03:00:00Z'
-        lastModifiedBy:
-          type: string
-          description: The identifier of the user that last updated this record.
-          readOnly: true
-          example: hporter
-    Currency:
-      title: Currency
-      type: string
-      description: The ISO 4217 standard format currency code used for RFPs.
-      enum:
-      - USD
-      - CAD
-      - AUD
-      - EUR
-      - GBP
-      - HKD
-      - NZD
-      - AED
-      - NOK
-      - INR
-      - MXN
-      - SEK
-      - DKK
-      - MYR
-      - JPY
-      - SGD
-      - THB
-      - IDR
-      - KRW
-      - CNY
-      - TWD
-      - RUB
-      - CHF
-      - CZK
-      - HUF
-      - QAR
-      - ZAR
-      - RON
-      - HRK
-      - TRY
-      - BRL
-      - PHP
-      - SAR
-      - PLN
-      - ARS
-      - AWG
-      - AZN
-      - BSD
-      - BBD
-      - BMD
-      - CLP
-      - COP
-      - CRC
-      - DOP
-      - XCD
-      - ILS
-      - JMD
-      - LVL
-      - LTL
-      - MDL
-      - ANG
-      - OMR
-      - TTD
-      - UAH
-      - UYU
-      - RSD
-      - AFN
-      - AMD
-      - AOA
-      - BAM
-      - BDT
-      - BGN
-      - BHD
-      - BOB
-      - DZD
-      - EEK
-      - EGP
-      - FJD
-      - GTQ
-      - HNL
-      - ISK
-      - JOD
-      - KYD
-      - KZT
-      - LBP
-      - MAD
-      - NGN
-      - NIO
-      - ESP
-      - FRF
-      - PAB
-      - PEN
-      - PKR
-      - PYG
-      - SVC
-      - SYP
-      - VEF
-      - VND
-      - XPF
-      - GYD
-      - MOP
-      - PGK
-      - XOF
-      - XAF
-      - BZD
-      - BYR
-      - BWP
-      - BND
-      - BIF
-      - KHR
-      - CVE
-      - KMF
-      - CDF
-      - DJF
-      - ERN
-      - FKP
-      - GMD
-      - GEL
-      - GHS
-      - GIP
-      - GNF
-      - HTG
-      - KES
-      - KWD
-      - KGS
-      - LAK
-      - LRD
-      - MKD
-      - MGA
-      - MWK
-      - MVR
-      - MRO
-      - MUR
-      - MNT
-      - MZN
-      - MMK
-      - NAD
-      - NPR
-      - RWF
-      - SHP
-      - WST
-      - STD
-      - SLL
-      - SBD
-      - SOS
-      - LKR
-      - SRD
-      - SZL
-      - TOP
-      - TND
-      - UGX
-      - UZS
-      - VUV
-      - YER
-      - ZMK
-      - ZWD
-      - SR
-      - ETB
-      - GH
-      - GWP
-      - IQD
-      - IRR
-      - KPW
-      - LSL
-      - ROL
-      - SDG
-      - SKK
-      - TJS
-      - TMT
-      - TZS
-      - ALL
-      - BTN
-      - CUP
-      - LD
-      - SCR
-      - ZMW
-      - ZWL
-    ProposalStatus:
-      type: string
-      title: ProposalStatus
-      description: The status of the proposal. See [definitions of proposal statuses](https://support.cvent.com/s/communityarticle/Understanding-RFP-and-Proposal-Statuses)
-      enum:
-      - NOT_SENT
-      - SUBMITTED
-      - AWARDED
-      - DECLINED
-      - DELETED
-      - NO_RESPONSE
-      - CANCELLED
-      - WITHDRAWN
-      default: NOT_SENT
-    AgendaItemSetup1:
-      type: string
-      title: AgendaItemSetup
-      description: The setup of the Agenda
-      enum:
-      - BLANK
-      - BUFFET
-      - PLATED
-      - CLASSROOM
-      - CONFERENCE
-      - HERRINGBONE
-      - RECEPTION
-      - ROUNDS
-      - ROUNDS_OF_10
-      - ROUNDS_OF_8
-      - ROUNDS_OF_6
-      - SCHOOL_ROOM
-      - THEATER
-      - U_SHAPED
-      - T_SHAPED
-      - HOLLOW_SQUARE
-      - TEN_BY_TEN
-      - EIGHT_BY_TEN
-      - ISLAND
-      - PENINSULA
-      - TABLETOP
-      - CRESCENT_ROUNDS
-      - CHEVRON
-      - CABARET
-      - FLOW
-      - OFFSITE
-      - OTHER
-    Day:
-      title: Day
-      description: Day contains a date and a counter
-      type: object
-      properties:
-        dayNumber:
-          type: integer
-          description: Counter for number of Days
-          example: 1
-        date:
-          type: string
-          format: date
-          description: The ISO 8601 date of the booking
-          example: '2021-07-03'
-    TransactionType:
-      title: TransactionType
-      description: The proposal transaction type
-      type: string
-      enum:
-      - AWARD
-      - CANCEL
-      - COPY
-      - CREATE
-      - DECLINE
-      - DELETE
-      - EXPIRE
-      - MODIFY
-      - OBFUSCATE
-      - PUBLISH
-      - PUBLISH_CANCEL
-      - PUBLISH_REQUEST
-      - REOPEN
-      - RESEND_EMAIL
-      - SUBMIT
-      - VALIDATE
-      - WITHDRAW
-    EventSummary:
-      description: Schema for event summary associated with this proposal.
-      type: object
-      title: EventSummary
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: The unique ID of the event in the proposal.
-          example: bedc1f8e-f68b-40cf-b901-487e407f637a
-    Country:
-      title: Country
-      description: ISO 3166 two-letter (alpha-2) country codes with some additional non-standard cvent specific codes.
-      type: string
-      enum:
-      - BLANK
-      - AD
-      - AE
-      - AF
-      - AG
-      - AI
-      - AL
-      - AM
-      - AN
-      - AO
-      - AQ
-      - AR
-      - AS
-      - AT
-      - AU
-      - AW
-      - AX
-      - AZ
-      - BA
-      - BB
-      - BD
-      - BE
-      - BF
-      - BG
-      - BH
-      - BI
-      - BJ
-      - BL
-      - BM
-      - BN
-      - BO
-      - BQ
-      - BR
-      - BS
-      - BT
-      - BV
-      - BW
-      - BY
-      - BZ
-      - CA
-      - CC
-      - CD
-      - CF
-      - CG
-      - CH
-      - CI
-      - CK
-      - CL
-      - CM
-      - CN
-      - CO
-      - CR
-      - CU
-      - CV
-      - CW
-      - CX
-      - CY
-      - CZ
-      - DE
-      - DJ
-      - DK
-      - DM
-      - DO
-      - DZ
-      - EC
-      - EE
-      - EG
-      - EH
-      - ER
-      - ES
-      - ET
-      - FI
-      - FJ
-      - FK
-      - FM
-      - FO
-      - FR
-      - GA
-      - GB
-      - GB_1
-      - GB_2
-      - GB_3
-      - GB_4
-      - GD
-      - GE
-      - GF
-      - GG
-      - GH
-      - GI
-      - GL
-      - GM
-      - GN
-      - GP
-      - GQ
-      - GR
-      - GS
-      - GT
-      - GU
-      - GW
-      - GY
-      - HK
-      - HM
-      - HN
-      - HR
-      - HT
-      - HU
-      - ID
-      - IE
-      - IL
-      - IM
-      - IN
-      - IO
-      - IQ
-      - IR
-      - IS
-      - IT
-      - JE
-      - JM
-      - JO
-      - JP
-      - KE
-      - KG
-      - KH
-      - KI
-      - KM
-      - KN
-      - KO
-      - KP
-      - KR
-      - KW
-      - KY
-      - KZ
-      - LA
-      - LB
-      - LC
-      - LI
-      - LK
-      - LR
-      - LS
-      - LT
-      - LU
-      - LV
-      - LY
-      - MA
-      - MC
-      - MD
-      - ME
-      - MF
-      - MG
-      - MH
-      - MK
-      - ML
-      - MM
-      - MN
-      - MO
-      - MP
-      - MQ
-      - MR
-      - MS
-      - MT
-      - MU
-      - MV
-      - MW
-      - MX
-      - MY
-      - MZ
-      - NA
-      - NC
-      - NE
-      - NF
-      - NG
-      - NI
-      - NL
-      - 'NO'
-      - NP
-      - NR
-      - NU
-      - NZ
-      - OM
-      - PA
-      - PE
-      - PF
-      - PG
-      - PH
-      - PK
-      - PL
-      - PM
-      - PN
-      - PR
-      - PS
-      - PT
-      - PW
-      - PY
-      - QA
-      - RE
-      - RO
-      - RS
-      - RU
-      - RW
-      - SA
-      - SB
-      - SC
-      - SD
-      - SE
-      - SG
-      - SH
-      - SI
-      - SJ
-      - SK
-      - SL
-      - SM
-      - SN
-      - SO
-      - SR
-      - SS
-      - ST
-      - SV
-      - SX
-      - SY
-      - SZ
-      - TC
-      - TD
-      - TF
-      - TG
-      - TH
-      - TJ
-      - TK
-      - TL
-      - TM
-      - TN
-      - TO
-      - TP
-      - TR
-      - TT
-      - TV
-      - TW
-      - TZ
-      - UA
-      - UG
-      - UM
-      - US
-      - UY
-      - UZ
-      - VA
-      - VC
-      - VE
-      - VG
-      - VI
-      - VN
-      - VU
-      - WF
-      - WS
-      - YE
-      - YT
-      - ZA
-      - ZM
-      - ZW
-    Supplier1:
-      description: Represents a supplier object.
-      type: object
-      title: Supplier
-      properties:
-        type:
-          $ref: '#/components/schemas/SupplierType1'
-    AgendaItems:
-      description: The agenda items with all agenda items and additional details
-      type: object
-      title: AgendaItems
-      properties:
-        items:
-          type: array
-          maxItems: 200
-          description: The list of agenda items.
-          items:
-            $ref: '#/components/schemas/AgendaItem'
-        requiredRoomSizeUnits:
-          $ref: '#/components/schemas/MeasurementUnit'
-        roomRequirementsMet:
-          type: boolean
-          description: True indicates room requirements are met.
-          example: true
-        responseNotes:
-          type: string
-          maxLength: 255
-          description: Response notes from the venue.
-          example: We cannot accommodate agenda items starting before 8am.
-    Category1:
-      type: object
-      title: Category
-      description: A category of items.
-      properties:
-        type:
-          type: string
-          description: The category type.
-          example: AVProduction
-        name:
-          type: string
-          description: The name of the category.
-          example: Audio Video Production
-        totalCost:
-          type: number
-          description: Total cost for all items within this category.
-          example: 10000.99
-        items:
-          type: array
-          description: List of items in this category.
-          items:
-            $ref: '#/components/schemas/Item'
-    RoomOccupancy:
-      title: RoomOccupancy
-      description: RoomOccupancy
-      type: string
-      enum:
-      - BLANK
-      - SINGLE
-      - DOUBLE
-      - TRIPLE
-      - QUAD
-    SleepingRoomBlock:
-      type: object
-      title: SleepingRoomBlock
-      description: The sleeping room block.
-      properties:
-        proposalDateType:
-          $ref: '#/components/schemas/DateType1'
-        sleepingRoomType:
-          $ref: '#/components/schemas/SleepingRoomType1'
-        date:
-          type: string
-          format: date
-          description: Date the rooms in the room block are available.
-          example: '2021-01-13'
-        quantity:
-          type: integer
-          description: The total number of rooms for this room block.
-          example: 20
-          minimum: 0
-        rate:
-          type: number
-          description: The nightly cost of rooms in this room block.
-          example: 150
-          minimum: 0
-    SessionType:
-      title: SessionType
-      description: The session type.
-      type: string
-      enum:
-      - SPEAKER
-      - REMOTE
-    EstimatedCost:
-      type: object
-      title: EstimatedCost
-      description: The estimated cost
-      properties:
-        guestRoom:
-          type: number
-          description: Guest room cost.
-          example: 100
-        meetingRoom:
-          type: number
-          description: Meeting room cost.
-          example: 10
-        foodAndBeverage:
-          type: number
-          description: Food and beverage cost.
-          example: 100
-        foodAndBeverageMinimum:
-          type: number
-          description: Minimum cost for food and beverage.
-          example: 10
-        notes:
-          type: string
-          maxLength: 2500
-          description: Extra notes on the cost.
-          example: Estimated cost includes taxes.
-    Transaction:
-      description: The latest transaction that took place on a given proposal
-      type: object
-      title: Transaction
-      readOnly: true
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: The unique ID of a specific transaction.
-          example: cf5fd2cc-3d09-11ee-be56-0242ac120002
-        type:
-          $ref: '#/components/schemas/TransactionType'
-        time:
-          type: string
-          format: date-time
-          description: The ISO 8601 zoned date time when this record was updated.
-          example: '2023-02-12T03:00:00Z'
-    DateType1:
-      type: string
-      title: DateType
-      description: The date types used for the proposal, 'PREFERRED' have the highest priority. Values prefixed with 'ALTERNATE_' are decreasing in priority (e.g., ALTERNATE_1 has higher priority than 'ALTERNATE_2 and so on).
-      enum:
-      - PREFERRED
-      - ALTERNATE_1
-      - ALTERNATE_2
-      - ALTERNATE_3
-      - ALTERNATE_4
-      - ALTERNATE_5
-      - ALTERNATE_6
-      - ALTERNATE_7
-      - ALTERNATE_8
-      - ALTERNATE_9
-      - ALTERNATE_10
-      - ALTERNATE_11
-      - ALTERNATE_12
-      default: PREFERRED
-    SleepingRoom1:
-      type: object
-      title: SleepingRoom
-      description: The sleeping room.
-      properties:
-        proposalDateType:
-          $ref: '#/components/schemas/DateType1'
-        checkInDate:
-          type: string
-          format: date
-          description: The check in date for attendees.
-          example: '2021-01-13'
-        checkOutDate:
-          type: string
-          format: date
-          description: The check out date for attendees.
-          example: '2021-01-13'
-        peakRoomNights:
-          type: integer
-          minimum: 0
-          description: The night during an event when the most sleeping rooms are occupied.
-          example: 2
-        totalRoomNights:
-          type: integer
-          description: The total number of room nights available over the entire event.
-          minimum: 0
-          example: 200
-        lowestRate:
-          type: number
-          description: The lowest room rate offered by the venue.
-          example: 140
-        maximumRate:
-          type: number
-          description: The highest room rate offered by the venue.
-          example: 200
-        lowestAverageDailyRate:
-          type: number
-          description: The lowest average daily rate.
-          example: 140
-        highestAverageDailyRate:
-          type: number
-          description: The highest average daily rate.
-          example: 200
-        totalRoomCost:
-          type: number
-          description: The total room cost to attendees.
-          example: 300
-        budgetedRoomRate:
-          type: number
-          description: The planner's budgeted room rate.
-          example: 135
-        lowestAvailableRoomCount:
-          type: integer
-          description: Minimum number of available rooms.
-          example: 10
-        highestAvailableRoomCount:
-          type: integer
-          description: Maximum number of available rooms.
-          example: 10
-        notes:
-          type: string
-          maxLength: 2500
-          description: Additional notes of the sleeping room.
-          example: Premier Suite not available for the selected dates.
-        sleepingRoomBlocks:
-          type: array
-          description: List of sleeping room blocks for this sleeping room type.
-          items:
-            $ref: '#/components/schemas/SleepingRoomBlock'
-    ContactType1:
-      type: string
-      title: ContactType
-      description: The contact types used for the proposal.
-      enum:
-      - PRIMARY
-      - SECONDARY
-      default: PRIMARY
-    AvailablePackage:
-      description: The available package.
-      type: object
-      title: AvailablePackage
-      properties:
-        day:
-          $ref: '#/components/schemas/Day'
-        packageType:
-          $ref: '#/components/schemas/PackageType'
-        roomOccupancy:
-          $ref: '#/components/schemas/RoomOccupancy'
-        roomType:
-          $ref: '#/components/schemas/SleepingRoomType1'
-        rate:
-          type: number
-          description: Package cost.
-          example: 100
-        quantity:
-          type: integer
-          description: Quantity of the package.
-          example: 100
-        includedCostItems:
-          type: array
-          description: List of items for which cost is included in the package.
-          items:
-            $ref: '#/components/schemas/CostItemType'
-        notes:
-          type: string
-          maxLength: 255
-          description: Extra notes on the package.
-          example: We will give complimentary access of jacuzzi.
-    Package:
-      type: object
-      title: Package
-      description: The proposal package.
-      properties:
-        dateType:
-          $ref: '#/components/schemas/DateType1'
-        checkInDate:
-          type: string
-          format: date
-          description: The ISO 8601 formatted date attendees can check-in.
-          example: '2016-10-13'
-        availablePackages:
-          type: array
-          maxItems: 200
-          description: List of all available packages from the venue.
-          items:
-            $ref: '#/components/schemas/AvailablePackage'
-        additionalInfo:
-          type: string
-          maxLength: 255
-          description: Additional information about the package.
-          example: The offered packages are best-in-class.
-        totalPackageCost:
-          type: number
-          description: Total package cost.
-          example: 100
-    CancelledReason:
-      title: CancelledReason
-      description: CancelledReason
-      type: string
-      enum:
-      - EVENT_CANCELLED
-      - REQUIREMENTS_CHANGED
-      - OTHER
-      - BOOKED_ANOTHER_VENUE_DESTINATION
-      - CLIENT_BOOKED_DIRECTLY
-      - EVENT_POSTPONED
-      - MEDICAL_EMERGENCY
-      - EPIDEMIC_OR_PANDEMIC
-      - NATURAL_DISASTER
-      - POLITICAL_OR_CIVIL_UNREST
-    StatusSummary:
-      description: Represents a summary of status associated with this proposal.
-      type: object
-      title: StatusSummary
-      properties:
-        reason:
-          type: string
-          example: Other
-          description: Reason provided by the planner for status update
-        comment:
-          type: string
-          example: Not as per requirement
-          description: Comment provided by the planner while updating the status of the proposal.
-    RfpSummary:
-      description: Schema for Rfp details associated with this proposal.
-      type: object
-      title: RfpSummary
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: The unique ID of the RFP this proposal is associated with.
-          example: 385b9a4c-3f00-4b67-99ca-8dddc82a95b5
-    CostItemType:
-      title: CostItemType
-      description: The cost item type.
-      type: string
-      enum:
-      - AIRPORT_TRANSPORTATION
-      - AIR_CONDITIONING_HEATING
-      - AUDIO_PATCH
-      - AV_EQUIPMENT
-      - BELLMAN_DELIVERY
-      - BREAKFAST_BUFFET
-      - BREAKFAST_CONTINENTAL
-      - BREAKFAST_PLATED
-      - BREAKOUT_LARGE
-      - BREAKOUT_MEDIUM
-      - BREAKOUT_SMALL
-      - BREAKOUT_TOTAL
-      - BREAK_AM
-      - BREAK_DRINKS_ONLY
-      - BREAK_PM
-      - BREAK_SNACKS_AND_DRINKS
-      - BUILDING_OVERTIME
-      - BUSINESS_CENTER
-      - CMP
-      - CONFERENCE_CONCIERGE
-      - CONFERENCE_PLANNING_MANAGER
-      - DDR_FULL_DAY
-      - DDR_HALF_DAY
-      - DINNER_BUFFET
-      - DINNER_PLATED
-      - EXHIBIT_SPACE
-      - FACILITY_FEE
-      - FITNESS_CENTER
-      - GALLON_COFFEE
-      - GENERAL_SESSION
-      - HOUSEKEEPING
-      - INTERNET_GUEST_ROOM
-      - INTERNET_MEETING_ROOM
-      - LABOR
-      - LIGHTING
-      - LOCAL_TRANSPORTATION
-      - LUNCH_BOXED
-      - LUNCH_BUFFET
-      - LUNCH_PLATED
-      - MEETING_ROOMS_TOTAL
-      - NONE
-      - OFFICE
-      - OTHER_FB
-      - OTHER_MISC
-      - OTHER_RENTAL
-      - OTHER_TRANSPORTATION
-      - PARKING_FEE_SELF
-      - PARKING_FEE_VALET
-      - POWER_DROP
-      - RECEPTION_BEVERAGE
-      - RECEPTION_FOOD
-      - RECEPTION_HEAVY_HORS_D_OEUVRES
-      - RECEPTION_LIGHT_APPETIZERS
-      - RESORT_FEE
-      - ROOM_DROP
-      - SERVICE_CHARGES
-      - SETUP
-      - SHIPPING_RECEIVING
-      - SLEEPING_ROOMS
-      - STORAGE
-      - TEARDOWN
-      - TOTAL_FB_MINIMUM
-    MeasurementUnit:
-      title: MeasurementUnit
-      description: 'Unit of measurement for area or space.
-
-
-        Values:
-
-        - `SQUARE_FEET` — Square Feet
-
-        - `SQUARE_METERS` — Square Meters'
-      type: string
-      enum:
-      - SQUARE_FEET
-      - SQUARE_METERS
     StateProvince:
       type: string
       title: StateProvince
@@ -1922,6 +878,1093 @@ components:
       - YOR
       - YT
       - ZET
+    ProposalStatus:
+      type: string
+      title: ProposalStatus
+      description: The status of the proposal. See [definitions of proposal statuses](https://support.cvent.com/s/communityarticle/Understanding-RFP-and-Proposal-Statuses)
+      enum:
+      - NOT_SENT
+      - SUBMITTED
+      - AWARDED
+      - DECLINED
+      - DELETED
+      - NO_RESPONSE
+      - CANCELLED
+      - WITHDRAWN
+      default: NOT_SENT
+    Supplier1:
+      description: Represents a supplier object.
+      type: object
+      title: Supplier
+      properties:
+        type:
+          $ref: '#/components/schemas/SupplierType1'
+    SupplierSummary:
+      description: Represents a summary of supplier information associated with current proposal.
+      type: object
+      title: SupplierSummary
+      properties:
+        supplier:
+          description: The supplier associated with current proposal.
+          oneOf:
+          - $ref: '#/components/schemas/VenueSummary'
+          discriminator:
+            propertyName: type
+            mapping:
+              VENUE: '#/components/schemas/VenueSummary'
+    SupplierType1:
+      title: SupplierType
+      description: 'The supplier''s type. VENUE: A hotel, convention and visitors bureau (CVB), or other location for an event.'
+      type: string
+      enum:
+      - VENUE
+      default: VENUE
+    AvailablePackage:
+      description: The available package.
+      type: object
+      title: AvailablePackage
+      properties:
+        day:
+          $ref: '#/components/schemas/Day'
+        packageType:
+          $ref: '#/components/schemas/PackageType'
+        roomOccupancy:
+          $ref: '#/components/schemas/RoomOccupancy'
+        roomType:
+          $ref: '#/components/schemas/SleepingRoomType1'
+        rate:
+          type: number
+          description: Package cost.
+          example: 100
+        quantity:
+          type: integer
+          description: Quantity of the package.
+          example: 100
+        includedCostItems:
+          type: array
+          description: List of items for which cost is included in the package.
+          items:
+            $ref: '#/components/schemas/CostItemType'
+        notes:
+          type: string
+          maxLength: 255
+          description: Extra notes on the package.
+          example: We will give complimentary access of jacuzzi.
+    AgendaItemSetup1:
+      type: string
+      title: AgendaItemSetup
+      description: The setup of the Agenda
+      enum:
+      - BLANK
+      - BUFFET
+      - PLATED
+      - CLASSROOM
+      - CONFERENCE
+      - HERRINGBONE
+      - RECEPTION
+      - ROUNDS
+      - ROUNDS_OF_10
+      - ROUNDS_OF_8
+      - ROUNDS_OF_6
+      - SCHOOL_ROOM
+      - THEATER
+      - U_SHAPED
+      - T_SHAPED
+      - HOLLOW_SQUARE
+      - TEN_BY_TEN
+      - EIGHT_BY_TEN
+      - ISLAND
+      - PENINSULA
+      - TABLETOP
+      - CRESCENT_ROUNDS
+      - CHEVRON
+      - CABARET
+      - FLOW
+      - OFFSITE
+      - OTHER
+    Audit:
+      title: Audit
+      description: Audit information
+      type: object
+      properties:
+        created:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date time when this record was created.
+          readOnly: true
+          example: '2017-01-02T02:00:00Z'
+        createdBy:
+          type: string
+          description: The identifier of the user that created this record.
+          readOnly: true
+          example: hporter
+        lastModified:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date time when this record was updated.
+          readOnly: true
+          example: '2019-02-12T03:00:00Z'
+        lastModifiedBy:
+          type: string
+          description: The identifier of the user that last updated this record.
+          readOnly: true
+          example: hporter
+    ContactType1:
+      type: string
+      title: ContactType
+      description: The contact types used for the proposal.
+      enum:
+      - PRIMARY
+      - SECONDARY
+      default: PRIMARY
+    ProposalResponse:
+      description: Schema for proposal.
+      type: object
+      title: Proposal
+      allOf:
+      - $ref: '#/components/schemas/BaseProposal'
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The unique ID of the proposal.
+          example: cf5fd2cc-3d09-11ee-be56-0242ac120002
+        proposalCode:
+          type: string
+          minLength: 14
+          maxLength: 14
+          description: A 14-character human readable proposal code.
+          example: P230810-G7T9DR
+        status:
+          $ref: '#/components/schemas/ProposalStatus'
+        version:
+          type: integer
+          description: The version number associated with the proposal.
+          example: 1
+        lastSubmittedTime:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned Coordinated Universal Time (UTC) when the proposal was last submitted.
+          example: '2023-02-12T03:00:00Z'
+        responseReason:
+          type: string
+          description: The reason for the response.
+          oneOf:
+          - $ref: '#/components/schemas/DeclinedReason'
+          - $ref: '#/components/schemas/CancelledReason'
+          example: BOOKED_ANOTHER_VENUE_DESTINATION
+        responseDetails:
+          type: string
+          description: Additional details provided while responding to the proposal.
+          example: The location is far from the event venue.
+      required:
+      - id
+      - proposalCode
+      - status
+      - version
+    TransactionType:
+      title: TransactionType
+      description: The proposal transaction type
+      type: string
+      enum:
+      - AWARD
+      - CANCEL
+      - COPY
+      - CREATE
+      - DECLINE
+      - DELETE
+      - EXPIRE
+      - MODIFY
+      - OBFUSCATE
+      - PUBLISH
+      - PUBLISH_CANCEL
+      - PUBLISH_REQUEST
+      - REOPEN
+      - RESEND_EMAIL
+      - SUBMIT
+      - VALIDATE
+      - WITHDRAW
+    BaseProposal:
+      description: Schema for proposal request.
+      type: object
+      title: BaseProposal
+      allOf:
+      - $ref: '#/components/schemas/Audit'
+      properties:
+        scpTemplateId:
+          format: uuid
+          type: string
+          example: a633b01c-e461-4cc2-8c66-8ae036115658
+          description: The ID of the smart custom proposal template.
+        type:
+          $ref: '#/components/schemas/ProposalType'
+        supplierSummary:
+          $ref: '#/components/schemas/SupplierSummary'
+        rfpSummary:
+          $ref: '#/components/schemas/RfpSummary'
+        eventSummary:
+          $ref: '#/components/schemas/EventSummary'
+        statusSummary:
+          $ref: '#/components/schemas/StatusSummary'
+        introduction:
+          type: string
+          maxLength: 2500
+          description: Introduction text for the proposal.
+          example: Let us design the day of your dreams at our property.
+        billingContractualResponse:
+          type: string
+          maxLength: 2500
+          description: Details about concessions or contractual requirements from the supplier. DEPRECATED - This field is deprecated. Only applied to proposal made from vendor marketplace, a sunset product.
+          example: All invoices must be paid in 30 days.
+          deprecated: true
+        currencyCode:
+          $ref: '#/components/schemas/Currency'
+        commissionableBid:
+          type: boolean
+          description: True indicates this is a commissionable bid.
+          example: true
+        commissionRate:
+          type: number
+          description: The proposal's commission rate.
+          example: 10.12
+        name:
+          type: string
+          maxLength: 50
+          description: Name of the proposal.
+          example: Proposal for Royal Bank of Spain.
+        blockCode:
+          type: string
+          maxLength: 50
+          description: Block code for the proposal.
+          example: ABDCFD-234535-3535
+        proposalDates:
+          type: array
+          description: List of dates the venue is available.
+          items:
+            $ref: '#/components/schemas/ProposalDate'
+        sleepingRooms:
+          type: array
+          description: List of all sleeping rooms offered in the proposal.
+          items:
+            $ref: '#/components/schemas/SleepingRoom1'
+        categoryItemsCost:
+          $ref: '#/components/schemas/CategoryItemsCost'
+        aggregatedCost:
+          $ref: '#/components/schemas/AggregatedCost'
+        estimatedCost:
+          $ref: '#/components/schemas/EstimatedCost'
+        contacts:
+          type: array
+          description: List of all contacts.
+          items:
+            $ref: '#/components/schemas/Contact2'
+        plannerContacts:
+          type: array
+          description: List of all planner contacts.
+          items:
+            $ref: '#/components/schemas/Contact2'
+        meetingRoom:
+          $ref: '#/components/schemas/MeetingRoom'
+        agendaItems:
+          $ref: '#/components/schemas/AgendaItems'
+        packages:
+          type: array
+          description: List of Package Details
+          maxItems: 200
+          items:
+            $ref: '#/components/schemas/Package'
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+    Country:
+      title: Country
+      description: ISO 3166 two-letter (alpha-2) country codes with some additional non-standard cvent specific codes.
+      type: string
+      enum:
+      - BLANK
+      - AD
+      - AE
+      - AF
+      - AG
+      - AI
+      - AL
+      - AM
+      - AN
+      - AO
+      - AQ
+      - AR
+      - AS
+      - AT
+      - AU
+      - AW
+      - AX
+      - AZ
+      - BA
+      - BB
+      - BD
+      - BE
+      - BF
+      - BG
+      - BH
+      - BI
+      - BJ
+      - BL
+      - BM
+      - BN
+      - BO
+      - BQ
+      - BR
+      - BS
+      - BT
+      - BV
+      - BW
+      - BY
+      - BZ
+      - CA
+      - CC
+      - CD
+      - CF
+      - CG
+      - CH
+      - CI
+      - CK
+      - CL
+      - CM
+      - CN
+      - CO
+      - CR
+      - CU
+      - CV
+      - CW
+      - CX
+      - CY
+      - CZ
+      - DE
+      - DJ
+      - DK
+      - DM
+      - DO
+      - DZ
+      - EC
+      - EE
+      - EG
+      - EH
+      - ER
+      - ES
+      - ET
+      - FI
+      - FJ
+      - FK
+      - FM
+      - FO
+      - FR
+      - GA
+      - GB
+      - GB_1
+      - GB_2
+      - GB_3
+      - GB_4
+      - GD
+      - GE
+      - GF
+      - GG
+      - GH
+      - GI
+      - GL
+      - GM
+      - GN
+      - GP
+      - GQ
+      - GR
+      - GS
+      - GT
+      - GU
+      - GW
+      - GY
+      - HK
+      - HM
+      - HN
+      - HR
+      - HT
+      - HU
+      - ID
+      - IE
+      - IL
+      - IM
+      - IN
+      - IO
+      - IQ
+      - IR
+      - IS
+      - IT
+      - JE
+      - JM
+      - JO
+      - JP
+      - KE
+      - KG
+      - KH
+      - KI
+      - KM
+      - KN
+      - KO
+      - KP
+      - KR
+      - KW
+      - KY
+      - KZ
+      - LA
+      - LB
+      - LC
+      - LI
+      - LK
+      - LR
+      - LS
+      - LT
+      - LU
+      - LV
+      - LY
+      - MA
+      - MC
+      - MD
+      - ME
+      - MF
+      - MG
+      - MH
+      - MK
+      - ML
+      - MM
+      - MN
+      - MO
+      - MP
+      - MQ
+      - MR
+      - MS
+      - MT
+      - MU
+      - MV
+      - MW
+      - MX
+      - MY
+      - MZ
+      - NA
+      - NC
+      - NE
+      - NF
+      - NG
+      - NI
+      - NL
+      - 'NO'
+      - NP
+      - NR
+      - NU
+      - NZ
+      - OM
+      - PA
+      - PE
+      - PF
+      - PG
+      - PH
+      - PK
+      - PL
+      - PM
+      - PN
+      - PR
+      - PS
+      - PT
+      - PW
+      - PY
+      - QA
+      - RE
+      - RO
+      - RS
+      - RU
+      - RW
+      - SA
+      - SB
+      - SC
+      - SD
+      - SE
+      - SG
+      - SH
+      - SI
+      - SJ
+      - SK
+      - SL
+      - SM
+      - SN
+      - SO
+      - SR
+      - SS
+      - ST
+      - SV
+      - SX
+      - SY
+      - SZ
+      - TC
+      - TD
+      - TF
+      - TG
+      - TH
+      - TJ
+      - TK
+      - TL
+      - TM
+      - TN
+      - TO
+      - TP
+      - TR
+      - TT
+      - TV
+      - TW
+      - TZ
+      - UA
+      - UG
+      - UM
+      - US
+      - UY
+      - UZ
+      - VA
+      - VC
+      - VE
+      - VG
+      - VI
+      - VN
+      - VU
+      - WF
+      - WS
+      - YE
+      - YT
+      - ZA
+      - ZM
+      - ZW
+    MeetingRoom:
+      type: object
+      title: MeetingRoom
+      description: The meeting room.
+      properties:
+        name:
+          type: string
+          maxLength: 255
+          description: Meeting room name.
+          example: Conference Room A
+        notes:
+          type: string
+          maxLength: 2500
+          description: Planner note about the meeting room.
+          example: This meeting room has the best audio quality.
+    ProposalRequest:
+      description: Schema for proposal request.
+      type: object
+      title: ProposalRequest
+      allOf:
+      - $ref: '#/components/schemas/BaseProposal'
+    SessionType:
+      title: SessionType
+      description: The session type.
+      type: string
+      enum:
+      - SPEAKER
+      - REMOTE
+    Currency:
+      title: Currency
+      type: string
+      description: The ISO 4217 standard format currency code used for RFPs.
+      enum:
+      - USD
+      - CAD
+      - AUD
+      - EUR
+      - GBP
+      - HKD
+      - NZD
+      - AED
+      - NOK
+      - INR
+      - MXN
+      - SEK
+      - DKK
+      - MYR
+      - JPY
+      - SGD
+      - THB
+      - IDR
+      - KRW
+      - CNY
+      - TWD
+      - RUB
+      - CHF
+      - CZK
+      - HUF
+      - QAR
+      - ZAR
+      - RON
+      - HRK
+      - TRY
+      - BRL
+      - PHP
+      - SAR
+      - PLN
+      - ARS
+      - AWG
+      - AZN
+      - BSD
+      - BBD
+      - BMD
+      - CLP
+      - COP
+      - CRC
+      - DOP
+      - XCD
+      - ILS
+      - JMD
+      - LVL
+      - LTL
+      - MDL
+      - ANG
+      - OMR
+      - TTD
+      - UAH
+      - UYU
+      - RSD
+      - AFN
+      - AMD
+      - AOA
+      - BAM
+      - BDT
+      - BGN
+      - BHD
+      - BOB
+      - DZD
+      - EEK
+      - EGP
+      - FJD
+      - GTQ
+      - HNL
+      - ISK
+      - JOD
+      - KYD
+      - KZT
+      - LBP
+      - MAD
+      - NGN
+      - NIO
+      - ESP
+      - FRF
+      - PAB
+      - PEN
+      - PKR
+      - PYG
+      - SVC
+      - SYP
+      - VEF
+      - VND
+      - XPF
+      - GYD
+      - MOP
+      - PGK
+      - XOF
+      - XAF
+      - BZD
+      - BYR
+      - BWP
+      - BND
+      - BIF
+      - KHR
+      - CVE
+      - KMF
+      - CDF
+      - DJF
+      - ERN
+      - FKP
+      - GMD
+      - GEL
+      - GHS
+      - GIP
+      - GNF
+      - HTG
+      - KES
+      - KWD
+      - KGS
+      - LAK
+      - LRD
+      - MKD
+      - MGA
+      - MWK
+      - MVR
+      - MRO
+      - MUR
+      - MNT
+      - MZN
+      - MMK
+      - NAD
+      - NPR
+      - RWF
+      - SHP
+      - WST
+      - STD
+      - SLL
+      - SBD
+      - SOS
+      - LKR
+      - SRD
+      - SZL
+      - TOP
+      - TND
+      - UGX
+      - UZS
+      - VUV
+      - YER
+      - ZMK
+      - ZWD
+      - SR
+      - ETB
+      - GH
+      - GWP
+      - IQD
+      - IRR
+      - KPW
+      - LSL
+      - ROL
+      - SDG
+      - SKK
+      - TJS
+      - TMT
+      - TZS
+      - ALL
+      - BTN
+      - CUP
+      - LD
+      - SCR
+      - ZMW
+      - ZWL
+    CancelledReason:
+      title: CancelledReason
+      description: CancelledReason
+      type: string
+      enum:
+      - EVENT_CANCELLED
+      - REQUIREMENTS_CHANGED
+      - OTHER
+      - BOOKED_ANOTHER_VENUE_DESTINATION
+      - CLIENT_BOOKED_DIRECTLY
+      - EVENT_POSTPONED
+      - MEDICAL_EMERGENCY
+      - EPIDEMIC_OR_PANDEMIC
+      - NATURAL_DISASTER
+      - POLITICAL_OR_CIVIL_UNREST
+    AggregatedCost:
+      description: The aggregated cost
+      type: object
+      title: AggregatedCost
+      properties:
+        totalFoodAndBeverageCost:
+          type: number
+          description: The cost of the food and beverage.
+          example: 396.56
+        totalMiscCost:
+          type: number
+          description: The total misc cost.
+          example: 644.96
+    PackageType:
+      type: string
+      title: PackageType
+      description: Package type for the proposal.
+      enum:
+      - ALL_INCLUSIVE
+      - COMPLETE_MEETING_PACKAGE
+      - DAILY_DELEGATE_RATE
+      - DAY_MEETING_PACKAGE
+      - HALF_DDR
+      - HALF_DMP
+      - MODIFIED_MEETING_PACKAGE
+      - SLEEPING_ROOM_RATE
+      - TWENTYFOUR_HOUR_RATE
+    AgendaItems:
+      description: The agenda items with all agenda items and additional details
+      type: object
+      title: AgendaItems
+      properties:
+        items:
+          type: array
+          maxItems: 200
+          description: The list of agenda items.
+          items:
+            $ref: '#/components/schemas/AgendaItem'
+        requiredRoomSizeUnits:
+          $ref: '#/components/schemas/MeasurementUnit'
+        roomRequirementsMet:
+          type: boolean
+          description: True indicates room requirements are met.
+          example: true
+        responseNotes:
+          type: string
+          maxLength: 255
+          description: Response notes from the venue.
+          example: We cannot accommodate agenda items starting before 8am.
+    DateType1:
+      type: string
+      title: DateType
+      description: The date types used for the proposal, 'PREFERRED' have the highest priority. Values prefixed with 'ALTERNATE_' are decreasing in priority (e.g., ALTERNATE_1 has higher priority than 'ALTERNATE_2 and so on).
+      enum:
+      - PREFERRED
+      - ALTERNATE_1
+      - ALTERNATE_2
+      - ALTERNATE_3
+      - ALTERNATE_4
+      - ALTERNATE_5
+      - ALTERNATE_6
+      - ALTERNATE_7
+      - ALTERNATE_8
+      - ALTERNATE_9
+      - ALTERNATE_10
+      - ALTERNATE_11
+      - ALTERNATE_12
+      default: PREFERRED
+    CategoryItemsCost:
+      type: object
+      title: CategoryItemsCost
+      description: Category items cost. DEPRECATED - This field is deprecated. Only applied to proposals made by vendors, and the vendor marketplace is sunset.
+      deprecated: true
+      properties:
+        notes:
+          type: string
+          description: Notes on category items cost from the venue.
+          example: We are offering a discount on projectors.
+        totalCost:
+          type: number
+          description: Total cost across all categories.
+          example: 10000.99
+        categories:
+          type: array
+          description: List of categories.
+          items:
+            $ref: '#/components/schemas/Category1'
+    Category1:
+      type: object
+      title: Category
+      description: A category of items.
+      properties:
+        type:
+          type: string
+          description: The category type.
+          example: AVProduction
+        name:
+          type: string
+          description: The name of the category.
+          example: Audio Video Production
+        totalCost:
+          type: number
+          description: Total cost for all items within this category.
+          example: 10000.99
+        items:
+          type: array
+          description: List of items in this category.
+          items:
+            $ref: '#/components/schemas/Item'
+    VenueSummary:
+      description: Represents a summary of venue information associated with current proposal.
+      type: object
+      title: VenueSummary
+      allOf:
+      - $ref: '#/components/schemas/Supplier1'
+      properties:
+        id:
+          type: string
+          description: The unique ID of the venue.
+          example: bedc1f8e-f68b-40cf-b901-487e407f637a
+        name:
+          type: string
+          description: The name of the venue.
+          example: Hotel Grand San Francisco.
+    MeasurementUnit:
+      title: MeasurementUnit
+      description: 'Unit of measurement for area or space.
+
+
+        Values:
+
+        - `SQUARE_FEET` — Square Feet
+
+        - `SQUARE_METERS` — Square Meters'
+      type: string
+      enum:
+      - SQUARE_FEET
+      - SQUARE_METERS
+    AgendaItem:
+      description: The agenda item
+      type: object
+      title: AgendaItem
+      properties:
+        name:
+          type: string
+          maxLength: 50
+          description: The name of the agenda item.
+          example: Cvent Connect Intro
+        number:
+          type: integer
+          description: Sequence of the agenda item.
+          example: 1
+        type:
+          $ref: '#/components/schemas/AgendaItemType1'
+        setup:
+          $ref: '#/components/schemas/AgendaItemSetup1'
+        sessionType:
+          $ref: '#/components/schemas/SessionType'
+        startTime:
+          type: string
+          format: date-time
+          description: The start time of the event.
+          example: '2021-01-13T14:06:20.080Z'
+        endTime:
+          type: string
+          format: date-time
+          description: The end time of the event.
+          example: '2021-01-13T14:06:20.080Z'
+        requiredRoomSize:
+          type: integer
+          description: Required size of the room.
+          example: 100
+        expectedNumberOfPeople:
+          type: integer
+          description: The expected number of people attending this agenda item.
+          example: 500
+        roomInfoRequired:
+          type: boolean
+          description: True indicates room information is required.
+          example: true
+        roomHoldRequired:
+          type: boolean
+          description: True indicates room hold is required.
+          example: true
+        twentyFourHourHoldRequired:
+          type: boolean
+          description: True indicates room hold is required for twenty four hours.
+          example: true
+        locatedAtPrimeEventVenue:
+          type: boolean
+          description: True indicates it is located at prime event venue.
+          example: true
+        meal:
+          $ref: '#/components/schemas/RfpMealType'
+        days:
+          type: array
+          maxItems: 200
+          description: Number of days for agenda.
+          items:
+            $ref: '#/components/schemas/Day'
+        roomOptedOut:
+          type: boolean
+          description: True indicates room is opted out.
+          example: true
+        audioVideoNeeds:
+          type: string
+          maxLength: 255
+          description: The audio video requirement for the agenda item.
+          example: Audio
+        notes:
+          type: string
+          maxLength: 255
+          description: Additional note for the agenda item.
+          example: Video is good to have for this event.
+        meetingRoom:
+          type: array
+          maxItems: 500
+          description: List of meeting rooms.
+          items:
+            $ref: '#/components/schemas/MeetingRoom'
+    CostItemType:
+      title: CostItemType
+      description: The cost item type.
+      type: string
+      enum:
+      - AIRPORT_TRANSPORTATION
+      - AIR_CONDITIONING_HEATING
+      - AUDIO_PATCH
+      - AV_EQUIPMENT
+      - BELLMAN_DELIVERY
+      - BREAKFAST_BUFFET
+      - BREAKFAST_CONTINENTAL
+      - BREAKFAST_PLATED
+      - BREAKOUT_LARGE
+      - BREAKOUT_MEDIUM
+      - BREAKOUT_SMALL
+      - BREAKOUT_TOTAL
+      - BREAK_AM
+      - BREAK_DRINKS_ONLY
+      - BREAK_PM
+      - BREAK_SNACKS_AND_DRINKS
+      - BUILDING_OVERTIME
+      - BUSINESS_CENTER
+      - CMP
+      - CONFERENCE_CONCIERGE
+      - CONFERENCE_PLANNING_MANAGER
+      - DDR_FULL_DAY
+      - DDR_HALF_DAY
+      - DINNER_BUFFET
+      - DINNER_PLATED
+      - EXHIBIT_SPACE
+      - FACILITY_FEE
+      - FITNESS_CENTER
+      - GALLON_COFFEE
+      - GENERAL_SESSION
+      - HOUSEKEEPING
+      - INTERNET_GUEST_ROOM
+      - INTERNET_MEETING_ROOM
+      - LABOR
+      - LIGHTING
+      - LOCAL_TRANSPORTATION
+      - LUNCH_BOXED
+      - LUNCH_BUFFET
+      - LUNCH_PLATED
+      - MEETING_ROOMS_TOTAL
+      - NONE
+      - OFFICE
+      - OTHER_FB
+      - OTHER_MISC
+      - OTHER_RENTAL
+      - OTHER_TRANSPORTATION
+      - PARKING_FEE_SELF
+      - PARKING_FEE_VALET
+      - POWER_DROP
+      - RECEPTION_BEVERAGE
+      - RECEPTION_FOOD
+      - RECEPTION_HEAVY_HORS_D_OEUVRES
+      - RECEPTION_LIGHT_APPETIZERS
+      - RESORT_FEE
+      - ROOM_DROP
+      - SERVICE_CHARGES
+      - SETUP
+      - SHIPPING_RECEIVING
+      - SLEEPING_ROOMS
+      - STORAGE
+      - TEARDOWN
+      - TOTAL_FB_MINIMUM
+    EstimatedCost:
+      type: object
+      title: EstimatedCost
+      description: The estimated cost
+      properties:
+        guestRoom:
+          type: number
+          description: Guest room cost.
+          example: 100
+        meetingRoom:
+          type: number
+          description: Meeting room cost.
+          example: 10
+        foodAndBeverage:
+          type: number
+          description: Food and beverage cost.
+          example: 100
+        foodAndBeverageMinimum:
+          type: number
+          description: Minimum cost for food and beverage.
+          example: 10
+        notes:
+          type: string
+          maxLength: 2500
+          description: Extra notes on the cost.
+          example: Estimated cost includes taxes.
     SleepingRoomType1:
       type: string
       title: SleepingRoomType
@@ -1947,32 +1990,98 @@ components:
           items:
             $ref: '#/components/schemas/ErrorResponseBase1'
           description: Additional details of cascading error messages.
-    ProposalRequest:
-      description: Schema for proposal request.
+    StatusSummary:
+      description: Represents a summary of status associated with this proposal.
       type: object
-      title: ProposalRequest
-      allOf:
-      - $ref: '#/components/schemas/BaseProposal'
-    ErrorResponseBase1:
-      title: ErrorResponseBase
-      type: object
-      description: Represents an error response with no additional details.
-      required:
-      - code
-      - message
+      title: StatusSummary
       properties:
-        code:
+        reason:
+          type: string
+          example: Other
+          description: Reason provided by the planner for status update
+        comment:
+          type: string
+          example: Not as per requirement
+          description: Comment provided by the planner while updating the status of the proposal.
+    SleepingRoom1:
+      type: object
+      title: SleepingRoom
+      description: The sleeping room.
+      properties:
+        proposalDateType:
+          $ref: '#/components/schemas/DateType1'
+        checkInDate:
+          type: string
+          format: date
+          description: The check in date for attendees.
+          example: '2021-01-13'
+        checkOutDate:
+          type: string
+          format: date
+          description: The check out date for attendees.
+          example: '2021-01-13'
+        peakRoomNights:
           type: integer
-          description: The HTTP status code representing the error.
-          example: 400
-        message:
+          minimum: 0
+          description: The night during an event when the most sleeping rooms are occupied.
+          example: 2
+        totalRoomNights:
+          type: integer
+          description: The total number of room nights available over the entire event.
+          minimum: 0
+          example: 200
+        lowestRate:
+          type: number
+          description: The lowest room rate offered by the venue.
+          example: 140
+        maximumRate:
+          type: number
+          description: The highest room rate offered by the venue.
+          example: 200
+        lowestAverageDailyRate:
+          type: number
+          description: The lowest average daily rate.
+          example: 140
+        highestAverageDailyRate:
+          type: number
+          description: The highest average daily rate.
+          example: 200
+        totalRoomCost:
+          type: number
+          description: The total room cost to attendees.
+          example: 300
+        budgetedRoomRate:
+          type: number
+          description: The planner's budgeted room rate.
+          example: 135
+        lowestAvailableRoomCount:
+          type: integer
+          description: Minimum number of available rooms.
+          example: 10
+        highestAvailableRoomCount:
+          type: integer
+          description: Maximum number of available rooms.
+          example: 10
+        notes:
           type: string
-          description: A brief description of the error.
-          example: Bad Request
-        target:
+          maxLength: 2500
+          description: Additional notes of the sleeping room.
+          example: Premier Suite not available for the selected dates.
+        sleepingRoomBlocks:
+          type: array
+          description: List of sleeping room blocks for this sleeping room type.
+          items:
+            $ref: '#/components/schemas/SleepingRoomBlock'
+    RfpSummary:
+      description: Schema for Rfp details associated with this proposal.
+      type: object
+      title: RfpSummary
+      properties:
+        id:
           type: string
-          description: The target resource of the error.
-          example: example target
+          format: uuid
+          description: The unique ID of the RFP this proposal is associated with.
+          example: 385b9a4c-3f00-4b67-99ca-8dddc82a95b5
     DeclinedReason:
       title: DeclinedReason
       description: The set of decline reasons available for proposals
@@ -1995,20 +2104,132 @@ components:
       - SIZE_OF_MEETING_SPACE
       - SLEEPING_ROOM_RATE_TOO_HIGH
       - SUITE_AVAILABILITY
-    PackageType:
+    Transaction:
+      description: The latest transaction that took place on a given proposal
+      type: object
+      title: Transaction
+      readOnly: true
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The unique ID of a specific transaction.
+          example: cf5fd2cc-3d09-11ee-be56-0242ac120002
+        type:
+          $ref: '#/components/schemas/TransactionType'
+        time:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date time when this record was updated.
+          example: '2023-02-12T03:00:00Z'
+    ProposalDate:
+      type: object
+      title: ProposalDate
+      description: The proposal date.
+      properties:
+        dateType:
+          $ref: '#/components/schemas/DateType1'
+        startDate:
+          type: string
+          format: date
+          description: The start date of the event.
+          example: '2021-01-13'
+        endDate:
+          type: string
+          format: date
+          description: The end date of the event.
+          example: '2021-01-13'
+    Package:
+      type: object
+      title: Package
+      description: The proposal package.
+      properties:
+        dateType:
+          $ref: '#/components/schemas/DateType1'
+        checkInDate:
+          type: string
+          format: date
+          description: The ISO 8601 formatted date attendees can check-in.
+          example: '2016-10-13'
+        availablePackages:
+          type: array
+          maxItems: 200
+          description: List of all available packages from the venue.
+          items:
+            $ref: '#/components/schemas/AvailablePackage'
+        additionalInfo:
+          type: string
+          maxLength: 255
+          description: Additional information about the package.
+          example: The offered packages are best-in-class.
+        totalPackageCost:
+          type: number
+          description: Total package cost.
+          example: 100
+    ErrorResponseBase1:
+      title: ErrorResponseBase
+      type: object
+      description: Represents an error response with no additional details.
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          description: The HTTP status code representing the error.
+          example: 400
+        message:
+          type: string
+          description: A brief description of the error.
+          example: Bad Request
+        target:
+          type: string
+          description: The target resource of the error.
+          example: example target
+    RfpMealType:
       type: string
-      title: PackageType
-      description: Package type for the proposal.
+      title: RfpMealType
+      description: The meal types offered through an RFP
       enum:
-      - ALL_INCLUSIVE
-      - COMPLETE_MEETING_PACKAGE
-      - DAILY_DELEGATE_RATE
-      - DAY_MEETING_PACKAGE
-      - HALF_DDR
-      - HALF_DMP
-      - MODIFIED_MEETING_PACKAGE
-      - SLEEPING_ROOM_RATE
-      - TWENTYFOUR_HOUR_RATE
+      - BLANK
+      - CONTACT_ME_ABOUT_F_B_REQUIREMENTS
+      - BREAKFAST_BUFFET
+      - BREAKFAST_CONTINENTAL
+      - BREAKFAST_PLATED
+      - LUNCH_BOXED
+      - LUNCH_BUFFET
+      - LUNCH_PLATED
+      - DINNER_BUFFET
+      - DINNER_PLATED
+      - BREAK_DRINKS_ONLY
+      - BREAK_SNACKS_AND_DRINKS
+      - RECEPTION_LIGHT_APPETIZERS
+      - RECEPTION_HEAVY_HORS_D_OEUVRES
+    AgendaItemType1:
+      type: string
+      title: AgendaItemType
+      description: The type of Agenda
+      enum:
+      - BLANK
+      - BREAK
+      - BREAKOUT
+      - GENERAL_SESSION
+      - MEETING
+      - RECEPTION
+      - REGISTRATION
+      - SETUP
+      - TEARDOWN
+      - EXHIBIT
+      - BREAKFAST
+      - LUNCH
+      - DINNER
+      - SNACK
+      - OTHER
+      - OFFICE
+      - STORAGE_ROOM
+      - HOSPITALITY_DESK
+      - HOSPITALITY_SUITE
+      - SPEAKER_ROOM
     Contact2:
       title: Contact
       description: The contact details.
@@ -2102,335 +2323,107 @@ components:
           maxLength: 255
           description: Additional notes of the contact.
           example: Available between 8am - 5pm.
-    SupplierSummary:
-      description: Represents a summary of supplier information associated with current proposal.
-      type: object
-      title: SupplierSummary
-      properties:
-        supplier:
-          description: The supplier associated with current proposal.
-          oneOf:
-          - $ref: '#/components/schemas/VenueSummary'
-          discriminator:
-            propertyName: type
-            mapping:
-              VENUE: '#/components/schemas/VenueSummary'
-    BaseProposal:
-      description: Schema for proposal request.
-      type: object
-      title: BaseProposal
-      allOf:
-      - $ref: '#/components/schemas/Audit'
-      properties:
-        scpTemplateId:
-          format: uuid
-          type: string
-          example: a633b01c-e461-4cc2-8c66-8ae036115658
-          description: The ID of the smart custom proposal template.
-        type:
-          $ref: '#/components/schemas/ProposalType'
-        supplierSummary:
-          $ref: '#/components/schemas/SupplierSummary'
-        rfpSummary:
-          $ref: '#/components/schemas/RfpSummary'
-        eventSummary:
-          $ref: '#/components/schemas/EventSummary'
-        statusSummary:
-          $ref: '#/components/schemas/StatusSummary'
-        introduction:
-          type: string
-          maxLength: 2500
-          description: Introduction text for the proposal.
-          example: Let us design the day of your dreams at our property.
-        billingContractualResponse:
-          type: string
-          maxLength: 2500
-          description: Details about concessions or contractual requirements from the supplier. DEPRECATED - This field is deprecated. Only applied to proposal made from vendor marketplace, a sunset product.
-          example: All invoices must be paid in 30 days.
-          deprecated: true
-        currencyCode:
-          $ref: '#/components/schemas/Currency'
-        commissionableBid:
-          type: boolean
-          description: True indicates this is a commissionable bid.
-          example: true
-        commissionRate:
-          type: number
-          description: The proposal's commission rate.
-          example: 10.12
-        name:
-          type: string
-          maxLength: 50
-          description: Name of the proposal.
-          example: Proposal for Royal Bank of Spain.
-        blockCode:
-          type: string
-          maxLength: 50
-          description: Block code for the proposal.
-          example: ABDCFD-234535-3535
-        proposalDates:
-          type: array
-          description: List of dates the venue is available.
-          items:
-            $ref: '#/components/schemas/ProposalDate'
-        sleepingRooms:
-          type: array
-          description: List of all sleeping rooms offered in the proposal.
-          items:
-            $ref: '#/components/schemas/SleepingRoom1'
-        categoryItemsCost:
-          $ref: '#/components/schemas/CategoryItemsCost'
-        aggregatedCost:
-          $ref: '#/components/schemas/AggregatedCost'
-        estimatedCost:
-          $ref: '#/components/schemas/EstimatedCost'
-        contacts:
-          type: array
-          description: List of all contacts.
-          items:
-            $ref: '#/components/schemas/Contact2'
-        plannerContacts:
-          type: array
-          description: List of all planner contacts.
-          items:
-            $ref: '#/components/schemas/Contact2'
-        meetingRoom:
-          $ref: '#/components/schemas/MeetingRoom'
-        agendaItems:
-          $ref: '#/components/schemas/AgendaItems'
-        packages:
-          type: array
-          description: List of Package Details
-          maxItems: 200
-          items:
-            $ref: '#/components/schemas/Package'
-        transaction:
-          $ref: '#/components/schemas/Transaction'
-    VenueSummary:
-      description: Represents a summary of venue information associated with current proposal.
-      type: object
-      title: VenueSummary
-      allOf:
-      - $ref: '#/components/schemas/Supplier1'
-      properties:
-        id:
-          type: string
-          description: The unique ID of the venue.
-          example: bedc1f8e-f68b-40cf-b901-487e407f637a
-        name:
-          type: string
-          description: The name of the venue.
-          example: Hotel Grand San Francisco.
-    RfpMealType:
+    ProposalType:
       type: string
-      title: RfpMealType
-      description: The meal types offered through an RFP
+      title: ProposalType
+      description: The type of the proposal.
+      enum:
+      - VENUE
+      default: VENUE
+    Day:
+      title: Day
+      description: Day contains a date and a counter
+      type: object
+      properties:
+        dayNumber:
+          type: integer
+          description: Counter for number of Days
+          example: 1
+        date:
+          type: string
+          format: date
+          description: The ISO 8601 date of the booking
+          example: '2021-07-03'
+    RoomOccupancy:
+      title: RoomOccupancy
+      description: RoomOccupancy
+      type: string
       enum:
       - BLANK
-      - CONTACT_ME_ABOUT_F_B_REQUIREMENTS
-      - BREAKFAST_BUFFET
-      - BREAKFAST_CONTINENTAL
-      - BREAKFAST_PLATED
-      - LUNCH_BOXED
-      - LUNCH_BUFFET
-      - LUNCH_PLATED
-      - DINNER_BUFFET
-      - DINNER_PLATED
-      - BREAK_DRINKS_ONLY
-      - BREAK_SNACKS_AND_DRINKS
-      - RECEPTION_LIGHT_APPETIZERS
-      - RECEPTION_HEAVY_HORS_D_OEUVRES
-    ProposalResponse:
-      description: Schema for proposal.
+      - SINGLE
+      - DOUBLE
+      - TRIPLE
+      - QUAD
+    Item:
       type: object
-      title: Proposal
-      allOf:
-      - $ref: '#/components/schemas/BaseProposal'
+      title: Item
+      description: An item that has cost information.
+      properties:
+        itemId:
+          type: string
+          description: Unique ID for the item.
+          example: AC-127-3B
+        name:
+          type: string
+          description: The name of the item.
+          example: Earphones
+        quantity:
+          type: integer
+          description: The number of items.
+          example: 20
+        totalCost:
+          type: number
+          description: Total cost of the item(s).
+          example: 10000.99
+        notes:
+          type: string
+          maxLength: 2500
+          description: Notes associated with the item.
+          example: This item is very popular.
+    SleepingRoomBlock:
+      type: object
+      title: SleepingRoomBlock
+      description: The sleeping room block.
+      properties:
+        proposalDateType:
+          $ref: '#/components/schemas/DateType1'
+        sleepingRoomType:
+          $ref: '#/components/schemas/SleepingRoomType1'
+        date:
+          type: string
+          format: date
+          description: Date the rooms in the room block are available.
+          example: '2021-01-13'
+        quantity:
+          type: integer
+          description: The total number of rooms for this room block.
+          example: 20
+          minimum: 0
+        rate:
+          type: number
+          description: The nightly cost of rooms in this room block.
+          example: 150
+          minimum: 0
+    EventSummary:
+      description: Schema for event summary associated with this proposal.
+      type: object
+      title: EventSummary
       properties:
         id:
           type: string
           format: uuid
-          description: The unique ID of the proposal.
-          example: cf5fd2cc-3d09-11ee-be56-0242ac120002
-        proposalCode:
-          type: string
-          minLength: 14
-          maxLength: 14
-          description: A 14-character human readable proposal code.
-          example: P230810-G7T9DR
-        status:
-          $ref: '#/components/schemas/ProposalStatus'
-        version:
-          type: integer
-          description: The version number associated with the proposal.
-          example: 1
-        lastSubmittedTime:
-          type: string
-          format: date-time
-          description: The ISO 8601 zoned Coordinated Universal Time (UTC) when the proposal was last submitted.
-          example: '2023-02-12T03:00:00Z'
-        responseReason:
-          type: string
-          description: The reason for the response.
-          oneOf:
-          - $ref: '#/components/schemas/DeclinedReason'
-          - $ref: '#/components/schemas/CancelledReason'
-          example: BOOKED_ANOTHER_VENUE_DESTINATION
-        responseDetails:
-          type: string
-          description: Additional details provided while responding to the proposal.
-          example: The location is far from the event venue.
-      required:
-      - id
-      - proposalCode
-      - status
-      - version
-    MeetingRoom:
-      type: object
-      title: MeetingRoom
-      description: The meeting room.
-      properties:
-        name:
-          type: string
-          maxLength: 255
-          description: Meeting room name.
-          example: Conference Room A
-        notes:
-          type: string
-          maxLength: 2500
-          description: Planner note about the meeting room.
-          example: This meeting room has the best audio quality.
-    CategoryItemsCost:
-      type: object
-      title: CategoryItemsCost
-      description: Category items cost. DEPRECATED - This field is deprecated. Only applied to proposals made by vendors, and the vendor marketplace is sunset.
-      deprecated: true
-      properties:
-        notes:
-          type: string
-          description: Notes on category items cost from the venue.
-          example: We are offering a discount on projectors.
-        totalCost:
-          type: number
-          description: Total cost across all categories.
-          example: 10000.99
-        categories:
-          type: array
-          description: List of categories.
-          items:
-            $ref: '#/components/schemas/Category1'
-    AgendaItem:
-      description: The agenda item
-      type: object
-      title: AgendaItem
-      properties:
-        name:
-          type: string
-          maxLength: 50
-          description: The name of the agenda item.
-          example: Cvent Connect Intro
-        number:
-          type: integer
-          description: Sequence of the agenda item.
-          example: 1
-        type:
-          $ref: '#/components/schemas/AgendaItemType1'
-        setup:
-          $ref: '#/components/schemas/AgendaItemSetup1'
-        sessionType:
-          $ref: '#/components/schemas/SessionType'
-        startTime:
-          type: string
-          format: date-time
-          description: The start time of the event.
-          example: '2021-01-13T14:06:20.080Z'
-        endTime:
-          type: string
-          format: date-time
-          description: The end time of the event.
-          example: '2021-01-13T14:06:20.080Z'
-        requiredRoomSize:
-          type: integer
-          description: Required size of the room.
-          example: 100
-        expectedNumberOfPeople:
-          type: integer
-          description: The expected number of people attending this agenda item.
-          example: 500
-        roomInfoRequired:
-          type: boolean
-          description: True indicates room information is required.
-          example: true
-        roomHoldRequired:
-          type: boolean
-          description: True indicates room hold is required.
-          example: true
-        twentyFourHourHoldRequired:
-          type: boolean
-          description: True indicates room hold is required for twenty four hours.
-          example: true
-        locatedAtPrimeEventVenue:
-          type: boolean
-          description: True indicates it is located at prime event venue.
-          example: true
-        meal:
-          $ref: '#/components/schemas/RfpMealType'
-        days:
-          type: array
-          maxItems: 200
-          description: Number of days for agenda.
-          items:
-            $ref: '#/components/schemas/Day'
-        roomOptedOut:
-          type: boolean
-          description: True indicates room is opted out.
-          example: true
-        audioVideoNeeds:
-          type: string
-          maxLength: 255
-          description: The audio video requirement for the agenda item.
-          example: Audio
-        notes:
-          type: string
-          maxLength: 255
-          description: Additional note for the agenda item.
-          example: Video is good to have for this event.
-        meetingRoom:
-          type: array
-          maxItems: 500
-          description: List of meeting rooms.
-          items:
-            $ref: '#/components/schemas/MeetingRoom'
-    AggregatedCost:
-      description: The aggregated cost
-      type: object
-      title: AggregatedCost
-      properties:
-        totalFoodAndBeverageCost:
-          type: number
-          description: The cost of the food and beverage.
-          example: 396.56
-        totalMiscCost:
-          type: number
-          description: The total misc cost.
-          example: 644.96
-  requestBodies:
-    ProposalRequest:
-      description: A Proposal request object to create a proposal
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ProposalRequest'
+          description: The unique ID of the event in the proposal.
+          example: bedc1f8e-f68b-40cf-b901-487e407f637a
   responses:
-    Forbidden1:
-      description: You do not have access to the resource
+    BadRequest1:
+      description: Bad request
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse-12'
           example:
-            code: 403
-            message: Access Forbidden
+            code: 400
+            message: Bad Request
     TooManyRequests1:
       description: Too many requests
       content:
@@ -2449,15 +2442,22 @@ components:
           example:
             code: 401
             message: Unauthorized
-    BadRequest1:
-      description: Bad request
+    Forbidden1:
+      description: You do not have access to the resource
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse-12'
           example:
-            code: 400
-            message: Bad Request
+            code: 403
+            message: Access Forbidden
+  requestBodies:
+    ProposalRequest:
+      description: A Proposal request object to create a proposal
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProposalRequest'
   securitySchemes:
     OAuth2.authorizationCode:
       type: oauth2

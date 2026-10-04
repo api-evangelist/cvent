@@ -360,45 +360,10 @@ paths:
         description: More about OAuth2 authorization code support for administrators
         url: '#oauth2-auth-code-planner-admin'
 components:
-  parameters:
-    weblinkId:
-      in: path
-      name: weblinkId
-      description: ID of an exhibitor weblink.
-      required: true
-      schema:
-        type: string
-        format: uuid
-        example: 4d44b9e4-8c1a-403d-a20a-0b981f539935
-    exhibitorId:
-      in: path
-      name: exhibitorId
-      description: ID of an exhibitor.
-      required: true
-      schema:
-        type: string
-        format: uuid
-        example: 4888db54-db22-11eb-8d19-0242ac130003
-    id6:
-      in: path
-      name: id
-      description: ID of an event.
-      required: true
-      schema:
-        type: string
-        format: uuid
-        example: 3db28cfc-db22-11eb-8d19-0242ac130003
-    fileId1:
-      in: path
-      name: fileId
-      description: ID of a file.
-      required: true
-      schema:
-        $ref: '#/components/schemas/uuid-property'
   schemas:
-    Exhibitor:
-      description: The Associated Exhibitor.
-      title: Exhibitor
+    Event4:
+      description: The Associated Event.
+      title: Event
       type: object
       required:
       - id
@@ -406,8 +371,14 @@ components:
         id:
           type: string
           format: uuid
-          example: 4888db54-db22-11eb-8d19-0242ac130003
-          description: Exhibitor id
+          example: 3db28cfc-db22-11eb-8d19-0242ac130003
+          description: Event id
+    uuid-property:
+      title: UUID Property
+      description: A string that has to be a format matching the industry standard uuid
+      type: string
+      format: uuid
+      example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
     Audit:
       title: Audit
       description: Audit information
@@ -435,6 +406,32 @@ components:
           description: The identifier of the user that last updated this record.
           readOnly: true
           example: hporter
+    error-response:
+      title: ErrorResponse
+      description: Represents an error response with additional details of cascading error messages.
+      allOf:
+      - $ref: '#/components/schemas/ErrorResponseBase1'
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorResponseBase1'
+          description: Additional details of cascading error messages.
+    weblink-list-response:
+      title: WeblinkListResponse
+      type: object
+      description: A response object containing a list of weblinks associated with an exhibitor.
+      properties:
+        data:
+          type: array
+          maxItems: 50
+          items:
+            $ref: '#/components/schemas/existing-weblink'
+          description: List of weblinks associated with an exhibitor.
     file-list-response:
       title: FileListResponse
       description: A JSON object containing a list of files associated with an exhibitor.
@@ -446,19 +443,46 @@ components:
           items:
             $ref: '#/components/schemas/existing-file'
           description: List of files associated with an exhibitor.
-    existing-file:
-      description: Content of existing exhibitor file
-      title: File Response
+    existing-weblink:
+      description: Content of existing exhibitor weblink
+      title: Weblink Response
       type: object
       allOf:
-      - $ref: '#/components/schemas/file'
+      - $ref: '#/components/schemas/weblink'
       properties:
         id:
-          description: Unique ID of the file.
+          description: Unique ID of the weblink.
           readOnly: true
           format: uuid
-          example: 3d44b9e4-8c1a-403d-a20a-0b981f539935
+          example: 4d44b9e4-8c1a-403d-a20a-0b981f539935
           type: string
+    Exhibitor:
+      description: The Associated Exhibitor.
+      title: Exhibitor
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 4888db54-db22-11eb-8d19-0242ac130003
+          description: Exhibitor id
+    ErrorResponse-12:
+      title: ErrorResponse
+      description: Represents an error response with additional details of cascading error messages.
+      allOf:
+      - $ref: '#/components/schemas/ErrorResponseBase1'
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorResponseBase1'
+          description: Additional details of cascading error messages.
     file:
       description: Content of exhibitor file.
       title: File Request
@@ -489,6 +513,39 @@ components:
       - exhibitor
       - displayName
       - order
+    ErrorResponseBase1:
+      title: ErrorResponseBase
+      type: object
+      description: Represents an error response with no additional details.
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          description: The HTTP status code representing the error.
+          example: 400
+        message:
+          type: string
+          description: A brief description of the error.
+          example: Bad Request
+        target:
+          type: string
+          description: The target resource of the error.
+          example: example target
+    existing-file:
+      description: Content of existing exhibitor file
+      title: File Response
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/file'
+      properties:
+        id:
+          description: Unique ID of the file.
+          readOnly: true
+          format: uuid
+          example: 3d44b9e4-8c1a-403d-a20a-0b981f539935
+          type: string
     weblink:
       description: Content of exhibitor weblink.
       title: Weblink Request
@@ -525,144 +582,7 @@ components:
       - url
       - name
       - order
-    Event4:
-      description: The Associated Event.
-      title: Event
-      type: object
-      required:
-      - id
-      properties:
-        id:
-          type: string
-          format: uuid
-          example: 3db28cfc-db22-11eb-8d19-0242ac130003
-          description: Event id
-    weblink-list-response:
-      title: WeblinkListResponse
-      type: object
-      description: A response object containing a list of weblinks associated with an exhibitor.
-      properties:
-        data:
-          type: array
-          maxItems: 50
-          items:
-            $ref: '#/components/schemas/existing-weblink'
-          description: List of weblinks associated with an exhibitor.
-    uuid-property:
-      title: UUID Property
-      description: A string that has to be a format matching the industry standard uuid
-      type: string
-      format: uuid
-      example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
-    error-response:
-      title: ErrorResponse
-      description: Represents an error response with additional details of cascading error messages.
-      allOf:
-      - $ref: '#/components/schemas/ErrorResponseBase1'
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        details:
-          type: array
-          items:
-            $ref: '#/components/schemas/ErrorResponseBase1'
-          description: Additional details of cascading error messages.
-    ErrorResponse-12:
-      title: ErrorResponse
-      description: Represents an error response with additional details of cascading error messages.
-      allOf:
-      - $ref: '#/components/schemas/ErrorResponseBase1'
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        details:
-          type: array
-          items:
-            $ref: '#/components/schemas/ErrorResponseBase1'
-          description: Additional details of cascading error messages.
-    ErrorResponseBase1:
-      title: ErrorResponseBase
-      type: object
-      description: Represents an error response with no additional details.
-      required:
-      - code
-      - message
-      properties:
-        code:
-          type: integer
-          description: The HTTP status code representing the error.
-          example: 400
-        message:
-          type: string
-          description: A brief description of the error.
-          example: Bad Request
-        target:
-          type: string
-          description: The target resource of the error.
-          example: example target
-    existing-weblink:
-      description: Content of existing exhibitor weblink
-      title: Weblink Response
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/weblink'
-      properties:
-        id:
-          description: Unique ID of the weblink.
-          readOnly: true
-          format: uuid
-          example: 4d44b9e4-8c1a-403d-a20a-0b981f539935
-          type: string
   responses:
-    Forbidden1:
-      description: You do not have access to the resource
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 403
-            message: Access Forbidden
-    TooManyRequests1:
-      description: Too many requests
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 429
-            message: Limit Exceeded
-    Unauthorized1:
-      description: Bad or expired token
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 401
-            message: Unauthorized
-    BadRequest1:
-      description: Bad request
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 400
-            message: Bad Request
-    NotFound1:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 404
-            message: Not found
     UnprocessableEntity13:
       description: Was not able to process the request.
       content:
@@ -672,6 +592,86 @@ components:
           example:
             code: 422
             message: Unprocessable Entity
+    BadRequest1:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 400
+            message: Bad Request
+    TooManyRequests1:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 429
+            message: Limit Exceeded
+    NotFound1:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 404
+            message: Not found
+    Unauthorized1:
+      description: Bad or expired token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 401
+            message: Unauthorized
+    Forbidden1:
+      description: You do not have access to the resource
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 403
+            message: Access Forbidden
+  parameters:
+    id6:
+      in: path
+      name: id
+      description: ID of an event.
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: 3db28cfc-db22-11eb-8d19-0242ac130003
+    fileId1:
+      in: path
+      name: fileId
+      description: ID of a file.
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid-property'
+    weblinkId:
+      in: path
+      name: weblinkId
+      description: ID of an exhibitor weblink.
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: 4d44b9e4-8c1a-403d-a20a-0b981f539935
+    exhibitorId:
+      in: path
+      name: exhibitorId
+      description: ID of an exhibitor.
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: 4888db54-db22-11eb-8d19-0242ac130003
   securitySchemes:
     OAuth2.authorizationCode:
       type: oauth2

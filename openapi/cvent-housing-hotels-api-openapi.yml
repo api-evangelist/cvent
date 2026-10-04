@@ -54,6 +54,12 @@ paths:
           $ref: '#/components/responses/TooManyRequests1'
 components:
   schemas:
+    currency.json:
+      description: ISO 4217 currency code.
+      title: Currency
+      type: string
+      example: USD
+      default: USD
     HotelRoomRatesRequest:
       description: Represents hotel room rates request.
       title: HotelRoomRatesRequest
@@ -83,6 +89,21 @@ components:
           example: 150
         currencyCode:
           $ref: '#/components/schemas/currency.json'
+    ErrorResponse-12:
+      title: ErrorResponse
+      description: Represents an error response with additional details of cascading error messages.
+      allOf:
+      - $ref: '#/components/schemas/ErrorResponseBase1'
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorResponseBase1'
+          description: Additional details of cascading error messages.
     HotelRoomRatesResponse:
       description: Represents hotel room rates response.
       title: HotelRoomRatesResponse
@@ -132,27 +153,6 @@ components:
           type: string
           description: The room code.
           example: VLR
-    ErrorResponse-12:
-      title: ErrorResponse
-      description: Represents an error response with additional details of cascading error messages.
-      allOf:
-      - $ref: '#/components/schemas/ErrorResponseBase1'
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        details:
-          type: array
-          items:
-            $ref: '#/components/schemas/ErrorResponseBase1'
-          description: Additional details of cascading error messages.
-    currency.json:
-      description: ISO 4217 currency code.
-      title: Currency
-      type: string
-      example: USD
-      default: USD
     ErrorResponseBase1:
       title: ErrorResponseBase
       type: object
@@ -191,6 +191,24 @@ components:
         type: string
         example: HOTELCODE
   responses:
+    Unauthorized1:
+      description: Bad or expired token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 401
+            message: Unauthorized
+    Forbidden1:
+      description: You do not have access to the resource
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 403
+            message: Access Forbidden
     TooManyRequests1:
       description: Too many requests
       content:
@@ -218,24 +236,6 @@ components:
           example:
             code: 404
             message: Not found
-    Forbidden1:
-      description: You do not have access to the resource
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 403
-            message: Access Forbidden
-    Unauthorized1:
-      description: Bad or expired token
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 401
-            message: Unauthorized
   securitySchemes:
     OAuth2.authorizationCode:
       type: oauth2

@@ -323,69 +323,71 @@ paths:
         description: More about OAuth2 authorization code support for administrators
         url: '#oauth2-auth-code-planner-admin'
 components:
-  parameters:
-    exhibitorId:
-      in: path
-      name: exhibitorId
-      description: ID of an exhibitor.
-      required: true
-      schema:
-        type: string
-        format: uuid
-        example: 4888db54-db22-11eb-8d19-0242ac130003
-    adminId:
-      in: path
-      name: adminId
-      description: ID of an exhibitor admin.
-      required: true
-      schema:
-        type: string
-        format: uuid
-        example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
-    id6:
-      in: path
-      name: id
-      description: ID of an event.
-      required: true
-      schema:
-        type: string
-        format: uuid
-        example: 3db28cfc-db22-11eb-8d19-0242ac130003
-    token:
-      name: token
-      in: query
-      description: 'The continuation token returned from a previous class. This must be a valid UUID v4 if provided.
-
-        This will override any other pageable parameters provided.
-
-        '
-      style: form
-      explode: true
-      schema:
-        type: string
-        example: 0e28af57-511f-47ab-ae46-46cd1ca51a1a
-    boothstaffId:
-      in: path
-      name: boothstaffId
-      description: ID of a booth staff member.
-      required: true
-      schema:
-        type: string
-        format: uuid
-        example: 4e0f5152-515e-11ee-be56-0242ac120002
-    limit:
-      name: limit
-      in: query
-      description: The maximum number of records to return per page.
-      style: form
-      explode: true
-      schema:
-        maximum: 200
-        minimum: 1
-        type: integer
-        default: 100
-        example: 100
   schemas:
+    booth-staff-response:
+      title: Booth Staff
+      type: object
+      description: Booth staff with an associated ID.
+      allOf:
+      - $ref: '#/components/schemas/booth-staff-request'
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 4e0f5152-515e-11ee-be56-0242ac120002
+          description: ID of an exhibitor booth staff member.
+          readOnly: true
+    Event4:
+      description: The Associated Event.
+      title: Event
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 3db28cfc-db22-11eb-8d19-0242ac130003
+          description: Event id
+    Audit:
+      title: Audit
+      description: Audit information
+      type: object
+      properties:
+        created:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date time when this record was created.
+          readOnly: true
+          example: '2017-01-02T02:00:00Z'
+        createdBy:
+          type: string
+          description: The identifier of the user that created this record.
+          readOnly: true
+          example: hporter
+        lastModified:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date time when this record was updated.
+          readOnly: true
+          example: '2019-02-12T03:00:00Z'
+        lastModifiedBy:
+          type: string
+          description: The identifier of the user that last updated this record.
+          readOnly: true
+          example: hporter
+    exhibitor-admins-list-response:
+      title: ExhibitorAdminsListResponse
+      type: object
+      description: Exhibitor Admins List Response schema
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/exhibitor-admin-response'
+          description: List of exhibitor admins.
     Exhibitor:
       description: The Associated Exhibitor.
       title: Exhibitor
@@ -398,6 +400,117 @@ components:
           format: uuid
           example: 4888db54-db22-11eb-8d19-0242ac130003
           description: Exhibitor id
+    ErrorResponse-12:
+      title: ErrorResponse
+      description: Represents an error response with additional details of cascading error messages.
+      allOf:
+      - $ref: '#/components/schemas/ErrorResponseBase1'
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorResponseBase1'
+          description: Additional details of cascading error messages.
+    PaginationLinks:
+      title: PaginationLinks
+      type: object
+      description: Represents pagination links for navigating between pages of data.
+      properties:
+        next:
+          $ref: '#/components/schemas/Link'
+        self:
+          $ref: '#/components/schemas/Link'
+        prev:
+          $ref: '#/components/schemas/Link'
+    booth-staff-request:
+      title: Booth Staff
+      description: A JSON schema representing booth staff.
+      required:
+      - attendee
+      - event
+      - exhibitor
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/Audit'
+      properties:
+        attendee:
+          $ref: '#/components/schemas/Attendee1'
+        event:
+          $ref: '#/components/schemas/Event4'
+        exhibitor:
+          $ref: '#/components/schemas/Exhibitor'
+    booth-staff-list-response:
+      title: BoothStaffListResponse
+      type: object
+      description: Represents the booth staff list response, with paging information and a list of booth staff.
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/booth-staff-response'
+          description: List of booth staff.
+    Link:
+      title: Link
+      required:
+      - href
+      type: object
+      description: Represents a link to a related resource.
+      properties:
+        href:
+          type: string
+          description: A url provided that can be followed for linking
+          example: ?token=90c5f062-76ad-4ea4-aa53-00eb698d9262
+    ErrorResponseBase1:
+      title: ErrorResponseBase
+      type: object
+      description: Represents an error response with no additional details.
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          description: The HTTP status code representing the error.
+          example: 400
+        message:
+          type: string
+          description: A brief description of the error.
+          example: Bad Request
+        target:
+          type: string
+          description: The target resource of the error.
+          example: example target
+    Attendee1:
+      description: The associated Attendee.
+      title: Attendee
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+          description: Attendee id
+    exhibitor-admin-response:
+      title: Exhibitor Admin
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/exhibitor-admin-request'
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+          description: Exhibitor Admin id
+          readOnly: true
+      description: Existing Exhibitor Admin with an id property
     OSSAudit:
       title: OSS-Audit
       description: OSS Audit information
@@ -424,33 +537,6 @@ components:
           type: string
           description: The identifier of the user that last updated this record.This filed is deprecated.
           deprecated: true
-          readOnly: true
-          example: hporter
-    Audit:
-      title: Audit
-      description: Audit information
-      type: object
-      properties:
-        created:
-          type: string
-          format: date-time
-          description: The ISO 8601 zoned date time when this record was created.
-          readOnly: true
-          example: '2017-01-02T02:00:00Z'
-        createdBy:
-          type: string
-          description: The identifier of the user that created this record.
-          readOnly: true
-          example: hporter
-        lastModified:
-          type: string
-          format: date-time
-          description: The ISO 8601 zoned date time when this record was updated.
-          readOnly: true
-          example: '2019-02-12T03:00:00Z'
-        lastModifiedBy:
-          type: string
-          description: The identifier of the user that last updated this record.
           readOnly: true
           example: hporter
     Paging:
@@ -482,96 +568,6 @@ components:
           example: 2
         _links:
           $ref: '#/components/schemas/PaginationLinks'
-    booth-staff-request:
-      title: Booth Staff
-      description: A JSON schema representing booth staff.
-      required:
-      - attendee
-      - event
-      - exhibitor
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/Audit'
-      properties:
-        attendee:
-          $ref: '#/components/schemas/Attendee1'
-        event:
-          $ref: '#/components/schemas/Event4'
-        exhibitor:
-          $ref: '#/components/schemas/Exhibitor'
-    PaginationLinks:
-      title: PaginationLinks
-      type: object
-      description: Represents pagination links for navigating between pages of data.
-      properties:
-        next:
-          $ref: '#/components/schemas/Link'
-        self:
-          $ref: '#/components/schemas/Link'
-        prev:
-          $ref: '#/components/schemas/Link'
-    exhibitor-admin-response:
-      title: Exhibitor Admin
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/exhibitor-admin-request'
-      properties:
-        id:
-          type: string
-          format: uuid
-          example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
-          description: Exhibitor Admin id
-          readOnly: true
-      description: Existing Exhibitor Admin with an id property
-    booth-staff-response:
-      title: Booth Staff
-      type: object
-      description: Booth staff with an associated ID.
-      allOf:
-      - $ref: '#/components/schemas/booth-staff-request'
-      properties:
-        id:
-          type: string
-          format: uuid
-          example: 4e0f5152-515e-11ee-be56-0242ac120002
-          description: ID of an exhibitor booth staff member.
-          readOnly: true
-    Event4:
-      description: The Associated Event.
-      title: Event
-      type: object
-      required:
-      - id
-      properties:
-        id:
-          type: string
-          format: uuid
-          example: 3db28cfc-db22-11eb-8d19-0242ac130003
-          description: Event id
-    Attendee1:
-      description: The associated Attendee.
-      title: Attendee
-      type: object
-      required:
-      - id
-      properties:
-        id:
-          type: string
-          format: uuid
-          example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
-          description: Attendee id
-    booth-staff-list-response:
-      title: BoothStaffListResponse
-      type: object
-      description: Represents the booth staff list response, with paging information and a list of booth staff.
-      properties:
-        paging:
-          $ref: '#/components/schemas/Paging'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/booth-staff-response'
-          description: List of booth staff.
     exhibitor-admin-request:
       title: Exhibitor Admin
       type: object
@@ -603,92 +599,69 @@ components:
           format: email
           description: The email address of the exhibitor admin
           example: john.eddy@test.com
-    ErrorResponse-12:
-      title: ErrorResponse
-      description: Represents an error response with additional details of cascading error messages.
-      allOf:
-      - $ref: '#/components/schemas/ErrorResponseBase1'
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        details:
-          type: array
-          items:
-            $ref: '#/components/schemas/ErrorResponseBase1'
-          description: Additional details of cascading error messages.
-    exhibitor-admins-list-response:
-      title: ExhibitorAdminsListResponse
-      type: object
-      description: Exhibitor Admins List Response schema
-      properties:
-        paging:
-          $ref: '#/components/schemas/Paging'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/exhibitor-admin-response'
-          description: List of exhibitor admins.
-    ErrorResponseBase1:
-      title: ErrorResponseBase
-      type: object
-      description: Represents an error response with no additional details.
-      required:
-      - code
-      - message
-      properties:
-        code:
-          type: integer
-          description: The HTTP status code representing the error.
-          example: 400
-        message:
-          type: string
-          description: A brief description of the error.
-          example: Bad Request
-        target:
-          type: string
-          description: The target resource of the error.
-          example: example target
-    Link:
-      title: Link
-      required:
-      - href
-      type: object
-      description: Represents a link to a related resource.
-      properties:
-        href:
-          type: string
-          description: A url provided that can be followed for linking
-          example: ?token=90c5f062-76ad-4ea4-aa53-00eb698d9262
+  parameters:
+    id6:
+      in: path
+      name: id
+      description: ID of an event.
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: 3db28cfc-db22-11eb-8d19-0242ac130003
+    limit:
+      name: limit
+      in: query
+      description: The maximum number of records to return per page.
+      style: form
+      explode: true
+      schema:
+        maximum: 200
+        minimum: 1
+        type: integer
+        default: 100
+        example: 100
+    boothstaffId:
+      in: path
+      name: boothstaffId
+      description: ID of a booth staff member.
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: 4e0f5152-515e-11ee-be56-0242ac120002
+    adminId:
+      in: path
+      name: adminId
+      description: ID of an exhibitor admin.
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+    token:
+      name: token
+      in: query
+      description: 'The continuation token returned from a previous class. This must be a valid UUID v4 if provided.
+
+        This will override any other pageable parameters provided.
+
+        '
+      style: form
+      explode: true
+      schema:
+        type: string
+        example: 0e28af57-511f-47ab-ae46-46cd1ca51a1a
+    exhibitorId:
+      in: path
+      name: exhibitorId
+      description: ID of an exhibitor.
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: 4888db54-db22-11eb-8d19-0242ac130003
   responses:
-    Forbidden1:
-      description: You do not have access to the resource
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 403
-            message: Access Forbidden
-    TooManyRequests1:
-      description: Too many requests
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 429
-            message: Limit Exceeded
-    Unauthorized1:
-      description: Bad or expired token
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 401
-            message: Unauthorized
     BadRequest1:
       description: Bad request
       content:
@@ -698,6 +671,15 @@ components:
           example:
             code: 400
             message: Bad Request
+    TooManyRequests1:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 429
+            message: Limit Exceeded
     NotFound1:
       description: Resource not found
       content:
@@ -707,6 +689,24 @@ components:
           example:
             code: 404
             message: Not found
+    Unauthorized1:
+      description: Bad or expired token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 401
+            message: Unauthorized
+    Forbidden1:
+      description: You do not have access to the resource
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 403
+            message: Access Forbidden
   securitySchemes:
     OAuth2.authorizationCode:
       type: oauth2

@@ -309,215 +309,18 @@ paths:
           $ref: '#/components/responses/TooManyRequests1'
 components:
   schemas:
-    display-type:
-      type: string
-      description: 'The type of display for the field. `Bar`: It is associated with choice questions type. `DropDown`: It is associated with drop down type questions. `Horizontal`: It is associated with horizontal type questions. `List`: It is associated with list type questions. `MultiSelectBox`: It is associated with multi select box type questions. `Vertical`: It is associated with vertical type questions.'
-      enum:
-      - Bar
-      - DropDown
-      - Horizontal
-      - List
-      - MultiSelectBox
-      - Vertical
-    QuestionClassificationType:
-      type: string
-      title: QuestionClassificationType
-      description: 'Indicates the types of RFP that can be assigned this custom question. `MEETING_ROOM`: Meeting room type RFPs can be assigned this custom question. `GUEST_ROOM`: Guest room type RFPs can be assigned this custom question. `ALL_RFPS`:  All RFPs can be assigned this custom question.'
-      enum:
-      - MEETING_ROOM
-      - GUEST_ROOM
-      - ALL_RFPS
-    choice-sort-order:
-      type: string
-      description: 'The sort order for the choices. `AToZ`: sorted alphabetically in ascending order. `AsEntered`: Sorted in the order they were added, oldest choices first. `Random`: Random sort.'
-      enum:
-      - AToZ
-      - AsEntered
-      - Random
-    Field:
-      title: Field
-      description: A question field.
+    Category:
+      title: Category
+      description: A question category.
       type: object
       allOf:
       - $ref: '#/components/schemas/TextField'
       properties:
-        type:
-          $ref: '#/components/schemas/FieldType'
-        choices:
-          type: array
-          description: List of choices for this field.
-          items:
-            $ref: '#/components/schemas/Choice'
-          minItems: 1
-          maxItems: 100
-        notApplicableAnswer:
-          $ref: '#/components/schemas/AdditionalChoice'
-        otherAnswer:
-          $ref: '#/components/schemas/AdditionalChoice'
         required:
           type: boolean
           default: false
-          description: True indicates this is a mandatory question field.
+          description: True indicates the category is mandatory for answer.
           example: true
-    text-answer-format:
-      description: 'Text answer format. Used for `OpenEndedTextOneLine` question types.`CustomFormat`: Answers must follow a planner defined custom format. `EmailAddress`: Answers must follow the pattern of an email address. `General`: Answers can be any string. `USPhoneNumber`: Answers must be formatted as a phone number.'
-      type: string
-      enum:
-      - CustomFormat
-      - EmailAddress
-      - General
-      - USPhoneNumber
-    DocumentType-1:
-      type: string
-      title: DocumentType
-      readOnly: true
-      description: The document type.
-      enum:
-      - AI
-      - AVI
-      - BMP
-      - DOC
-      - DOCX
-      - EML
-      - EPS
-      - FLV
-      - GIF
-      - HTM
-      - HTML
-      - ICS
-      - JFIF
-      - JPEG
-      - JPG
-      - LINK
-      - MOV
-      - MP4
-      - MSG
-      - ONE
-      - OST
-      - PDF
-      - PNG
-      - PPT
-      - PPTX
-      - PST
-      - SVG
-      - TIF
-      - TIFF
-      - TXT
-      - WMV
-      - XLS
-      - XLSX
-    SupplierType:
-      title: SupplierType
-      description: 'Type of supplier. `CONVENTION_AND_CONFERENCE_CENTER`: Supplier of large event venues such as convention centers, conference centers, and exposition halls. `CVB`: CVBs (Convention and Visitors Bureau) are suppliers that assist in the promotion and facilitation of tourism, conventions, and events in their respective areas. `HOTEL`: Suppliers that are hotels or resorts. `OTHER`: Suppliers that do not fall under other categories.'
-      type: string
-      enum:
-      - CONVENTION_AND_CONFERENCE_CENTER
-      - CVB
-      - HOTEL
-      - OTHER
-    date-answer-format:
-      type: string
-      description: 'The answer format that a given date is stored in. `Date`: Answer format is stored in Date format. `DateTime`: Answer format is stored in DateTime format. `Time`: Answer format is stored in Time format.'
-      enum:
-      - Date
-      - DateTime
-      - Time
-      default: DateTime
-    unit-position:
-      type: string
-      description: Unit position used for text box question type.
-      enum:
-      - Left
-      - Right
-    Audit:
-      title: Audit
-      description: Audit information
-      type: object
-      properties:
-        created:
-          type: string
-          format: date-time
-          description: The ISO 8601 zoned date time when this record was created.
-          readOnly: true
-          example: '2017-01-02T02:00:00Z'
-        createdBy:
-          type: string
-          description: The identifier of the user that created this record.
-          readOnly: true
-          example: hporter
-        lastModified:
-          type: string
-          format: date-time
-          description: The ISO 8601 zoned date time when this record was updated.
-          readOnly: true
-          example: '2019-02-12T03:00:00Z'
-        lastModifiedBy:
-          type: string
-          description: The identifier of the user that last updated this record.
-          readOnly: true
-          example: hporter
-    QuestionType:
-      title: QuestionType
-      enum:
-      - CommentBox
-      - DateTime
-      - FileUpload
-      - Form
-      - LargeChoices
-      - MatrixMultiChoice
-      - MatrixRating
-      - MatrixSideBySide
-      - MatrixSingleChoice
-      - MatrixSpreadSheet
-      - MultiChoice
-      - NetPromoter
-      - Number
-      - NumberAllocation
-      - OpenEndedDateTime
-      - OpenEndedNumeric
-      - OpenEndedTextCommentBox
-      - OpenEndedTextOneLine
-      - RankOrder
-      - Rating
-      - SingleChoice
-      - Text
-      type: string
-      description: The type of question. See [this article](https://support.cvent.com/s/communityarticle/Survey-Adding-Questions) for details on each enum.
-      example: SingleChoice
-    CustomFieldAnswers:
-      title: RfpCustomField
-      description: This object contains RFP custom fields attributes only.
-      type: object
-      properties:
-        customField:
-          title: ExpandableCustomObject
-          properties:
-            id:
-              type: string
-              format: uuid
-              description: Unique identifier for custom field.
-              example: 50dc08af-24a9-4d01-84be-3d43133dc945
-          required:
-          - id
-          type: object
-          description: 'An object containing custom field data. By default, contains only the field ID.
-
-
-            This is an **expandable** object. When requested via the `expand` query parameter with value `customField`, this object expands to include all properties of a custom field definition.
-
-
-            See the `expand` parameter documentation and refer to the [Get Custom Field](#tag/Custom-Fields/operation/getCustomField) API for the complete expanded schema.'
-        answers:
-          type: array
-          description: List of answers for the RFP custom field.
-          maxItems: 100
-          items:
-            type: string
-            description: Answer String
-            example: Choice 1
-      required:
-      - customField
-      - answers
     RfpMeal:
       type: string
       title: RfpMeal
@@ -536,351 +339,6 @@ components:
       - LUNCH_PLATED
       - RECEPTION_HEAVY_HORS_D_OEUVRES
       - RECEPTION_LIGHT_APPETIZERS
-    RfpInternalDocument:
-      type: object
-      title: RfpInternalDocument
-      description: This object contains RFP specific internal documents attributes only.
-      required:
-      - id
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: Unique ID of the file.
-          example: f56a51a4-84b0-46c9-a612-716dc95a1c96
-        created:
-          type: string
-          format: date-time
-          description: ISO 8601 date-time the document was uploaded.
-          example: '2021-01-13T14:06:20.080Z'
-        name:
-          type: string
-          description: Display name of the document.
-          example: BudgetCostSavings
-        uniqueName:
-          type: string
-          description: Name of the document. Must be unique in the account.
-          example: 183f9efaa4c14070985782ee31abbf3c.jpg
-          readOnly: true
-        size:
-          type: integer
-          format: int64
-          description: The size of document in bytes.
-          example: 777835
-          readOnly: true
-        url:
-          type: string
-          format: uri
-          description: URL of the document if `secure` is false. This field is null if `secure` is true.
-          example: https://custom.cvent.com/0B7DEF22676A4434982BDAD2D6EC591F/files/supplier/0713cef78d4e4d818899d4522022d5ad/73ab2e3054fd4321a5e0f846a7adb0d7.jpg
-        type:
-          $ref: '#/components/schemas/DocumentType-1'
-        mimeType:
-          type: string
-          description: The content type of the document.
-          example: image/jpeg
-    GuestRoomType:
-      title: GuestRoomType
-      description: 'Guest room type. `ANY`: Room can be any type. `SINGLE`: Room with one bed. `DOUBLE`: Room with two beds. `SUITE`: Room is an entire suite. `STAFF`: Room is for staff.'
-      type: string
-      enum:
-      - ANY
-      - SINGLE
-      - DOUBLE
-      - SUITE
-      - STAFF
-      example: DOUBLE
-    GuestRoomOccupancyPerRoomType:
-      title: GuestRoomOccupancyPerRoomType
-      description: Room occupancy for a room type.
-      type: object
-      properties:
-        occupancy:
-          $ref: '#/components/schemas/GuestRoomOccupancy'
-        type:
-          $ref: '#/components/schemas/GuestRoomType'
-    Paging:
-      title: Paging
-      required:
-      - _links
-      type: object
-      description: Represents pagination information for a collection of resources.
-      properties:
-        previousToken:
-          type: string
-          description: The pagination token for the previous page, if one exists. You can use this token to navigate to the previous page of data.
-          example: 1a2b3c4d5e6f7g8h9i10j11k
-        nextToken:
-          type: string
-          description: The pagination token for the next page. If this value is present in the response, there is another page of data you can fetch.
-          example: 1a2b3c4d5e6f7g8h9i10j11k
-        currentToken:
-          type: string
-          description: The pagination token for the current page.
-          example: 1a2b3c4d5e6f7g8h9i10j11k
-        limit:
-          type: integer
-          description: The number of records to return on the page. Not to exceed 200.
-          example: 100
-        totalCount:
-          type: integer
-          description: The total number of records available. This field may return blank, even if there are more records. To confirm if there are more records, check the `nextToken` field.
-          example: 2
-        _links:
-          $ref: '#/components/schemas/PaginationLinks'
-    RoomBlock:
-      title: RoomBlock
-      description: Contains details related to room allotment for a day.
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: Unique identifier for the room block.
-          readOnly: true
-          example: 1f6193da-e12b-4638-b1e2-13dd60d0adeb
-        date:
-          type: string
-          format: date
-          description: The ISO 8601 date when the rooms are required.
-          readOnly: true
-          example: '2025-10-13'
-        dayNumber:
-          type: integer
-          description: Counter for day number.
-          example: 3
-        totalRooms:
-          type: integer
-          description: Total number of rooms required for the day.
-          readOnly: true
-          example: 24
-          minimum: 0
-          maximum: 49995
-        details:
-          type: array
-          description: Contains detail of quantity required for each room type.
-          items:
-            $ref: '#/components/schemas/RoomBlockDetails'
-          minItems: 0
-          maxItems: 5
-    PaginationLinks:
-      title: PaginationLinks
-      type: object
-      description: Represents pagination links for navigating between pages of data.
-      properties:
-        next:
-          $ref: '#/components/schemas/Link'
-        self:
-          $ref: '#/components/schemas/Link'
-        prev:
-          $ref: '#/components/schemas/Link'
-    GuestRoomOccupancy:
-      title: GuestRoomOccupancy
-      description: 'Guest room occupancy. `SINGLE`: Single occupant. `DOUBLE`: Two occupants. `TRIPLE`: Three occupants. `QUAD`: Four occupants. '
-      type: string
-      enum:
-      - SINGLE
-      - DOUBLE
-      - TRIPLE
-      - QUAD
-      example: SINGLE
-    PaginatedRfpAgendaItemsSchedule:
-      title: PaginatedRfpAgendaItemsSchedule
-      description: Paginated list of agenda items schedule attached to an RFP.
-      type: object
-      properties:
-        paging:
-          $ref: '#/components/schemas/Paging'
-        data:
-          description: List of agenda items schedule attached to an RFP.
-          type: array
-          items:
-            $ref: '#/components/schemas/RfpAgendaItemScheduleWithId'
-    PaginatedRfpAgendaItems:
-      title: PaginatedRfpAgendaItems
-      description: Paginated list of agenda items associated with an RFP.
-      type: object
-      properties:
-        paging:
-          $ref: '#/components/schemas/Paging'
-        data:
-          description: List of agenda items associated with an RFP.
-          type: array
-          items:
-            $ref: '#/components/schemas/RfpAgendaItem'
-    RfpQuestion:
-      title: RfpQuestion
-      description: Question associated with an RFP.
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/QuestionCommon'
-      properties:
-        supplierTypes:
-          type: array
-          description: List of supplier types that can view the question on the RFP.
-          items:
-            $ref: '#/components/schemas/SupplierType'
-          uniqueItems: true
-          example:
-          - CVB
-          - HOTEL
-        classificationType:
-          $ref: '#/components/schemas/QuestionClassificationType'
-        order:
-          type: integer
-          description: Determines the display order for questions on the RFP. Questions with smaller values appear first.
-          example: 1
-          minimum: 1
-        standardQuestion:
-          $ref: '#/components/schemas/StandardQuestion'
-        aiQuestionGenerationSource:
-          type: string
-          maxLength: 100
-          readOnly: true
-          description: Represents the AI generation source for the custom question on RFP. This field is set during question creation and cannot be modified afterwards.
-          example: MCP-Visual Studio Code/1.107.1
-    AgendaItemType:
-      type: string
-      title: AgendaItemType
-      description: Type of the agenda.
-      enum:
-      - BREAK
-      - BREAKFAST
-      - BREAKOUT
-      - DINNER
-      - EXHIBIT
-      - GENERAL_SESSION
-      - HOSPITALITY_DESK
-      - HOSPITALITY_SUITE
-      - LUNCH
-      - MEETING
-      - OFFICE
-      - OTHER
-      - RECEPTION
-      - REGISTRATION
-      - SETUP
-      - SNACK
-      - SPEAKER_ROOM
-      - STORAGE_ROOM
-      - TEARDOWN
-    RfpAgendaItem:
-      type: object
-      title: RfpAgendaItem
-      description: Agenda item associated with an RFP.
-      required:
-      - id
-      allOf:
-      - $ref: '#/components/schemas/RfpAgendaItemRequest'
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: Unique ID of the agenda item.
-          example: 9290ddfb-cc91-4cc3-9b3f-5ee5caba486b
-        agendaBuilderAttachment:
-          type: object
-          description: Attachment whose data was used to create the agenda item.
-          readOnly: true
-          required:
-          - id
-          properties:
-            id:
-              type: string
-              format: uuid
-              description: Unique identifier for the attachment.
-              example: 50dc08af-24a9-4d01-84be-3d43133dc945
-    AttachmentSource:
-      type: string
-      title: AttachmentSource
-      description: The source from where the attachment was uploaded.
-      enum:
-      - FILE_COPY_ADMIN_LIBRARY
-      - FILE_UPLOAD_LINK_URL
-      - FILE_UPLOAD_TO_CUSTOM_DRIVE
-      - FILE_UPLOAD_TO_TEMP_LOCATION
-      - USER_DOCUMENT_LINK_URL
-    PaginatedInternalDocuments:
-      title: PaginatedInternalDocuments
-      description: Paginated list of internal documents attached to an RFP.
-      type: object
-      properties:
-        paging:
-          $ref: '#/components/schemas/Paging'
-        data:
-          description: List of internal documents linked to an RFP.
-          type: array
-          items:
-            $ref: '#/components/schemas/RfpInternalDocument'
-    AgendaItemSetup:
-      type: string
-      title: AgendaItemSetup
-      description: Setup type for the agenda.
-      enum:
-      - BUFFET
-      - CABARET
-      - CHEVRON
-      - CLASSROOM
-      - CONFERENCE
-      - CRESCENT_ROUNDS
-      - EIGHT_BY_TEN
-      - FLOW
-      - HERRINGBONE
-      - HOLLOW_SQUARE
-      - ISLAND
-      - OFFSITE
-      - OTHER
-      - PENINSULA
-      - PLATED
-      - RECEPTION
-      - ROUNDS
-      - ROUNDS_OF_10
-      - ROUNDS_OF_6
-      - ROUNDS_OF_8
-      - SCHOOL_ROOM
-      - TABLETOP
-      - TEN_BY_TEN
-      - THEATER
-      - T_SHAPED
-      - U_SHAPED
-    PaginatedRfpQuestions:
-      title: PaginatedRfpQuestions
-      description: Paginated response containing questions associated to an RFP.
-      type: object
-      properties:
-        paging:
-          $ref: '#/components/schemas/Paging'
-        data:
-          description: List of questions associated to an RFP.
-          type: array
-          items:
-            $ref: '#/components/schemas/RfpQuestion'
-    RfpAttachment:
-      type: object
-      title: RfpAttachment
-      description: Attachment attributes and their supplier-level association.
-      allOf:
-      - $ref: '#/components/schemas/RfpAttachmentBase'
-      properties:
-        sendInEmail:
-          type: boolean
-          description: True indicates the attachment should be sent in emails that notify suppliers about RFPs.
-          example: false
-          readOnly: true
-        supplier:
-          type: object
-          description: Supplier associated with the attachment.
-          properties:
-            id:
-              type: string
-              format: uuid
-              description: ID of the supplier.
-              example: C20A0114-2635-48C3-9F59-9386361B517B
-          readOnly: true
-        selectedForSupplier:
-          type: boolean
-          description: True indicates the attachment is selected for the supplier whose ID is present in supplier.id field.
-          example: true
-          readOnly: true
     TextField:
       title: TextField
       description: A survey text field.
@@ -899,183 +357,6 @@ components:
           type: string
           description: Concise version or abbreviation of the question text. Set by the planner to simplify presentation of the question in reports.
           example: Needs offsite transportation?
-    FieldType:
-      title: FieldType
-      enum:
-      - DateTime
-      - MultiChoice
-      - Number
-      - SingleChoice
-      - Text
-      type: string
-      description: 'Determines the required format for a field. `DateTime`: Data is in date-time format. `MultiChoice`: Data is one or more options from a list. `Number`: Data is a number. `SingleChoice`: Data is a a single option from a list. `Text`: Data is free-text input.'
-    Choice:
-      title: Choice
-      description: A question choice.
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/TextField'
-      properties:
-        label:
-          type: string
-          description: Label of choice.
-          example: Choice A
-    ErrorResponse-12:
-      title: ErrorResponse
-      description: Represents an error response with additional details of cascading error messages.
-      allOf:
-      - $ref: '#/components/schemas/ErrorResponseBase1'
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        details:
-          type: array
-          items:
-            $ref: '#/components/schemas/ErrorResponseBase1'
-          description: Additional details of cascading error messages.
-    RfpAgendaItemRequest:
-      type: object
-      title: RfpAgendaItemRequest
-      description: Request body for creating or updating an RFP agenda item.
-      required:
-      - number
-      - schedules
-      allOf:
-      - $ref: '#/components/schemas/Audit'
-      properties:
-        name:
-          type: string
-          description: The name of the agenda item.
-          minLength: 0
-          maxLength: 50
-          example: Agenda Item 1
-        type:
-          $ref: '#/components/schemas/AgendaItemType'
-        setup:
-          $ref: '#/components/schemas/AgendaItemSetup'
-        note:
-          type: string
-          description: The note sent along with agenda item.
-          minLength: 0
-          maxLength: 2500
-          example: This is a sample comment for this agenda item.
-        startTime:
-          type: string
-          description: The start time of the agenda item in 24-hour format (HH:mm:ss). This represents the local time at event location. For RFPs spanning multiple time zones, this time applies uniformly in each location's respective timezone (e.g., 13:00:00 means 1 PM local time at every venue).
-          example: '10:00:00'
-        endTime:
-          type: string
-          description: The end time of the agenda item in 24-hour format (HH:mm:ss). This represents the local time at event location. For RFPs spanning multiple time zones, this time applies uniformly in each location's respective timezone (e.g., 14:00:00 means 2 PM local time at every venue).
-          example: '10:30:00'
-        roomSize:
-          type: integer
-          minimum: 0
-          description: The required room size. It is specified in the default measurement unit of the RFP. Use <a href="#tag/RFP/operation/getRFP">GET RFP</a> API to get the default measurement unit.
-          example: 1000
-        attendeeCount:
-          type: integer
-          minimum: 1
-          maximum: 49999
-          description: Expected number of people attending the agenda.
-          example: 10000
-        roomInfoRequired:
-          type: boolean
-          description: True indicates room information like type, description is required.
-          example: false
-        twentyFourHourHold:
-          type: boolean
-          description: True indicates that twenty four hour hold is required.
-          example: true
-        locatedAtPrimaryEventVenue:
-          type: boolean
-          description: True indicates that agenda location is at primary event venue.
-          example: false
-        rfpMeal:
-          $ref: '#/components/schemas/RfpMeal'
-        number:
-          type: integer
-          description: The sequence number of the agenda item.
-          minimum: 1
-          maximum: 49999
-          example: 5
-        schedules:
-          type: array
-          minItems: 1
-          maxItems: 150
-          description: List of dates when this agenda item is scheduled.
-          items:
-            $ref: '#/components/schemas/RfpAgendaItemSchedule'
-    ErrorResponseBase1:
-      title: ErrorResponseBase
-      type: object
-      description: Represents an error response with no additional details.
-      required:
-      - code
-      - message
-      properties:
-        code:
-          type: integer
-          description: The HTTP status code representing the error.
-          example: 400
-        message:
-          type: string
-          description: A brief description of the error.
-          example: Bad Request
-        target:
-          type: string
-          description: The target resource of the error.
-          example: example target
-    Link:
-      title: Link
-      required:
-      - href
-      type: object
-      description: Represents a link to a related resource.
-      properties:
-        href:
-          type: string
-          description: A url provided that can be followed for linking
-          example: ?token=90c5f062-76ad-4ea4-aa53-00eb698d9262
-    Category:
-      title: Category
-      description: A question category.
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/TextField'
-      properties:
-        required:
-          type: boolean
-          default: false
-          description: True indicates the category is mandatory for answer.
-          example: true
-    AdditionalChoice:
-      title: additionalChoice
-      description: Contains text of additional choice i.e notApplicableAnswer choice or otherAnswer choice.
-      type: object
-      properties:
-        text:
-          type: string
-          description: Display text of additional choice.
-          example: Dietary Restriction - Other
-        shortText:
-          type: string
-          description: Name of additional choice text in reporting.
-          example: Dietary Preference - Other Allergies
-    RoomBlockDetails:
-      title: RoomBlockDetails
-      description: Contains details related to room allotment for a room type.
-      type: object
-      properties:
-        quantity:
-          type: integer
-          description: Quantity of rooms required.
-          minimum: 0
-          maximum: 9999
-          example: 24
-        type:
-          $ref: '#/components/schemas/GuestRoomType'
     RfpGuestRooms:
       title: RfpGuestRooms
       description: Guest Room Requirements
@@ -1120,6 +401,102 @@ components:
           example: 2 Executive suites are mandatory.
           minLength: 0
           maxLength: 2500
+    PaginatedInternalDocuments:
+      title: PaginatedInternalDocuments
+      description: Paginated list of internal documents attached to an RFP.
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          description: List of internal documents linked to an RFP.
+          type: array
+          items:
+            $ref: '#/components/schemas/RfpInternalDocument'
+    FieldType:
+      title: FieldType
+      enum:
+      - DateTime
+      - MultiChoice
+      - Number
+      - SingleChoice
+      - Text
+      type: string
+      description: 'Determines the required format for a field. `DateTime`: Data is in date-time format. `MultiChoice`: Data is one or more options from a list. `Number`: Data is a number. `SingleChoice`: Data is a a single option from a list. `Text`: Data is free-text input.'
+    DocumentType-1:
+      type: string
+      title: DocumentType
+      readOnly: true
+      description: The document type.
+      enum:
+      - AI
+      - AVI
+      - BMP
+      - DOC
+      - DOCX
+      - EML
+      - EPS
+      - FLV
+      - GIF
+      - HTM
+      - HTML
+      - ICS
+      - JFIF
+      - JPEG
+      - JPG
+      - LINK
+      - MOV
+      - MP4
+      - MSG
+      - ONE
+      - OST
+      - PDF
+      - PNG
+      - PPT
+      - PPTX
+      - PST
+      - SVG
+      - TIF
+      - TIFF
+      - TXT
+      - WMV
+      - XLS
+      - XLSX
+    Audit:
+      title: Audit
+      description: Audit information
+      type: object
+      properties:
+        created:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date time when this record was created.
+          readOnly: true
+          example: '2017-01-02T02:00:00Z'
+        createdBy:
+          type: string
+          description: The identifier of the user that created this record.
+          readOnly: true
+          example: hporter
+        lastModified:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date time when this record was updated.
+          readOnly: true
+          example: '2019-02-12T03:00:00Z'
+        lastModifiedBy:
+          type: string
+          description: The identifier of the user that last updated this record.
+          readOnly: true
+          example: hporter
+    text-answer-format:
+      description: 'Text answer format. Used for `OpenEndedTextOneLine` question types.`CustomFormat`: Answers must follow a planner defined custom format. `EmailAddress`: Answers must follow the pattern of an email address. `General`: Answers can be any string. `USPhoneNumber`: Answers must be formatted as a phone number.'
+      type: string
+      enum:
+      - CustomFormat
+      - EmailAddress
+      - General
+      - USPhoneNumber
     numeric-answer-format:
       type: string
       description: The answer format that a given number is stored in.
@@ -1127,16 +504,36 @@ components:
       - Currency
       - Decimal
       - Number
-    StandardQuestion:
-      title: StandardQuestion
-      description: Standard questions are selected from a predefined list of Cvent questions that can be used in an RFP.
+    date-answer-format:
+      type: string
+      description: 'The answer format that a given date is stored in. `Date`: Answer format is stored in Date format. `DateTime`: Answer format is stored in DateTime format. `Time`: Answer format is stored in Time format.'
+      enum:
+      - Date
+      - DateTime
+      - Time
+      default: DateTime
+    RoomBlockDetails:
+      title: RoomBlockDetails
+      description: Contains details related to room allotment for a room type.
       type: object
       properties:
-        id:
-          type: string
-          format: uuid
-          description: Unique identifier for standard question.
-          example: 50dc08af-24a9-4d01-84be-3d43133dc945
+        quantity:
+          type: integer
+          description: Quantity of rooms required.
+          minimum: 0
+          maximum: 9999
+          example: 24
+        type:
+          $ref: '#/components/schemas/GuestRoomType'
+    SupplierType:
+      title: SupplierType
+      description: 'Type of supplier. `CONVENTION_AND_CONFERENCE_CENTER`: Supplier of large event venues such as convention centers, conference centers, and exposition halls. `CVB`: CVBs (Convention and Visitors Bureau) are suppliers that assist in the promotion and facilitation of tourism, conventions, and events in their respective areas. `HOTEL`: Suppliers that are hotels or resorts. `OTHER`: Suppliers that do not fall under other categories.'
+      type: string
+      enum:
+      - CONVENTION_AND_CONFERENCE_CENTER
+      - CVB
+      - HOTEL
+      - OTHER
     PaginatedRfpCustomField:
       title: PaginatedRfpCustomField
       description: Paginated list of RFP custom fields associated to a RFP.
@@ -1149,21 +546,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CustomFieldAnswers'
-    PaginatedRfpAttachments:
-      title: PaginatedRFPAttachments
-      description: Paginated list of RFP attachments.
-      type: object
-      required:
-      - paging
-      - data
-      properties:
-        paging:
-          $ref: '#/components/schemas/Paging'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/RfpAttachment'
-          description: List of attachments added on an RFP.
     QuestionCommon:
       title: QuestionCommon
       description: Base model with common properties for a question.
@@ -1305,19 +687,65 @@ components:
               type: integer
               description: The unique identifier of the custom answer format for the account.
               example: 104
-    RfpAgendaItemScheduleWithId:
+    AdditionalChoice:
+      title: additionalChoice
+      description: Contains text of additional choice i.e notApplicableAnswer choice or otherAnswer choice.
       type: object
-      title: RfpAgendaItemScheduleWithId
-      description: Contains RFP specific agenda items schedule information with agenda item id.
-      allOf:
-      - $ref: '#/components/schemas/RfpAgendaItemSchedule'
       properties:
-        id:
+        text:
           type: string
-          format: uuid
-          readOnly: true
-          description: Unique ID of the agenda item.
-          example: 50dc08af-24a9-4d01-84be-3d43133dc945
+          description: Display text of additional choice.
+          example: Dietary Restriction - Other
+        shortText:
+          type: string
+          description: Name of additional choice text in reporting.
+          example: Dietary Preference - Other Allergies
+    PaginatedRfpAgendaItemsSchedule:
+      title: PaginatedRfpAgendaItemsSchedule
+      description: Paginated list of agenda items schedule attached to an RFP.
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          description: List of agenda items schedule attached to an RFP.
+          type: array
+          items:
+            $ref: '#/components/schemas/RfpAgendaItemScheduleWithId'
+    GuestRoomOccupancy:
+      title: GuestRoomOccupancy
+      description: 'Guest room occupancy. `SINGLE`: Single occupant. `DOUBLE`: Two occupants. `TRIPLE`: Three occupants. `QUAD`: Four occupants. '
+      type: string
+      enum:
+      - SINGLE
+      - DOUBLE
+      - TRIPLE
+      - QUAD
+      example: SINGLE
+    AgendaItemType:
+      type: string
+      title: AgendaItemType
+      description: Type of the agenda.
+      enum:
+      - BREAK
+      - BREAKFAST
+      - BREAKOUT
+      - DINNER
+      - EXHIBIT
+      - GENERAL_SESSION
+      - HOSPITALITY_DESK
+      - HOSPITALITY_SUITE
+      - LUNCH
+      - MEETING
+      - OFFICE
+      - OTHER
+      - RECEPTION
+      - REGISTRATION
+      - SETUP
+      - SNACK
+      - SPEAKER_ROOM
+      - STORAGE_ROOM
+      - TEARDOWN
     RfpAgendaItemSchedule:
       type: object
       title: RfpAgendaItemSchedule
@@ -1335,6 +763,96 @@ components:
           readOnly: true
           description: The ISO 8601 date of the agenda item.
           example: '2021-07-03'
+    Field:
+      title: Field
+      description: A question field.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/TextField'
+      properties:
+        type:
+          $ref: '#/components/schemas/FieldType'
+        choices:
+          type: array
+          description: List of choices for this field.
+          items:
+            $ref: '#/components/schemas/Choice'
+          minItems: 1
+          maxItems: 100
+        notApplicableAnswer:
+          $ref: '#/components/schemas/AdditionalChoice'
+        otherAnswer:
+          $ref: '#/components/schemas/AdditionalChoice'
+        required:
+          type: boolean
+          default: false
+          description: True indicates this is a mandatory question field.
+          example: true
+    RfpQuestion:
+      title: RfpQuestion
+      description: Question associated with an RFP.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/QuestionCommon'
+      properties:
+        supplierTypes:
+          type: array
+          description: List of supplier types that can view the question on the RFP.
+          items:
+            $ref: '#/components/schemas/SupplierType'
+          uniqueItems: true
+          example:
+          - CVB
+          - HOTEL
+        classificationType:
+          $ref: '#/components/schemas/QuestionClassificationType'
+        order:
+          type: integer
+          description: Determines the display order for questions on the RFP. Questions with smaller values appear first.
+          example: 1
+          minimum: 1
+        standardQuestion:
+          $ref: '#/components/schemas/StandardQuestion'
+        aiQuestionGenerationSource:
+          type: string
+          maxLength: 100
+          readOnly: true
+          description: Represents the AI generation source for the custom question on RFP. This field is set during question creation and cannot be modified afterwards.
+          example: MCP-Visual Studio Code/1.107.1
+    CustomFieldAnswers:
+      title: RfpCustomField
+      description: This object contains RFP custom fields attributes only.
+      type: object
+      properties:
+        customField:
+          title: ExpandableCustomObject
+          properties:
+            id:
+              type: string
+              format: uuid
+              description: Unique identifier for custom field.
+              example: 50dc08af-24a9-4d01-84be-3d43133dc945
+          required:
+          - id
+          type: object
+          description: 'An object containing custom field data. By default, contains only the field ID.
+
+
+            This is an **expandable** object. When requested via the `expand` query parameter with value `customField`, this object expands to include all properties of a custom field definition.
+
+
+            See the `expand` parameter documentation and refer to the [Get Custom Field](#tag/Custom-Fields/operation/getCustomField) API for the complete expanded schema.'
+        answers:
+          type: array
+          description: List of answers for the RFP custom field.
+          maxItems: 100
+          items:
+            type: string
+            description: Answer String
+            example: Choice 1
+      required:
+      - customField
+      - answers
     RfpAttachmentBase:
       type: object
       title: RfpAttachmentBase
@@ -1405,34 +923,489 @@ components:
           readOnly: true
         source:
           $ref: '#/components/schemas/AttachmentSource'
+    PaginatedRfpAgendaItems:
+      title: PaginatedRfpAgendaItems
+      description: Paginated list of agenda items associated with an RFP.
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          description: List of agenda items associated with an RFP.
+          type: array
+          items:
+            $ref: '#/components/schemas/RfpAgendaItem'
+    RfpInternalDocument:
+      type: object
+      title: RfpInternalDocument
+      description: This object contains RFP specific internal documents attributes only.
+      required:
+      - id
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique ID of the file.
+          example: f56a51a4-84b0-46c9-a612-716dc95a1c96
+        created:
+          type: string
+          format: date-time
+          description: ISO 8601 date-time the document was uploaded.
+          example: '2021-01-13T14:06:20.080Z'
+        name:
+          type: string
+          description: Display name of the document.
+          example: BudgetCostSavings
+        uniqueName:
+          type: string
+          description: Name of the document. Must be unique in the account.
+          example: 183f9efaa4c14070985782ee31abbf3c.jpg
+          readOnly: true
+        size:
+          type: integer
+          format: int64
+          description: The size of document in bytes.
+          example: 777835
+          readOnly: true
+        url:
+          type: string
+          format: uri
+          description: URL of the document if `secure` is false. This field is null if `secure` is true.
+          example: https://custom.cvent.com/0B7DEF22676A4434982BDAD2D6EC591F/files/supplier/0713cef78d4e4d818899d4522022d5ad/73ab2e3054fd4321a5e0f846a7adb0d7.jpg
+        type:
+          $ref: '#/components/schemas/DocumentType-1'
+        mimeType:
+          type: string
+          description: The content type of the document.
+          example: image/jpeg
+    ErrorResponse-12:
+      title: ErrorResponse
+      description: Represents an error response with additional details of cascading error messages.
+      allOf:
+      - $ref: '#/components/schemas/ErrorResponseBase1'
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorResponseBase1'
+          description: Additional details of cascading error messages.
+    PaginationLinks:
+      title: PaginationLinks
+      type: object
+      description: Represents pagination links for navigating between pages of data.
+      properties:
+        next:
+          $ref: '#/components/schemas/Link'
+        self:
+          $ref: '#/components/schemas/Link'
+        prev:
+          $ref: '#/components/schemas/Link'
+    PaginatedRfpAttachments:
+      title: PaginatedRFPAttachments
+      description: Paginated list of RFP attachments.
+      type: object
+      required:
+      - paging
+      - data
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/RfpAttachment'
+          description: List of attachments added on an RFP.
+    RfpAgendaItemRequest:
+      type: object
+      title: RfpAgendaItemRequest
+      description: Request body for creating or updating an RFP agenda item.
+      required:
+      - number
+      - schedules
+      allOf:
+      - $ref: '#/components/schemas/Audit'
+      properties:
+        name:
+          type: string
+          description: The name of the agenda item.
+          minLength: 0
+          maxLength: 50
+          example: Agenda Item 1
+        type:
+          $ref: '#/components/schemas/AgendaItemType'
+        setup:
+          $ref: '#/components/schemas/AgendaItemSetup'
+        note:
+          type: string
+          description: The note sent along with agenda item.
+          minLength: 0
+          maxLength: 2500
+          example: This is a sample comment for this agenda item.
+        startTime:
+          type: string
+          description: The start time of the agenda item in 24-hour format (HH:mm:ss). This represents the local time at event location. For RFPs spanning multiple time zones, this time applies uniformly in each location's respective timezone (e.g., 13:00:00 means 1 PM local time at every venue).
+          example: '10:00:00'
+        endTime:
+          type: string
+          description: The end time of the agenda item in 24-hour format (HH:mm:ss). This represents the local time at event location. For RFPs spanning multiple time zones, this time applies uniformly in each location's respective timezone (e.g., 14:00:00 means 2 PM local time at every venue).
+          example: '10:30:00'
+        roomSize:
+          type: integer
+          minimum: 0
+          description: The required room size. It is specified in the default measurement unit of the RFP. Use <a href="#tag/RFP/operation/getRFP">GET RFP</a> API to get the default measurement unit.
+          example: 1000
+        attendeeCount:
+          type: integer
+          minimum: 1
+          maximum: 49999
+          description: Expected number of people attending the agenda.
+          example: 10000
+        roomInfoRequired:
+          type: boolean
+          description: True indicates room information like type, description is required.
+          example: false
+        twentyFourHourHold:
+          type: boolean
+          description: True indicates that twenty four hour hold is required.
+          example: true
+        locatedAtPrimaryEventVenue:
+          type: boolean
+          description: True indicates that agenda location is at primary event venue.
+          example: false
+        rfpMeal:
+          $ref: '#/components/schemas/RfpMeal'
+        number:
+          type: integer
+          description: The sequence number of the agenda item.
+          minimum: 1
+          maximum: 49999
+          example: 5
+        schedules:
+          type: array
+          minItems: 1
+          maxItems: 150
+          description: List of dates when this agenda item is scheduled.
+          items:
+            $ref: '#/components/schemas/RfpAgendaItemSchedule'
+    RfpAgendaItem:
+      type: object
+      title: RfpAgendaItem
+      description: Agenda item associated with an RFP.
+      required:
+      - id
+      allOf:
+      - $ref: '#/components/schemas/RfpAgendaItemRequest'
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique ID of the agenda item.
+          example: 9290ddfb-cc91-4cc3-9b3f-5ee5caba486b
+        agendaBuilderAttachment:
+          type: object
+          description: Attachment whose data was used to create the agenda item.
+          readOnly: true
+          required:
+          - id
+          properties:
+            id:
+              type: string
+              format: uuid
+              description: Unique identifier for the attachment.
+              example: 50dc08af-24a9-4d01-84be-3d43133dc945
+    Link:
+      title: Link
+      required:
+      - href
+      type: object
+      description: Represents a link to a related resource.
+      properties:
+        href:
+          type: string
+          description: A url provided that can be followed for linking
+          example: ?token=90c5f062-76ad-4ea4-aa53-00eb698d9262
+    unit-position:
+      type: string
+      description: Unit position used for text box question type.
+      enum:
+      - Left
+      - Right
+    QuestionType:
+      title: QuestionType
+      enum:
+      - CommentBox
+      - DateTime
+      - FileUpload
+      - Form
+      - LargeChoices
+      - MatrixMultiChoice
+      - MatrixRating
+      - MatrixSideBySide
+      - MatrixSingleChoice
+      - MatrixSpreadSheet
+      - MultiChoice
+      - NetPromoter
+      - Number
+      - NumberAllocation
+      - OpenEndedDateTime
+      - OpenEndedNumeric
+      - OpenEndedTextCommentBox
+      - OpenEndedTextOneLine
+      - RankOrder
+      - Rating
+      - SingleChoice
+      - Text
+      type: string
+      description: The type of question. See [this article](https://support.cvent.com/s/communityarticle/Survey-Adding-Questions) for details on each enum.
+      example: SingleChoice
+    GuestRoomType:
+      title: GuestRoomType
+      description: 'Guest room type. `ANY`: Room can be any type. `SINGLE`: Room with one bed. `DOUBLE`: Room with two beds. `SUITE`: Room is an entire suite. `STAFF`: Room is for staff.'
+      type: string
+      enum:
+      - ANY
+      - SINGLE
+      - DOUBLE
+      - SUITE
+      - STAFF
+      example: DOUBLE
+    ErrorResponseBase1:
+      title: ErrorResponseBase
+      type: object
+      description: Represents an error response with no additional details.
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          description: The HTTP status code representing the error.
+          example: 400
+        message:
+          type: string
+          description: A brief description of the error.
+          example: Bad Request
+        target:
+          type: string
+          description: The target resource of the error.
+          example: example target
+    QuestionClassificationType:
+      type: string
+      title: QuestionClassificationType
+      description: 'Indicates the types of RFP that can be assigned this custom question. `MEETING_ROOM`: Meeting room type RFPs can be assigned this custom question. `GUEST_ROOM`: Guest room type RFPs can be assigned this custom question. `ALL_RFPS`:  All RFPs can be assigned this custom question.'
+      enum:
+      - MEETING_ROOM
+      - GUEST_ROOM
+      - ALL_RFPS
+    Choice:
+      title: Choice
+      description: A question choice.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/TextField'
+      properties:
+        label:
+          type: string
+          description: Label of choice.
+          example: Choice A
+    RfpAgendaItemScheduleWithId:
+      type: object
+      title: RfpAgendaItemScheduleWithId
+      description: Contains RFP specific agenda items schedule information with agenda item id.
+      allOf:
+      - $ref: '#/components/schemas/RfpAgendaItemSchedule'
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+          description: Unique ID of the agenda item.
+          example: 50dc08af-24a9-4d01-84be-3d43133dc945
+    RoomBlock:
+      title: RoomBlock
+      description: Contains details related to room allotment for a day.
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the room block.
+          readOnly: true
+          example: 1f6193da-e12b-4638-b1e2-13dd60d0adeb
+        date:
+          type: string
+          format: date
+          description: The ISO 8601 date when the rooms are required.
+          readOnly: true
+          example: '2025-10-13'
+        dayNumber:
+          type: integer
+          description: Counter for day number.
+          example: 3
+        totalRooms:
+          type: integer
+          description: Total number of rooms required for the day.
+          readOnly: true
+          example: 24
+          minimum: 0
+          maximum: 49995
+        details:
+          type: array
+          description: Contains detail of quantity required for each room type.
+          items:
+            $ref: '#/components/schemas/RoomBlockDetails'
+          minItems: 0
+          maxItems: 5
+    AttachmentSource:
+      type: string
+      title: AttachmentSource
+      description: The source from where the attachment was uploaded.
+      enum:
+      - FILE_COPY_ADMIN_LIBRARY
+      - FILE_UPLOAD_LINK_URL
+      - FILE_UPLOAD_TO_CUSTOM_DRIVE
+      - FILE_UPLOAD_TO_TEMP_LOCATION
+      - USER_DOCUMENT_LINK_URL
+    choice-sort-order:
+      type: string
+      description: 'The sort order for the choices. `AToZ`: sorted alphabetically in ascending order. `AsEntered`: Sorted in the order they were added, oldest choices first. `Random`: Random sort.'
+      enum:
+      - AToZ
+      - AsEntered
+      - Random
+    StandardQuestion:
+      title: StandardQuestion
+      description: Standard questions are selected from a predefined list of Cvent questions that can be used in an RFP.
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for standard question.
+          example: 50dc08af-24a9-4d01-84be-3d43133dc945
+    RfpAttachment:
+      type: object
+      title: RfpAttachment
+      description: Attachment attributes and their supplier-level association.
+      allOf:
+      - $ref: '#/components/schemas/RfpAttachmentBase'
+      properties:
+        sendInEmail:
+          type: boolean
+          description: True indicates the attachment should be sent in emails that notify suppliers about RFPs.
+          example: false
+          readOnly: true
+        supplier:
+          type: object
+          description: Supplier associated with the attachment.
+          properties:
+            id:
+              type: string
+              format: uuid
+              description: ID of the supplier.
+              example: C20A0114-2635-48C3-9F59-9386361B517B
+          readOnly: true
+        selectedForSupplier:
+          type: boolean
+          description: True indicates the attachment is selected for the supplier whose ID is present in supplier.id field.
+          example: true
+          readOnly: true
+    display-type:
+      type: string
+      description: 'The type of display for the field. `Bar`: It is associated with choice questions type. `DropDown`: It is associated with drop down type questions. `Horizontal`: It is associated with horizontal type questions. `List`: It is associated with list type questions. `MultiSelectBox`: It is associated with multi select box type questions. `Vertical`: It is associated with vertical type questions.'
+      enum:
+      - Bar
+      - DropDown
+      - Horizontal
+      - List
+      - MultiSelectBox
+      - Vertical
+    Paging:
+      title: Paging
+      required:
+      - _links
+      type: object
+      description: Represents pagination information for a collection of resources.
+      properties:
+        previousToken:
+          type: string
+          description: The pagination token for the previous page, if one exists. You can use this token to navigate to the previous page of data.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        nextToken:
+          type: string
+          description: The pagination token for the next page. If this value is present in the response, there is another page of data you can fetch.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        currentToken:
+          type: string
+          description: The pagination token for the current page.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        limit:
+          type: integer
+          description: The number of records to return on the page. Not to exceed 200.
+          example: 100
+        totalCount:
+          type: integer
+          description: The total number of records available. This field may return blank, even if there are more records. To confirm if there are more records, check the `nextToken` field.
+          example: 2
+        _links:
+          $ref: '#/components/schemas/PaginationLinks'
+    GuestRoomOccupancyPerRoomType:
+      title: GuestRoomOccupancyPerRoomType
+      description: Room occupancy for a room type.
+      type: object
+      properties:
+        occupancy:
+          $ref: '#/components/schemas/GuestRoomOccupancy'
+        type:
+          $ref: '#/components/schemas/GuestRoomType'
+    AgendaItemSetup:
+      type: string
+      title: AgendaItemSetup
+      description: Setup type for the agenda.
+      enum:
+      - BUFFET
+      - CABARET
+      - CHEVRON
+      - CLASSROOM
+      - CONFERENCE
+      - CRESCENT_ROUNDS
+      - EIGHT_BY_TEN
+      - FLOW
+      - HERRINGBONE
+      - HOLLOW_SQUARE
+      - ISLAND
+      - OFFSITE
+      - OTHER
+      - PENINSULA
+      - PLATED
+      - RECEPTION
+      - ROUNDS
+      - ROUNDS_OF_10
+      - ROUNDS_OF_6
+      - ROUNDS_OF_8
+      - SCHOOL_ROOM
+      - TABLETOP
+      - TEN_BY_TEN
+      - THEATER
+      - T_SHAPED
+      - U_SHAPED
+    PaginatedRfpQuestions:
+      title: PaginatedRfpQuestions
+      description: Paginated response containing questions associated to an RFP.
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          description: List of questions associated to an RFP.
+          type: array
+          items:
+            $ref: '#/components/schemas/RfpQuestion'
   responses:
-    Forbidden1:
-      description: You do not have access to the resource
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 403
-            message: Access Forbidden
-    TooManyRequests1:
-      description: Too many requests
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 429
-            message: Limit Exceeded
-    Unauthorized1:
-      description: Bad or expired token
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 401
-            message: Unauthorized
     BadRequest1:
       description: Bad request
       content:
@@ -1442,6 +1415,15 @@ components:
           example:
             code: 400
             message: Bad Request
+    TooManyRequests1:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 429
+            message: Limit Exceeded
     NotFound1:
       description: Resource not found
       content:
@@ -1451,20 +1433,25 @@ components:
           example:
             code: 404
             message: Not found
+    Forbidden1:
+      description: You do not have access to the resource
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 403
+            message: Access Forbidden
+    Unauthorized1:
+      description: Bad or expired token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 401
+            message: Unauthorized
   parameters:
-    token:
-      name: token
-      in: query
-      description: 'The continuation token returned from a previous class. This must be a valid UUID v4 if provided.
-
-        This will override any other pageable parameters provided.
-
-        '
-      style: form
-      explode: true
-      schema:
-        type: string
-        example: 0e28af57-511f-47ab-ae46-46cd1ca51a1a
     customFieldExpand:
       name: expand
       in: query
@@ -1501,6 +1488,19 @@ components:
         type: string
         format: uuid
       example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+    token:
+      name: token
+      in: query
+      description: 'The continuation token returned from a previous class. This must be a valid UUID v4 if provided.
+
+        This will override any other pageable parameters provided.
+
+        '
+      style: form
+      explode: true
+      schema:
+        type: string
+        example: 0e28af57-511f-47ab-ae46-46cd1ca51a1a
   securitySchemes:
     OAuth2.authorizationCode:
       type: oauth2

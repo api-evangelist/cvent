@@ -102,74 +102,6 @@ paths:
         url: '#oauth2-auth-code-planner-admin'
 components:
   schemas:
-    fileWithAudit:
-      title: FileWithAudit
-      type: object
-      description: File object that represents a file uploaded to the platform.
-      allOf:
-      - title: File
-        type: object
-        description: File object that represents a file basic metadata details.
-        properties:
-          id:
-            type: string
-            format: uuid
-            description: Unique Id of a file
-            example: 94a18afa-30ad-407e-87c2-526e1e871a82
-          friendlyName:
-            type: string
-            description: Full Name of the file
-            example: sample.txt
-          path:
-            $ref: '#/components/schemas/file-link.json'
-          fileSize:
-            type: integer
-            description: Size of the file in bytes.
-            example: 2048
-      properties:
-        created:
-          type: string
-          format: date-time
-          description: The ISO 8601 zoned date time when this record was created.
-          readOnly: true
-          deprecated: true
-          example: '2019-01-01T00:00:00Z'
-        createdBy:
-          type: string
-          description: The identifier of the user that created this record.
-          readOnly: true
-          deprecated: true
-          example: hporter
-        lastModified:
-          type: string
-          format: date-time
-          description: The ISO 8601 zoned date time when this record was updated.
-          readOnly: true
-          deprecated: true
-          example: '2019-01-01T00:00:00Z'
-        lastModifiedBy:
-          type: string
-          description: The identifier of the user that last updated this record.
-          readOnly: true
-          example: hporter
-          deprecated: true
-    uuid-property:
-      title: UUID Property
-      description: A string that has to be a format matching the industry standard uuid
-      type: string
-      format: uuid
-      example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
-    file-link.json:
-      title: FileLink
-      required:
-      - href
-      type: object
-      description: Represents a link to the associated file resource.
-      properties:
-        href:
-          type: string
-          description: A full URL referencing the file
-          example: https://custom.t2.cvent.com/35b0fcc5a7194de690f5382a35ac8266/00000000000000000000000000000000/files/universal-file/tmp/99f8f0b0438e4341a90f959785f73f5a.xlsx
     fileUpload:
       title: File
       type: object
@@ -222,6 +154,74 @@ components:
           items:
             $ref: '#/components/schemas/ErrorResponseBase1'
           description: Additional details of cascading error messages.
+    uuid-property:
+      title: UUID Property
+      description: A string that has to be a format matching the industry standard uuid
+      type: string
+      format: uuid
+      example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+    file-link.json:
+      title: FileLink
+      required:
+      - href
+      type: object
+      description: Represents a link to the associated file resource.
+      properties:
+        href:
+          type: string
+          description: A full URL referencing the file
+          example: https://custom.t2.cvent.com/35b0fcc5a7194de690f5382a35ac8266/00000000000000000000000000000000/files/universal-file/tmp/99f8f0b0438e4341a90f959785f73f5a.xlsx
+    fileWithAudit:
+      title: FileWithAudit
+      type: object
+      description: File object that represents a file uploaded to the platform.
+      allOf:
+      - title: File
+        type: object
+        description: File object that represents a file basic metadata details.
+        properties:
+          id:
+            type: string
+            format: uuid
+            description: Unique Id of a file
+            example: 94a18afa-30ad-407e-87c2-526e1e871a82
+          friendlyName:
+            type: string
+            description: Full Name of the file
+            example: sample.txt
+          path:
+            $ref: '#/components/schemas/file-link.json'
+          fileSize:
+            type: integer
+            description: Size of the file in bytes.
+            example: 2048
+      properties:
+        created:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date time when this record was created.
+          readOnly: true
+          deprecated: true
+          example: '2019-01-01T00:00:00Z'
+        createdBy:
+          type: string
+          description: The identifier of the user that created this record.
+          readOnly: true
+          deprecated: true
+          example: hporter
+        lastModified:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date time when this record was updated.
+          readOnly: true
+          deprecated: true
+          example: '2019-01-01T00:00:00Z'
+        lastModifiedBy:
+          type: string
+          description: The identifier of the user that last updated this record.
+          readOnly: true
+          example: hporter
+          deprecated: true
     ErrorResponseBase1:
       title: ErrorResponseBase
       type: object
@@ -242,7 +242,33 @@ components:
           type: string
           description: The target resource of the error.
           example: example target
+  parameters:
+    id12:
+      in: path
+      name: id
+      description: The unique identifier of a file.
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid-property'
   responses:
+    Unauthorized1:
+      description: Bad or expired token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 401
+            message: Unauthorized
+    Forbidden1:
+      description: You do not have access to the resource
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 403
+            message: Access Forbidden
     TooManyRequests1:
       description: Too many requests
       content:
@@ -270,32 +296,6 @@ components:
           example:
             code: 404
             message: Not found
-    Forbidden1:
-      description: You do not have access to the resource
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 403
-            message: Access Forbidden
-    Unauthorized1:
-      description: Bad or expired token
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 401
-            message: Unauthorized
-  parameters:
-    id12:
-      in: path
-      name: id
-      description: The unique identifier of a file.
-      required: true
-      schema:
-        $ref: '#/components/schemas/uuid-property'
   securitySchemes:
     OAuth2.authorizationCode:
       type: oauth2

@@ -236,6 +236,113 @@ paths:
         '429':
           $ref: '#/components/responses/TooManyRequests1'
 components:
+  parameters:
+    userGroupId:
+      in: path
+      name: userGroupId
+      description: 'The User Group''s Id.
+
+        '
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: B089AC31-1212-63FB-AAEA-382037E1BCDF
+    userId:
+      in: path
+      name: userId
+      description: 'The Account User''s Id.
+
+        '
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: FF8AF134-3505-4D67-AAEA-1975D8E1327C
+    limit:
+      name: limit
+      in: query
+      description: The maximum number of records to return per page.
+      style: form
+      explode: true
+      schema:
+        maximum: 200
+        minimum: 1
+        type: integer
+        default: 100
+        example: 100
+    token1:
+      in: query
+      name: token
+      description: 'The pagination token returned from a previous call.
+
+        This will override any other pageable parameters provided.
+
+        '
+      required: false
+      style: form
+      explode: true
+      schema:
+        type: string
+        example: 1a2b3c4d5e6f7g8h9i10j11k
+  responses:
+    UserGroups:
+      description: List of User Groups
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UserGroups'
+    BadRequest1:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 400
+            message: Bad Request
+    TooManyRequests1:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 429
+            message: Limit Exceeded
+    UserGroup:
+      description: A User Group
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AccountUserGroup'
+    NotFound1:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 404
+            message: Not found
+    Unauthorized1:
+      description: Bad or expired token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 401
+            message: Unauthorized
+    Forbidden1:
+      description: You do not have access to the resource
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 403
+            message: Access Forbidden
   schemas:
     AccountUserGroup:
       title: Account User Group
@@ -311,6 +418,63 @@ components:
             $ref: '#/components/schemas/AccountUserGroup'
           description: The list of user groups retrieved for the specified page.
           readOnly: true
+    ErrorResponse-12:
+      title: ErrorResponse
+      description: Represents an error response with additional details of cascading error messages.
+      allOf:
+      - $ref: '#/components/schemas/ErrorResponseBase1'
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorResponseBase1'
+          description: Additional details of cascading error messages.
+    PaginationLinks:
+      title: PaginationLinks
+      type: object
+      description: Represents pagination links for navigating between pages of data.
+      properties:
+        next:
+          $ref: '#/components/schemas/Link'
+        self:
+          $ref: '#/components/schemas/Link'
+        prev:
+          $ref: '#/components/schemas/Link'
+    Link:
+      title: Link
+      required:
+      - href
+      type: object
+      description: Represents a link to a related resource.
+      properties:
+        href:
+          type: string
+          description: A url provided that can be followed for linking
+          example: ?token=90c5f062-76ad-4ea4-aa53-00eb698d9262
+    ErrorResponseBase1:
+      title: ErrorResponseBase
+      type: object
+      description: Represents an error response with no additional details.
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          description: The HTTP status code representing the error.
+          example: 400
+        message:
+          type: string
+          description: A brief description of the error.
+          example: Bad Request
+        target:
+          type: string
+          description: The target resource of the error.
+          example: example target
     Paging:
       title: Paging
       required:
@@ -340,170 +504,6 @@ components:
           example: 2
         _links:
           $ref: '#/components/schemas/PaginationLinks'
-    PaginationLinks:
-      title: PaginationLinks
-      type: object
-      description: Represents pagination links for navigating between pages of data.
-      properties:
-        next:
-          $ref: '#/components/schemas/Link'
-        self:
-          $ref: '#/components/schemas/Link'
-        prev:
-          $ref: '#/components/schemas/Link'
-    ErrorResponse-12:
-      title: ErrorResponse
-      description: Represents an error response with additional details of cascading error messages.
-      allOf:
-      - $ref: '#/components/schemas/ErrorResponseBase1'
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        details:
-          type: array
-          items:
-            $ref: '#/components/schemas/ErrorResponseBase1'
-          description: Additional details of cascading error messages.
-    ErrorResponseBase1:
-      title: ErrorResponseBase
-      type: object
-      description: Represents an error response with no additional details.
-      required:
-      - code
-      - message
-      properties:
-        code:
-          type: integer
-          description: The HTTP status code representing the error.
-          example: 400
-        message:
-          type: string
-          description: A brief description of the error.
-          example: Bad Request
-        target:
-          type: string
-          description: The target resource of the error.
-          example: example target
-    Link:
-      title: Link
-      required:
-      - href
-      type: object
-      description: Represents a link to a related resource.
-      properties:
-        href:
-          type: string
-          description: A url provided that can be followed for linking
-          example: ?token=90c5f062-76ad-4ea4-aa53-00eb698d9262
-  responses:
-    Forbidden1:
-      description: You do not have access to the resource
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 403
-            message: Access Forbidden
-    TooManyRequests1:
-      description: Too many requests
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 429
-            message: Limit Exceeded
-    UserGroups:
-      description: List of User Groups
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/UserGroups'
-    UserGroup:
-      description: A User Group
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/AccountUserGroup'
-    Unauthorized1:
-      description: Bad or expired token
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 401
-            message: Unauthorized
-    BadRequest1:
-      description: Bad request
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 400
-            message: Bad Request
-    NotFound1:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 404
-            message: Not found
-  parameters:
-    token1:
-      in: query
-      name: token
-      description: 'The pagination token returned from a previous call.
-
-        This will override any other pageable parameters provided.
-
-        '
-      required: false
-      style: form
-      explode: true
-      schema:
-        type: string
-        example: 1a2b3c4d5e6f7g8h9i10j11k
-    userId:
-      in: path
-      name: userId
-      description: 'The Account User''s Id.
-
-        '
-      required: true
-      schema:
-        type: string
-        format: uuid
-        example: FF8AF134-3505-4D67-AAEA-1975D8E1327C
-    userGroupId:
-      in: path
-      name: userGroupId
-      description: 'The User Group''s Id.
-
-        '
-      required: true
-      schema:
-        type: string
-        format: uuid
-        example: B089AC31-1212-63FB-AAEA-382037E1BCDF
-    limit:
-      name: limit
-      in: query
-      description: The maximum number of records to return per page.
-      style: form
-      explode: true
-      schema:
-        maximum: 200
-        minimum: 1
-        type: integer
-        default: 100
-        example: 100
   requestBodies:
     UserGroup:
       description: A User Group

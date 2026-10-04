@@ -64,21 +64,17 @@ paths:
         url: '#oauth2-auth-code-planner-admin'
 components:
   schemas:
-    attendeeCreditsPaginatedResponse:
-      title: Credits information
-      description: Response containing attendee credits information.
-      required:
-      - paging
-      - data
+    pagination-links.json:
+      title: PaginationLinks
       type: object
+      description: Represents pagination links for navigating between pages of data.
       properties:
-        paging:
-          $ref: '#/components/schemas/paging.json'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/attendee-credit.json'
-          description: Collection of credits assigned to attendees.
+        next:
+          $ref: '#/components/schemas/link.json'
+        self:
+          $ref: '#/components/schemas/link.json'
+        prev:
+          $ref: '#/components/schemas/link.json'
     attendee-credit.json:
       title: AttendeeCredit
       description: Credit details for an attendee.
@@ -133,17 +129,30 @@ components:
           description: The ISO 8601 zoned date time when this record was last modified.
           example: '2024-01-07T02:00:00Z'
           format: date-time
-    pagination-links.json:
-      title: PaginationLinks
+    expandable-credit-type.json:
+      title: ExpandableCreditType
+      description: 'An object that contains the associated credit type ID.
+
+
+        This is an **expandable** object and if requested will contain the name of a credit type object.'
       type: object
-      description: Represents pagination links for navigating between pages of data.
       properties:
-        next:
-          $ref: '#/components/schemas/link.json'
-        self:
-          $ref: '#/components/schemas/link.json'
-        prev:
-          $ref: '#/components/schemas/link.json'
+        id:
+          type: string
+          format: uuid
+          example: c15d600b-1363-413e-b00a-87d946903fe1
+          description: A unique identifier of the credit type.
+    link.json:
+      title: Link
+      required:
+      - href
+      type: object
+      description: Represents a link to a related resource.
+      properties:
+        href:
+          type: string
+          description: A url provided that can be followed for linking
+          example: ?token=90c5f062-76ad-4ea4-aa53-00eb698d9262
     paging.json:
       title: Paging
       required:
@@ -173,38 +182,6 @@ components:
           example: 2
         _links:
           $ref: '#/components/schemas/pagination-links.json'
-    expandable-credit-type.json:
-      title: ExpandableCreditType
-      description: 'An object that contains the associated credit type ID.
-
-
-        This is an **expandable** object and if requested will contain the name of a credit type object.'
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          example: c15d600b-1363-413e-b00a-87d946903fe1
-          description: A unique identifier of the credit type.
-    link.json:
-      title: Link
-      required:
-      - href
-      type: object
-      description: Represents a link to a related resource.
-      properties:
-        href:
-          type: string
-          description: A url provided that can be followed for linking
-          example: ?token=90c5f062-76ad-4ea4-aa53-00eb698d9262
-    attendee-credit-type.json:
-      title: AttendeeCreditType
-      description: 'Represents the entity that granted the credit. Event: This credit was granted by an event. Session: This credit was granted by a session.'
-      type: string
-      enum:
-      - Event
-      - Session
-      example: Session
     ErrorResponse-12:
       title: ErrorResponse
       description: Represents an error response with additional details of cascading error messages.
@@ -240,53 +217,56 @@ components:
           type: string
           description: The target resource of the error.
           example: example target
-  responses:
-    Forbidden1:
-      description: You do not have access to the resource
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 403
-            message: Access Forbidden
-    TooManyRequests1:
-      description: Too many requests
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 429
-            message: Limit Exceeded
-    Unauthorized1:
-      description: Bad or expired token
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 401
-            message: Unauthorized
-    BadRequest1:
-      description: Bad request
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 400
-            message: Bad Request
-    NotFound1:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 404
-            message: Not found
+    attendeeCreditsPaginatedResponse:
+      title: Credits information
+      description: Response containing attendee credits information.
+      required:
+      - paging
+      - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/paging.json'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/attendee-credit.json'
+          description: Collection of credits assigned to attendees.
+    attendee-credit-type.json:
+      title: AttendeeCreditType
+      description: 'Represents the entity that granted the credit. Event: This credit was granted by an event. Session: This credit was granted by a session.'
+      type: string
+      enum:
+      - Event
+      - Session
+      example: Session
   parameters:
+    sort10:
+      in: query
+      name: sort
+      required: false
+      description: "The `sort` query parameter sorts items in the list of results and organizes them according to your preference.\nThere are two orders:\n  * ascending: ASC\n  * descending: DESC\n\nThe following fields are sortable:\n  * lastModified\n"
+      schema:
+        example: lastModified:DESC
+        type: string
+    before:
+      name: before
+      required: false
+      in: query
+      description: Used to query records that have been added or updated before this time point.
+      schema:
+        type: string
+        format: date-time
+        example: '2017-01-02T02:00:00Z'
+    after:
+      name: after
+      required: false
+      description: Used to query records that have been added or updated after this time point. Default to the beginning of time of the data store.
+      in: query
+      schema:
+        type: string
+        format: date-time
+        example: '2017-01-02T02:00:00Z'
     attendeeCreditLimit:
       name: limit
       in: query
@@ -299,15 +279,6 @@ components:
         type: integer
         default: 100
         example: 100
-    after:
-      name: after
-      required: false
-      description: Used to query records that have been added or updated after this time point. Default to the beginning of time of the data store.
-      in: query
-      schema:
-        type: string
-        format: date-time
-        example: '2017-01-02T02:00:00Z'
     token:
       name: token
       in: query
@@ -321,23 +292,6 @@ components:
       schema:
         type: string
         example: 0e28af57-511f-47ab-ae46-46cd1ca51a1a
-    before:
-      name: before
-      required: false
-      in: query
-      description: Used to query records that have been added or updated before this time point.
-      schema:
-        type: string
-        format: date-time
-        example: '2017-01-02T02:00:00Z'
-    sort10:
-      in: query
-      name: sort
-      required: false
-      description: "The `sort` query parameter sorts items in the list of results and organizes them according to your preference.\nThere are two orders:\n  * ascending: ASC\n  * descending: DESC\n\nThe following fields are sortable:\n  * lastModified\n"
-      schema:
-        example: lastModified:DESC
-        type: string
     expand1:
       name: expand
       in: query
@@ -352,6 +306,52 @@ components:
           type: string
           enum:
           - creditType
+  responses:
+    BadRequest1:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 400
+            message: Bad Request
+    TooManyRequests1:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 429
+            message: Limit Exceeded
+    NotFound1:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 404
+            message: Not found
+    Unauthorized1:
+      description: Bad or expired token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 401
+            message: Unauthorized
+    Forbidden1:
+      description: You do not have access to the resource
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 403
+            message: Access Forbidden
   securitySchemes:
     OAuth2.authorizationCode:
       type: oauth2

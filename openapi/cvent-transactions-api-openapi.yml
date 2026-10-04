@@ -245,6 +245,150 @@ paths:
         url: '#oauth2-auth-code-planner-admin'
 components:
   schemas:
+    transaction-details-paginated-response:
+      title: TransactionDetailsPaginatedResponse
+      description: The response from a request to list of transactions. This includes the paging object as well.
+      required:
+      - paging
+      - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/transaction-detail-response'
+          description: Collection of transaction details.
+    OrderItemRef:
+      title: OrderItemRef
+      type: object
+      description: Represents an order item by its ID.
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: cfb2f6d9-0ec9-467d-8a6e-da29e2b674af
+          description: A unique identifier for the order item.
+      required:
+      - id
+    ProductType:
+      title: ProductType
+      enum:
+      - AdmissionItem
+      - Track
+      - Session
+      - QuantityItem
+      - DonationItem
+      - GroupItem
+      - HotelItem
+      - MembershipItem
+      - GroupFlight
+      - RegistrantTypeServiceFee
+      - PaymentTypeServiceFee
+      - Tax
+      - Appointment
+      type: string
+      default: Session
+      description: This is used to denote the product type.
+      example: Session
+      readOnly: true
+    uuid-property:
+      title: UUID Property
+      description: A string that has to be a format matching the industry standard uuid
+      type: string
+      format: uuid
+      example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+    Attendee:
+      type: object
+      description: The reference to the attendee. Contains only the ID of the attendee.
+      title: Attendee
+      required:
+      - id
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the primary invitee for the current attendee's registration.
+          example: 5b0e8d1f-8fd6-4ebe-977a-602b4a1f9c43
+    transaction-items-account-paginated-response:
+      title: TransactionItemsAccountPaginatedResponse
+      description: The response from a request to the list of transaction items. This includes the paging object as well.
+      required:
+      - paging
+      - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/transaction-item-account-response'
+          description: Collection of transaction items.
+    Audit:
+      title: Audit
+      description: Audit information
+      type: object
+      properties:
+        created:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date time when this record was created.
+          readOnly: true
+          example: '2017-01-02T02:00:00Z'
+        createdBy:
+          type: string
+          description: The identifier of the user that created this record.
+          readOnly: true
+          example: hporter
+        lastModified:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date time when this record was updated.
+          readOnly: true
+          example: '2019-02-12T03:00:00Z'
+        lastModifiedBy:
+          type: string
+          description: The identifier of the user that last updated this record.
+          readOnly: true
+          example: hporter
+    BaseAddress:
+      title: Base Address
+      description: Base Address Model
+      type: object
+      properties:
+        address1:
+          type: string
+          maxLength: 40
+          description: The first line of an address.
+          example: Cvent Inc.
+        address2:
+          type: string
+          maxLength: 40
+          description: The second line of an address.
+          example: 4001 West Parmer Lane
+        address3:
+          type: string
+          maxLength: 40
+          description: The third line of an address.
+          example: PO Box 123
+        city:
+          type: string
+          maxLength: 40
+          description: The name of the city.
+          example: Austin
+        countryCode:
+          type: string
+          maxLength: 3
+          minLength: 2
+          description: ISO 3166 two-letter (alpha-2) country code.
+          example: US
+        postalCode:
+          type: string
+          maxLength: 25
+          description: Postal code (also known as zipcode) of the address.
+          example: '78727'
     transaction-detail-response:
       title: TransactionDetail
       type: object
@@ -330,96 +474,6 @@ components:
           description: The expiration date of the attendee's credit card.
         billingAddress:
           $ref: '#/components/schemas/BillingAddress'
-    Audit:
-      title: Audit
-      description: Audit information
-      type: object
-      properties:
-        created:
-          type: string
-          format: date-time
-          description: The ISO 8601 zoned date time when this record was created.
-          readOnly: true
-          example: '2017-01-02T02:00:00Z'
-        createdBy:
-          type: string
-          description: The identifier of the user that created this record.
-          readOnly: true
-          example: hporter
-        lastModified:
-          type: string
-          format: date-time
-          description: The ISO 8601 zoned date time when this record was updated.
-          readOnly: true
-          example: '2019-02-12T03:00:00Z'
-        lastModifiedBy:
-          type: string
-          description: The identifier of the user that last updated this record.
-          readOnly: true
-          example: hporter
-    TransactionId:
-      title: TransactionId
-      type: object
-      description: This is used to denote the id and merchant/processor transaction id for transaction items.
-      properties:
-        id:
-          $ref: '#/components/schemas/uuid-property'
-        processorTransactionId:
-          type: string
-          description: This denotes the online processor transaction Id for transactions.
-          maxLength: 60
-          example: ch_3Lrr4TBhiDV0mZz50nZpGx4a
-      required:
-      - id
-    ProductOrderItem:
-      title: ProductOrderItem
-      type: object
-      description: This is used to denote the product details in an order item
-      properties:
-        id:
-          $ref: '#/components/schemas/uuid-property'
-        type:
-          $ref: '#/components/schemas/ProductType'
-    Paging:
-      title: Paging
-      required:
-      - _links
-      type: object
-      description: Represents pagination information for a collection of resources.
-      properties:
-        previousToken:
-          type: string
-          description: The pagination token for the previous page, if one exists. You can use this token to navigate to the previous page of data.
-          example: 1a2b3c4d5e6f7g8h9i10j11k
-        nextToken:
-          type: string
-          description: The pagination token for the next page. If this value is present in the response, there is another page of data you can fetch.
-          example: 1a2b3c4d5e6f7g8h9i10j11k
-        currentToken:
-          type: string
-          description: The pagination token for the current page.
-          example: 1a2b3c4d5e6f7g8h9i10j11k
-        limit:
-          type: integer
-          description: The number of records to return on the page. Not to exceed 200.
-          example: 100
-        totalCount:
-          type: integer
-          description: The total number of records available. This field may return blank, even if there are more records. To confirm if there are more records, check the `nextToken` field.
-          example: 2
-        _links:
-          $ref: '#/components/schemas/PaginationLinks'
-    PaginationLinks:
-      title: PaginationLinks
-      type: object
-      description: Represents pagination links for navigating between pages of data.
-      properties:
-        next:
-          $ref: '#/components/schemas/Link'
-        self:
-          $ref: '#/components/schemas/Link'
-        prev:
-          $ref: '#/components/schemas/Link'
     transaction-item-account-response:
       title: TransactionItem
       type: object
@@ -454,6 +508,119 @@ components:
           type: string
           description: This denotes the currency of this transaction
           example: EUR
+    BillingAddress:
+      title: Billing Address
+      description: Billing Address Details
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/BaseAddress'
+      properties:
+        region:
+          type: string
+          description: The name of the state/province/region of the address.
+          maxLength: 50
+          example: Texas
+        regionCode:
+          type: string
+          description: The abbreviation of the state/province/region of the address.
+          minLength: 2
+          maxLength: 10
+          example: TX
+    ProductOrderItem:
+      title: ProductOrderItem
+      type: object
+      description: This is used to denote the product details in an order item
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid-property'
+        type:
+          $ref: '#/components/schemas/ProductType'
+    PaymentType-1:
+      title: PaymentType
+      enum:
+      - Authorization
+      - Online Charge
+      - Online Refund
+      - Offline Charge
+      - Offline Refund
+      type: string
+      description: 'Denotes the type of payment made by an attendee. Authorization: Online payment that has been approved by the cardholder''s bank but has not been executed. Online Charge: Online payment recieved in Cvent. Online Refund: Online refund to attendee processed in Cvent. Offline Charge: The transaction is a payment made to the attendee''s order electronically in another system of record, or paid in physical currency. Offline Refund: The transaction is a refund issued to the attendee electronically in another system of record, or paid in physical currency.'
+      example: Online Refund
+    Event:
+      type: object
+      description: The reference to the event. Contains only the ID of the event.
+      title: Event
+      required:
+      - id
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the event.
+          example: 4a0e8d1f-8fd6-4ebe-977a-602b4a1f9c56
+    ErrorResponse-12:
+      title: ErrorResponse
+      description: Represents an error response with additional details of cascading error messages.
+      allOf:
+      - $ref: '#/components/schemas/ErrorResponseBase1'
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorResponseBase1'
+          description: Additional details of cascading error messages.
+    PaginationLinks:
+      title: PaginationLinks
+      type: object
+      description: Represents pagination links for navigating between pages of data.
+      properties:
+        next:
+          $ref: '#/components/schemas/Link'
+        self:
+          $ref: '#/components/schemas/Link'
+        prev:
+          $ref: '#/components/schemas/Link'
+    TransactionId:
+      title: TransactionId
+      type: object
+      description: This is used to denote the id and merchant/processor transaction id for transaction items.
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid-property'
+        processorTransactionId:
+          type: string
+          description: This denotes the online processor transaction Id for transactions.
+          maxLength: 60
+          example: ch_3Lrr4TBhiDV0mZz50nZpGx4a
+      required:
+      - id
+    Link:
+      title: Link
+      required:
+      - href
+      type: object
+      description: Represents a link to a related resource.
+      properties:
+        href:
+          type: string
+          description: A url provided that can be followed for linking
+          example: ?token=90c5f062-76ad-4ea4-aa53-00eb698d9262
+    Order:
+      type: object
+      description: Represents an order. Contains only the ID of the order.
+      title: Order
+      required:
+      - id
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique ID of the order.
+          example: 6c0e8d1f-8fd6-4ebe-977a-602b4a1f9c43
     PaymentMethod:
       title: PaymentMethod
       enum:
@@ -508,119 +675,6 @@ components:
       type: string
       description: This denotes the payment method in a transaction.
       example: Mastercard
-    Attendee:
-      type: object
-      description: The reference to the attendee. Contains only the ID of the attendee.
-      title: Attendee
-      required:
-      - id
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: Unique identifier of the primary invitee for the current attendee's registration.
-          example: 5b0e8d1f-8fd6-4ebe-977a-602b4a1f9c43
-    PaymentType-1:
-      title: PaymentType
-      enum:
-      - Authorization
-      - Online Charge
-      - Online Refund
-      - Offline Charge
-      - Offline Refund
-      type: string
-      description: 'Denotes the type of payment made by an attendee. Authorization: Online payment that has been approved by the cardholder''s bank but has not been executed. Online Charge: Online payment recieved in Cvent. Online Refund: Online refund to attendee processed in Cvent. Offline Charge: The transaction is a payment made to the attendee''s order electronically in another system of record, or paid in physical currency. Offline Refund: The transaction is a refund issued to the attendee electronically in another system of record, or paid in physical currency.'
-      example: Online Refund
-    Event:
-      type: object
-      description: The reference to the event. Contains only the ID of the event.
-      title: Event
-      required:
-      - id
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: Unique identifier of the event.
-          example: 4a0e8d1f-8fd6-4ebe-977a-602b4a1f9c56
-    ProductType:
-      title: ProductType
-      enum:
-      - AdmissionItem
-      - Track
-      - Session
-      - QuantityItem
-      - DonationItem
-      - GroupItem
-      - HotelItem
-      - MembershipItem
-      - GroupFlight
-      - RegistrantTypeServiceFee
-      - PaymentTypeServiceFee
-      - Tax
-      - Appointment
-      type: string
-      default: Session
-      description: This is used to denote the product type.
-      example: Session
-      readOnly: true
-    uuid-property:
-      title: UUID Property
-      description: A string that has to be a format matching the industry standard uuid
-      type: string
-      format: uuid
-      example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
-    ErrorResponse-12:
-      title: ErrorResponse
-      description: Represents an error response with additional details of cascading error messages.
-      allOf:
-      - $ref: '#/components/schemas/ErrorResponseBase1'
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        details:
-          type: array
-          items:
-            $ref: '#/components/schemas/ErrorResponseBase1'
-          description: Additional details of cascading error messages.
-    BaseAddress:
-      title: Base Address
-      description: Base Address Model
-      type: object
-      properties:
-        address1:
-          type: string
-          maxLength: 40
-          description: The first line of an address.
-          example: Cvent Inc.
-        address2:
-          type: string
-          maxLength: 40
-          description: The second line of an address.
-          example: 4001 West Parmer Lane
-        address3:
-          type: string
-          maxLength: 40
-          description: The third line of an address.
-          example: PO Box 123
-        city:
-          type: string
-          maxLength: 40
-          description: The name of the city.
-          example: Austin
-        countryCode:
-          type: string
-          maxLength: 3
-          minLength: 2
-          description: ISO 3166 two-letter (alpha-2) country code.
-          example: US
-        postalCode:
-          type: string
-          maxLength: 25
-          description: Postal code (also known as zipcode) of the address.
-          example: '78727'
     ErrorResponseBase1:
       title: ErrorResponseBase
       type: object
@@ -641,117 +695,36 @@ components:
           type: string
           description: The target resource of the error.
           example: example target
-    Link:
-      title: Link
+    Paging:
+      title: Paging
       required:
-      - href
+      - _links
       type: object
-      description: Represents a link to a related resource.
+      description: Represents pagination information for a collection of resources.
       properties:
-        href:
+        previousToken:
           type: string
-          description: A url provided that can be followed for linking
-          example: ?token=90c5f062-76ad-4ea4-aa53-00eb698d9262
-    Order:
-      type: object
-      description: Represents an order. Contains only the ID of the order.
-      title: Order
-      required:
-      - id
-      properties:
-        id:
+          description: The pagination token for the previous page, if one exists. You can use this token to navigate to the previous page of data.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        nextToken:
           type: string
-          format: uuid
-          description: Unique ID of the order.
-          example: 6c0e8d1f-8fd6-4ebe-977a-602b4a1f9c43
-    transaction-details-paginated-response:
-      title: TransactionDetailsPaginatedResponse
-      description: The response from a request to list of transactions. This includes the paging object as well.
-      required:
-      - paging
-      - data
-      type: object
-      properties:
-        paging:
-          $ref: '#/components/schemas/Paging'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/transaction-detail-response'
-          description: Collection of transaction details.
-    OrderItemRef:
-      title: OrderItemRef
-      type: object
-      description: Represents an order item by its ID.
-      properties:
-        id:
+          description: The pagination token for the next page. If this value is present in the response, there is another page of data you can fetch.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        currentToken:
           type: string
-          format: uuid
-          example: cfb2f6d9-0ec9-467d-8a6e-da29e2b674af
-          description: A unique identifier for the order item.
-      required:
-      - id
-    transaction-items-account-paginated-response:
-      title: TransactionItemsAccountPaginatedResponse
-      description: The response from a request to the list of transaction items. This includes the paging object as well.
-      required:
-      - paging
-      - data
-      type: object
-      properties:
-        paging:
-          $ref: '#/components/schemas/Paging'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/transaction-item-account-response'
-          description: Collection of transaction items.
-    BillingAddress:
-      title: Billing Address
-      description: Billing Address Details
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/BaseAddress'
-      properties:
-        region:
-          type: string
-          description: The name of the state/province/region of the address.
-          maxLength: 50
-          example: Texas
-        regionCode:
-          type: string
-          description: The abbreviation of the state/province/region of the address.
-          minLength: 2
-          maxLength: 10
-          example: TX
+          description: The pagination token for the current page.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        limit:
+          type: integer
+          description: The number of records to return on the page. Not to exceed 200.
+          example: 100
+        totalCount:
+          type: integer
+          description: The total number of records available. This field may return blank, even if there are more records. To confirm if there are more records, check the `nextToken` field.
+          example: 2
+        _links:
+          $ref: '#/components/schemas/PaginationLinks'
   responses:
-    Forbidden1:
-      description: You do not have access to the resource
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 403
-            message: Access Forbidden
-    TooManyRequests1:
-      description: Too many requests
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 429
-            message: Limit Exceeded
-    Unauthorized1:
-      description: Bad or expired token
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 401
-            message: Unauthorized
     BadRequest1:
       description: Bad request
       content:
@@ -761,6 +734,15 @@ components:
           example:
             code: 400
             message: Bad Request
+    TooManyRequests1:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 429
+            message: Limit Exceeded
     NotFound1:
       description: Resource not found
       content:
@@ -770,7 +752,46 @@ components:
           example:
             code: 404
             message: Not found
+    Unauthorized1:
+      description: Bad or expired token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 401
+            message: Unauthorized
+    Forbidden1:
+      description: You do not have access to the resource
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 403
+            message: Access Forbidden
   parameters:
+    before:
+      name: before
+      required: false
+      in: query
+      description: Used to query records that have been added or updated before this time point.
+      schema:
+        type: string
+        format: date-time
+        example: '2017-01-02T02:00:00Z'
+    limit:
+      name: limit
+      in: query
+      description: The maximum number of records to return per page.
+      style: form
+      explode: true
+      schema:
+        maximum: 200
+        minimum: 1
+        type: integer
+        default: 100
+        example: 100
     after:
       name: after
       required: false
@@ -780,6 +801,13 @@ components:
         type: string
         format: date-time
         example: '2017-01-02T02:00:00Z'
+    transactionId:
+      in: path
+      name: transactionId
+      description: Unique ID of a Transaction.
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid-property'
     transactionItemId:
       in: path
       name: transactionItemId
@@ -802,34 +830,6 @@ components:
       schema:
         type: string
         example: 0e28af57-511f-47ab-ae46-46cd1ca51a1a
-    transactionId:
-      in: path
-      name: transactionId
-      description: Unique ID of a Transaction.
-      required: true
-      schema:
-        $ref: '#/components/schemas/uuid-property'
-    before:
-      name: before
-      required: false
-      in: query
-      description: Used to query records that have been added or updated before this time point.
-      schema:
-        type: string
-        format: date-time
-        example: '2017-01-02T02:00:00Z'
-    limit:
-      name: limit
-      in: query
-      description: The maximum number of records to return per page.
-      style: form
-      explode: true
-      schema:
-        maximum: 200
-        minimum: 1
-        type: integer
-        default: 100
-        example: 100
   securitySchemes:
     OAuth2.authorizationCode:
       type: oauth2
