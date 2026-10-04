@@ -1159,6 +1159,9 @@ apis:
   - type: OpenAPI
     url: openapi/cvent-hooks-api-openapi.yml
 common:
+- type: CapabilityMap
+  url: capabilities/cvent-capability-edges.yml
+  name: Cvent Business Capability Map
 - type: SupportArticles
   url: https://support.cvent.com/
 - type: IssueTracker

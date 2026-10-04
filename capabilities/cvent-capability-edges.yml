@@ -3,6 +3,7 @@ provider: Cvent
 generated_by: planning/capability-mapping/scripts/classify_capabilities.py
 model: claude-opus-5
 frame:
+- Software & Technology
 - Travel & Hospitality
 min_confidence: 0.7
 capability_model:
@@ -11,8 +12,61 @@ capability_model:
   attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
     CC BY 4.0
   notice: NOTICE
-edge_count: 1
+edge_count: 9
 edges:
+- tag: Usage
+  spec_file: cvent-usage-api-openapi.yml
+  capability_id: BC-4270.50
+  capability_id_l1: BC-4270
+  capability_name: API Consumption Governance
+  confidence: 0.85
+  evidence: GET /usage  getUsage  Get Current Usage; GET /usage/tier  getUsageTier  Get Current Usage
+    Tier; schemas UsagePlan, UsageQuotaFields
+  reason: Exposes current API usage, quota fields and the caller's usage plan/tier — quotas, rate limits
+    and mapping of API consumption to plan tiers, which is exactly API Consumption Governance for the
+    vendor's developer platform.
+- tag: Audience Segments
+  spec_file: cvent-audience-segments-api-openapi.yml
+  capability_id: BC-420.20
+  capability_id_l1: BC-420
+  capability_name: Customer Segmentation Management
+  confidence: 0.8
+  evidence: POST /audience-segments createAudienceSegment  Create Audience Segment; PUT /audience-segments/{audienceSegmentId}/attendees/{attendeeId}  associateAttendeeToSegment
+  reason: Full CRUD over audience segments plus association of individual attendees to segments is segmentation
+    of the contact base for differentiated treatment, matching Customer Segmentation Management.
+- tag: Discounts
+  spec_file: cvent-discounts-api-openapi.yml
+  capability_id: BC-440.30
+  capability_id_l1: BC-440
+  capability_name: Discount & Promotion Management
+  confidence: 0.8
+  evidence: POST /events/{id}/discounts createEventDiscount Create Event Discount; schemas CreateUpdateDiscountCode,
+    ExistingVolumeDiscount, VolumeDiscountThresholdType
+  reason: Operations create and maintain discount codes and volume discounts applied to event registration/agenda
+    items, which is discount and promotion administration. Some ambiguity about whether it belongs under
+    broader pricing management, hence 0.8.
+- tag: Travel RFPs
+  spec_file: cvent-travel-rfps-api-openapi.yml
+  capability_id: BC-500.10
+  capability_id_l1: BC-500
+  capability_name: Sourcing Management
+  confidence: 0.72
+  evidence: GET /travel-proposals/bids  ListTravelProposalBids; GET /travel-programs/questions  ListTravelProgramsQuestions;
+    schemas BidStatusType, RateReviewStatusType
+  reason: Travel programs with RFP questions, proposals and supplier bids with rates and bid/rate review
+    status — a classic RFx and supplier bid-evaluation sourcing process for hotel programmes. Mapped to
+    Sourcing Management; read-only scope keeps confidence below 0.8.
+- tag: Campaigns
+  spec_file: cvent-campaigns-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.7
+  evidence: GET /campaigns  getCampaigns  List eMarketing Campaigns; POST /emarketing/emails  sendEMarketingEmails  Send
+    Email To Recipients
+  reason: Lists eMarketing campaigns and email templates and sends campaign email to recipient lists with
+    delivery status — email marketing automation execution, i.e. Digital Marketing Management. Some ambiguity
+    versus demand generation.
 - tag: Events
   spec_file: cvent-events-api-openapi.yml
   capability_id: BC-4110
@@ -23,3 +77,36 @@ edges:
   reason: Creation and lifecycle management of the event record itself on a meetings and events platform
     — the core object of events/group operations. Held at L1 because no L2 covers event record definition
     as such.
+- tag: Leads
+  spec_file: cvent-leads-api-openapi.yml
+  capability_id: BC-410.30
+  capability_id_l1: BC-410
+  capability_name: Opportunity & Pipeline Management
+  confidence: 0.7
+  evidence: GET /leads  getLeads  List Leads; GET /events/{id}/exhibitors/{exhibitorId}/leads/{leadId}/answers  getLeadQualificationAnswers  List
+    Qualification Answers
+  reason: Exhibitor lead capture and lead qualification answers (schemas Lead, Exhibitor, BoothStaff,
+    ELiteratureDocument) realise lead lifecycle management within sales pipeline. Some ambiguity with
+    demand generation, hence 0.7.
+- tag: RFP Requirements
+  spec_file: cvent-rfp-requirements-api-openapi.yml
+  capability_id: BC-500.10
+  capability_id_l1: BC-500
+  capability_name: Sourcing Management
+  confidence: 0.7
+  evidence: GET /rfps/{rfpId}/questions  listRfpQuestions  List RFP Questions; GET /rfps/{rfpId}/guest-rooms  getRfpGuestRooms;
+    GET /rfps/{rfpId}/attachments
+  reason: Specification of RFP requirements — agenda items, guest-room blocks, questions, attachments
+    — is the requirement-definition step of an RFx sourcing event, matching Sourcing Management (RFx,
+    supplier selection).
+- tag: User SCIM
+  spec_file: cvent-user-scim-api-openapi.yml
+  capability_id: BC-4230.50
+  capability_id_l1: BC-4230
+  capability_name: Tenant Identity Federation
+  confidence: 0.7
+  evidence: POST /scim/v2/Users  createUser  Create User; GET /scim/v2/Groups  getUserGroups  Get SCIM
+    Groups; GET /scim/v2/ServiceProviderConfig
+  reason: A SCIM 2.0 endpoint set letting a customer's identity provider provision, update and deprovision
+    user accounts in the vendor's platform — the lifecycle of tenant user accounts via SCIM. Confidence
+    tempered because it could also be classed as generic Identity & Access Management.
