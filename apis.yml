@@ -1159,6 +1159,8 @@ apis:
   - type: OpenAPI
     url: openapi/cvent-hooks-api-openapi.yml
 common:
+- type: FinOps
+  url: finops/cvent-finops.yml
 - type: CapabilityMap
   url: capabilities/cvent-capability-edges.yml
   name: Cvent Business Capability Map
