@@ -1,39 +1,39 @@
-generated: '2026-09-07'
+generated: '2026-09-23'
 method: generated
 source: openapi/cvent-appointments-api-openapi.yml, openapi/cvent-attendee-activities-api-openapi.yml,
   openapi/cvent-attendee-insights-api-openapi.yml, openapi/cvent-attendee-messages-api-openapi.yml,
   openapi/cvent-attendees-api-openapi.yml, openapi/cvent-audience-segments-api-openapi.yml,
-  openapi/cvent-badge-print-job-api-openapi.yml, openapi/cvent-badge-printer-pools-api-openapi.yml,
-  openapi/cvent-budget-api-openapi.yml, openapi/cvent-bulk-api-openapi.yml, openapi/cvent-campaigns-api-openapi.yml,
-  openapi/cvent-card-tokens-api-openapi.yml, openapi/cvent-compliance-api-openapi.yml, openapi/cvent-contacts-api-openapi.yml,
-  openapi/cvent-custom-fields-api-openapi.yml, openapi/cvent-discounts-api-openapi.yml, openapi/cvent-emails-api-openapi.yml,
-  openapi/cvent-event-credits-api-openapi.yml, openapi/cvent-event-features-api-openapi.yml,
+  openapi/cvent-authentication-api-openapi.yml, openapi/cvent-badge-print-job-api-openapi.yml,
+  openapi/cvent-badge-printer-pools-api-openapi.yml, openapi/cvent-budget-api-openapi.yml, openapi/cvent-bulk-api-openapi.yml,
+  openapi/cvent-campaigns-api-openapi.yml, openapi/cvent-card-tokens-api-openapi.yml, openapi/cvent-compliance-api-openapi.yml,
+  openapi/cvent-contacts-api-openapi.yml, openapi/cvent-custom-fields-api-openapi.yml, openapi/cvent-discounts-api-openapi.yml,
+  openapi/cvent-emails-api-openapi.yml, openapi/cvent-event-credits-api-openapi.yml, openapi/cvent-event-features-api-openapi.yml,
   openapi/cvent-event-role-api-openapi.yml, openapi/cvent-event-travel-api-openapi.yml, openapi/cvent-events-api-openapi.yml,
-  openapi/cvent-events-plus-hub-api-openapi.yml, openapi/cvent-exhibitor-content-api-openapi.yml,
-  openapi/cvent-exhibitor-team-api-openapi.yml, openapi/cvent-exhibitors-api-openapi.yml, openapi/cvent-file-api-openapi.yml,
+  openapi/cvent-events-hub-api-openapi.yml, openapi/cvent-exhibitor-api-openapi.yml, openapi/cvent-exhibitor-content-api-openapi.yml,
+  openapi/cvent-exhibitor-team-api-openapi.yml, openapi/cvent-file-api-openapi.yml, openapi/cvent-hooks-api-openapi.yml,
   openapi/cvent-housing-api-openapi.yml, openapi/cvent-housing-hotels-api-openapi.yml, openapi/cvent-leads-api-openapi.yml,
-  openapi/cvent-meeting-request-api-openapi.yml, openapi/cvent-oauth-api-openapi.yml, openapi/cvent-orders-api-openapi.yml,
-  openapi/cvent-process-form-api-openapi.yml, openapi/cvent-proposal-draft-api-openapi.yml,
-  openapi/cvent-rfp-additional-details-api-openapi.yml, openapi/cvent-rfp-management-api-openapi.yml,
-  openapi/cvent-rfp-requirements-api-openapi.yml, openapi/cvent-rfp-suppliers-api-openapi.yml,
-  openapi/cvent-seating-api-openapi.yml, openapi/cvent-sessions-api-openapi.yml, openapi/cvent-signatures-api-openapi.yml,
-  openapi/cvent-speakers-api-openapi.yml, openapi/cvent-surveys-api-openapi.yml, openapi/cvent-transactions-api-openapi.yml,
-  openapi/cvent-travel-accounts-api-openapi.yml, openapi/cvent-travel-rfps-api-openapi.yml,
-  openapi/cvent-travel-suppliers-api-openapi.yml, openapi/cvent-usage-api-openapi.yml, openapi/cvent-user-scim-api-openapi.yml,
-  openapi/cvent-users-api-openapi.yml, openapi/cvent-venue-meeting-rooms-api-openapi.yml, openapi/cvent-venue-profiles-api-openapi.yml,
-  openapi/cvent-video-api-openapi.yml, openapi/cvent-webcasts-api-openapi.yml, openapi/cvent-webhooks-api-openapi.yml
+  openapi/cvent-meeting-request-api-openapi.yml, openapi/cvent-orders-api-openapi.yml, openapi/cvent-process-form-api-openapi.yml,
+  openapi/cvent-proposal-draft-api-openapi.yml, openapi/cvent-rfp-additional-details-api-openapi.yml,
+  openapi/cvent-rfp-management-api-openapi.yml, openapi/cvent-rfp-requirements-api-openapi.yml,
+  openapi/cvent-rfp-suppliers-api-openapi.yml, openapi/cvent-seating-api-openapi.yml, openapi/cvent-sessions-api-openapi.yml,
+  openapi/cvent-signatures-api-openapi.yml, openapi/cvent-speakers-api-openapi.yml, openapi/cvent-surveys-api-openapi.yml,
+  openapi/cvent-transactions-api-openapi.yml, openapi/cvent-travel-accounts-api-openapi.yml,
+  openapi/cvent-travel-rfps-api-openapi.yml, openapi/cvent-travel-suppliers-api-openapi.yml,
+  openapi/cvent-usage-api-openapi.yml, openapi/cvent-user-scim-api-openapi.yml, openapi/cvent-users-api-openapi.yml,
+  openapi/cvent-venue-meeting-rooms-api-openapi.yml, openapi/cvent-venue-profiles-api-openapi.yml,
+  openapi/cvent-video-api-openapi.yml, openapi/cvent-webcasts-api-openapi.yml
 description: Recommended x-agentic-access execution contracts, classified heuristically from
   the OpenAPI. A governance starting point for exposing this API to AI agents — review and bind
   audience per deployment. See research/curity/agentic-governance/.
 summary:
   operations: 469
   by_action_class:
-    connected: 258
-    acting: 211
+    connected: 273
+    acting: 196
   by_consequence:
-    read: 258
-    write: 200
-    physical: 11
+    read: 273
+    write: 186
+    physical: 10
   human_in_the_loop_required: 0
 operations:
 - path: /appointment-attendees
@@ -448,20 +448,14 @@ operations:
   method: post
   operationId: listAttendeesPostFilter
   x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
+    action-class: connected
+    consequence: read
+    subject: optional
     scope:
     - event/attendees:read
-    audience: null
     token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
+      max-ttl: 3600
+    audit: none
 - path: /attendees/{id}
   method: get
   operationId: getAttendeeById
@@ -562,20 +556,14 @@ operations:
   method: post
   operationId: getBadgesPostFilters
   x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
+    action-class: connected
+    consequence: read
+    subject: optional
     scope:
     - exhibitor/badges:read
-    audience: null
     token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
+      max-ttl: 3600
+    audit: none
 - path: /events/{id}/badges/{badgeId}
   method: put
   operationId: updateBadge
@@ -628,20 +616,14 @@ operations:
   method: post
   operationId: listAssociatedAudienceSegments
   x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
+    action-class: connected
+    consequence: read
+    subject: optional
     scope:
     - event/audience-segments:read
-    audience: null
     token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
+      max-ttl: 3600
+    audit: none
 - path: /audience-segments
   method: post
   operationId: createAudienceSegment
@@ -676,20 +658,14 @@ operations:
   method: post
   operationId: listAudienceSegmentsPostFilter
   x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
+    action-class: connected
+    consequence: read
+    subject: optional
     scope:
     - event/audience-segments:read
-    audience: null
     token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
+      max-ttl: 3600
+    audit: none
 - path: /audience-segments/{audienceSegmentId}
   method: get
   operationId: getAudienceSegmentById
@@ -786,6 +762,42 @@ operations:
       - abnormal
       - high-value
     audit: required
+- path: /oauth2/authorize
+  method: get
+  operationId: oauth2Authorize
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /oauth2/token
+  method: post
+  operationId: oauth2Token
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /token-validation
+  method: get
+  operationId: validateToken
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
 - path: /events/{eventId}/badge-print-jobs
   method: post
   operationId: createBadgePrintJob
@@ -1454,20 +1466,14 @@ operations:
   method: post
   operationId: filterCommunicationLogMessages
   x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
+    action-class: connected
+    consequence: read
+    subject: optional
     scope:
     - compliance/communications:read
-    audience: null
     token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
+      max-ttl: 3600
+    audit: none
 - path: /contact-groups
   method: post
   operationId: createContactGroup
@@ -1676,20 +1682,14 @@ operations:
   method: post
   operationId: listContactsPostFilters
   x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
+    action-class: connected
+    consequence: read
+    subject: optional
     scope:
     - event/contacts:read
-    audience: null
     token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
+      max-ttl: 3600
+    audit: none
 - path: /contacts/obfuscate/{obfuscateId}/status
   method: get
   operationId: getContactObfuscationStatusById
@@ -2329,20 +2329,14 @@ operations:
   method: post
   operationId: listAdmissionItemsPostFilters
   x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
+    action-class: connected
+    consequence: read
+    subject: optional
     scope:
     - event/admission-items:read
-    audience: null
     token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
+      max-ttl: 3600
+    audit: none
 - path: /event-questions
   method: get
   operationId: getEventQuestions
@@ -2457,20 +2451,14 @@ operations:
   method: post
   operationId: getEventsPostFilters
   x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
+    action-class: connected
+    consequence: read
+    subject: optional
     scope:
     - event/events:read
-    audience: null
     token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
+      max-ttl: 3600
+    audit: none
 - path: /events/{id}
   method: get
   operationId: getEventById
@@ -2589,20 +2577,14 @@ operations:
   method: post
   operationId: listDonationItemsPostFilter
   x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
+    action-class: connected
+    consequence: read
+    subject: optional
     scope:
     - event/donation-items:read
-    audience: null
     token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
+      max-ttl: 3600
+    audit: none
 - path: /events/{id}/emails
   method: get
   operationId: listEventEmails
@@ -2655,22 +2637,14 @@ operations:
   method: post
   operationId: listMembershipItemsPostFilter
   x-agentic-access:
-    action-class: acting
-    consequence: physical
-    subject: required
+    action-class: connected
+    consequence: read
+    subject: optional
     scope:
     - event/membership-items:read
-    audience: null
     token:
-      max-ttl: 300
-      exchange: true
-      purpose-required: true
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
+      max-ttl: 3600
+    audit: none
 - path: /events/{id}/orders
   method: get
   operationId: getOrders
@@ -2743,20 +2717,14 @@ operations:
   method: post
   operationId: listQuantityItemsPostFilter
   x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
+    action-class: connected
+    consequence: read
+    subject: optional
     scope:
     - event/quantity-items:read
-    audience: null
     token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
+      max-ttl: 3600
+    audit: none
 - path: /events/{id}/registration-paths
   method: get
   operationId: listRegistrationPaths
@@ -2917,20 +2885,14 @@ operations:
   method: post
   operationId: listEventVouchersPostFilter
   x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
+    action-class: connected
+    consequence: read
+    subject: optional
     scope:
     - event/vouchers:read
-    audience: null
     token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
+      max-ttl: 3600
+    audit: none
 - path: /events/{id}/vouchers/{voucherId}/attendees
   method: get
   operationId: listEventVoucherAttendees
@@ -3117,264 +3079,6 @@ operations:
     token:
       max-ttl: 3600
     audit: none
-- path: /events/{id}/exhibitors/{exhibitorId}/files
-  method: get
-  operationId: listExhibitorFiles
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    scope:
-    - exhibitor/exhibitor-contents:read
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /events/{id}/exhibitors/{exhibitorId}/files/{fileId}
-  method: get
-  operationId: getExhibitorFile
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    scope:
-    - exhibitor/exhibitor-contents:read
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /events/{id}/exhibitors/{exhibitorId}/files/{fileId}
-  method: put
-  operationId: updateExhibitorFile
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    scope:
-    - exhibitor/exhibitor-contents:write
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /events/{id}/exhibitors/{exhibitorId}/files/{fileId}
-  method: delete
-  operationId: disassociateExhibitorFile
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    scope:
-    - exhibitor/exhibitor-contents:delete
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /events/{id}/exhibitors/{exhibitorId}/weblinks
-  method: get
-  operationId: listExhibitorWeblinks
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    scope:
-    - exhibitor/exhibitor-contents:read
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /events/{id}/exhibitors/{exhibitorId}/weblinks
-  method: post
-  operationId: createExhibitorWeblink
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    scope:
-    - exhibitor/exhibitor-contents:write
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /events/{id}/exhibitors/{exhibitorId}/weblinks/{weblinkId}
-  method: get
-  operationId: getExhibitorWeblink
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    scope:
-    - exhibitor/exhibitor-contents:read
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /events/{id}/exhibitors/{exhibitorId}/weblinks/{weblinkId}
-  method: put
-  operationId: updateExhibitorWeblink
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    scope:
-    - exhibitor/exhibitor-contents:write
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /events/{id}/exhibitors/{exhibitorId}/weblinks/{weblinkId}
-  method: delete
-  operationId: deleteExhibitorWeblink
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    scope:
-    - exhibitor/exhibitor-contents:delete
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /events/{id}/exhibitors/{exhibitorId}/admins
-  method: get
-  operationId: listExhibitorAdmins
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    scope:
-    - exhibitor/exhibitor-admins:read
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /events/{id}/exhibitors/{exhibitorId}/admins
-  method: post
-  operationId: postExhibitorAdmin
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    scope:
-    - exhibitor/exhibitor-admins:write
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /events/{id}/exhibitors/{exhibitorId}/admins/{adminId}
-  method: get
-  operationId: getExhibitorAdmin
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    scope:
-    - exhibitor/exhibitor-admins:read
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /events/{id}/exhibitors/{exhibitorId}/admins/{adminId}
-  method: put
-  operationId: updateExhibitorAdmin
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    scope:
-    - exhibitor/exhibitor-admins:write
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /events/{id}/exhibitors/{exhibitorId}/booth-staff
-  method: get
-  operationId: listBoothStaff
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    scope:
-    - exhibitor/booth-staff:read
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /events/{id}/exhibitors/{exhibitorId}/booth-staff
-  method: post
-  operationId: associateBoothStaff
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    scope:
-    - exhibitor/booth-staff:write
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /events/{id}/exhibitors/{exhibitorId}/booth-staff/{boothstaffId}
-  method: get
-  operationId: getBoothStaff
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    scope:
-    - exhibitor/booth-staff:read
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /events/{id}/exhibitors/{exhibitorId}/booth-staff/{boothstaffId}
-  method: delete
-  operationId: deleteBoothStaff
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    scope:
-    - exhibitor/booth-staff:delete
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
 - path: /events/{id}/exhibitor-categories
   method: get
   operationId: getExhibitorCategories
@@ -3843,6 +3547,264 @@ operations:
     token:
       max-ttl: 3600
     audit: none
+- path: /events/{id}/exhibitors/{exhibitorId}/files
+  method: get
+  operationId: listExhibitorFiles
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - exhibitor/exhibitor-contents:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /events/{id}/exhibitors/{exhibitorId}/files/{fileId}
+  method: get
+  operationId: getExhibitorFile
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - exhibitor/exhibitor-contents:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /events/{id}/exhibitors/{exhibitorId}/files/{fileId}
+  method: put
+  operationId: updateExhibitorFile
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - exhibitor/exhibitor-contents:write
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /events/{id}/exhibitors/{exhibitorId}/files/{fileId}
+  method: delete
+  operationId: disassociateExhibitorFile
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - exhibitor/exhibitor-contents:delete
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /events/{id}/exhibitors/{exhibitorId}/weblinks
+  method: get
+  operationId: listExhibitorWeblinks
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - exhibitor/exhibitor-contents:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /events/{id}/exhibitors/{exhibitorId}/weblinks
+  method: post
+  operationId: createExhibitorWeblink
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - exhibitor/exhibitor-contents:write
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /events/{id}/exhibitors/{exhibitorId}/weblinks/{weblinkId}
+  method: get
+  operationId: getExhibitorWeblink
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - exhibitor/exhibitor-contents:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /events/{id}/exhibitors/{exhibitorId}/weblinks/{weblinkId}
+  method: put
+  operationId: updateExhibitorWeblink
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - exhibitor/exhibitor-contents:write
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /events/{id}/exhibitors/{exhibitorId}/weblinks/{weblinkId}
+  method: delete
+  operationId: deleteExhibitorWeblink
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - exhibitor/exhibitor-contents:delete
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /events/{id}/exhibitors/{exhibitorId}/admins
+  method: get
+  operationId: listExhibitorAdmins
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - exhibitor/exhibitor-admins:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /events/{id}/exhibitors/{exhibitorId}/admins
+  method: post
+  operationId: postExhibitorAdmin
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - exhibitor/exhibitor-admins:write
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /events/{id}/exhibitors/{exhibitorId}/admins/{adminId}
+  method: get
+  operationId: getExhibitorAdmin
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - exhibitor/exhibitor-admins:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /events/{id}/exhibitors/{exhibitorId}/admins/{adminId}
+  method: put
+  operationId: updateExhibitorAdmin
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - exhibitor/exhibitor-admins:write
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /events/{id}/exhibitors/{exhibitorId}/booth-staff
+  method: get
+  operationId: listBoothStaff
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - exhibitor/booth-staff:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /events/{id}/exhibitors/{exhibitorId}/booth-staff
+  method: post
+  operationId: associateBoothStaff
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - exhibitor/booth-staff:write
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /events/{id}/exhibitors/{exhibitorId}/booth-staff/{boothstaffId}
+  method: get
+  operationId: getBoothStaff
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - exhibitor/booth-staff:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /events/{id}/exhibitors/{exhibitorId}/booth-staff/{boothstaffId}
+  method: delete
+  operationId: deleteBoothStaff
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - exhibitor/booth-staff:delete
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
 - path: /files
   method: post
   operationId: uploadFile
@@ -3873,6 +3835,72 @@ operations:
     token:
       max-ttl: 3600
     audit: none
+- path: /contacts/hooks
+  method: get
+  operationId: ListContactHooks
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - account/hooks:read
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /contacts/hooks
+  method: post
+  operationId: createContactHook
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - account/hooks:write
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /contacts/hooks/{id}
+  method: put
+  operationId: updateContactHook
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - account/hooks:write
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /contacts/hooks/{id}
+  method: delete
+  operationId: deleteContactHook
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - account/hooks:delete
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
 - path: /connections
   method: post
   operationId: createConnection
@@ -4237,20 +4265,14 @@ operations:
   method: post
   operationId: getLeadsPostFiltersData
   x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
+    action-class: connected
+    consequence: read
+    subject: optional
     scope:
     - exhibitor/leads:read
-    audience: null
     token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
+      max-ttl: 3600
+    audit: none
 - path: /events/{id}/meeting-requests
   method: get
   operationId: getMeetingRequestByEventId
@@ -4356,42 +4378,6 @@ operations:
     subject: optional
     scope:
     - event/meeting-requests:read
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /oauth2/authorize
-  method: get
-  operationId: oauth2Authorize
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /oauth2/token
-  method: post
-  operationId: oauth2Token
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /token-validation
-  method: get
-  operationId: validateToken
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
     token:
       max-ttl: 3600
     audit: none
@@ -4807,20 +4793,14 @@ operations:
   method: post
   operationId: listProgramItemsPostFilters
   x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
+    action-class: connected
+    consequence: read
+    subject: optional
     scope:
     - event/program-items:read
-    audience: null
     token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
+      max-ttl: 3600
+    audit: none
 - path: /program-items/{programItemId}
   method: put
   operationId: updateProgramItem
@@ -5335,20 +5315,14 @@ operations:
   method: post
   operationId: listSpeakersPostFilter
   x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
+    action-class: connected
+    consequence: read
+    subject: optional
     scope:
     - event/speakers:read
-    audience: null
     token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
+      max-ttl: 3600
+    audit: none
 - path: /speakers/{id}
   method: put
   operationId: updateSpeaker
@@ -6879,72 +6853,6 @@ operations:
     subject: required
     scope:
     - event/attendee-links:delete
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /contacts/hooks
-  method: get
-  operationId: ListContactHooks
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    scope:
-    - account/hooks:read
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /contacts/hooks
-  method: post
-  operationId: createContactHook
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    scope:
-    - account/hooks:write
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /contacts/hooks/{id}
-  method: put
-  operationId: updateContactHook
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    scope:
-    - account/hooks:write
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /contacts/hooks/{id}
-  method: delete
-  operationId: deleteContactHook
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    scope:
-    - account/hooks:delete
     audience: null
     token:
       max-ttl: 900
