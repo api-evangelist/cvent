@@ -145,5 +145,5 @@
     builder: unknown (not in the directory record)
     other_apps:
     - cvent-webinar
-  status: pending-generation
+  status: not-a-workflow
   arazzo: null
