@@ -1262,265 +1262,6 @@ paths:
         url: '#oauth2-auth-code-planner-admin'
 components:
   schemas:
-    uuid-property:
-      title: UUID Property
-      description: A string that has to be a format matching the industry standard uuid
-      type: string
-      format: uuid
-      example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
-    ContactOptOut:
-      title: ContactOptOut
-      description: Details of an opt-out for a Contact.
-      type: object
-      properties:
-        optedOut:
-          type: boolean
-          default: false
-          description: Used to denote if a contact has opted-out of receiving system generated emails.
-          example: false
-        date:
-          type: string
-          format: date-time
-          description: The ISO 8601 zoned date time when this contact was opted-out. This value can change if the contact opts out multiple times.
-          readOnly: true
-          example: '2019-02-12T03:00:00Z'
-        by:
-          $ref: '#/components/schemas/OptoutBy'
-    contact-merge:
-      title: ContactMergeRequest
-      description: This entity represents a request to merge one or two contacts with another 'main' contact.
-      required:
-      - secondaryContacts
-      properties:
-        secondaryContacts:
-          type: array
-          items:
-            $ref: '#/components/schemas/uuid-property'
-          minItems: 1
-          maxItems: 2
-          description: Id of the contact(s) to be merged to the main contact.
-        conflictResolution:
-          type: object
-          description: Represents choices in resolving conflicts in the contacts to be merged or to optionally select fields to keep from a secondary contact, overriding default behavior.
-          properties:
-            events:
-              type: array
-              items:
-                $ref: '#/components/schemas/EventContactId'
-              description: For each event (designated by event id), choose a contact id whose linked attendee will be associated with the resulting merged contact. Use whenever at least two contacts exist as attendees in a single event.
-            surveys:
-              type: array
-              items:
-                $ref: '#/components/schemas/SurveyContactId'
-              description: For each survey (designated by survey id), choose a contact id whose linked respondent will be associated with the resulting merged contact. Use whenever at least two contacts exist as respondents in a single survey.
-            relatedContacts:
-              type: string
-              format: uuid
-              description: The id of the contact to keep the relationships of in the resulting merged contact. Only one contact can be chosen, and relationships of the other contact(s) will be discarded.
-            contactFields:
-              type: array
-              items:
-                $ref: '#/components/schemas/ContactMergeField'
-              description: Specify which contact to use values from for any contact field.
-    UpdatedThroughNameProperty:
-      title: UpdatedThroughNameProperty
-      description: Name of the place where this change was updated through.
-      type: string
-      enum:
-      - Abstract Guest Side Author Update
-      - Abstract Guest Side Reviewer Update
-      - Abstract Guest Side User
-      - Abstract Planner side
-      - Address Book Profile
-      - Amex Card Delete
-      - Amex Card Insert
-      - Amex Card Update
-      - Answers Replaced from Administration
-      - Appointment Guest Side
-      - Attendee Hub
-      - Budget Allocation Update
-      - Budget Attendee Update
-      - Budget Item Custom Field Answers Replaced from Administration
-      - Budget Item Delete
-      - Budget Item Duplicate
-      - Budget Item Import
-      - Budget Item Insert via REST API
-      - Budget Item Insert
-      - Budget Item Single Update
-      - Budget Item Template Import
-      - Budget Item Update via REST API
-      - Budget Items Bulk Assign Vendor
-      - Budget Items Bulk Copy Cost label
-      - Budget Items Bulk Copy
-      - Budget Items Bulk Delete
-      - Budget Items Bulk Update
-      - Budget Version Update
-      - Bulk Update Contact Field Answer
-      - Concur Reconciliation - Create New Budget Item For Each Expense
-      - Concur Reconciliation - Map to Existing Budget Item
-      - Confirm Opt In Email
-      - Contact Import
-      - Contact New Membership
-      - Contact Pending Obfuscation
-      - Contact Website Profile Update
-      - Created Within Meeting Request
-      - Created from API
-      - Created from Request Website
-      - Crowd Compass Profile Update
-      - Custom Field Added From Admin
-      - Custom Field Added via REST API
-      - Custom Field Deleted From Admin
-      - Custom Field Modified From Admin
-      - Custom Field Modified via REST API
-      - Deleted Within Administration
-      - Deleted from Meeting Request Form
-      - Deleted from Request Website
-      - Deleted within Meeting Request
-      - Event Automatically Created from Meeting Request
-      - Event Created from API
-      - Event Created from Event Wizard
-      - Event Guest Side Modification
-      - Event Guest Side Registration
-      - Event Import
-      - Event Modified from Meeting Request via API
-      - Event Modified from Meeting Request
-      - Event Onsite Registration
-      - Event POST
-      - Event Planner Contact Information Update
-      - Event Planner Side Modification
-      - Event Planner Side Registration
-      - Hotel Request Import
-      - Marketo Contact Import
-      - Modified Within Event
-      - Modified Within Meeting Request
-      - Modified from API
-      - Modified from Event Documents
-      - Modified from Meeting Request via Notification
-      - Modified from Request Website
-      - Registration Import
-      - REST API
-      - Salesforce Integration
-      - Survey Author Modification
-      - Survey Author Response
-      - Survey Guest Side Modification
-      - Survey Guest Side Response
-      - Survey POST
-      - Travel Cost Import - Map to Existing Budget item
-      - Travel Cost Import - Map to New Budget Item
-      - VCN Transaction - Create New Budget Item For Each Transaction
-      - VCN Transaction - Map to Multiple Budget Item
-      - VCN Transaction - Map to Single Budget Item
-      - VCN Transaction - Removed from Budget Item
-      - Web Services
-      - eMarketing Profile Update
-      example: Address Book Profile
-    AddressType:
-      title: AddressType
-      enum:
-      - Home
-      - Work
-      type: string
-      description: The type of address.
-      example: Home
-    contact-history-paginated-response:
-      title: ContactHistoryPaginatedResponse
-      description: The response of a request to get the change history for a specific contact.
-      type: object
-      properties:
-        paging:
-          $ref: '#/components/schemas/Paging'
-        data:
-          description: Collection of change histories for a specific contact.
-          type: array
-          items:
-            $ref: '#/components/schemas/ContactHistory'
-    Audit:
-      title: Audit
-      description: Audit information
-      type: object
-      properties:
-        created:
-          type: string
-          format: date-time
-          description: The ISO 8601 zoned date time when this record was created.
-          readOnly: true
-          example: '2017-01-02T02:00:00Z'
-        createdBy:
-          type: string
-          description: The identifier of the user that created this record.
-          readOnly: true
-          example: hporter
-        lastModified:
-          type: string
-          format: date-time
-          description: The ISO 8601 zoned date time when this record was updated.
-          readOnly: true
-          example: '2019-02-12T03:00:00Z'
-        lastModifiedBy:
-          type: string
-          description: The identifier of the user that last updated this record.
-          readOnly: true
-          example: hporter
-    BaseAddress:
-      title: Base Address
-      description: Base Address Model
-      type: object
-      properties:
-        address1:
-          type: string
-          maxLength: 40
-          description: The first line of an address.
-          example: Cvent Inc.
-        address2:
-          type: string
-          maxLength: 40
-          description: The second line of an address.
-          example: 4001 West Parmer Lane
-        address3:
-          type: string
-          maxLength: 40
-          description: The third line of an address.
-          example: PO Box 123
-        city:
-          type: string
-          maxLength: 40
-          description: The name of the city.
-          example: Austin
-        countryCode:
-          type: string
-          maxLength: 3
-          minLength: 2
-          description: ISO 3166 two-letter (alpha-2) country code.
-          example: US
-        postalCode:
-          type: string
-          maxLength: 25
-          description: Postal code (also known as zipcode) of the address.
-          example: '78727'
-    contact-group-paginated-response:
-      title: ContactGroupPaginatedResponse
-      description: The response from a request to get the list of contact groups.  This includes the paging object as well as the collection of contact-groups.
-      required:
-      - paging
-      - data
-      type: object
-      properties:
-        paging:
-          $ref: '#/components/schemas/Paging'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/contact-group'
-          description: Collection of contact groups.
-    filter:
-      title: A filter sent in the body of a request
-      description: A filter which is sent through the body of the request.
-      type: object
-      properties:
-        filter:
-          type: string
-          example: property eq 'value'
-          description: Filter included in the request.
     contact-type-paginated-response:
       title: ContactTypePaginatedResponse
       description: The response from a request to get the list of contact types. This includes the paging object as well as the collection of contact-types.
@@ -1536,491 +1277,6 @@ components:
           items:
             $ref: '#/components/schemas/ContactType'
           description: Collection of contact types.
-    AttendeeContactType:
-      title: AttendeeContactType
-      type: object
-      description: Contains details related to the attendee's contact type.
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: The unique identifier of the contact type
-          example: 861B51EC-AA7E-475F-B38D-4C8E35C47D63
-        name:
-          type: string
-          description: A descriptive name for the contact type
-          example: VIP Member
-          readOnly: true
-    custom-field:
-      title: CustomField
-      description: A Custom Field
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/CustomFieldBase'
-      properties:
-        type:
-          description: The type of data collected by a custom field.
-          type: string
-          allOf:
-          - $ref: '#/components/schemas/CustomFieldType'
-          - readOnly: true
-            example: MultiSelect
-    CustomFieldBase:
-      title: CustomFieldBase
-      description: Base schema for Custom Field - allows type to be customized by extending schemas
-      required:
-      - id
-      - value
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique ID representing this custom field.
-          format: uuid
-        name:
-          type: string
-          description: The actual text of the custom field.
-          example: What is your favorite color?
-          readOnly: true
-        value:
-          type: array
-          uniqueItems: true
-          items:
-            type: string
-            description: A question answer value
-            maxLength: 16000
-          description: The set of answers or possible answers to a question.
-          example:
-          - Choice C
-          - Choice A
-        order:
-          type: integer
-          description: The order of this question in the bigger list of questions.
-          example: 1
-          readOnly: true
-    ContactId:
-      title: ContactId
-      description: A contact id.
-      required:
-      - id
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: The ID of the contact.
-    CreateContact:
-      title: CreateContact
-      description: Represents a contact to be created.
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/Contact'
-      properties:
-        parentId:
-          deprecated: true
-          type: string
-          format: uuid
-          description: ID of the parent contact, applicable with contact snapshot. This field has been deprecated. If the event has contact snapshot enabled, snapshot will be automatically created through the Add attendees API.
-        event:
-          deprecated: true
-          description: Event ID
-          type: object
-          properties:
-            id:
-              deprecated: true
-              type: string
-              format: uuid
-              description: ID of the event where the contact was created, applicable when contact snapshot is enabled for an event. This field has been deprecated. If the event has contact snapshot enabled, snapshot will be automatically created through the Add attendees API.
-    SurveyContactId:
-      title: SurveyContactId
-      description: A pair of survey and contact id.
-      required:
-      - surveyId
-      - contactId
-      type: object
-      properties:
-        surveyId:
-          type: string
-          format: uuid
-          description: ID of the survey
-        contactId:
-          type: string
-          format: uuid
-          description: ID of the contact
-    Gender:
-      title: Gender
-      enum:
-      - Male
-      - Female
-      - Non-binary
-      - Rather not say
-      type: string
-      description: The gender of the contact.
-      example: Male
-    contact-bulk-patch:
-      type: array
-      items:
-        $ref: '#/components/schemas/contact-patch'
-    BulkResponseItem:
-      title: BulkResponseItem
-      description: Represents a single item that is returned as part of a Bulk request call.
-      type: object
-      required:
-      - status
-      - data
-      properties:
-        data:
-          type: object
-          description: The data returned for a single item in the bulk request call.
-          example:
-            event_id: 1234
-            attendee_count: 50
-          additionalProperties: true
-        status:
-          type: integer
-          description: http status code representing processing status of a single item
-          example: 400
-        message:
-          type: string
-          description: Quick description of what happened with processing
-          example: Example error message.
-        request:
-          type: object
-          description: The processed request tied to this response. This field is only sent when processing fails.
-          example:
-            operation: PUT
-            headers:
-              header1: header1Value
-              header2: header2Value
-            queryParams:
-              param1: param1Value
-              param2: param2Value
-          additionalProperties: true
-      additionalProperties: false
-    Passport:
-      title: Passport
-      description: This entity represents a contact's passport information.
-      type: object
-      properties:
-        number:
-          type: string
-          description: "The passport number of the contact.\n\n Reading and writing of this field require the `event/contacts:read-sensitive` and `event/contacts:write-sensitive` scopes respectively."
-          example: '123456789'
-          maxLength: 100
-        country:
-          type: string
-          description: The passport country of the contact.
-          example: United Kingdom
-          readOnly: true
-        countryCode:
-          type: string
-          description: The passport country code of the contact.
-          example: GB
-          minLength: 2
-          maxLength: 3
-    ContactCreate:
-      title: ContactCreate
-      description: This entity is used to represent a single item that is posted for a contact create
-      allOf:
-      - $ref: '#/components/schemas/CreateContact'
-    contact-update:
-      title: ContactUpdate
-      description: This entity is used to represent a single item that is requested for a contact update
-      required:
-      - id
-      allOf:
-      - $ref: '#/components/schemas/contact'
-    CustomFieldType:
-      title: CustomFieldType
-      enum:
-      - AutoIncrement
-      - ConsentQuestion
-      - Currency
-      - Decimal
-      - Date
-      - DateTime
-      - Email
-      - FileUpload
-      - FreeText
-      - General
-      - MultiChoice
-      - MultiSelect
-      - Number
-      - OpenEndedDateTime
-      - OpenEndedText
-      - SingleChoice
-      - SingleSelect
-      - USPhoneNumber
-      - Unknown
-      type: string
-      description: The type of data collected by a custom field.
-      example: General
-    ContactBulkResponseItem:
-      title: ContactBulkResponseItem
-      description: This entity is used to represent a single item that is returned as part of a Bulk request call.
-      allOf:
-      - $ref: '#/components/schemas/BulkResponseItem'
-      properties:
-        data:
-          anyOf:
-          - $ref: '#/components/schemas/contact'
-          - $ref: '#/components/schemas/ErrorResponse-12'
-    contact-group:
-      title: ContactGroup
-      required:
-      - id
-      - name
-      description: A group of contacts.
-      allOf:
-      - $ref: '#/components/schemas/Audit'
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: The ID of the contact group.
-          readOnly: true
-        name:
-          type: string
-          description: Name of the contact group.
-          maxLength: 100
-          example: group name
-        shortDescription:
-          type: string
-          description: Short description of the contact group.
-          example: short description
-        description:
-          type: string
-          description: Full description of the contact group.
-          example: long description
-        type:
-          $ref: '#/components/schemas/ContactGroupType'
-        note:
-          deprecated: true
-          type: string
-          description: Moved to internalNote in the DistributionListInfo object. The note field only applies to Distribution List.
-          example: Sample internal note
-        distributionListInfo:
-          $ref: '#/components/schemas/DistributionListInfo'
-    contact:
-      title: ExistingContact
-      description: Represents a contact that has been created and has an id.
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/Contact'
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: The ID of the contact.
-        parentId:
-          type: string
-          format: uuid
-          description: ID of the parent contact, applicable with contact snapshot.
-          readOnly: true
-        event:
-          description: Event ID
-          type: object
-          properties:
-            id:
-              type: string
-              format: uuid
-              description: ID of the event where the contact was created, applicable when contact snapshot is enabled for an event.
-          readOnly: true
-    contact-id-paginated-response:
-      title: ContactIdPaginatedResponse
-      description: The response from a request to get the ids of contacts in a contact group or relationship. This includes the paging object as well as the collection of contact ids.
-      required:
-      - paging
-      - data
-      type: object
-      properties:
-        paging:
-          $ref: '#/components/schemas/Paging'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/IdOnlyEntity'
-          description: Collection of contact ids.
-    DistributionListInfo:
-      title: DistributionListInfo
-      description: Model representing a distribution list info. Only required if the contact group type is DISTRIBUTION_LIST.
-      type: object
-      properties:
-        securityType:
-          $ref: '#/components/schemas/DistributionListSecurityType'
-        internalNote:
-          description: Internal note for Distribution Lists.
-          type: string
-          maxLength: 300
-          example: Sample distribution list internal note
-        status:
-          $ref: '#/components/schemas/DistributionListStatus'
-    ErrorResponse-12:
-      title: ErrorResponse
-      description: Represents an error response with additional details of cascading error messages.
-      allOf:
-      - $ref: '#/components/schemas/ErrorResponseBase1'
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        details:
-          type: array
-          items:
-            $ref: '#/components/schemas/ErrorResponseBase1'
-          description: Additional details of cascading error messages.
-    contact-paginated-response:
-      title: ContactPaginatedResponse
-      description: The response from a request to get the list of contacts.  This includes the paging object as well as the collection of contacts.
-      required:
-      - paging
-      - data
-      type: object
-      properties:
-        paging:
-          $ref: '#/components/schemas/Paging'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/contact'
-          description: Collection of contacts.
-    PaginationLinks:
-      title: PaginationLinks
-      type: object
-      description: Represents pagination links for navigating between pages of data.
-      properties:
-        next:
-          $ref: '#/components/schemas/Link'
-        self:
-          $ref: '#/components/schemas/Link'
-        prev:
-          $ref: '#/components/schemas/Link'
-    ContactMembership:
-      title: ContactMembership
-      description: Contact Membership information
-      type: object
-      readOnly: true
-      properties:
-        type:
-          type: string
-          description: The type of membership the contact has signed up for.
-          maxLength: 300
-          example: Corporate Sponsor
-        plan:
-          type: string
-          description: Describes the specific plan the contact has signed up for.
-          maxLength: 300
-          example: Gold Level
-        joined:
-          type: string
-          format: date
-          description: The ISO-8601 formatted date the contact began their membership.
-          readOnly: true
-          example: '2017-02-10'
-        expiration:
-          type: string
-          format: date
-          description: The ISO-8601 formatted date the contact's membership will expire.
-          readOnly: true
-          example: '2020-02-09'
-        lastRenewal:
-          type: string
-          format: date
-          description: The ISO-8601 formatted date the contact last renewed their membership.
-          readOnly: true
-          example: '2019-02-08'
-        amountDue:
-          type: number
-          description: The amount currently due for this membership.
-          readOnly: true
-          minimum: 0
-          example: 50.5
-        listInDirectory:
-          type: boolean
-          description: Indicates if the member details should be included in the member directory.
-          example: false
-    contact-bulk-update:
-      type: array
-      items:
-        $ref: '#/components/schemas/contact-update'
-    contact-bulk-create:
-      type: array
-      items:
-        $ref: '#/components/schemas/ContactCreate'
-    ContactType:
-      title: ContactType
-      description: This entity represents a contact type at contact level.
-      required:
-      - id
-      - code
-      - name
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: The ID of the contact type.
-          readOnly: true
-        code:
-          type: string
-          description: The contact type code. Must be unique in the account.
-          readOnly: true
-          maxLength: 30
-          example: VIP
-        name:
-          type: string
-          description: Name of the contact type.
-          maxLength: 50
-          example: VIP Attendee
-        description:
-          type: string
-          description: Description of the contact type.
-          maxLength: 2500
-          example: Very important attendee.
-        active:
-          type: boolean
-          description: Indicates whether the contact type is active.
-          example: true
-          readOnly: true
-    ContactObfuscationStatusType:
-      title: ContactObfuscationStatusType
-      enum:
-      - INITIATED
-      - QUEUED
-      - PROCESSING
-      - COMPLETED
-      - FAILED
-      type: string
-      description: 'Status of the request to obfuscate a contact.
-
-
-        INITIATED - The obfuscation request has been received.
-
-
-        QUEUED - The obfuscation request is currently waiting in the queue to be executed.
-
-
-        PROCESSING -  The obfuscation request is currently being processed.
-
-
-        COMPLETED -  The obfuscation request is complete.
-
-
-        FAILED - The obfuscation request failed due to an error.'
-      example: INITIATED
-    Link:
-      title: Link
-      required:
-      - href
-      type: object
-      description: Represents a link to a related resource.
-      properties:
-        href:
-          type: string
-          description: A url provided that can be followed for linking
-          example: ?token=90c5f062-76ad-4ea4-aa53-00eb698d9262
     DistributionListStatus:
       title: DistributionListStatus
       enum:
@@ -2031,22 +1287,6 @@ components:
       description: Type of distribution list status.
       readOnly: true
       example: PENDING
-    EventContactId:
-      title: EventContactId
-      description: A pair of event and contact id.
-      required:
-      - eventId
-      - contactId
-      type: object
-      properties:
-        eventId:
-          type: string
-          format: uuid
-          description: ID of the event.
-        contactId:
-          type: string
-          format: uuid
-          description: ID of the contact.
     Compliance:
       title: Compliance
       description: Privacy compliance fields for a contact.
@@ -2085,137 +1325,185 @@ components:
           - VIDEO_CENTER_MEMBER
           - RESPONDENT
           - NOT_SET
-    DistributionListSecurityType:
-      title: DistributionListSecurityType
-      enum:
-      - PRIVATE
-      - SEMI_PRIVATE
-      - PUBLIC
-      type: string
-      description: Type of distribution list security. For a public list, contacts can sign up themselves. For a semi-private list, contacts can add themselves, but a planner must approve their membership before they can receive emails. For a private list, only planners can add contacts. Contacts can always remove themselves from lists on the Manage Profile page.
-    ContactMergeField:
-      title: ContactMergeField
-      description: A pair of a contact field name and a contact id.
-      required:
-      - fieldName
-      - contactId
-      type: object
-      properties:
-        fieldName:
-          type: string
-          example: firstName
-          description: The name of a contact field.
-        contactId:
-          type: string
-          format: uuid
-          description: ID of the contact.
-          example: a45a3341-d30f-4bd9-bfd8-fbcdae37f0f2
-    Address:
-      title: Address
-      description: Contact address details.
-      type: object
+    ErrorResponse-12:
+      title: ErrorResponse
+      description: Represents an error response with additional details of cascading error messages.
       allOf:
-      - $ref: '#/components/schemas/BaseAddress'
-      properties:
-        region:
-          type: string
-          description: The name of the state/province/region of the address.
-          readOnly: true
-          example: Texas
-        regionCode:
-          type: string
-          description: The abbreviation of the state/province/region of the address.
-          minLength: 2
-          maxLength: 10
-          example: TX
-        country:
-          type: string
-          description: Name of the country of the address.
-          readOnly: true
-          example: United States of America
-    OptoutBy:
-      title: OptoutBy
-      enum:
-      - Abuse Complaint
-      - Account User
-      - API
-      - Contact Self Opt-Out
-      - Cvent Support
-      - Hard Bounce
-      - Import
-      - Invitee Self Unsubscribe
-      - Multiple Bounce
-      - Respondent Self Unsubscribe
-      - Temporary Block
-      - Cvent Salesforce App
-      type: string
-      description: This is used to denote how a contact is opt'd out of Cvent system.
-      example: Account User
-      readOnly: true
-    ErrorResponseBase1:
-      title: ErrorResponseBase
+      - $ref: '#/components/schemas/ErrorResponseBase1'
       type: object
-      description: Represents an error response with no additional details.
       required:
       - code
       - message
       properties:
-        code:
-          type: integer
-          description: The HTTP status code representing the error.
-          example: 400
-        message:
-          type: string
-          description: A brief description of the error.
-          example: Bad Request
-        target:
-          type: string
-          description: The target resource of the error.
-          example: example target
-    contact-patch:
-      title: ContactPatch
-      description: This entity is used to represent a single item that is requested for a contact patch.
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorResponseBase1'
+          description: Additional details of cascading error messages.
+    ContactType:
+      title: ContactType
+      description: This entity represents a contact type at contact level.
       required:
       - id
-      allOf:
-      - $ref: '#/components/schemas/contact'
-      - properties:
-          company: {}
-          title: {}
-          _links:
-            properties:
-              facebookUrl:
-                properties:
-                  href: {}
-          homeAddress:
-            properties:
-              address3: {}
-              countryCode: {}
-          dateOfBirth: {}
-          gender: {}
-          homePhone: {}
-          socialSecurityNumber: {}
-    ContactGroupType:
-      title: ContactGroupType
-      enum:
-      - BLACKLIST
-      - DISTRIBUTION_LIST
-      - STANDARD
-      type: string
-      description: Type of contact group. `BLACKLIST` are contacts that are not allowed to register for your events. `DISTRIBUTION_LIST` is a group of contacts you plan to send eMarketing emails to. `STANDARD` is a multi-purpose group for organizing contacts.
-      example: STANDARD
-      default: STANDARD
-    IdOnlyEntity:
-      title: Id only entity
-      description: An entity which only has an id.
-      required:
-      - id
+      - code
+      - name
       type: object
       properties:
         id:
           type: string
-          description: The entity's id value.
-          example: abc-123
+          format: uuid
+          description: The ID of the contact type.
+          readOnly: true
+        code:
+          type: string
+          description: The contact type code. Must be unique in the account.
+          readOnly: true
+          maxLength: 30
+          example: VIP
+        name:
+          type: string
+          description: Name of the contact type.
+          maxLength: 50
+          example: VIP Attendee
+        description:
+          type: string
+          description: Description of the contact type.
+          maxLength: 2500
+          example: Very important attendee.
+        active:
+          type: boolean
+          description: Indicates whether the contact type is active.
+          example: true
+          readOnly: true
+    CustomFieldType:
+      title: CustomFieldType
+      enum:
+      - AutoIncrement
+      - ConsentQuestion
+      - Currency
+      - Decimal
+      - Date
+      - DateTime
+      - Email
+      - FileUpload
+      - FreeText
+      - General
+      - MultiChoice
+      - MultiSelect
+      - Number
+      - OpenEndedDateTime
+      - OpenEndedText
+      - SingleChoice
+      - SingleSelect
+      - USPhoneNumber
+      - Unknown
+      type: string
+      description: The type of data collected by a custom field.
+      example: General
+    contact-paginated-response:
+      title: ContactPaginatedResponse
+      description: The response from a request to get the list of contacts.  This includes the paging object as well as the collection of contacts.
+      required:
+      - paging
+      - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/contact'
+          description: Collection of contacts.
+    uuid-property:
+      title: UUID Property
+      description: A string that has to be a format matching the industry standard uuid
+      type: string
+      format: uuid
+      example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+    AddressType:
+      title: AddressType
+      enum:
+      - Home
+      - Work
+      type: string
+      description: The type of address.
+      example: Home
+    BulkResponseItem:
+      title: BulkResponseItem
+      description: Represents a single item that is returned as part of a Bulk request call.
+      type: object
+      required:
+      - status
+      - data
+      properties:
+        data:
+          type: object
+          description: The data returned for a single item in the bulk request call.
+          example:
+            event_id: 1234
+            attendee_count: 50
+          additionalProperties: true
+        status:
+          type: integer
+          description: http status code representing processing status of a single item
+          example: 400
+        message:
+          type: string
+          description: Quick description of what happened with processing
+          example: Example error message.
+        request:
+          type: object
+          description: The processed request tied to this response. This field is only sent when processing fails.
+          example:
+            operation: PUT
+            headers:
+              header1: header1Value
+              header2: header2Value
+            queryParams:
+              param1: param1Value
+              param2: param2Value
+          additionalProperties: true
+      additionalProperties: false
+    filter:
+      title: A filter sent in the body of a request
+      description: A filter which is sent through the body of the request.
+      type: object
+      properties:
+        filter:
+          type: string
+          example: property eq 'value'
+          description: Filter included in the request.
+    AttendeeContactType:
+      title: AttendeeContactType
+      type: object
+      description: Contains details related to the attendee's contact type.
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The unique identifier of the contact type
+          example: 861B51EC-AA7E-475F-B38D-4C8E35C47D63
+        name:
+          type: string
+          description: A descriptive name for the contact type
+          example: VIP Member
+          readOnly: true
+    contact-group-paginated-response:
+      title: ContactGroupPaginatedResponse
+      description: The response from a request to get the list of contact groups.  This includes the paging object as well as the collection of contact-groups.
+      required:
+      - paging
+      - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/contact-group'
+          description: Collection of contact groups.
     ContactLinks:
       title: ContactLinks
       type: object
@@ -2239,102 +1527,152 @@ components:
               type: string
               description: The url of the contact's profile picture
               example: https://cvent.com/picture123
-    contact-obfuscation-status:
-      title: ContactObfuscationStatus
-      description: Model representing an obfuscation status of a contact.
+    contact-id-paginated-response:
+      title: ContactIdPaginatedResponse
+      description: The response from a request to get the ids of contacts in a contact group or relationship. This includes the paging object as well as the collection of contact ids.
+      required:
+      - paging
+      - data
       type: object
       properties:
-        status:
-          $ref: '#/components/schemas/ContactObfuscationStatusType'
-        obfuscateId:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/IdOnlyEntity'
+          description: Collection of contact ids.
+    DistributionListSecurityType:
+      title: DistributionListSecurityType
+      enum:
+      - PRIVATE
+      - SEMI_PRIVATE
+      - PUBLIC
+      type: string
+      description: Type of distribution list security. For a public list, contacts can sign up themselves. For a semi-private list, contacts can add themselves, but a planner must approve their membership before they can receive emails. For a private list, only planners can add contacts. Contacts can always remove themselves from lists on the Manage Profile page.
+    CreateContact:
+      title: CreateContact
+      description: Represents a contact to be created.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/Contact'
+      properties:
+        parentId:
+          deprecated: true
           type: string
           format: uuid
-          description: The obfuscation job identifier.
-          readOnly: true
-        contact:
-          $ref: '#/components/schemas/ContactId'
-    ContactHistory:
-      title: ContactHistory
-      description: A single instance of change for a specific contact in the contact's change history.
-      type: object
-      properties:
-        updatedFieldName:
-          description: The name of a field that was changed and tracked by this single instance of change in contact change history.
-          type: string
-          example: Last Name
-        oldValue:
-          description: The old value of a field that was changed.
-          type: string
-          example: Wilson
-        newValue:
-          description: The new value of a field that was changed.
-          type: string
-          example: James
-        updatedThroughName:
-          $ref: '#/components/schemas/UpdatedThroughNameProperty'
-        updatedDate:
-          description: The ISO 8601 formatted date-time when the associated contact, of this single instance of change in contact change history, was updated.
-          type: string
-          format: date-time
-          example: '2023-08-03T14:51:00.777Z'
-        updatedBy:
-          description: The name of a person who updated a contact that is associated with this single instance of change in contact change history.
-          type: string
-          example: John Doe
-    Paging:
-      title: Paging
-      required:
-      - _links
-      type: object
-      description: Represents pagination information for a collection of resources.
-      properties:
-        previousToken:
-          type: string
-          description: The pagination token for the previous page, if one exists. You can use this token to navigate to the previous page of data.
-          example: 1a2b3c4d5e6f7g8h9i10j11k
-        nextToken:
-          type: string
-          description: The pagination token for the next page. If this value is present in the response, there is another page of data you can fetch.
-          example: 1a2b3c4d5e6f7g8h9i10j11k
-        currentToken:
-          type: string
-          description: The pagination token for the current page.
-          example: 1a2b3c4d5e6f7g8h9i10j11k
-        limit:
-          type: integer
-          description: The number of records to return on the page. Not to exceed 200.
-          example: 100
-        totalCount:
-          type: integer
-          description: The total number of records available. This field may return blank, even if there are more records. To confirm if there are more records, check the `nextToken` field.
-          example: 2
-        _links:
-          $ref: '#/components/schemas/PaginationLinks'
-    contact-file:
-      title: ContactFile
-      required:
-      - file
-      - href
-      description: A contact's file, such as a profile image.
-      properties:
-        file:
+          description: ID of the parent contact, applicable with contact snapshot. This field has been deprecated. If the event has contact snapshot enabled, snapshot will be automatically created through the Add attendees API.
+        event:
+          deprecated: true
+          description: Event ID
+          type: object
           properties:
             id:
+              deprecated: true
               type: string
               format: uuid
-              description: The ID of the file.
-        href:
-          format: uri
+              description: ID of the event where the contact was created, applicable when contact snapshot is enabled for an event. This field has been deprecated. If the event has contact snapshot enabled, snapshot will be automatically created through the Add attendees API.
+    OptoutBy:
+      title: OptoutBy
+      enum:
+      - Abuse Complaint
+      - Account User
+      - API
+      - Contact Self Opt-Out
+      - Cvent Support
+      - Hard Bounce
+      - Import
+      - Invitee Self Unsubscribe
+      - Multiple Bounce
+      - Respondent Self Unsubscribe
+      - Temporary Block
+      - Cvent Salesforce App
+      type: string
+      description: This is used to denote how a contact is opt'd out of Cvent system.
+      example: Account User
+      readOnly: true
+    contact-merge:
+      title: ContactMergeRequest
+      description: This entity represents a request to merge one or two contacts with another 'main' contact.
+      required:
+      - secondaryContacts
+      properties:
+        secondaryContacts:
+          type: array
+          items:
+            $ref: '#/components/schemas/uuid-property'
+          minItems: 1
+          maxItems: 2
+          description: Id of the contact(s) to be merged to the main contact.
+        conflictResolution:
+          type: object
+          description: Represents choices in resolving conflicts in the contacts to be merged or to optionally select fields to keep from a secondary contact, overriding default behavior.
+          properties:
+            events:
+              type: array
+              items:
+                $ref: '#/components/schemas/EventContactId'
+              description: For each event (designated by event id), choose a contact id whose linked attendee will be associated with the resulting merged contact. Use whenever at least two contacts exist as attendees in a single event.
+            surveys:
+              type: array
+              items:
+                $ref: '#/components/schemas/SurveyContactId'
+              description: For each survey (designated by survey id), choose a contact id whose linked respondent will be associated with the resulting merged contact. Use whenever at least two contacts exist as respondents in a single survey.
+            relatedContacts:
+              type: string
+              format: uuid
+              description: The id of the contact to keep the relationships of in the resulting merged contact. Only one contact can be chosen, and relationships of the other contact(s) will be discarded.
+            contactFields:
+              type: array
+              items:
+                $ref: '#/components/schemas/ContactMergeField'
+              description: Specify which contact to use values from for any contact field.
+    ContactObfuscationStatusType:
+      title: ContactObfuscationStatusType
+      enum:
+      - INITIATED
+      - QUEUED
+      - PROCESSING
+      - COMPLETED
+      - FAILED
+      type: string
+      description: 'Status of the request to obfuscate a contact.
+
+
+        INITIATED - The obfuscation request has been received.
+
+
+        QUEUED - The obfuscation request is currently waiting in the queue to be executed.
+
+
+        PROCESSING -  The obfuscation request is currently being processed.
+
+
+        COMPLETED -  The obfuscation request is complete.
+
+
+        FAILED - The obfuscation request failed due to an error.'
+      example: INITIATED
+    ErrorResponseBase1:
+      title: ErrorResponseBase
+      type: object
+      description: Represents an error response with no additional details.
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          description: The HTTP status code representing the error.
+          example: 400
+        message:
           type: string
-          description: URL of the contact's file.
-          readOnly: true
-          example: https://custom.cvent.com/a5154f85f71a4cf2464e037feb75b308/00000000000000000000000000000000/files/universal-file/tmp/e209d73d845746b7a6deda4da9d91b2c.png
-    contact-bulk-response:
-      title: ContactBulkResponse
-      description: List of contacts to create or update.
-      type: array
-      items:
-        $ref: '#/components/schemas/ContactBulkResponseItem'
+          description: A brief description of the error.
+          example: Bad Request
+        target:
+          type: string
+          description: The target resource of the error.
+          example: example target
     Contact:
       title: Contact
       description: Represents a contact and their related information.
@@ -2521,6 +1859,764 @@ components:
           description: Represents the preferred pronouns of a contact.
           example: he/him/she/her/they/them
           maxLength: 50
+    contact-update:
+      title: ContactUpdate
+      description: This entity is used to represent a single item that is requested for a contact update
+      required:
+      - id
+      allOf:
+      - $ref: '#/components/schemas/contact'
+    contact-group:
+      title: ContactGroup
+      required:
+      - id
+      - name
+      description: A group of contacts.
+      allOf:
+      - $ref: '#/components/schemas/Audit'
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The ID of the contact group.
+          readOnly: true
+        name:
+          type: string
+          description: Name of the contact group.
+          maxLength: 100
+          example: group name
+        shortDescription:
+          type: string
+          description: Short description of the contact group.
+          example: short description
+        description:
+          type: string
+          description: Full description of the contact group.
+          example: long description
+        type:
+          $ref: '#/components/schemas/ContactGroupType'
+        note:
+          deprecated: true
+          type: string
+          description: Moved to internalNote in the DistributionListInfo object. The note field only applies to Distribution List.
+          example: Sample internal note
+        distributionListInfo:
+          $ref: '#/components/schemas/DistributionListInfo'
+    BaseAddress:
+      title: Base Address
+      description: Base Address Model
+      type: object
+      properties:
+        address1:
+          type: string
+          maxLength: 40
+          description: The first line of an address.
+          example: Cvent Inc.
+        address2:
+          type: string
+          maxLength: 40
+          description: The second line of an address.
+          example: 4001 West Parmer Lane
+        address3:
+          type: string
+          maxLength: 40
+          description: The third line of an address.
+          example: PO Box 123
+        city:
+          type: string
+          maxLength: 40
+          description: The name of the city.
+          example: Austin
+        countryCode:
+          type: string
+          maxLength: 3
+          minLength: 2
+          description: ISO 3166 two-letter (alpha-2) country code.
+          example: US
+        postalCode:
+          type: string
+          maxLength: 25
+          description: Postal code (also known as zipcode) of the address.
+          example: '78727'
+    custom-field:
+      title: CustomField
+      description: A Custom Field
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/CustomFieldBase'
+      properties:
+        type:
+          description: The type of data collected by a custom field.
+          type: string
+          allOf:
+          - $ref: '#/components/schemas/CustomFieldType'
+          - readOnly: true
+            example: MultiSelect
+    contact-patch:
+      title: ContactPatch
+      description: This entity is used to represent a single item that is requested for a contact patch.
+      required:
+      - id
+      allOf:
+      - $ref: '#/components/schemas/contact'
+      - properties:
+          company: {}
+          title: {}
+          _links:
+            properties:
+              facebookUrl:
+                properties:
+                  href: {}
+          homeAddress:
+            properties:
+              address3: {}
+              countryCode: {}
+          dateOfBirth: {}
+          gender: {}
+          homePhone: {}
+          socialSecurityNumber: {}
+    contact-bulk-patch:
+      type: array
+      items:
+        $ref: '#/components/schemas/contact-patch'
+    Address:
+      title: Address
+      description: Contact address details.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/BaseAddress'
+      properties:
+        region:
+          type: string
+          description: The name of the state/province/region of the address.
+          readOnly: true
+          example: Texas
+        regionCode:
+          type: string
+          description: The abbreviation of the state/province/region of the address.
+          minLength: 2
+          maxLength: 10
+          example: TX
+        country:
+          type: string
+          description: Name of the country of the address.
+          readOnly: true
+          example: United States of America
+    UpdatedThroughNameProperty:
+      title: UpdatedThroughNameProperty
+      description: Name of the place where this change was updated through.
+      type: string
+      enum:
+      - Abstract Guest Side Author Update
+      - Abstract Guest Side Reviewer Update
+      - Abstract Guest Side User
+      - Abstract Planner side
+      - Address Book Profile
+      - Amex Card Delete
+      - Amex Card Insert
+      - Amex Card Update
+      - Answers Replaced from Administration
+      - Appointment Guest Side
+      - Attendee Hub
+      - Budget Allocation Update
+      - Budget Attendee Update
+      - Budget Item Custom Field Answers Replaced from Administration
+      - Budget Item Delete
+      - Budget Item Duplicate
+      - Budget Item Import
+      - Budget Item Insert via REST API
+      - Budget Item Insert
+      - Budget Item Single Update
+      - Budget Item Template Import
+      - Budget Item Update via REST API
+      - Budget Items Bulk Assign Vendor
+      - Budget Items Bulk Copy Cost label
+      - Budget Items Bulk Copy
+      - Budget Items Bulk Delete
+      - Budget Items Bulk Update
+      - Budget Version Update
+      - Bulk Update Contact Field Answer
+      - Concur Reconciliation - Create New Budget Item For Each Expense
+      - Concur Reconciliation - Map to Existing Budget Item
+      - Confirm Opt In Email
+      - Contact Import
+      - Contact New Membership
+      - Contact Pending Obfuscation
+      - Contact Website Profile Update
+      - Created Within Meeting Request
+      - Created from API
+      - Created from Request Website
+      - Crowd Compass Profile Update
+      - Custom Field Added From Admin
+      - Custom Field Added via REST API
+      - Custom Field Deleted From Admin
+      - Custom Field Modified From Admin
+      - Custom Field Modified via REST API
+      - Deleted Within Administration
+      - Deleted from Meeting Request Form
+      - Deleted from Request Website
+      - Deleted within Meeting Request
+      - Event Automatically Created from Meeting Request
+      - Event Created from API
+      - Event Created from Event Wizard
+      - Event Guest Side Modification
+      - Event Guest Side Registration
+      - Event Import
+      - Event Modified from Meeting Request via API
+      - Event Modified from Meeting Request
+      - Event Onsite Registration
+      - Event POST
+      - Event Planner Contact Information Update
+      - Event Planner Side Modification
+      - Event Planner Side Registration
+      - Hotel Request Import
+      - Marketo Contact Import
+      - Modified Within Event
+      - Modified Within Meeting Request
+      - Modified from API
+      - Modified from Event Documents
+      - Modified from Meeting Request via Notification
+      - Modified from Request Website
+      - Registration Import
+      - REST API
+      - Salesforce Integration
+      - Survey Author Modification
+      - Survey Author Response
+      - Survey Guest Side Modification
+      - Survey Guest Side Response
+      - Survey POST
+      - Travel Cost Import - Map to Existing Budget item
+      - Travel Cost Import - Map to New Budget Item
+      - VCN Transaction - Create New Budget Item For Each Transaction
+      - VCN Transaction - Map to Multiple Budget Item
+      - VCN Transaction - Map to Single Budget Item
+      - VCN Transaction - Removed from Budget Item
+      - Web Services
+      - eMarketing Profile Update
+      example: Address Book Profile
+    DistributionListInfo:
+      title: DistributionListInfo
+      description: Model representing a distribution list info. Only required if the contact group type is DISTRIBUTION_LIST.
+      type: object
+      properties:
+        securityType:
+          $ref: '#/components/schemas/DistributionListSecurityType'
+        internalNote:
+          description: Internal note for Distribution Lists.
+          type: string
+          maxLength: 300
+          example: Sample distribution list internal note
+        status:
+          $ref: '#/components/schemas/DistributionListStatus'
+    Passport:
+      title: Passport
+      description: This entity represents a contact's passport information.
+      type: object
+      properties:
+        number:
+          type: string
+          description: "The passport number of the contact.\n\n Reading and writing of this field require the `event/contacts:read-sensitive` and `event/contacts:write-sensitive` scopes respectively."
+          example: '123456789'
+          maxLength: 100
+        country:
+          type: string
+          description: The passport country of the contact.
+          example: United Kingdom
+          readOnly: true
+        countryCode:
+          type: string
+          description: The passport country code of the contact.
+          example: GB
+          minLength: 2
+          maxLength: 3
+    ContactId:
+      title: ContactId
+      description: A contact id.
+      required:
+      - id
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The ID of the contact.
+    ContactCreate:
+      title: ContactCreate
+      description: This entity is used to represent a single item that is posted for a contact create
+      allOf:
+      - $ref: '#/components/schemas/CreateContact'
+    ContactMembership:
+      title: ContactMembership
+      description: Contact Membership information
+      type: object
+      readOnly: true
+      properties:
+        type:
+          type: string
+          description: The type of membership the contact has signed up for.
+          maxLength: 300
+          example: Corporate Sponsor
+        plan:
+          type: string
+          description: Describes the specific plan the contact has signed up for.
+          maxLength: 300
+          example: Gold Level
+        joined:
+          type: string
+          format: date
+          description: The ISO-8601 formatted date the contact began their membership.
+          readOnly: true
+          example: '2017-02-10'
+        expiration:
+          type: string
+          format: date
+          description: The ISO-8601 formatted date the contact's membership will expire.
+          readOnly: true
+          example: '2020-02-09'
+        lastRenewal:
+          type: string
+          format: date
+          description: The ISO-8601 formatted date the contact last renewed their membership.
+          readOnly: true
+          example: '2019-02-08'
+        amountDue:
+          type: number
+          description: The amount currently due for this membership.
+          readOnly: true
+          minimum: 0
+          example: 50.5
+        listInDirectory:
+          type: boolean
+          description: Indicates if the member details should be included in the member directory.
+          example: false
+    ContactMergeField:
+      title: ContactMergeField
+      description: A pair of a contact field name and a contact id.
+      required:
+      - fieldName
+      - contactId
+      type: object
+      properties:
+        fieldName:
+          type: string
+          example: firstName
+          description: The name of a contact field.
+        contactId:
+          type: string
+          format: uuid
+          description: ID of the contact.
+          example: a45a3341-d30f-4bd9-bfd8-fbcdae37f0f2
+    contact-history-paginated-response:
+      title: ContactHistoryPaginatedResponse
+      description: The response of a request to get the change history for a specific contact.
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        data:
+          description: Collection of change histories for a specific contact.
+          type: array
+          items:
+            $ref: '#/components/schemas/ContactHistory'
+    CustomFieldBase:
+      title: CustomFieldBase
+      description: Base schema for Custom Field - allows type to be customized by extending schemas
+      required:
+      - id
+      - value
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique ID representing this custom field.
+          format: uuid
+        name:
+          type: string
+          description: The actual text of the custom field.
+          example: What is your favorite color?
+          readOnly: true
+        value:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            description: A question answer value
+            maxLength: 16000
+          description: The set of answers or possible answers to a question.
+          example:
+          - Choice C
+          - Choice A
+        order:
+          type: integer
+          description: The order of this question in the bigger list of questions.
+          example: 1
+          readOnly: true
+    Gender:
+      title: Gender
+      enum:
+      - Male
+      - Female
+      - Non-binary
+      - Rather not say
+      type: string
+      description: The gender of the contact.
+      example: Male
+    EventContactId:
+      title: EventContactId
+      description: A pair of event and contact id.
+      required:
+      - eventId
+      - contactId
+      type: object
+      properties:
+        eventId:
+          type: string
+          format: uuid
+          description: ID of the event.
+        contactId:
+          type: string
+          format: uuid
+          description: ID of the contact.
+    ContactOptOut:
+      title: ContactOptOut
+      description: Details of an opt-out for a Contact.
+      type: object
+      properties:
+        optedOut:
+          type: boolean
+          default: false
+          description: Used to denote if a contact has opted-out of receiving system generated emails.
+          example: false
+        date:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date time when this contact was opted-out. This value can change if the contact opts out multiple times.
+          readOnly: true
+          example: '2019-02-12T03:00:00Z'
+        by:
+          $ref: '#/components/schemas/OptoutBy'
+    Link:
+      title: Link
+      required:
+      - href
+      type: object
+      description: Represents a link to a related resource.
+      properties:
+        href:
+          type: string
+          description: A url provided that can be followed for linking
+          example: ?token=90c5f062-76ad-4ea4-aa53-00eb698d9262
+    contact-obfuscation-status:
+      title: ContactObfuscationStatus
+      description: Model representing an obfuscation status of a contact.
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ContactObfuscationStatusType'
+        obfuscateId:
+          type: string
+          format: uuid
+          description: The obfuscation job identifier.
+          readOnly: true
+        contact:
+          $ref: '#/components/schemas/ContactId'
+    contact-bulk-create:
+      type: array
+      items:
+        $ref: '#/components/schemas/ContactCreate'
+    contact:
+      title: ExistingContact
+      description: Represents a contact that has been created and has an id.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/Contact'
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The ID of the contact.
+        parentId:
+          type: string
+          format: uuid
+          description: ID of the parent contact, applicable with contact snapshot.
+          readOnly: true
+        event:
+          description: Event ID
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+              description: ID of the event where the contact was created, applicable when contact snapshot is enabled for an event.
+          readOnly: true
+    contact-bulk-response:
+      title: ContactBulkResponse
+      description: List of contacts to create or update.
+      type: array
+      items:
+        $ref: '#/components/schemas/ContactBulkResponseItem'
+    contact-bulk-update:
+      type: array
+      items:
+        $ref: '#/components/schemas/contact-update'
+    ContactHistory:
+      title: ContactHistory
+      description: A single instance of change for a specific contact in the contact's change history.
+      type: object
+      properties:
+        updatedFieldName:
+          description: The name of a field that was changed and tracked by this single instance of change in contact change history.
+          type: string
+          example: Last Name
+        oldValue:
+          description: The old value of a field that was changed.
+          type: string
+          example: Wilson
+        newValue:
+          description: The new value of a field that was changed.
+          type: string
+          example: James
+        updatedThroughName:
+          $ref: '#/components/schemas/UpdatedThroughNameProperty'
+        updatedDate:
+          description: The ISO 8601 formatted date-time when the associated contact, of this single instance of change in contact change history, was updated.
+          type: string
+          format: date-time
+          example: '2023-08-03T14:51:00.777Z'
+        updatedBy:
+          description: The name of a person who updated a contact that is associated with this single instance of change in contact change history.
+          type: string
+          example: John Doe
+    Paging:
+      title: Paging
+      required:
+      - _links
+      type: object
+      description: Represents pagination information for a collection of resources.
+      properties:
+        previousToken:
+          type: string
+          description: The pagination token for the previous page, if one exists. You can use this token to navigate to the previous page of data.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        nextToken:
+          type: string
+          description: The pagination token for the next page. If this value is present in the response, there is another page of data you can fetch.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        currentToken:
+          type: string
+          description: The pagination token for the current page.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        limit:
+          type: integer
+          description: The number of records to return on the page. Not to exceed 200.
+          example: 100
+        totalCount:
+          type: integer
+          description: The total number of records available. This field may return blank, even if there are more records. To confirm if there are more records, check the `nextToken` field.
+          example: 2
+        _links:
+          $ref: '#/components/schemas/PaginationLinks'
+    ContactBulkResponseItem:
+      title: ContactBulkResponseItem
+      description: This entity is used to represent a single item that is returned as part of a Bulk request call.
+      allOf:
+      - $ref: '#/components/schemas/BulkResponseItem'
+      properties:
+        data:
+          anyOf:
+          - $ref: '#/components/schemas/contact'
+          - $ref: '#/components/schemas/ErrorResponse-12'
+    IdOnlyEntity:
+      title: Id only entity
+      description: An entity which only has an id.
+      required:
+      - id
+      type: object
+      properties:
+        id:
+          type: string
+          description: The entity's id value.
+          example: abc-123
+    contact-file:
+      title: ContactFile
+      required:
+      - file
+      - href
+      description: A contact's file, such as a profile image.
+      properties:
+        file:
+          properties:
+            id:
+              type: string
+              format: uuid
+              description: The ID of the file.
+        href:
+          format: uri
+          type: string
+          description: URL of the contact's file.
+          readOnly: true
+          example: https://custom.cvent.com/a5154f85f71a4cf2464e037feb75b308/00000000000000000000000000000000/files/universal-file/tmp/e209d73d845746b7a6deda4da9d91b2c.png
+    Audit:
+      title: Audit
+      description: Audit information
+      type: object
+      properties:
+        created:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date time when this record was created.
+          readOnly: true
+          example: '2017-01-02T02:00:00Z'
+        createdBy:
+          type: string
+          description: The identifier of the user that created this record.
+          readOnly: true
+          example: hporter
+        lastModified:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date time when this record was updated.
+          readOnly: true
+          example: '2019-02-12T03:00:00Z'
+        lastModifiedBy:
+          type: string
+          description: The identifier of the user that last updated this record.
+          readOnly: true
+          example: hporter
+    PaginationLinks:
+      title: PaginationLinks
+      type: object
+      description: Represents pagination links for navigating between pages of data.
+      properties:
+        next:
+          $ref: '#/components/schemas/Link'
+        self:
+          $ref: '#/components/schemas/Link'
+        prev:
+          $ref: '#/components/schemas/Link'
+    SurveyContactId:
+      title: SurveyContactId
+      description: A pair of survey and contact id.
+      required:
+      - surveyId
+      - contactId
+      type: object
+      properties:
+        surveyId:
+          type: string
+          format: uuid
+          description: ID of the survey
+        contactId:
+          type: string
+          format: uuid
+          description: ID of the contact
+    ContactGroupType:
+      title: ContactGroupType
+      enum:
+      - BLACKLIST
+      - DISTRIBUTION_LIST
+      - STANDARD
+      type: string
+      description: Type of contact group. `BLACKLIST` are contacts that are not allowed to register for your events. `DISTRIBUTION_LIST` is a group of contacts you plan to send eMarketing emails to. `STANDARD` is a multi-purpose group for organizing contacts.
+      example: STANDARD
+      default: STANDARD
+  parameters:
+    contactId:
+      in: path
+      name: contactId
+      description: ID of a contact.
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid-property'
+    contactGroupId:
+      in: path
+      name: id
+      description: ID of a contact group.
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid-property'
+    customFieldId:
+      in: path
+      name: customFieldId
+      description: ID of a custom field.
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid-property'
+    token:
+      name: token
+      in: query
+      description: 'The continuation token returned from a previous class. This must be a valid UUID v4 if provided.
+
+        This will override any other pageable parameters provided.
+
+        '
+      style: form
+      explode: true
+      schema:
+        type: string
+        example: 0e28af57-511f-47ab-ae46-46cd1ca51a1a
+    after:
+      name: after
+      required: false
+      description: Used to query records that have been added or updated after this time point. Default to the beginning of time of the data store.
+      in: query
+      schema:
+        type: string
+        format: date-time
+        example: '2017-01-02T02:00:00Z'
+    limit:
+      name: limit
+      in: query
+      description: The maximum number of records to return per page.
+      style: form
+      explode: true
+      schema:
+        maximum: 200
+        minimum: 1
+        type: integer
+        default: 100
+        example: 100
+    includePurged:
+      in: query
+      required: false
+      name: includePurged
+      description: 'True means purged contacts can be included in the response. Purged contacts contain only limited display data (`id`, `lastModified`, and `purged`). When true, the filter query parameter can only filter by the `id` field. The `before`, `after`, `limit`, and `token` query parameters are still valid query parameters to use with this parameter. If false, only contacts that have not been purged will be returned.
+
+        '
+      schema:
+        type: boolean
+        default: false
+    id:
+      in: path
+      name: id
+      description: ID of a contact.
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid-property'
+    obfuscateId:
+      in: path
+      name: obfuscateId
+      description: ID of an obfuscation request.
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid-property'
+    relatedContactId:
+      in: path
+      name: relatedContactId
+      description: ID of a related contact.
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid-property'
+    before:
+      name: before
+      required: false
+      in: query
+      description: Used to query records that have been added or updated before this time point.
+      schema:
+        type: string
+        format: date-time
+        example: '2017-01-02T02:00:00Z'
   responses:
     Conflict1:
       description: The request conflicts with current state of the target resource
@@ -2531,24 +2627,6 @@ components:
           example:
             code: 409
             message: Conflict
-    BadRequest1:
-      description: Bad request
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 400
-            message: Bad Request
-    TooManyRequests1:
-      description: Too many requests
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 429
-            message: Limit Exceeded
     NotFound1:
       description: Resource not found
       content:
@@ -2567,6 +2645,15 @@ components:
           example:
             code: 403
             message: Access Forbidden
+    BadRequest1:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 400
+            message: Bad Request
     Unauthorized1:
       description: Bad or expired token
       content:
@@ -2576,102 +2663,15 @@ components:
           example:
             code: 401
             message: Unauthorized
-  parameters:
-    obfuscateId:
-      in: path
-      name: obfuscateId
-      description: ID of an obfuscation request.
-      required: true
-      schema:
-        $ref: '#/components/schemas/uuid-property'
-    before:
-      name: before
-      required: false
-      in: query
-      description: Used to query records that have been added or updated before this time point.
-      schema:
-        type: string
-        format: date-time
-        example: '2017-01-02T02:00:00Z'
-    limit:
-      name: limit
-      in: query
-      description: The maximum number of records to return per page.
-      style: form
-      explode: true
-      schema:
-        maximum: 200
-        minimum: 1
-        type: integer
-        default: 100
-        example: 100
-    id:
-      in: path
-      name: id
-      description: ID of a contact.
-      required: true
-      schema:
-        $ref: '#/components/schemas/uuid-property'
-    after:
-      name: after
-      required: false
-      description: Used to query records that have been added or updated after this time point. Default to the beginning of time of the data store.
-      in: query
-      schema:
-        type: string
-        format: date-time
-        example: '2017-01-02T02:00:00Z'
-    includePurged:
-      in: query
-      required: false
-      name: includePurged
-      description: 'True means purged contacts can be included in the response. Purged contacts contain only limited display data (`id`, `lastModified`, and `purged`). When true, the filter query parameter can only filter by the `id` field. The `before`, `after`, `limit`, and `token` query parameters are still valid query parameters to use with this parameter. If false, only contacts that have not been purged will be returned.
-
-        '
-      schema:
-        type: boolean
-        default: false
-    relatedContactId:
-      in: path
-      name: relatedContactId
-      description: ID of a related contact.
-      required: true
-      schema:
-        $ref: '#/components/schemas/uuid-property'
-    contactGroupId:
-      in: path
-      name: id
-      description: ID of a contact group.
-      required: true
-      schema:
-        $ref: '#/components/schemas/uuid-property'
-    token:
-      name: token
-      in: query
-      description: 'The continuation token returned from a previous class. This must be a valid UUID v4 if provided.
-
-        This will override any other pageable parameters provided.
-
-        '
-      style: form
-      explode: true
-      schema:
-        type: string
-        example: 0e28af57-511f-47ab-ae46-46cd1ca51a1a
-    customFieldId:
-      in: path
-      name: customFieldId
-      description: ID of a custom field.
-      required: true
-      schema:
-        $ref: '#/components/schemas/uuid-property'
-    contactId:
-      in: path
-      name: contactId
-      description: ID of a contact.
-      required: true
-      schema:
-        $ref: '#/components/schemas/uuid-property'
+    TooManyRequests1:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 429
+            message: Limit Exceeded
   securitySchemes:
     OAuth2.authorizationCode:
       type: oauth2

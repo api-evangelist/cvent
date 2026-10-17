@@ -194,104 +194,6 @@ paths:
         url: '#oauth2-auth-code-planner-admin'
 components:
   schemas:
-    event-features-response:
-      title: EventFeature
-      description: Representation of an event's feature along with its properties
-      type: object
-      required:
-      - type
-      - locked
-      - enabled
-      properties:
-        type:
-          $ref: '#/components/schemas/feature-type.json'
-        enabled:
-          type: boolean
-          description: If a particular feature is enabled for the event
-          example: true
-        locked:
-          type: boolean
-          description: If a particular feature is locked to perform any mutation over it
-          example: true
-        lockedReason:
-          type: string
-          description: Generic message informing feature is locked due to some sub-feature/child feature in use
-          example: Your event is already using some Registration features
-        enabledTier:
-          $ref: '#/components/schemas/tier.json'
-        availableTiers:
-          description: Available feature tiers.
-          type: array
-          items:
-            $ref: '#/components/schemas/feature-tier.json'
-        config:
-          type: object
-          description: Feature configuration.
-          anyOf:
-          - title: RegistrationFeatureConfig
-            description: Denote the configuration for the registration feature.
-            type: object
-            properties:
-              pricing:
-                $ref: '#/components/schemas/pricing-config.json'
-        weblink:
-          type: string
-          format: uri
-          readOnly: true
-          description: URL of the feature's webpage.
-          example: https://cvent.me/XX51b9
-    pagination-links.json:
-      title: PaginationLinks
-      type: object
-      description: Represents pagination links for navigating between pages of data.
-      properties:
-        next:
-          $ref: '#/components/schemas/link.json'
-        self:
-          $ref: '#/components/schemas/link.json'
-        prev:
-          $ref: '#/components/schemas/link.json'
-    uuid-property:
-      title: UUID Property
-      description: A string that has to be a format matching the industry standard uuid
-      type: string
-      format: uuid
-      example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
-    Locale:
-      title: Locale
-      description: Locale code
-      type: string
-      example: en-US
-      minLength: 1
-      maxLength: 200
-    event-feature-launch-request:
-      title: EventFeaturesLaunchRequest
-      description: Event-features launch request parameters.
-      type: object
-      properties:
-        deleteTestData:
-          description: True keeps email data collected in test mode, prior to the registration feature being launched.
-          type: boolean
-          default: false
-    launch-feature-type.json:
-      title: LaunchFeatureType
-      description: These are the types of features used in the event container events that can be launched.
-      type: string
-      enum:
-      - Website
-      - Registration
-      example: Registration
-    link.json:
-      title: Link
-      required:
-      - href
-      type: object
-      description: Represents a link to a related resource.
-      properties:
-        href:
-          type: string
-          description: A url provided that can be followed for linking
-          example: ?token=90c5f062-76ad-4ea4-aa53-00eb698d9262
     payment-method-type.json:
       title: PaymentMethodType
       type: string
@@ -346,23 +248,36 @@ components:
       - Visa Electron
       - WPM
       example: Visa
-    feature-tier.json:
-      title: FeatureTier
-      description: Tier available for the feature
+    launch-feature-type.json:
+      title: LaunchFeatureType
+      description: These are the types of features used in the event container events that can be launched.
+      type: string
+      enum:
+      - Website
+      - Registration
+      example: Registration
+    ErrorResponse-12:
+      title: ErrorResponse
+      description: Represents an error response with additional details of cascading error messages.
+      allOf:
+      - $ref: '#/components/schemas/ErrorResponseBase1'
       type: object
       required:
-      - name
+      - code
+      - message
       properties:
-        name:
-          $ref: '#/components/schemas/tier.json'
-        locked:
-          type: boolean
-          description: If a particular tier is locked to perform any mutation over it
-          example: false
-        lockReason:
-          type: string
-          description: Generic message informing tier to be locked due to some feature in use
-          example: ''
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorResponseBase1'
+          description: Additional details of cascading error messages.
+    Locale:
+      title: Locale
+      description: Locale code
+      type: string
+      example: en-US
+      minLength: 1
+      maxLength: 200
     paging.json:
       title: Paging
       required:
@@ -392,104 +307,6 @@ components:
           example: 2
         _links:
           $ref: '#/components/schemas/pagination-links.json'
-    event-weblink.json:
-      title: EventWeblink
-      description: Metadata for an event weblink.
-      type: object
-      properties:
-        name:
-          type: string
-          maxLength: 50
-          description: Name of the weblink, used by planners to identify the weblinks in their event.
-          example: VIP Registration
-        url:
-          type: string
-          format: uri
-          description: Short URL of the webpage.
-          example: https://cvent.me/XX51b9
-        landingPage:
-          type: string
-          description: The name of the webpage attendees will be directed to when using the weblink.
-          example: Registration
-        locale:
-          $ref: '#/components/schemas/locale.json'
-    event-features-paginated-response:
-      title: EventFeaturesPaginatedResponse
-      description: Paginated collection of event features.
-      required:
-      - data
-      - paging
-      type: object
-      properties:
-        paging:
-          $ref: '#/components/schemas/paging.json'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/event-feature.json'
-          description: Collection of event features
-    event-weblinks-paginated-response:
-      title: EventWeblinksPaginatedResponse
-      description: Paginated collection of event weblinks.
-      required:
-      - data
-      - paging
-      type: object
-      properties:
-        paging:
-          type: object
-          allOf:
-          - properties:
-              limit:
-                description: The number of records to return on the page, not to exceed 100.
-                example: 100
-          - $ref: '#/components/schemas/paging.json'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/event-weblink.json'
-          description: Collection of event weblinks.
-    event-feature.json:
-      title: EventFeature
-      description: Representation of an event's feature along with its properties
-      type: object
-      required:
-      - type
-      - locked
-      - enabled
-      properties:
-        type:
-          $ref: '#/components/schemas/feature-type.json'
-        enabled:
-          type: boolean
-          description: If a particular feature is enabled for the event
-          example: true
-        locked:
-          type: boolean
-          description: If a particular feature is locked to perform any mutation over it
-          example: true
-        lockedReason:
-          type: string
-          description: Generic message informing feature is locked due to some sub-feature/child feature in use
-          example: Your event is already using some Registration features
-        enabledTier:
-          $ref: '#/components/schemas/tier.json'
-        availableTiers:
-          description: Available feature tiers.
-          type: array
-          items:
-            $ref: '#/components/schemas/feature-tier.json'
-        config:
-          type: object
-          description: Feature configuration.
-          anyOf:
-          - $ref: '#/components/schemas/event-features-response/properties/config/anyOf/0'
-        weblink:
-          type: string
-          format: uri
-          readOnly: true
-          description: URL of the feature's webpage.
-          example: https://cvent.me/XX51b9
     locale.json:
       title: Locale
       description: Locale code
@@ -497,61 +314,6 @@ components:
       example: en-US
       minLength: 1
       maxLength: 200
-    pricing-config.json:
-      title: PricingConfig
-      description: Represents the configuration of the event's pricing feature.
-      type: object
-      required:
-      - enabled
-      properties:
-        enabled:
-          type: boolean
-          description: True enables pricing for the event.
-          example: true
-        invoicePrefix:
-          type: string
-          description: A prefix helps distinguish invoices for this event from those of other events.
-          example: EVE001
-          maxLength: 6
-        revenueGoal:
-          type: number
-          description: Revenue goal for the event.
-          example: 10000
-        merchantAccount:
-          type: string
-          description: Name of the merchant account associated with the event. This merchant account is where all event payments are deposited and refunds are withdrawn.
-          example: Event merchant account - USD
-          default: ''
-        currency:
-          type: string
-          description: The ISO 4217 standard format currency code representing the currency used for event pricing.
-          maxLength: 3
-          example: USD
-        allowedPaymentMethods:
-          type: array
-          description: Names of allowed payment methods for the merchant account. Not all options are valid for all merchants.
-          items:
-            $ref: '#/components/schemas/payment-method-type.json'
-          uniqueItems: true
-          example:
-          - Visa
-          - Diners Club
-          - Mastercard
-    ErrorResponse-12:
-      title: ErrorResponse
-      description: Represents an error response with additional details of cascading error messages.
-      allOf:
-      - $ref: '#/components/schemas/ErrorResponseBase1'
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        details:
-          type: array
-          items:
-            $ref: '#/components/schemas/ErrorResponseBase1'
-          description: Additional details of cascading error messages.
     feature-type.json:
       title: FeatureType
       description: 'The type of feature available for a container event.
@@ -611,6 +373,69 @@ components:
       - EventCredits
       - CreditsAndCertificates
       example: Registration
+    uuid-property:
+      title: UUID Property
+      description: A string that has to be a format matching the industry standard uuid
+      type: string
+      format: uuid
+      example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+    event-features-response:
+      title: EventFeature
+      description: Representation of an event's feature along with its properties
+      type: object
+      required:
+      - type
+      - locked
+      - enabled
+      properties:
+        type:
+          $ref: '#/components/schemas/feature-type.json'
+        enabled:
+          type: boolean
+          description: If a particular feature is enabled for the event
+          example: true
+        locked:
+          type: boolean
+          description: If a particular feature is locked to perform any mutation over it
+          example: true
+        lockedReason:
+          type: string
+          description: Generic message informing feature is locked due to some sub-feature/child feature in use
+          example: Your event is already using some Registration features
+        enabledTier:
+          $ref: '#/components/schemas/tier.json'
+        availableTiers:
+          description: Available feature tiers.
+          type: array
+          items:
+            $ref: '#/components/schemas/feature-tier.json'
+        config:
+          type: object
+          description: Feature configuration.
+          anyOf:
+          - title: RegistrationFeatureConfig
+            description: Denote the configuration for the registration feature.
+            type: object
+            properties:
+              pricing:
+                $ref: '#/components/schemas/pricing-config.json'
+        weblink:
+          type: string
+          format: uri
+          readOnly: true
+          description: URL of the feature's webpage.
+          example: https://cvent.me/XX51b9
+    pagination-links.json:
+      title: PaginationLinks
+      type: object
+      description: Represents pagination links for navigating between pages of data.
+      properties:
+        next:
+          $ref: '#/components/schemas/link.json'
+        self:
+          $ref: '#/components/schemas/link.json'
+        prev:
+          $ref: '#/components/schemas/link.json'
     ErrorResponseBase1:
       title: ErrorResponseBase
       type: object
@@ -642,6 +467,166 @@ components:
       - BASIC
       - PREMIUM
       example: PREMIER
+    feature-tier.json:
+      title: FeatureTier
+      description: Tier available for the feature
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          $ref: '#/components/schemas/tier.json'
+        locked:
+          type: boolean
+          description: If a particular tier is locked to perform any mutation over it
+          example: false
+        lockReason:
+          type: string
+          description: Generic message informing tier to be locked due to some feature in use
+          example: ''
+    event-feature-launch-request:
+      title: EventFeaturesLaunchRequest
+      description: Event-features launch request parameters.
+      type: object
+      properties:
+        deleteTestData:
+          description: True keeps email data collected in test mode, prior to the registration feature being launched.
+          type: boolean
+          default: false
+    event-weblinks-paginated-response:
+      title: EventWeblinksPaginatedResponse
+      description: Paginated collection of event weblinks.
+      required:
+      - data
+      - paging
+      type: object
+      properties:
+        paging:
+          type: object
+          allOf:
+          - properties:
+              limit:
+                description: The number of records to return on the page, not to exceed 100.
+                example: 100
+          - $ref: '#/components/schemas/paging.json'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/event-weblink.json'
+          description: Collection of event weblinks.
+    link.json:
+      title: Link
+      required:
+      - href
+      type: object
+      description: Represents a link to a related resource.
+      properties:
+        href:
+          type: string
+          description: A url provided that can be followed for linking
+          example: ?token=90c5f062-76ad-4ea4-aa53-00eb698d9262
+    pricing-config.json:
+      title: PricingConfig
+      description: Represents the configuration of the event's pricing feature.
+      type: object
+      required:
+      - enabled
+      properties:
+        enabled:
+          type: boolean
+          description: True enables pricing for the event.
+          example: true
+        invoicePrefix:
+          type: string
+          description: A prefix helps distinguish invoices for this event from those of other events.
+          example: EVE001
+          maxLength: 6
+        revenueGoal:
+          type: number
+          description: Revenue goal for the event.
+          example: 10000
+        merchantAccount:
+          type: string
+          description: Name of the merchant account associated with the event. This merchant account is where all event payments are deposited and refunds are withdrawn.
+          example: Event merchant account - USD
+          default: ''
+        currency:
+          type: string
+          description: The ISO 4217 standard format currency code representing the currency used for event pricing.
+          maxLength: 3
+          example: USD
+        allowedPaymentMethods:
+          type: array
+          description: Names of allowed payment methods for the merchant account. Not all options are valid for all merchants.
+          items:
+            $ref: '#/components/schemas/payment-method-type.json'
+          uniqueItems: true
+          example:
+          - Visa
+          - Diners Club
+          - Mastercard
+    event-weblink.json:
+      title: EventWeblink
+      description: Metadata for an event weblink.
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 50
+          description: Name of the weblink, used by planners to identify the weblinks in their event.
+          example: VIP Registration
+        url:
+          type: string
+          format: uri
+          description: Short URL of the webpage.
+          example: https://cvent.me/XX51b9
+        landingPage:
+          type: string
+          description: The name of the webpage attendees will be directed to when using the weblink.
+          example: Registration
+        locale:
+          $ref: '#/components/schemas/locale.json'
+    event-feature.json:
+      title: EventFeature
+      description: Representation of an event's feature along with its properties
+      type: object
+      required:
+      - type
+      - locked
+      - enabled
+      properties:
+        type:
+          $ref: '#/components/schemas/feature-type.json'
+        enabled:
+          type: boolean
+          description: If a particular feature is enabled for the event
+          example: true
+        locked:
+          type: boolean
+          description: If a particular feature is locked to perform any mutation over it
+          example: true
+        lockedReason:
+          type: string
+          description: Generic message informing feature is locked due to some sub-feature/child feature in use
+          example: Your event is already using some Registration features
+        enabledTier:
+          $ref: '#/components/schemas/tier.json'
+        availableTiers:
+          description: Available feature tiers.
+          type: array
+          items:
+            $ref: '#/components/schemas/feature-tier.json'
+        config:
+          type: object
+          description: Feature configuration.
+          anyOf:
+          - $ref: '#/components/schemas/event-features-response/properties/config/anyOf/0'
+        weblink:
+          type: string
+          format: uri
+          readOnly: true
+          description: URL of the feature's webpage.
+          example: https://cvent.me/XX51b9
     feature-update:
       title: FeatureUpdate
       description: Representation of an event feature update request
@@ -663,6 +648,21 @@ components:
           description: Feature configuration.
           anyOf:
           - $ref: '#/components/schemas/event-features-response/properties/config/anyOf/0'
+    event-features-paginated-response:
+      title: EventFeaturesPaginatedResponse
+      description: Paginated collection of event features.
+      required:
+      - data
+      - paging
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/paging.json'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/event-feature.json'
+          description: Collection of event features
   parameters:
     launch-feature-type:
       name: type
@@ -671,43 +671,6 @@ components:
       required: true
       schema:
         $ref: '#/components/schemas/launch-feature-type.json'
-    locale2:
-      name: locale
-      required: false
-      description: Locale code in IETF Language tag format. Indicates desired locale of return values.
-      in: query
-      schema:
-        $ref: '#/components/schemas/Locale'
-    limit:
-      name: limit
-      in: query
-      description: The maximum number of records to return per page.
-      style: form
-      explode: true
-      schema:
-        maximum: 200
-        minimum: 1
-        type: integer
-        default: 100
-        example: 100
-    type:
-      name: type
-      in: path
-      description: String containing event feature type
-      required: true
-      schema:
-        $ref: '#/components/schemas/feature-type.json'
-    limit-100:
-      name: limit
-      in: query
-      description: The maximum number of records to return per page.
-      style: form
-      explode: true
-      schema:
-        maximum: 100
-        minimum: 1
-        type: integer
-        default: 100
     token:
       name: token
       in: query
@@ -721,6 +684,18 @@ components:
       schema:
         type: string
         example: 0e28af57-511f-47ab-ae46-46cd1ca51a1a
+    limit:
+      name: limit
+      in: query
+      description: The maximum number of records to return per page.
+      style: form
+      explode: true
+      schema:
+        maximum: 200
+        minimum: 1
+        type: integer
+        default: 100
+        example: 100
     id10:
       in: path
       name: id
@@ -728,25 +703,32 @@ components:
       required: true
       schema:
         $ref: '#/components/schemas/uuid-property'
+    locale2:
+      name: locale
+      required: false
+      description: Locale code in IETF Language tag format. Indicates desired locale of return values.
+      in: query
+      schema:
+        $ref: '#/components/schemas/Locale'
+    limit-100:
+      name: limit
+      in: query
+      description: The maximum number of records to return per page.
+      style: form
+      explode: true
+      schema:
+        maximum: 100
+        minimum: 1
+        type: integer
+        default: 100
+    type:
+      name: type
+      in: path
+      description: String containing event feature type
+      required: true
+      schema:
+        $ref: '#/components/schemas/feature-type.json'
   responses:
-    BadRequest1:
-      description: Bad request
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 400
-            message: Bad Request
-    TooManyRequests1:
-      description: Too many requests
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 429
-            message: Limit Exceeded
     NotFound1:
       description: Resource not found
       content:
@@ -756,15 +738,15 @@ components:
           example:
             code: 404
             message: Not found
-    Unauthorized1:
-      description: Bad or expired token
+    BadRequest1:
+      description: Bad request
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse-12'
           example:
-            code: 401
-            message: Unauthorized
+            code: 400
+            message: Bad Request
     Forbidden1:
       description: You do not have access to the resource
       content:
@@ -774,6 +756,24 @@ components:
           example:
             code: 403
             message: Access Forbidden
+    Unauthorized1:
+      description: Bad or expired token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 401
+            message: Unauthorized
+    TooManyRequests1:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 429
+            message: Limit Exceeded
   securitySchemes:
     OAuth2.authorizationCode:
       type: oauth2

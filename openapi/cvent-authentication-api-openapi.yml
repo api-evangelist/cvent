@@ -191,106 +191,6 @@ paths:
         url: '#oauth2-auth-code-planner-admin'
 components:
   schemas:
-    Oauth2TokenPostResponse-0:
-      type: object
-      properties:
-        error_description:
-          type: string
-          description: Additional error information, when available.
-        error:
-          type: string
-          description: '**invalid_request**
-
-
-            The request is missing a required parameter, includes an unsupported parameter value (other than unsupported_grant_type), or is otherwise malformed. For example, grant_type is refresh_token but refresh_token is not included.
-
-
-            **invalid_client**
-
-
-            Client authentication failed. For example, when the client includes client_id and client_secret in the authorization header, but there''s no such client with that client_id and client_secret.
-
-
-            **invalid_grant**
-
-
-            Refresh token has been revoked.
-
-
-            Authorization code has been consumed already or does not exist.
-
-
-            **unauthorized_client**
-
-
-            Client is not allowed for code grant flow or for refreshing tokens.
-
-
-            **unsupported_grant_type**
-
-
-            Returned if grant_type is anything other than authorization_code or refresh_token.
-
-            '
-          enum:
-          - invalid_request
-          - invalid_client
-          - invalid_grant
-          - unauthorized_client
-          - unsupported_grant_type
-          example: invalid_request
-    ErrorResponse-12:
-      title: ErrorResponse
-      description: Represents an error response with additional details of cascading error messages.
-      allOf:
-      - $ref: '#/components/schemas/ErrorResponseBase1'
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        details:
-          type: array
-          items:
-            $ref: '#/components/schemas/ErrorResponseBase1'
-          description: Additional details of cascading error messages.
-    Oauth2TokenPostResponse:
-      type: object
-      properties:
-        access_token:
-          type: string
-          description: The access token contains scopes and groups and is used to grant access to authorized resources.
-          example: eyJz9sdfsdfsdfsd
-        refresh_token:
-          type: string
-          description: The refresh token contains the information necessary to obtain a new access token.
-          example: dn43ud8uj32nk2je
-        token_type:
-          type: string
-          description: The OAuth2 token type. Always `Bearer`.
-          example: Bearer
-        expires_in:
-          type: integer
-          description: The lifetime in seconds of the access token.
-          default: 3600
-          example: 3600
-      required:
-      - access_token
-      - token_type
-      - expires_in
-    ValidToken:
-      title: Valid Token
-      description: Validity status of an authentication token.
-      type: object
-      properties:
-        tokenValid:
-          type: boolean
-          description: True indicates the presented authentication token is valid.
-          example: true
-        statusCode:
-          type: integer
-          description: Supplementary status code. Typically will be 200 for a success case.
-          example: 200
     Oauth2TokenApplicationXWwwFormUrlencodedPostRequest:
       type: object
       properties:
@@ -351,6 +251,58 @@ components:
       required:
       - grant_type
       - client_id
+    ErrorResponse-12:
+      title: ErrorResponse
+      description: Represents an error response with additional details of cascading error messages.
+      allOf:
+      - $ref: '#/components/schemas/ErrorResponseBase1'
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorResponseBase1'
+          description: Additional details of cascading error messages.
+    ValidToken:
+      title: Valid Token
+      description: Validity status of an authentication token.
+      type: object
+      properties:
+        tokenValid:
+          type: boolean
+          description: True indicates the presented authentication token is valid.
+          example: true
+        statusCode:
+          type: integer
+          description: Supplementary status code. Typically will be 200 for a success case.
+          example: 200
+    Oauth2TokenPostResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+          description: The access token contains scopes and groups and is used to grant access to authorized resources.
+          example: eyJz9sdfsdfsdfsd
+        refresh_token:
+          type: string
+          description: The refresh token contains the information necessary to obtain a new access token.
+          example: dn43ud8uj32nk2je
+        token_type:
+          type: string
+          description: The OAuth2 token type. Always `Bearer`.
+          example: Bearer
+        expires_in:
+          type: integer
+          description: The lifetime in seconds of the access token.
+          default: 3600
+          example: 3600
+      required:
+      - access_token
+      - token_type
+      - expires_in
     ErrorResponseBase1:
       title: ErrorResponseBase
       type: object
@@ -371,16 +323,55 @@ components:
           type: string
           description: The target resource of the error.
           example: example target
+    Oauth2TokenPostResponse-0:
+      type: object
+      properties:
+        error_description:
+          type: string
+          description: Additional error information, when available.
+        error:
+          type: string
+          description: '**invalid_request**
+
+
+            The request is missing a required parameter, includes an unsupported parameter value (other than unsupported_grant_type), or is otherwise malformed. For example, grant_type is refresh_token but refresh_token is not included.
+
+
+            **invalid_client**
+
+
+            Client authentication failed. For example, when the client includes client_id and client_secret in the authorization header, but there''s no such client with that client_id and client_secret.
+
+
+            **invalid_grant**
+
+
+            Refresh token has been revoked.
+
+
+            Authorization code has been consumed already or does not exist.
+
+
+            **unauthorized_client**
+
+
+            Client is not allowed for code grant flow or for refreshing tokens.
+
+
+            **unsupported_grant_type**
+
+
+            Returned if grant_type is anything other than authorization_code or refresh_token.
+
+            '
+          enum:
+          - invalid_request
+          - invalid_client
+          - invalid_grant
+          - unauthorized_client
+          - unsupported_grant_type
+          example: invalid_request
   responses:
-    Unauthorized1:
-      description: Bad or expired token
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 401
-            message: Unauthorized
     Forbidden1:
       description: You do not have access to the resource
       content:
@@ -390,22 +381,6 @@ components:
           example:
             code: 403
             message: Access Forbidden
-    ValidToken:
-      description: A confirmation message that the token is valid
-      headers: {}
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ValidToken'
-    TooManyRequests1:
-      description: Too many requests
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse-12'
-          example:
-            code: 429
-            message: Limit Exceeded
     BadRequest1:
       description: Bad request
       content:
@@ -415,6 +390,31 @@ components:
           example:
             code: 400
             message: Bad Request
+    ValidToken:
+      description: A confirmation message that the token is valid
+      headers: {}
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ValidToken'
+    Unauthorized1:
+      description: Bad or expired token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 401
+            message: Unauthorized
+    TooManyRequests1:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse-12'
+          example:
+            code: 429
+            message: Limit Exceeded
   securitySchemes:
     OAuth2.authorizationCode:
       type: oauth2
