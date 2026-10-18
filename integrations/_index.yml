@@ -173,5 +173,5 @@
     - connectors/applications/cvent
     vendor_link: https://www.cvent.com/
     builder: Fivetran
-  status: pending-generation
+  status: not-a-workflow
   arazzo: null
