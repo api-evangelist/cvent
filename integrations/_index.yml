@@ -55,7 +55,9 @@
   use_case: For each new Cvent session marked virtual, auto-create the corresponding Zoom meeting and write the
     join URL back so attendees see the right link in their itinerary.
   source: curated
-  status: pending-generation
+  status: not-a-workflow
+  evidence: https://marketplace.zoom.us/apps/UKb_gycmQ5-iKIO8sjk8cQ
+  type: marketplace
   arazzo: null
 - slug: cvent-microsoft-teams
   label: Create Microsoft Teams events for Cvent webcasts
@@ -146,4 +148,30 @@
     other_apps:
     - cvent-webinar
   status: not-a-workflow
+  arazzo: null
+- slug: cvent-fivetran
+  label: Fivetran
+  partner: fivetran
+  partner_name: Fivetran
+  type: marketplace
+  marketplace: fivetran-connectors
+  channel: elt-connector
+  evidence: https://fivetran.com/docs/connectors/applications/cvent
+  source: edge
+  relationship: ipaas-bridge
+  contract_reference:
+    register: Fivetran connectors (fivetran.com/docs/connectors, docs-sitemap.xml + Partner-Built program)
+    spec_file: null
+    role: elt-connector:fivetran
+    registered_name: Cvent
+    matched_domain: cvent.com
+    matched_by: domain+name-among-holders
+    detected_by: sweep-data-integration.py
+    detected: '2026-10-18'
+    signal_note: one edge per (provider, platform); connectors, streams, packages and usage are context, never read
+    connector_paths:
+    - connectors/applications/cvent
+    vendor_link: https://www.cvent.com/
+    builder: Fivetran
+  status: pending-generation
   arazzo: null

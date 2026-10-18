@@ -53,10 +53,28 @@ edges:
     builder: Fivetran
   detected_by: sweep-data-integration.py
   first_seen: '2026-10-18'
+- partner_name: Zoom (own)
+  partner: zoom
+  partner_match: mirror
+  mirror_match: domain+name-among-holders
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://marketplace.zoom.us/apps/UKb_gycmQ5-iKIO8sjk8cQ
+  mirror_of: zoom/integrations/zoom-integration-edges.yml
+  apps:
+  - Cvent for Zoom Meetings and Webinars
+  listing_count: 1
+  detected: '2026-10-18'
+  detected_by: mirror-platform-listings.py
+  category: Zoom app
 method: searched
 checked:
 - https://fivetran.com/docs-sitemap.xml
 - https://fivetran.com/docs/connectors/partner-built-program
 - https://zapier.com/api/v4/apps/
+- zoom/integrations/zoom-integration-edges.yml
 source:
 - https://zapier.com/api/v4/apps/
