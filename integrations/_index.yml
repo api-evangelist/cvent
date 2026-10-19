@@ -227,3 +227,16 @@
     detected: '2026-10-18'
   status: not-a-workflow
   arazzo: null
+- slug: cvent-brightcove-own
+  label: Brightcove (own)
+  partner: brightcove
+  partner_name: Brightcove (own)
+  category: Content Distribution & Storage
+  type: marketplace
+  marketplace: own
+  channel: partner-built
+  evidence: https://marketplace.brightcove.com/partners/cvent-event-management-marketing
+  source: edge
+  relationship: platform-app
+  status: not-a-workflow
+  arazzo: null

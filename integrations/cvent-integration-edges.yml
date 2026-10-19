@@ -122,10 +122,28 @@ edges:
     detected: '2026-10-18'
   detected_by: sweep-events-ticketing.py
   detected: '2026-10-18'
+- partner_name: Brightcove (own)
+  partner: brightcove
+  partner_match: mirror
+  mirror_match: domain+name-among-holders
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://marketplace.brightcove.com/partners/cvent-event-management-marketing
+  mirror_of: brightcove/integrations/brightcove-integration-edges.yml
+  apps:
+  - Cvent Event Management & Marketing
+  listing_count: 1
+  detected: '2026-10-18'
+  detected_by: mirror-platform-listings.py
+  category: Content Distribution & Storage
 method: searched
 checked:
 - https://fivetran.com/docs-sitemap.xml
 - https://fivetran.com/docs/connectors/partner-built-program
+- https://marketplace.brightcove.com/llms.txt
 - https://marketplace.cvent.com/api/marketplace/v1/listing
 - https://zapier.com/api/v4/apps/
 - zoom/integrations/zoom-integration-edges.yml
