@@ -70,11 +70,74 @@ edges:
   detected: '2026-10-18'
   detected_by: mirror-platform-listings.py
   category: Zoom app
+- partner_name: Verbit
+  app: 'Verbit for Cvent: Smarter Captions. Stronger Connections'
+  partner: verbit
+  partner_match: domain
+  type: marketplace
+  marketplace: own
+  channel: partner-built
+  relationship: platform-app
+  direction: partner-built
+  evidence: https://marketplace.cvent.com/apps/449008/verbit-for-cvent-smarter-captions-stronger-connections
+  category: Cvent app
+  contract_reference:
+    register: Cvent App Marketplace (marketplace.cvent.com AppDirect listing + products JSON)
+    spec_file: null
+    role: cvent-app
+    registered_name: Verbit
+    matched_domain: verbit.ai
+    matched_by: domain
+    listings: 1
+    sample_apps:
+    - 'Verbit for Cvent: Smarter Captions. Stronger Connections'
+    signal_note: one edge per (builder, platform); listings are context, never read
+    detected_by: sweep-events-ticketing.py
+    detected: '2026-10-18'
+  detected_by: sweep-events-ticketing.py
+  detected: '2026-10-18'
+- partner_name: American Express Corporate Meeting Payment Solutions
+  app: American Express Corporate Meeting Payment Solutions
+  partner: american-express
+  partner_match: domain+name-among-holders
+  type: marketplace
+  marketplace: own
+  channel: provider-built
+  relationship: platform-app
+  direction: provider-built
+  evidence: https://marketplace.cvent.com/apps/365715/american-express-corporate-meeting-payment-solutions
+  category: Cvent app
+  contract_reference:
+    register: Cvent App Marketplace (marketplace.cvent.com AppDirect listing + products JSON)
+    spec_file: null
+    role: cvent-provider-built-app
+    registered_name: Cvent
+    matched_domain: americanexpress.com
+    matched_by: domain+name-among-holders
+    listings: 1
+    sample_apps:
+    - American Express Corporate Meeting Payment Solutions
+    signal_note: one edge per (builder, platform); listings are context, never read
+    detected_by: sweep-events-ticketing.py
+    detected: '2026-10-18'
+  detected_by: sweep-events-ticketing.py
+  detected: '2026-10-18'
 method: searched
 checked:
 - https://fivetran.com/docs-sitemap.xml
 - https://fivetran.com/docs/connectors/partner-built-program
+- https://marketplace.cvent.com/api/marketplace/v1/listing
 - https://zapier.com/api/v4/apps/
 - zoom/integrations/zoom-integration-edges.yml
 source:
 - https://zapier.com/api/v4/apps/
+marketplace_apps:
+- marketplace: own
+  channel: partner-built
+  app: cvent
+  url: https://marketplace.cvent.com/en-US/listings
+  app_count: 81
+  adapter: sweep-events-ticketing.py:AppDirect api/marketplace/v1/listing + /products/<id> (developerName, referUrl,
+    support, privacy, terms)
+  listed: 2
+  note: 81 listings read; only domain-linked builders / vendors are written

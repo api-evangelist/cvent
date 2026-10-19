@@ -175,3 +175,55 @@
     builder: Fivetran
   status: not-a-workflow
   arazzo: null
+- slug: cvent-verbit
+  label: Verbit
+  partner: verbit
+  partner_name: Verbit
+  category: Cvent app
+  type: marketplace
+  marketplace: own
+  channel: partner-built
+  evidence: https://marketplace.cvent.com/apps/449008/verbit-for-cvent-smarter-captions-stronger-connections
+  source: edge
+  relationship: platform-app
+  contract_reference:
+    register: Cvent App Marketplace (marketplace.cvent.com AppDirect listing + products JSON)
+    spec_file: null
+    role: cvent-app
+    registered_name: Verbit
+    matched_domain: verbit.ai
+    matched_by: domain
+    listings: 1
+    sample_apps:
+    - 'Verbit for Cvent: Smarter Captions. Stronger Connections'
+    signal_note: one edge per (builder, platform); listings are context, never read
+    detected_by: sweep-events-ticketing.py
+    detected: '2026-10-18'
+  status: not-a-workflow
+  arazzo: null
+- slug: cvent-american-express-corporate-meeting-payment-solutions
+  label: American Express Corporate Meeting Payment Solutions
+  partner: american-express
+  partner_name: American Express Corporate Meeting Payment Solutions
+  category: Cvent app
+  type: marketplace
+  marketplace: own
+  channel: provider-built
+  evidence: https://marketplace.cvent.com/apps/365715/american-express-corporate-meeting-payment-solutions
+  source: edge
+  relationship: platform-app
+  contract_reference:
+    register: Cvent App Marketplace (marketplace.cvent.com AppDirect listing + products JSON)
+    spec_file: null
+    role: cvent-provider-built-app
+    registered_name: Cvent
+    matched_domain: americanexpress.com
+    matched_by: domain+name-among-holders
+    listings: 1
+    sample_apps:
+    - American Express Corporate Meeting Payment Solutions
+    signal_note: one edge per (builder, platform); listings are context, never read
+    detected_by: sweep-events-ticketing.py
+    detected: '2026-10-18'
+  status: not-a-workflow
+  arazzo: null
