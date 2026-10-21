@@ -27,23 +27,6 @@ edges:
     - cvent-webinar
   detected_by: sweep-workflow-automation.py
   first_seen: '2026-10-15'
-- partner_name: Zoom (own)
-  partner: zoom
-  partner_match: mirror
-  mirror_match: domain+name-among-holders
-  type: marketplace
-  relationship: platform-app
-  direction: third-party
-  channel: partner-built
-  marketplace: own
-  evidence: https://marketplace.zoom.us/apps/UKb_gycmQ5-iKIO8sjk8cQ
-  mirror_of: zoom/integrations/zoom-integration-edges.yml
-  apps:
-  - Cvent for Zoom Meetings and Webinars
-  listing_count: 1
-  detected: '2026-10-18'
-  detected_by: mirror-platform-listings.py
-  category: Zoom app
 - partner_name: Verbit
   app: 'Verbit for Cvent: Smarter Captions. Stronger Connections'
   partner: verbit
@@ -96,23 +79,6 @@ edges:
     detected: '2026-10-18'
   detected_by: sweep-events-ticketing.py
   detected: '2026-10-18'
-- partner_name: Brightcove (own)
-  partner: brightcove
-  partner_match: mirror
-  mirror_match: domain+name-among-holders
-  type: marketplace
-  relationship: platform-app
-  direction: third-party
-  channel: partner-built
-  marketplace: own
-  evidence: https://marketplace.brightcove.com/partners/cvent-event-management-marketing
-  mirror_of: brightcove/integrations/brightcove-integration-edges.yml
-  apps:
-  - Cvent Event Management & Marketing
-  listing_count: 1
-  detected: '2026-10-18'
-  detected_by: mirror-platform-listings.py
-  category: Content Distribution & Storage
 - partner_name: Maven Central
   partner: maven-central
   partner_match: register
@@ -259,8 +225,60 @@ edges:
     detected: '2026-10-20'
   detected_by: sweep-compliance-assurance.py
   first_seen: '2026-10-20'
+- partner_name: Zoom (own)
+  partner: zoom
+  partner_match: mirror
+  mirror_match: domain+name-among-holders
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://marketplace.zoom.us/apps/UKb_gycmQ5-iKIO8sjk8cQ
+  mirror_of: zoom/integrations/zoom-integration-edges.yml
+  apps:
+  - Cvent for Zoom Meetings and Webinars
+  listing_count: 1
+  detected: '2026-10-18'
+  detected_by: mirror-platform-listings.py
+  category: Zoom app
+- partner_name: Brightcove (own)
+  partner: brightcove
+  partner_match: mirror
+  mirror_match: domain+name-among-holders
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://marketplace.brightcove.com/partners/cvent-event-management-marketing
+  mirror_of: brightcove/integrations/brightcove-integration-edges.yml
+  apps:
+  - Cvent Event Management & Marketing
+  listing_count: 1
+  detected: '2026-10-18'
+  detected_by: mirror-platform-listings.py
+  category: Content Distribution & Storage
+- partner_name: HubSpot (own)
+  partner: hubspot
+  partner_match: mirror
+  mirror_match: domain+name-among-holders
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://ecosystem.hubspot.com/marketplace/listing/cvent-1018074
+  mirror_of: hubspot/integrations/hubspot-integration-edges.yml
+  apps:
+  - Cvent
+  listing_count: 1
+  detected: '2026-10-21'
+  detected_by: mirror-platform-listings.py
+  category: EVENT_MANAGEMENT
 method: searched
 checked:
+- brightcove/integrations/brightcove-integration-edges.yml
 - https://api.nuget.org/v3
 - https://cloudsecurityalliance.org/star/registry
 - https://crates.io/api/v1
@@ -276,6 +294,7 @@ checked:
 - https://rubygems.org/api/v1
 - https://zapier.com/api/v4/apps/
 - zoom/integrations/zoom-integration-edges.yml
+- hubspot/integrations/hubspot-integration-edges.yml
 source:
 - https://zapier.com/api/v4/apps/
 marketplace_apps:
