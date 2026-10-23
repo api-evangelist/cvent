@@ -43,8 +43,8 @@ artifacts:
     method: unknown
     evidence: no authorship recorded
   integrations/_index.yml:
-    method: unknown
-    evidence: no authorship recorded
+    method: generated
+    evidence: carries an API Evangelist house phrase
   integrations/cvent-eloqua.yaml:
     method: unknown
     evidence: no authorship recorded
@@ -52,6 +52,9 @@ artifacts:
     method: unknown
     evidence: no authorship recorded
   integrations/cvent-hubspot.yaml:
+    method: unknown
+    evidence: no authorship recorded
+  integrations/cvent-integration-edges.yml:
     method: unknown
     evidence: no authorship recorded
   integrations/cvent-mailchimp.yaml:
@@ -84,127 +87,7 @@ artifacts:
   integrations/cvent-zoom.yaml:
     method: unknown
     evidence: no authorship recorded
-  kin/checks-2026-09-24T161608.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-25T125852.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-25T133943.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-25T143147.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-25T154045.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-26T215308.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-27T094438.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-27T103455.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-27T123021.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-27T132314.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-27T140727.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-28T221322.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-29T213958.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-29T230545.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-30T203505.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-30T220315.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-31T223420.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-01T063623.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-01T210448.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-01T222808.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-02T211804.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-02T224043.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-03T161828.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-03T174231.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-04T062714.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-04T212454.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-04T224856.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-05T055819.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-05T072335.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-05T144739.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-05T195450.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-05T211839.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-06T011047.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-06T211804.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-06T224210.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-07T200636.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-07T213054.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-08T214843.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-08T232836.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-10T204815.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-10T222408.yml:
+  kin/checks-2026-10-11T110117.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
   kin/score-2026-09-12T062655.yml:
@@ -286,6 +169,21 @@ artifacts:
     method: generated
     evidence: Kin Score snapshot written by score.rb
   kin/score-2026-09-24T161608.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-25T210408.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-25T232841.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-10-03T000835.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-10-03T024842.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-10-11T110117.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
   lifecycle/cvent-lifecycle.yml:
@@ -473,21 +371,189 @@ artifacts:
   openapi/cvent-webcasts-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  overlays/cvent-appointments-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/cvent-attendee-activities-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/cvent-attendee-insights-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/cvent-attendee-messages-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/cvent-attendees-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/cvent-audience-segments-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/cvent-authentication-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/cvent-badge-print-job-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/cvent-badge-printer-pools-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/cvent-budget-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/cvent-bulk-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/cvent-campaigns-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/cvent-card-tokens-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/cvent-compliance-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/cvent-contacts-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/cvent-custom-fields-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
   overlays/cvent-description-overlay.yaml:
     method: unknown
     evidence: no authorship recorded
+  overlays/cvent-discounts-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/cvent-emails-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/cvent-event-credits-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/cvent-event-features-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/cvent-event-role-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/cvent-event-travel-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/cvent-events-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/cvent-events-hub-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/cvent-exhibitor-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/cvent-exhibitor-content-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/cvent-exhibitor-team-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/cvent-file-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/cvent-hooks-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/cvent-housing-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/cvent-housing-hotels-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/cvent-leads-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/cvent-meeting-request-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
   overlays/cvent-operation-level-pagination-overlay.yaml:
     method: unknown
     evidence: no authorship recorded
+  overlays/cvent-orders-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/cvent-process-form-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/cvent-proposal-draft-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
   overlays/cvent-public-overlay.yaml:
     method: unknown
     evidence: no authorship recorded
   overlays/cvent-retries-overlay.yaml:
     method: unknown
     evidence: no authorship recorded
+  overlays/cvent-rfp-additional-details-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/cvent-rfp-management-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/cvent-rfp-requirements-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/cvent-rfp-suppliers-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/cvent-seating-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
   overlays/cvent-segments-error-response-overlay.yaml:
     method: unknown
     evidence: no authorship recorded
+  overlays/cvent-sessions-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/cvent-signatures-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/cvent-speakers-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/cvent-surveys-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/cvent-transactions-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/cvent-travel-accounts-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/cvent-travel-rfps-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/cvent-travel-suppliers-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/cvent-usage-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/cvent-user-scim-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/cvent-users-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/cvent-venue-meeting-rooms-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/cvent-venue-profiles-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/cvent-video-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/cvent-webcasts-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
   packages/cvent-packages.yml:
     method: searched
     evidence: declared in the artifact
