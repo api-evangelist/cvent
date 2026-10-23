@@ -30,7 +30,9 @@
   use_case: Stream Cvent attendee status changes (registered, attended, no-show) into Marketo as Program Member
     Status updates so nurture flows fire on real event behavior.
   source: curated
-  status: pending-generation
+  status: not-a-workflow
+  evidence: https://exchange.adobe.com/apps/ec/106398
+  type: marketplace
   arazzo: null
 - slug: cvent-eloqua
   label: Sync Cvent contacts and registrations to Eloqua
@@ -352,19 +354,6 @@
     detected: '2026-10-20'
   status: not-a-workflow
   arazzo: null
-- slug: cvent-brightcove-own
-  label: Brightcove (own)
-  partner: brightcove
-  partner_name: Brightcove (own)
-  category: Content Distribution & Storage
-  type: marketplace
-  marketplace: own
-  channel: partner-built
-  evidence: https://marketplace.brightcove.com/partners/cvent-event-management-marketing
-  source: edge
-  relationship: platform-app
-  status: not-a-workflow
-  arazzo: null
 - slug: cvent-uk-g-cloud-14-digital-marketplace
   label: UK G-Cloud 14 (Digital Marketplace)
   partner_name: UK G-Cloud 14 (Digital Marketplace)
@@ -442,5 +431,18 @@
       lapsed: false
     detected_by: sweep-tx-ramp-certified-cloud.py
     detected: '2026-10-22'
+  status: not-a-workflow
+  arazzo: null
+- slug: cvent-brightcove-own
+  label: Brightcove (own)
+  partner: brightcove
+  partner_name: Brightcove (own)
+  category: Content Distribution & Storage
+  type: marketplace
+  marketplace: own
+  channel: partner-built
+  evidence: https://marketplace.brightcove.com/partners/cvent-event-management-marketing
+  source: edge
+  relationship: platform-app
   status: not-a-workflow
   arazzo: null

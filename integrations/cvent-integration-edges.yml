@@ -225,57 +225,6 @@ edges:
     detected: '2026-10-20'
   detected_by: sweep-compliance-assurance.py
   first_seen: '2026-10-20'
-- partner_name: Zoom (own)
-  partner: zoom
-  partner_match: mirror
-  mirror_match: domain+name-among-holders
-  type: marketplace
-  relationship: platform-app
-  direction: third-party
-  channel: partner-built
-  marketplace: own
-  evidence: https://marketplace.zoom.us/apps/UKb_gycmQ5-iKIO8sjk8cQ
-  mirror_of: zoom/integrations/zoom-integration-edges.yml
-  apps:
-  - Cvent for Zoom Meetings and Webinars
-  listing_count: 1
-  detected: '2026-10-18'
-  detected_by: mirror-platform-listings.py
-  category: Zoom app
-- partner_name: Brightcove (own)
-  partner: brightcove
-  partner_match: mirror
-  mirror_match: domain+name-among-holders
-  type: marketplace
-  relationship: platform-app
-  direction: third-party
-  channel: partner-built
-  marketplace: own
-  evidence: https://marketplace.brightcove.com/partners/cvent-event-management-marketing
-  mirror_of: brightcove/integrations/brightcove-integration-edges.yml
-  apps:
-  - Cvent Event Management & Marketing
-  listing_count: 1
-  detected: '2026-10-18'
-  detected_by: mirror-platform-listings.py
-  category: Content Distribution & Storage
-- partner_name: HubSpot (own)
-  partner: hubspot
-  partner_match: mirror
-  mirror_match: domain+name-among-holders
-  type: marketplace
-  relationship: platform-app
-  direction: third-party
-  channel: partner-built
-  marketplace: own
-  evidence: https://ecosystem.hubspot.com/marketplace/listing/cvent-1018074
-  mirror_of: hubspot/integrations/hubspot-integration-edges.yml
-  apps:
-  - Cvent
-  listing_count: 1
-  detected: '2026-10-21'
-  detected_by: mirror-platform-listings.py
-  category: EVENT_MANAGEMENT
 - partner_name: UK G-Cloud 14 (Digital Marketplace)
   partner: null
   partner_match: register
@@ -356,6 +305,74 @@ edges:
     detected: '2026-10-22'
   detected_by: sweep-tx-ramp-certified-cloud.py
   first_seen: '2026-10-22'
+- partner_name: Zoom (own)
+  partner: zoom
+  partner_match: mirror
+  mirror_match: domain+name-among-holders
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://marketplace.zoom.us/apps/UKb_gycmQ5-iKIO8sjk8cQ
+  mirror_of: zoom/integrations/zoom-integration-edges.yml
+  apps:
+  - Cvent for Zoom Meetings and Webinars
+  listing_count: 1
+  detected: '2026-10-18'
+  detected_by: mirror-platform-listings.py
+  category: Zoom app
+- partner_name: Brightcove (own)
+  partner: brightcove
+  partner_match: mirror
+  mirror_match: domain+name-among-holders
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://marketplace.brightcove.com/partners/cvent-event-management-marketing
+  mirror_of: brightcove/integrations/brightcove-integration-edges.yml
+  apps:
+  - Cvent Event Management & Marketing
+  listing_count: 1
+  detected: '2026-10-18'
+  detected_by: mirror-platform-listings.py
+  category: Content Distribution & Storage
+- partner_name: HubSpot (own)
+  partner: hubspot
+  partner_match: mirror
+  mirror_match: domain+name-among-holders
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://ecosystem.hubspot.com/marketplace/listing/cvent-1018074
+  mirror_of: hubspot/integrations/hubspot-integration-edges.yml
+  apps:
+  - Cvent
+  listing_count: 1
+  detected: '2026-10-21'
+  detected_by: mirror-platform-listings.py
+  category: EVENT_MANAGEMENT
+- partner_name: Marketo (own)
+  partner: marketo
+  partner_match: mirror
+  mirror_match: domain+name-among-holders
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://exchange.adobe.com/apps/ec/106398
+  mirror_of: marketo/integrations/marketo-integration-edges.yml
+  apps:
+  - Cvent Event Marketing and Management
+  listing_count: 1
+  detected: '2026-10-23'
+  detected_by: mirror-platform-listings.py
+  category: Adobe Exchange Experience Cloud listing (Marketo Engage)
 method: searched
 checked:
 - brightcove/integrations/brightcove-integration-edges.yml
@@ -380,6 +397,7 @@ checked:
 - https://www.crowncommercial.gov.uk/agreements
 - https://www.ncsc.gov.uk/cyberessentials/search
 - https://dir.texas.gov/resource-library-item/tx-ramp-certified-cloud-products
+- marketo/integrations/marketo-integration-edges.yml
 source:
 - https://zapier.com/api/v4/apps/
 marketplace_apps:
