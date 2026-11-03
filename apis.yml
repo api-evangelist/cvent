@@ -27,17 +27,23 @@ deliveryModel:
   generated: '2026-09-25'
   method: derived
 accessModel:
-  pricing: freemium
+  pricing: paid
   onboarding: self-serve
   trial: false
-  try_now: true
+  try_now: false
   public: false
-  label: Freemium · Self-serve signup
+  gated: none
+  gated_source:
+  - onboarding
+  label: Paid · Self-serve signup
   confidence: high
   source:
   - plans
   - authentication
-  generated: '2026-07-22'
+  - rate-limits
+  - security
+  - sandbox
+  generated: '2026-11-02'
   method: derived
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/cvent.png
 type: Index
